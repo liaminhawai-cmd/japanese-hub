@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en-AU">
+<html lang="ja" translate="no" class="notranslate">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="google" content="notranslate">
 <meta name="description" content="Japanese Hub — practice tools for secondary Japanese.">
-<title>Japanese Hub</title>
+<title>にほんごハブ · Japanese Hub</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%88%B7%3C/text%3E%3C/svg%3E">
 <style>
   /* Same palette as the Grammar Hub so the suite reads as one thing.
@@ -28,15 +29,19 @@
   .jp{display:block;font-size:.55em;color:var(--muted);letter-spacing:.18em;margin-bottom:6px;font-weight:400}
   header p{color:var(--muted);font-size:.95rem;max-width:560px;margin:10px auto 0}
   h2{font-family:Georgia,serif;font-size:1.05rem;padding-bottom:8px;border-bottom:2px solid var(--line-soft);margin-top:26px}
+  h2 small{font-weight:400;color:var(--muted);font-size:.8em;margin-left:8px}
   .grid{display:grid;gap:14px;margin-top:16px;grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
-  a.card{display:flex;flex-direction:column;gap:6px;background:var(--paper);border:1px solid var(--line);
+  a.card{position:relative;display:flex;flex-direction:column;gap:6px;background:var(--paper);border:1px solid var(--line);
          border-radius:12px;padding:16px;text-decoration:none;color:inherit;box-shadow:var(--shadow);
          transition:transform .12s ease,border-color .12s ease}
   a.card:hover{transform:translateY(-3px);border-color:var(--accent)}
   a.card:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
   .card .emoji{font-size:1.6rem}
   .card h3{font-size:1rem;font-family:Georgia,serif}
+  .card h3 small{display:block;font-weight:400;color:var(--muted);font-size:.78em;font-family:'Segoe UI',Tahoma,sans-serif}
   .card p{font-size:.85rem;color:var(--muted)}
+  .poc{position:absolute;top:10px;right:10px;font-size:.62rem;font-weight:700;color:var(--accent);
+       border:1px solid var(--accent);border-radius:10px;padding:2px 8px;letter-spacing:.03em}
   .note{background:var(--paper);border:1px solid var(--line-soft);border-radius:10px;
         padding:11px 14px;color:var(--muted);font-size:.82rem;margin-top:18px}
   .building{color:var(--muted);font-size:.85rem;margin-top:14px}
@@ -53,22 +58,52 @@
   </header>
 
   <main>
-    <h2>Tools</h2>
+    <h2>文法<small>Grammar</small></h2>
     <div class="grid">
       <a class="card" href="grammar/">
         <span class="emoji">🧩</span>
-        <h3>Grammar Hub</h3>
-        <p>Pick skills from the progression matrix, drill them until mastered, get a report you can send your teacher.</p>
+        <h3>文法ハブ<small>Grammar Hub</small></h3>
+        <p>The Prep-to-12 grammar timeline. Pick a step, drill it until mastered, get a report you can send your teacher. Pull the lever for language help.</p>
       </a>
     </div>
 
-    <p class="building">Being built: oral exam practice, topic vocabulary and reading, model answers for VCE writing.</p>
+    <h2>ことば<small>Words and vocabulary</small></h2>
+    <div class="grid">
+      <a class="card" href="words/">
+        <span class="poc">ためし中 · trial</span>
+        <span class="emoji">🧱</span>
+        <h3>ことばラボ<small>Word Lab</small></h3>
+        <p>Kanji families: meet the words, build them from their parts, work out what they mean. Three families from the 給食 unit.</p>
+      </a>
+    </div>
+
+    <h2>話す・聞く<small>Speaking and listening</small></h2>
+    <div class="grid">
+      <a class="card" href="oral/">
+        <span class="poc">ためし中 · trial</span>
+        <span class="emoji">🎙️</span>
+        <h3>話す練習<small>Oral practice</small></h3>
+        <p>The 47 oral exam questions with audio, in three tiers. Listen, answer out loud, tick your own boxes.</p>
+      </a>
+    </div>
+
+    <h2>書く<small>Writing</small></h2>
+    <div class="grid">
+      <a class="card" href="writing/">
+        <span class="poc">ためし中 · trial</span>
+        <span class="emoji">✍️</span>
+        <h3>書き方の壁<small>Writing Wall</small></h3>
+        <p>What a top answer actually does, move by move — tap the coloured phrases to see the grammar behind each move.</p>
+      </a>
+    </div>
+
+    <p class="building">「ためし中」のカードは先生がチェック中です。Cards marked ためし中 are trial versions awaiting teacher review — they may change or disappear.</p>
 
     <p class="note">🔒 This hub never asks for your name or student ID, and nothing you do here is sent anywhere. Reports are shown on screen for you to copy or hand in yourself.</p>
   </main>
 
   <footer>
-    <div class="build-tag">JH build 2026-08-18</div>
+    <div class="build-tag">JH build 2026-08-18b</div>
   </footer>
 
 </div>
