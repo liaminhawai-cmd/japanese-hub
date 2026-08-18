@@ -53,65 +53,111 @@
 <div class="wrap">
 
   <header>
-    <h1><span class="jp">にほんごハブ</span>Japanese Hub</h1>
-    <p>Practice tools for secondary Japanese. Nothing to install, no account, no login. Open a tool and start.</p>
+    <h1 class="jt-tap" data-jt="title">にほんごハブ</h1>
+    <p class="jt-tap" data-jt="intro">Practice tools for secondary Japanese.</p>
   </header>
 
-  <main>
-    <h2>文法<small>Grammar</small></h2>
+  <main id="tools">
+    <h2 data-jt="hGrammar">文法</h2>
     <div class="grid">
       <a class="card" href="grammar/">
         <span class="emoji">🧩</span>
-        <h3>文法ハブ<small>Grammar Hub</small></h3>
-        <p>The Prep-to-12 grammar timeline. Pick a step, drill it until mastered, get a report you can send your teacher. Pull the lever for language help.</p>
+        <h3 data-jt="cGrammar">文法ハブ</h3>
+        <p data-jt="bGrammar">Prep から 12年までの文法の道すじ</p>
       </a>
     </div>
 
-    <h2>ことば<small>Words and vocabulary</small></h2>
+    <h2 data-jt="hWords">ことば</h2>
     <div class="grid">
       <a class="card" href="words/">
         <span class="poc">ためし中 · trial</span>
         <span class="emoji">🧱</span>
-        <h3>ことばラボ<small>Word Lab</small></h3>
-        <p>Kanji families: meet the words, build them from their parts, work out what they mean. Three families from the 給食 unit.</p>
+        <h3 data-jt="cWords">ことばラボ</h3>
+        <p data-jt="bWords">漢字のかぞくから、ことばを組み立てる</p>
       </a>
     </div>
 
-    <h2>話す・聞く<small>Speaking and listening</small></h2>
+    <h2 data-jt="hSpeak">話す・聞く</h2>
     <div class="grid">
       <a class="card" href="oral/">
         <span class="poc">ためし中 · trial</span>
         <span class="emoji">🎙️</span>
-        <h3>話す練習<small>Oral practice</small></h3>
-        <p>The 47 oral exam questions with audio, in three tiers. Listen, answer out loud, tick your own boxes.</p>
+        <h3 data-jt="cOral">話す練習</h3>
+        <p data-jt="bOral">口頭試験の47問、音声つき、三つのレベル</p>
       </a>
     </div>
 
-    <h2>書く<small>Writing</small></h2>
+    <h2 data-jt="hWrite">書く</h2>
     <div class="grid">
       <a class="card" href="levelup/">
         <span class="poc">ためし中 · trial</span>
         <span class="emoji">🪜</span>
-        <h3>レベルアップの壁<small>Level Up Wall</small></h3>
-        <p>One task, 自己しょうかい, answered at every level from Prep to Year 12. Find your rung, then look at the one above it and see exactly what changes.</p>
+        <h3 data-jt="cLevel">レベルアップの壁</h3>
+        <p data-jt="bLevel">一つの課題を、学年ごとに。次の段が見える</p>
       </a>
       <a class="card" href="writing/">
         <span class="poc">ためし中 · trial</span>
         <span class="emoji">✍️</span>
-        <h3>書き方の壁<small>Writing Wall</small></h3>
-        <p>What a top answer actually does, move by move — tap the coloured phrases to see the grammar behind each move.</p>
+        <h3 data-jt="cWriting">書き方の壁</h3>
+        <p data-jt="bWriting">いい答えが何をしているか、一手ずつ</p>
       </a>
     </div>
 
     <p class="building">「ためし中」のカードは先生がチェック中です。Cards marked ためし中 are trial versions awaiting teacher review — they may change or disappear.</p>
 
     <p class="note">🔒 This hub never asks for your name or student ID, and nothing you do here is sent anywhere. Reports are shown on screen for you to copy or hand in yourself.</p>
+    <span id="toolLever" data-scope="#tools" title="Pull down for more help with these cards. It lets go slowly."></span>
   </main>
 
   <footer>
-    <div class="build-tag">JH build 2026-08-18c</div>
+    <div class="build-tag">JH build 2026-08-18d</div>
   </footer>
 
 </div>
+<script src="lever.js"></script>
+<script>
+/* Japanese-led landing page. Forms: [kanji, kana, romaji, English]. */
+window.HubLever.init({
+  strings: {
+    title:    ["にほんごハブ","にほんごハブ","Nihongo habu","Japanese Hub"],
+    intro:    ["中高生のための日本語れんしゅう道具","ちゅうこうせいのためのにほんごれんしゅうどうぐ",
+               "chūkōsei no tame no nihongo renshū dōgu",
+               "Practice tools for secondary Japanese. Nothing to install, no account, no login."],
+    hGrammar: ["文法","ぶんぽう","bunpō","Grammar"],
+    hWords:   ["ことば","ことば","kotoba","Words and vocabulary"],
+    hSpeak:   ["話す・聞く","はなす・きく","hanasu, kiku","Speaking and listening"],
+    hWrite:   ["書く","かく","kaku","Writing"],
+    cGrammar: ["文法ハブ","ぶんぽうハブ","bunpō habu","Grammar Hub"],
+    cWords:   ["ことばラボ","ことばラボ","kotoba rabo","Word Lab"],
+    cOral:    ["話す練習","はなすれんしゅう","hanasu renshū","Oral practice"],
+    cLevel:   ["レベルアップの壁","レベルアップのかべ","reberu appu no kabe","Level Up Wall"],
+    cWriting: ["書き方の壁","かきかたのかべ","kakikata no kabe","Writing Wall"],
+    bGrammar: ["Prep から 12年までの文法の道すじ","プレップから12ねんまでのぶんぽうのみちすじ",
+               "pureppu kara 12-nen made no bunpō no michisuji",
+               "The Prep-to-12 grammar timeline. Pick a step, drill it until mastered, get a report."],
+    bWords:   ["漢字のかぞくから、ことばを組み立てる","かんじのかぞくから、ことばをくみたてる",
+               "kanji no kazoku kara, kotoba o kumitateru",
+               "Kanji families: meet the words, build them from their parts, work out what they mean."],
+    bOral:    ["口頭試験の47問、音声つき、三つのレベル","こうとうしけんの47もん、おんせいつき、みっつのレベル",
+               "kōtō shiken no 47 mon, onsei tsuki, mittsu no reberu",
+               "The 47 oral exam questions with audio, in three tiers. Answer out loud, tick your own boxes."],
+    bLevel:   ["一つの課題を、学年ごとに。次の段が見える","ひとつのかだいを、がくねんごとに。つぎのだんがみえる",
+               "hitotsu no kadai o, gakunen goto ni. tsugi no dan ga mieru",
+               "One task, answered at every level from Prep to Year 12. Find your rung, then look at the one above it."],
+    bWriting: ["いい答えが何をしているか、一手ずつ","いいこたえがなにをしているか、ひとてずつ",
+               "ii kotae ga nani o shite iru ka, hitote zutsu",
+               "What a top answer actually does, move by move. Tap the coloured phrases."],
+  },
+  ruby: {
+    hGrammar: "<ruby>文法<rt>ぶんぽう</rt></ruby>",
+    hSpeak: "<ruby>話<rt>はな</rt></ruby>す・<ruby>聞<rt>き</rt></ruby>く",
+    hWrite: "<ruby>書<rt>か</rt></ruby>く",
+    cGrammar: "<ruby>文法<rt>ぶんぽう</rt></ruby>ハブ",
+    cOral: "<ruby>話<rt>はな</rt></ruby>す<ruby>練習<rt>れんしゅう</rt></ruby>",
+    cLevel: "レベルアップの<ruby>壁<rt>かべ</rt></ruby>",
+    cWriting: "<ruby>書<rt>か</rt></ruby>き<ruby>方<rt>かた</rt></ruby>の<ruby>壁<rt>かべ</rt></ruby>",
+  },
+});
+</script>
 </body>
 </html>
