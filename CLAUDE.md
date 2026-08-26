@@ -3,6 +3,10 @@
 This is the **deploy target** for the Japanese Hub — a public repo serving
 the live site via GitHub Pages. Do not develop here.
 
+Read `STYLE_GUIDE.md` first — the portable build principles for every
+teaching resource across these repos (`kelpie-9f3c/index.html`, "Build
+principles", is its source; edit there and recopy).
+
 - Source of truth: the private development repo (`08598176-design/Grammar-hub`),
   which holds SPEC.md, DESIGN_RULES.md and the collab/ workflow.
 - Layout: `/index.html` is the hub landing page; each tool lives in its own
