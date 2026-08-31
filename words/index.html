@@ -65,8 +65,23 @@
        background:var(--bg);padding:10px 14px}
   .word-jp{font-size:24px;font-family:Georgia,serif;min-width:150px;cursor:pointer}
   .word-jp .h{color:var(--head)}
+  /* purple-lab move: colour the headword's own spelling by morpheme role,
+     not just the breakdown line underneath it */
+  .word-jp .w-prefix{color:var(--prefix);font-weight:700}
+  .word-jp .w-root{color:var(--root);font-weight:700}
+  .word-jp .w-suffix{color:var(--suffix);font-weight:700}
+  .word-jp .w-okuri{color:var(--muted)}
   .word-jp rt{font-size:11px;color:var(--muted);font-weight:400}
   .word-reveal{font-size:13px;color:var(--muted);flex:1}
+  .word-reveal code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:700;font-size:13px}
+  .word-reveal code.w-prefix{color:var(--prefix)}
+  .word-reveal code.w-root{color:var(--root)}
+  .word-reveal code.w-suffix{color:var(--suffix)}
+  .meet-legend{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;font-size:11.5px;font-weight:700;
+       margin:0 auto 12px;max-width:440px;border:1px solid var(--line-soft);border-radius:8px;
+       padding:8px 12px;background:var(--paper)}
+  .meet-legend .w-prefix,.meet-legend .w-root,.meet-legend .w-suffix{font-weight:800}
+  .meet-legend .note{font-weight:400;color:var(--muted)}
   .tap-hint{font-size:11px;color:var(--muted);text-align:center;margin-top:10px}
 
   /* ---- build task ---- */
@@ -127,6 +142,8 @@
     <button class="back" id="backBtn" data-jt="back">← かぞく</button>
     <div class="map-head"><span class="fam-kanji" id="meetKanji"></span></div>
     <p class="map-note" id="meetNote"></p>
+    <div class="meet-legend"><span class="w-prefix">prefix</span><span class="w-root">root</span><span class="w-suffix">suffix</span>
+      <span class="note">— the same colours mark each word's parts below</span></div>
     <div class="words" id="meetWords"></div>
     <p class="tap-hint">Tap a word: reading first, then meaning. It fades back to kanji by itself — like the lever in the Grammar Hub.</p>
     <div class="actions" id="meetActions"><button class="btn btn-primary" id="toBuild" data-jt="toBuild">つぎへ</button>
@@ -246,8 +263,22 @@ const UI_RUBY = {
   });
 
   /* MEET: tap a word -> reading -> meaning, elastic decay back to kanji */
+  function colourWord(w){
+    // walk the parts (which may be multi-character, e.g. "給食") and wrap
+    // each one's own letters in the span for its role — purple-lab's
+    // colourWord(), ported from morphemes to kanji compounds.
+    let out="", rest=w.jp;
+    w.parts.forEach(p=>{
+      const [txt,,role]=p;
+      const idx=rest.indexOf(txt);
+      if(idx===-1){ out+=esc(rest); rest=""; return; }
+      out+=esc(rest.slice(0,idx))+`<span class="w-${role}">${esc(txt)}</span>`;
+      rest=rest.slice(idx+txt.length);
+    });
+    return out+esc(rest);
+  }
   function wordHtml(w,stage){
-    const jp=w.jp.split("").map(ch=>fam.head.includes(ch)?`<span class="h">${ch}</span>`:ch).join("");
+    const jp=colourWord(w);
     if(stage===0)return jp;
     if(stage===1)return `${jp} <small style="color:var(--muted)">${esc(w.read)}</small>`;
     return `${jp} <small style="color:var(--muted)">${esc(w.read)} · ${esc(w.gloss)}</small>`;
@@ -267,7 +298,8 @@ const UI_RUBY = {
     fam.words.forEach(w=>{
       const row=document.createElement("div");row.className="word-row";
       const jp=document.createElement("div");jp.className="word-jp";jp.innerHTML=wordHtml(w,0);
-      const why=document.createElement("div");why.className="word-reveal";why.textContent=w.parts.filter(p=>p[1]).map(p=>`${p[0]} ${p[1]}`).join("  +  ");
+      const why=document.createElement("div");why.className="word-reveal";
+      why.innerHTML=w.parts.filter(p=>p[1]).map(p=>`<code class="w-${p[2]}">${esc(p[0])}</code> <i>${esc(p[1])}</i>`).join("  +  ");
       let stage=0,timer=null;
       jp.addEventListener("click",()=>{
         stage=Math.min(2,stage+1);jp.innerHTML=wordHtml(w,stage);

@@ -123,6 +123,14 @@
   .slot.aim{border-color:var(--accent);background:#faf5f0}
   .built{display:flex;align-items:baseline;gap:9px;margin-left:auto}
   .built .w{font-family:Georgia,serif;font-size:27px;font-weight:700;color:var(--correct)}
+  /* purple-lab move: once a word is built, colour its own spelling by each
+     kanji's capacity (sense/sound/both) rather than leaving it plain green */
+  .built .w span.cap-sense{color:var(--sense)}
+  .built .w span.cap-sound{color:var(--sound)}
+  .built .w span.cap-both{color:var(--both)}
+  .done-legend{display:flex;gap:12px;flex-wrap:wrap;font-size:10.5px;font-weight:800;letter-spacing:.05em;
+       margin:8px 0 6px;color:var(--muted)}
+  .done-legend span.cap-sense{color:var(--sense)} .done-legend span.cap-sound{color:var(--sound)} .done-legend span.cap-both{color:var(--both)}
   .built .rd{font-size:12px;color:var(--muted)}
   .tick{color:var(--correct);font-size:17px;font-weight:800}
 
@@ -664,8 +672,9 @@ const UI_RUBY = { subtitle:"ユニットのことばを、<ruby>漢字<rt>かん
     $("prog").textContent=u.title.split(" ")[0]+" · "+done.length+"/"+u.words.length;
     $("todo").innerHTML=todo.map((w)=>rowHtml(w,false)).join("");
     $("done-wrap").innerHTML = done.length
-      ? '<div class="done-head">できた · built ('+done.length+')</div><div class="list">'+
-        done.map((w)=>rowHtml(w,true)).join("")+'</div>'
+      ? '<div class="done-head">できた · built ('+done.length+')</div>'+
+        '<div class="done-legend"><span class="cap-sense">sense</span><span class="cap-sound">sound</span><span class="cap-both">both</span></div>'+
+        '<div class="list">'+done.map((w)=>rowHtml(w,true)).join("")+'</div>'
       : "";
     wireRows();
     const fin=$("finish");
@@ -683,10 +692,13 @@ const UI_RUBY = { subtitle:"ユニットのことばを、<ruby>漢字<rt>かん
     } else fin.className="finish";
   }
 
+  function colourBuilt(w){
+    return w.w.split("").map((k)=>'<span class="cap-'+capOf(k)+'">'+esc(k)+'</span>').join("");
+  }
   function rowHtml(w,isDone){
     if(isDone){
       return '<div class="row done" data-w="'+w.w+'"><div class="def"><span class="en">'+esc(w.def)+'</span></div>'+
-        '<div class="built"><span class="w">'+w.w+'</span><span class="rd">'+esc(w.r)+'</span>'+
+        '<div class="built"><span class="w">'+colourBuilt(w)+'</span><span class="rd">'+esc(w.r)+'</span>'+
         '<span class="tick">'+(S.first[w.w]?"✓":"✓")+'</span></div></div>';
     }
     const fill=S.fills[w.w]||[];
