@@ -273,9 +273,12 @@
       <span id="listLever" data-scope="#scr-list"></span>
     </div>
     <h2 style="font-family:Georgia,serif;font-size:19px;margin:4px 0 4px">The characters, part by part</h2>
-    <p style="color:var(--muted);font-size:13px;line-height:1.55;margin-bottom:14px">Each character with the
+    <p style="color:var(--muted);font-size:13px;line-height:1.55;margin-bottom:10px">Each character with the
       parts that build it, and the job each part does <b>in that character</b>. A part stays grey until you have
       built the character it sits in — the colour is the lesson, so it has to be earned.</p>
+    <div class="actions" style="justify-content:flex-start;margin:0 0 14px">
+      <button class="btn btn-ghost" id="revealBtn" type="button">Show every colour</button>
+    </div>
     <div id="list-body"></div>
   </section>
 
@@ -568,8 +571,13 @@ const UI_RUBY = { title:"かんじこうじょう", how:"ぶひんは <ruby>組<
      with their morpheme line anyway, and it carries more here: the
      radical's name (さんずい, もんがまえ) is real vocabulary students
      are taught to say aloud. */
+  /* The student earns the colour by building. A teacher planning or
+     printing the lesson needs to see all of it cold, so the list has a
+     reveal — off by default, so the student view keeps the promise the
+     home screen makes. */
+  let listReveal=false;
   function compLine(c){
-    const built = S.first["s:build:"+c.ch]!==undefined;
+    const built = listReveal || S.first["s:build:"+c.ch]!==undefined;
     return c.parts.map((p)=>{
       const info=PIECES[p.p]||{};
       const role=built?p.role:"none";
@@ -584,7 +592,7 @@ const UI_RUBY = { title:"かんじこうじょう", how:"ぶひんは <ruby>組<
       '<span class="c-sound">おと sound</span><span class="c-both">りょうほう both</span>'+
       '<span class="note">— the job a part does in <i>that</i> character, not everywhere</span></div>';
     BUILD8.forEach((c)=>{
-      const built = S.first["s:build:"+c.ch]!==undefined;
+      const built = listReveal || S.first["s:build:"+c.ch]!==undefined;
       const d=document.createElement("div");
       d.className="kcard"+(built?"":" locked");
       d.innerHTML='<span class="w">'+c.ch+'</span><span class="rd">'+esc(c.read)+'</span>'+
@@ -597,6 +605,11 @@ const UI_RUBY = { title:"かんじこうじょう", how:"ぶひんは <ruby>組<
       wrap.appendChild(d);
     });
   }
+  $("revealBtn").addEventListener("click",()=>{
+    listReveal=!listReveal;
+    $("revealBtn").textContent=listReveal?"Back to the earned view":"Show every colour";
+    drawList();
+  });
 
   /* ---------------- STAGE 1 · SORT THE BANK ----------------
      The question here is not "what job does this do in this character"
