@@ -135,6 +135,37 @@
        padding:3px 8px;background:var(--bg);min-width:44px}
   .pchip .pk{font-family:Georgia,serif;font-size:17px;line-height:1.2}
   .pchip .pg{font-size:8.5px;color:var(--muted);white-space:nowrap}
+
+  /* ---- step 1, kanji units: the purple-lab word card ----
+     The same card the Kanji Factory and the English word builders use.
+     Word large and serif, reading beside it, meaning under it, a dashed
+     rule, then the parts as serif code with their glosses joined by
+     " + ", then, for each of the unit's key kanji, the radicals it is
+     written with — coloured by the job each one does IN THAT CHARACTER,
+     with the radical's Japanese name, which is the vocabulary students
+     are taught to say aloud.
+     The colour is on the radicals and nowhere else, because that is the
+     only place this file's data states a role. The word's own kanji stay
+     neutral, and so does the parts bank in step 2: a part has no job
+     until there is a character for it to do the job in. */
+  .wcard{border:1px solid var(--line-soft);border-radius:10px;background:var(--paper);padding:13px 15px}
+  .wcard .w{font-family:Georgia,serif;font-size:30px;font-weight:700;line-height:1.2;vertical-align:middle}
+  .wcard .wr{font-size:12.5px;color:var(--muted);font-style:italic;margin-left:9px}
+  .wcard .wdef{display:block;font-size:13.5px;margin:6px 0;line-height:1.5}
+  .wcard .comp{font-size:13.5px;color:var(--muted);line-height:1.8;border-top:1px dashed var(--line-soft);
+       padding-top:6px;margin-top:6px}
+  .wcard .comp b,.wcard .comp i{color:var(--ink)}
+  .wcard .comp code{font-family:Georgia,serif;font-weight:700;font-size:20px;vertical-align:-1px}
+  .wcard .comp code.c-sense{color:var(--sense)} .wcard .comp code.c-sound{color:var(--sound)}
+  .wcard .comp code.c-both{color:var(--both)} .wcard .comp code.c-none{color:var(--muted)}
+  .wcard .rad{font-size:11px;font-weight:700;color:var(--muted)}
+  .wcard .kn{font-size:12.5px;color:var(--muted);line-height:1.7;margin-top:6px}
+  .wcard .kn .kc{font-family:Georgia,serif;font-size:19px;font-weight:700;color:var(--ink);vertical-align:-1px}
+  .wcard .kn .hk{display:block;font-size:12px;margin-top:1px}
+  .wlegend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;font-weight:700;
+       border:1px solid var(--line-soft);border-radius:8px;padding:9px 13px;background:var(--bg)}
+  .wlegend .c-sense{color:var(--sense)} .wlegend .c-sound{color:var(--sound)} .wlegend .c-both{color:var(--both)}
+  .wlegend .note{font-weight:400;color:var(--muted)}
   .kpchip{border:1px dashed var(--line);border-radius:8px;padding:3px 10px;background:var(--bg);
        font-family:Georgia,serif;font-size:16px;color:var(--muted)}
   .kpchip small{display:block;font-family:'Segoe UI',sans-serif;font-size:8.5px}
@@ -11413,7 +11444,49 @@ function paintGap(){
   });
 }
 
-/* ---------------- STEP 1 · STUDY ---------------- */
+/* ---------------- STEP 1 · STUDY ----------------
+   Purple Lab's word card, ported. An English word can be coloured
+   letter by letter because its morphemes are letters; a Japanese word
+   cannot, because a kanji's parts are strokes inside one glyph and CSS
+   colours whole characters only. So the breakdown gets its own lines
+   underneath: the word's kanji with their glosses, and under each key
+   kanji the radicals it is written with.
+
+   Nothing here is inferred. The kanji glosses come from KANJI, the
+   splits and roles from BUILDS, the radical glosses and Japanese names
+   from PARTS. A part with no gloss in PARTS renders without one rather
+   than borrowing a guess from somewhere else. Colour is only ever on a
+   radical inside a named character, because that is the only place the
+   data states a job; the word's own kanji stay neutral. */
+function radLine(b){
+  return b.parts.map((pt)=>{
+    const info=PARTS[pt.p]||{};
+    return '<code class="c-'+esc(pt.role)+'">'+esc(pt.p)+'</code>'+
+      (info.g?' <i>'+esc(info.g)+'</i>':"")+
+      (info.n?' <span class="rad">'+esc(info.n)+'</span>':"")+
+      (pt.role==="sound"&&pt.sound?' <b>'+esc(pt.sound)+'</b>':"");
+  }).join(" + ");
+}
+function wordCard(u,w){
+  const parts=w.parts||[];
+  const builds=BUILDS[u.key]||[];
+  /* a one-kanji word whose only part is itself needs no parts line:
+     the headword already is it, and the radicals below carry the work */
+  const selfOnly=parts.length===1&&parts[0]===w.w;
+  const kline=(selfOnly?[]:parts).map((p)=>{
+    const k=KANJI[p]||{};
+    return '<code class="c-none">'+esc(p)+'</code>'+(k.g?' <i>'+esc(k.g)+'</i>':"");
+  }).join(" + ");
+  const splits=parts.map((p)=>{
+    const b=builds.find((x)=>x.ch===p);
+    if(!b)return "";
+    return '<div class="kn"><span class="kc">'+esc(b.ch)+'</span> = '+radLine(b)+
+      (b.hook?'<span class="hk">'+esc(b.hook)+'</span>':"")+'</div>';
+  }).join("");
+  const comp=(kline||splits)?'<div class="comp">'+kline+splits+'</div>':"";
+  return '<div class="wcard"><span class="w">'+esc(w.w)+'</span><span class="wr">'+esc(w.r)+'</span>'+
+    '<span class="wdef">'+esc(w.def)+'</span>'+comp+'</div>';
+}
 function paintStudy(){
   const u=unit();
   stepHead("study-head","study");
@@ -11426,13 +11499,12 @@ function paintStudy(){
         (w.kp?'<span class="kpchip">'+esc(w.kp)+'<small>あとで会う漢字 · the kanji you will meet later</small></span>':"")+
         '</div>';
     }
-    return '<div class="wrow"><span class="wk">'+esc(w.w)+'</span><span class="wr">'+esc(w.r)+'</span>'+
-    '<span class="wdef">'+esc(w.def)+'</span>'+
-    '<span class="wparts">'+(w.parts||[]).map((p)=>{
-      const k=KANJI[p]||{};
-      return '<span class="pchip"><span class="pk">'+esc(p)+'</span><span class="pg">'+esc(k.g||"")+'</span></span>';
-    }).join("")+'</span></div>';
+    return wordCard(u,w);
   }).join("");
+  if(u.mode!=="kana")$("study-table").insertAdjacentHTML("afterbegin",
+    '<div class="wlegend"><span class="c-sense">いみ meaning</span>'+
+    '<span class="c-sound">おと sound</span><span class="c-both">りょうほう both</span>'+
+    '<span class="note">— the job a radical does in <i>that</i> character, not everywhere</span></div>');
   $("study-vocab").innerHTML='<a href="../vocab/#unit:'+esc(u.key)+'" target="_blank" rel="noopener">この単元のことばを、ことばのホームでも → see these words in the Vocab Hub</a>';
   $("study-prog").textContent=u.words.length+" words"+(u.mode==="kana"?"":" · every kanji part labelled");
   $("study-next").textContent="つぎへ · I know these, walk on →";
