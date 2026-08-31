@@ -197,6 +197,33 @@
        text-transform:uppercase;display:block;margin-bottom:3px}
   .warn{border-left:4px solid var(--amber)}
 
+  /* ---- the character list: the purple-lab word card, ported ----
+     Same shape as the English word builders' word list: the headword
+     large and serif, the meaning under it, then a dashed rule and the
+     parts as coloured monospace with their glosses, then the note.
+     The colour rule of this app still holds — a character you have not
+     built yet shows its parts in neutral grey, because a part has no
+     job until there is a character for it to do the job in. Build it
+     and the card lights up. */
+  .klegend{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;font-weight:700;margin:0 0 12px;
+       border:1px solid var(--line-soft);border-radius:8px;padding:10px 14px;background:var(--bg)}
+  .klegend .c-sense{color:var(--sense)} .klegend .c-sound{color:var(--sound)} .klegend .c-both{color:var(--both)}
+  .klegend .note{font-weight:400;color:var(--muted)}
+  .kcard{border:1px solid var(--line-soft);border-radius:10px;padding:14px 16px;margin-bottom:10px;background:var(--paper)}
+  .kcard.locked{opacity:.72}
+  .kcard .w{font-family:Georgia,serif;font-size:38px;font-weight:700;line-height:1.15;vertical-align:middle}
+  .kcard .rd{font-size:12px;color:var(--muted);font-style:italic;margin-left:8px}
+  .kcard .meaning{font-size:14px;margin:6px 0;line-height:1.5}
+  .kcard .comp{font-size:13.5px;color:var(--muted);line-height:1.8;border-top:1px dashed var(--line-soft);
+       padding-top:6px;margin-top:6px}
+  .kcard .comp b,.kcard .comp i{color:var(--ink)}
+  .kcard .comp code{font-family:Georgia,serif;font-weight:700;font-size:21px;vertical-align:-1px}
+  .kcard .comp code.c-sense{color:var(--sense)} .kcard .comp code.c-sound{color:var(--sound)}
+  .kcard .comp code.c-both{color:var(--both)} .kcard .comp code.c-none{color:var(--muted)}
+  .kcard .rad{font-size:11px;font-weight:700;color:var(--muted)}
+  .kcard .kn{font-size:12.5px;color:var(--muted);line-height:1.6;margin-top:5px}
+  .kcard .todo{font-size:11.5px;color:var(--muted);font-style:italic;margin-top:5px}
+
   /* ---- report ---- */
   .bigstat{text-align:center;font-family:Georgia,serif;font-size:42px;font-weight:700;color:var(--accent);margin:6px 0}
   .bigstat small{display:block;font-size:12px;font-family:'Segoe UI',sans-serif;color:var(--muted);font-weight:400}
@@ -237,6 +264,19 @@
       <button class="btn btn-primary" id="checkBtn" data-jt="check" disabled>チェック</button>
       <button class="btn btn-primary" id="nextBtn" data-jt="next" style="display:none">つぎへ</button>
     </div>
+  </section>
+
+  <section class="screen" id="scr-list">
+    <div class="topbar">
+      <button class="linkbtn" data-go="home" data-jt="back">← ホーム</button>
+      <span class="progress" data-jt="pList">かんじリスト</span>
+      <span id="listLever" data-scope="#scr-list"></span>
+    </div>
+    <h2 style="font-family:Georgia,serif;font-size:19px;margin:4px 0 4px">The characters, part by part</h2>
+    <p style="color:var(--muted);font-size:13px;line-height:1.55;margin-bottom:14px">Each character with the
+      parts that build it, and the job each part does <b>in that character</b>. A part stays grey until you have
+      built the character it sits in — the colour is the lesson, so it has to be earned.</p>
+    <div id="list-body"></div>
   </section>
 
   <section class="screen" id="scr-report">
@@ -393,6 +433,7 @@ const UI = {
   clear:    ["クリア","クリア","kuria","Clear"],
   copy:     ["コピー","コピー","kopī","Copy my report"],
   pReport:  ["レポート","レポート","repōto","My report"],
+  pList:    ["かんじリスト","かんじリスト","kanji risuto","The character list"],
 };
 const UI_RUBY = { title:"かんじこうじょう", how:"ぶひんは <ruby>組<rt>く</rt></ruby>み<ruby>立<rt>た</rt></ruby>てるまで <ruby>色<rt>いろ</rt></ruby>が つきません" };
 
@@ -503,12 +544,58 @@ const UI_RUBY = { title:"かんじこうじょう", how:"ぶひんは <ruby>組<
       b.addEventListener("click",st.fn);
       wrap.appendChild(b);
     });
+    const l=document.createElement("button");
+    l.className="fam";
+    l.innerHTML='<span class="fc">漢</span><span><span class="ft">かんじリスト</span>'+
+      '<span class="fd">Every character with its parts and the job each one does. Grey until you build it.</span>'+
+      '</span><span class="tag">any time</span>';
+    l.addEventListener("click",()=>{drawList();go("list");});
+    wrap.appendChild(l);
     const r=document.createElement("button");
     r.className="fam";
     r.innerHTML='<span class="fc">📋</span><span><span class="ft">レポート</span>'+
       '<span class="fd">Your first try at every decision.</span></span><span class="tag">any time</span>';
     r.addEventListener("click",()=>{drawReport();go("report");});
     wrap.appendChild(r);
+  }
+
+  /* ---------------- THE CHARACTER LIST ----------------
+     Purple Lab's word card, ported to kanji. The English builders
+     colour a word's own spelling by the role of each morpheme; a kanji
+     cannot be coloured that way, because the parts are strokes inside
+     one glyph and CSS can only colour whole characters. So the parts
+     get their own line underneath — which is what the English cards do
+     with their morpheme line anyway, and it carries more here: the
+     radical's name (さんずい, もんがまえ) is real vocabulary students
+     are taught to say aloud. */
+  function compLine(c){
+    const built = S.first["s:build:"+c.ch]!==undefined;
+    return c.parts.map((p)=>{
+      const info=PIECES[p.p]||{};
+      const role=built?p.role:"none";
+      const name=info.n?' <span class="rad">'+esc(info.n)+'</span>':"";
+      const snd=(built&&p.sound)?' <b>'+esc(p.sound)+'</b>':"";
+      return '<code class="c-'+role+'">'+esc(p.p)+'</code> <i>'+esc(info.g||"")+'</i>'+name+snd;
+    }).join(" + ");
+  }
+  function drawList(){
+    const wrap=$("list-body");
+    wrap.innerHTML='<div class="klegend"><span class="c-sense">いみ meaning</span>'+
+      '<span class="c-sound">おと sound</span><span class="c-both">りょうほう both</span>'+
+      '<span class="note">— the job a part does in <i>that</i> character, not everywhere</span></div>';
+    BUILD8.forEach((c)=>{
+      const built = S.first["s:build:"+c.ch]!==undefined;
+      const d=document.createElement("div");
+      d.className="kcard"+(built?"":" locked");
+      d.innerHTML='<span class="w">'+c.ch+'</span><span class="rd">'+esc(c.read)+'</span>'+
+        '<div class="meaning">'+esc(c.gloss)+'</div>'+
+        '<div class="comp">'+compLine(c)+
+          (c.nosound?'<div class="kn">No part of '+c.ch+' gives you the reading. Some characters are like that, and it is worth knowing which.</div>':"")+
+          (built?'<div class="kn">'+esc(c.hook)+'</div>'
+                :'<div class="todo">Build this one and its parts take their colours.</div>')+
+        '</div>';
+      wrap.appendChild(d);
+    });
   }
 
   /* ---------------- STAGE 1 · SORT THE BANK ----------------
