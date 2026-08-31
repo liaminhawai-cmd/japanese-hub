@@ -163,6 +163,7 @@
   .klegend .note{font-weight:400;color:var(--muted)}
   .kcard{border:1px solid var(--line-soft);border-radius:10px;padding:14px 16px;background:var(--paper);text-align:left}
   .kcard .w{font-family:Georgia,serif;font-size:38px;font-weight:700;line-height:1.15;vertical-align:middle}
+  .kcard .w .kglyph{vertical-align:middle;margin:-4px 0}
   .kcard .rd{font-size:12px;color:var(--muted);font-style:italic;margin-left:8px}
   .kcard .meaning{font-size:14px;margin:6px 0;line-height:1.5}
   .kcard .comp{font-size:13.5px;color:var(--muted);line-height:1.8;border-top:1px dashed var(--line-soft);
@@ -291,6 +292,10 @@
       <button class="btn btn-primary" id="kanji-check" data-jt="check" disabled>チェック</button>
       <button class="btn btn-primary" id="kanji-next" data-jt="next" style="display:none">つぎへ</button>
     </div>
+    <p class="privacy" style="margin-top:16px">Characters are drawn from
+      <a href="https://kanjivg.tagaini.net" target="_blank" rel="noopener">KanjiVG</a> stroke data by Ulrich Apel,
+      used under <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener">CC BY-SA 3.0</a>,
+      so each part can be coloured separately. Which job a part does in a character is this app's own claim, not KanjiVG's.</p>
   </section>
 
   <!-- ============ GRAMMAR GYM ============ -->
@@ -355,6 +360,7 @@
 </div>
 </div>
 <div class="build-tag">Unit10 PoC 2026-08-18</div>
+<script src="../kanji-strokes.js"></script>
 <script src="lever.js"></script>
 <script>
 /* ============================================================
@@ -992,6 +998,23 @@ const UI_RUBY = {
      a character with no `parts` gets no component line at all, and the
      hook keeps its "memory hook, not history" label, because a good
      mnemonic is not an etymology and this file says so. */
+  /* The character drawn stroke by stroke, so each component takes its own
+     colour inside the glyph — the same move the English word builders make
+     when they colour "pan" and "sexual" inside Pansexual. The colours are
+     this file's own step colours, the ones the component line already uses.
+     A character with no parts has no jobs to show, so it is drawn in one
+     ink colour. Falls back to the plain character where no stroke data is
+     bundled, so a headword can never come out blank. */
+  function glyph(k) {
+    if (window.KanjiGlyph && KanjiGlyph.has(k.ch)) {
+      return KanjiGlyph.svg(k.ch, k.parts, {
+        size: 52,
+        colors: { sense: "var(--s1)", sound: "var(--s3)" },
+        mono: k.parts.length ? null : "var(--ink)"
+      });
+    }
+    return k.ch;
+  }
   function kcard(k, tail) {
     const line = k.parts.length
       ? k.parts.map((p) =>
@@ -1002,7 +1025,7 @@ const UI_RUBY = {
     const comp = '<div class="comp">' + line +
       '<div class="hook"><span class="lab">おぼえかた · memory hook, not history</span>' + esc(k.hook) + "</div>" +
       '<div class="inwords">This unit: ' + k.words.map(esc).join("、") + "</div>" + "</div>";
-    return '<div class="kcard"><span class="w">' + k.ch + '</span>' +
+    return '<div class="kcard"><span class="w">' + glyph(k) + '</span>' +
       '<span class="rd">' + esc(k.kun) + " · " + esc(k.on) + "</span>" +
       '<div class="meaning">' + esc(k.gloss) + "</div>" + comp + "</div>";
   }
