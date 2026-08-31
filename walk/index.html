@@ -161,6 +161,8 @@
   .wcard .rad{font-size:11px;font-weight:700;color:var(--muted)}
   .wcard .kn{font-size:12.5px;color:var(--muted);line-height:1.7;margin-top:6px}
   .wcard .kn .kc{font-family:Georgia,serif;font-size:19px;font-weight:700;color:var(--ink);vertical-align:-1px}
+  .wcard .kn .kc .kglyph{vertical-align:middle;margin:-3px 0}
+  .kvgnote{font-size:11.5px;color:var(--muted);line-height:1.6;margin-top:14px;text-align:left}
   .wcard .kn .hk{display:block;font-size:12px;margin-top:1px}
   .wlegend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;font-weight:700;
        border:1px solid var(--line-soft);border-radius:8px;padding:9px 13px;background:var(--bg)}
@@ -359,6 +361,10 @@
       <div class="studytools"><button class="btn btn-ghost" id="hideBtn"></button></div>
       <div class="wtable" id="study-table"></div>
       <div class="vocablink" id="study-vocab"></div>
+      <p class="kvgnote">Characters are drawn from
+        <a href="https://kanjivg.tagaini.net" target="_blank" rel="noopener">KanjiVG</a> stroke data by Ulrich Apel,
+        used under <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener">CC BY-SA 3.0</a>,
+        so each part can be coloured separately. Which job a part does in a character is this app's own claim, not KanjiVG's.</p>
       <div class="stepfoot"><span class="prog" id="study-prog"></span>
         <button class="btn btn-primary" id="study-next"></button></div>
     </section>
@@ -410,6 +416,7 @@
   </div>
 </div>
 
+<script src="../kanji-strokes.js"></script>
 <script src="lever.js"></script>
 <script>
 "use strict";
@@ -11467,6 +11474,16 @@ function radLine(b){
       (pt.role==="sound"&&pt.sound?' <b>'+esc(pt.sound)+'</b>':"");
   }).join(" + ");
 }
+/* The character drawn stroke by stroke, so each radical takes its own
+   colour inside the glyph — what the English word builders get for free
+   when they colour "pan" and "sexual" inside Pansexual. It goes on the
+   individual kanji being broken down, never on the whole word, because
+   the split and the roles are stated per character. Falls back to the
+   plain character where no stroke data is bundled. */
+function kglyph(b){
+  if(window.KanjiGlyph&&KanjiGlyph.has(b.ch))return KanjiGlyph.svg(b.ch,b.parts,{size:38,weight:5});
+  return esc(b.ch);
+}
 function wordCard(u,w){
   const parts=w.parts||[];
   const builds=BUILDS[u.key]||[];
@@ -11480,7 +11497,7 @@ function wordCard(u,w){
   const splits=parts.map((p)=>{
     const b=builds.find((x)=>x.ch===p);
     if(!b)return "";
-    return '<div class="kn"><span class="kc">'+esc(b.ch)+'</span> = '+radLine(b)+
+    return '<div class="kn"><span class="kc">'+kglyph(b)+'</span> = '+radLine(b)+
       (b.hook?'<span class="hk">'+esc(b.hook)+'</span>':"")+'</div>';
   }).join("");
   const comp=(kline||splits)?'<div class="comp">'+kline+splits+'</div>':"";
