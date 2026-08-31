@@ -212,6 +212,7 @@
   .kcard{border:1px solid var(--line-soft);border-radius:10px;padding:14px 16px;margin-bottom:10px;background:var(--paper)}
   .kcard.locked{opacity:.72}
   .kcard .w{font-family:Georgia,serif;font-size:38px;font-weight:700;line-height:1.15;vertical-align:middle}
+  .kcard .w .kglyph{vertical-align:middle;margin:-4px 0}
   .kcard .rd{font-size:12px;color:var(--muted);font-style:italic;margin-left:8px}
   .kcard .meaning{font-size:14px;margin:6px 0;line-height:1.5}
   .kcard .comp{font-size:13.5px;color:var(--muted);line-height:1.8;border-top:1px dashed var(--line-soft);
@@ -280,6 +281,10 @@
       <button class="btn btn-ghost" id="revealBtn" type="button">Show every colour</button>
     </div>
     <div id="list-body"></div>
+    <p class="privacy" style="margin-top:16px">Characters are drawn from
+      <a href="https://kanjivg.tagaini.net" target="_blank" rel="noopener">KanjiVG</a> stroke data by Ulrich Apel,
+      used under <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener">CC BY-SA 3.0</a>,
+      so each part can be coloured separately. Which job a part does in a character is this app's own claim, not KanjiVG's.</p>
   </section>
 
   <section class="screen" id="scr-report">
@@ -300,6 +305,7 @@
 </div>
 </div>
 <div class="build-tag">Factory PoC 2026-08-19</div>
+<script src="../kanji-strokes.js"></script>
 <script src="lever.js"></script>
 <script>
 /* ============================================================
@@ -576,6 +582,16 @@ const UI_RUBY = { title:"かんじこうじょう", how:"ぶひんは <ruby>組<
      reveal — off by default, so the student view keeps the promise the
      home screen makes. */
   let listReveal=false;
+  /* The character itself, drawn stroke by stroke so each component takes
+     its own colour — the same move the English word list makes when it
+     colours "pan" and "sexual" inside Pansexual. Falls back to the plain
+     character where no stroke data is bundled. */
+  function glyph(c,lit){
+    if(window.KanjiGlyph && KanjiGlyph.has(c.ch)){
+      return KanjiGlyph.svg(c.ch, c.parts, { size:52, mono: lit?null:"var(--line)" });
+    }
+    return c.ch;
+  }
   function compLine(c){
     const built = listReveal || S.first["s:build:"+c.ch]!==undefined;
     return c.parts.map((p)=>{
@@ -595,7 +611,7 @@ const UI_RUBY = { title:"かんじこうじょう", how:"ぶひんは <ruby>組<
       const built = listReveal || S.first["s:build:"+c.ch]!==undefined;
       const d=document.createElement("div");
       d.className="kcard"+(built?"":" locked");
-      d.innerHTML='<span class="w">'+c.ch+'</span><span class="rd">'+esc(c.read)+'</span>'+
+      d.innerHTML='<span class="w">'+glyph(c,built)+'</span><span class="rd">'+esc(c.read)+'</span>'+
         '<div class="meaning">'+esc(c.gloss)+'</div>'+
         '<div class="comp">'+compLine(c)+
           (c.nosound?'<div class="kn">No part of '+c.ch+' gives you the reading. Some characters are like that, and it is worth knowing which.</div>':"")+
