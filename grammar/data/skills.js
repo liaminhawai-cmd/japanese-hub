@@ -322,10 +322,10 @@ window.SKILLS = [
       {
         type:"identify",
         prompt:"How would you answer this question?",
-        sentence:"これはあなたのかばんですか。 (Is this your bag?) — and it IS yours.",
-        options:["はい、わたしのです。","いいえ、わたしのです。","はい、ちがいます。","いいえ、そうです。"],
-        answer:"はい、わたしのです。",
-        explain:"はい = yes. わたしのです means 'it is mine' — の can stand in for the noun once it is obvious."
+        sentence:"これはあなたのかばんですか。 (Is this your bag?) It IS yours.",
+        options:["はい、そうです。","いいえ、そうです。","はい、ちがいます。","いいえ、ちがいます。"],
+        answer:"はい、そうです。",
+        explain:"はい goes with そうです (yes, that is right), いいえ goes with ちがいます (no, that is not it). The bag is yours, so the answer is はい、そうです。"
       }
     ]
   },
@@ -1118,6 +1118,60 @@ window.SKILLS = [
         answer:"でんしゃでいきます",
         explain:"で also marks the means of transport, how you go.",
         tags:["で"]
+      },
+      {
+        type:"identify",
+        prompt:"Which particle goes in the gap?",
+        sentence:"わたし＿＿がくせいです。 (I am a student.)",
+        options:["は","を","に","で"],
+        answer:"は",
+        explain:"は marks the topic, what the sentence is about.",
+        tags:["は"]
+      },
+      {
+        type:"identify",
+        prompt:"Which particle goes in the gap?",
+        sentence:"ほん＿＿よみます。 (I read a book.)",
+        options:["を","へ","で","と"],
+        answer:"を",
+        explain:"を marks the direct object, the thing being read.",
+        tags:["を"]
+      },
+      {
+        type:"identify",
+        prompt:"Which particle goes in the gap?",
+        sentence:"がっこう＿＿いきます。 (I go to school.)",
+        options:["に","を","が","と"],
+        answer:"に",
+        explain:"に marks the destination you are heading to.",
+        tags:["に"]
+      },
+      {
+        type:"identify",
+        prompt:"Which particle goes in the gap?",
+        sentence:"としょかん＿＿べんきょうします。 (I study at the library.)",
+        options:["で","に","を","が"],
+        answer:"で",
+        explain:"An action happens somewhere, so the place takes で. に here is the classic mix-up.",
+        tags:["で"]
+      },
+      {
+        type:"identify",
+        prompt:"Which particle matches the meaning: I ALSO want to go?",
+        sentence:"わたし＿＿いきたいです。",
+        options:["も","は","を","が"],
+        answer:"も",
+        explain:"も means also or too. It replaces は when you are adding yourself to the list.",
+        tags:["も"]
+      },
+      {
+        type:"identify",
+        prompt:"Which particle goes in the gap?",
+        sentence:"これはわたし＿＿ペンです。 (This is my pen.)",
+        options:["の","は","を","な"],
+        answer:"の",
+        explain:"の links owner and thing: わたしのペン, my pen.",
+        tags:["の"]
       }
     ]
   },
