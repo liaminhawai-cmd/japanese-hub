@@ -741,6 +741,46 @@ window.SKILLS = [
         cue:"見る",
         accept:["見て"],
         explain:"る-verbs (ichidan) drop る and add て. 見る → 見て"
+      },
+      {
+        type:"transform",
+        prompt:"Change to the te-form",
+        sentence:"のむ (to drink)",
+        accept:["のんで","飲んで"],
+        explain:"Verbs ending in む, ぬ, ぶ become んで. のむ to のんで",
+        tags:["mu-verbs"]
+      },
+      {
+        type:"transform",
+        prompt:"Change to the te-form",
+        sentence:"かく (to write)",
+        accept:["かいて","書いて"],
+        explain:"Verbs ending in く become いて. かく to かいて",
+        tags:["ku-verbs"]
+      },
+      {
+        type:"transform",
+        prompt:"Change to the te-form",
+        sentence:"あそぶ (to play)",
+        accept:["あそんで","遊んで"],
+        explain:"Verbs ending in ぶ become んで, the same as む verbs. あそぶ to あそんで",
+        tags:["bu-verbs"]
+      },
+      {
+        type:"transform",
+        prompt:"Change to the te-form",
+        sentence:"する (to do)",
+        accept:["して"],
+        explain:"する is irregular. Its te-form is して",
+        tags:["irregular"]
+      },
+      {
+        type:"transform",
+        prompt:"Change to the te-form",
+        sentence:"くる (to come)",
+        accept:["きて","来て"],
+        explain:"くる is irregular. Its te-form is きて",
+        tags:["irregular"]
       }
     ]
   },
@@ -878,6 +918,70 @@ window.SKILLS = [
         cue:"あらう",
         accept:["あらって","洗って"],
         explain:"う-verbs ending in う become って. あらう → あらって"
+      },
+      {
+        type:"transform",
+        prompt:"Change to てから (after doing...)",
+        sentence:"たべる (to eat)",
+        accept:["たべてから","食べてから"],
+        explain:"Make the te-form, then add から. たべる to たべて to たべてから",
+        tags:["てから"]
+      },
+      {
+        type:"transform",
+        prompt:"Change to てみます (try doing...)",
+        sentence:"のむ (to drink)",
+        accept:["のんでみます","飲んでみます"],
+        explain:"む verbs become んで, then add みます. のむ to のんで to のんでみます",
+        tags:["てみる"]
+      },
+      {
+        type:"transform",
+        prompt:"Change to てしまいました (finished doing...)",
+        sentence:"よむ (to read)",
+        accept:["よんでしまいました","読んでしまいました"],
+        explain:"Make the te-form, then add しまいました to show it was completely finished.",
+        tags:["てしまう"]
+      },
+      {
+        type:"transform",
+        prompt:"Change to てから (after doing...)",
+        sentence:"かえる (to return home)",
+        accept:["かえってから","帰ってから"],
+        explain:"る verbs of the u type become って. かえる to かえって to かえってから",
+        tags:["てから"]
+      },
+      {
+        type:"transform",
+        prompt:"Change to ていきます (do X and go)",
+        sentence:"もつ (to hold, to carry)",
+        accept:["もっていきます","持っていきます"],
+        explain:"つ verbs become って, then add いきます to show taking it away from here.",
+        tags:["ていく"]
+      },
+      {
+        type:"transform",
+        prompt:"Change to てきます (do X and come back)",
+        sentence:"かう (to buy)",
+        accept:["かってきます","買ってきます"],
+        explain:"う verbs become って, then add きます to show coming back here afterwards.",
+        tags:["てくる"]
+      },
+      {
+        type:"transform",
+        prompt:"Change to てみます (try doing...)",
+        sentence:"いく (to go)",
+        accept:["いってみます","行ってみます"],
+        explain:"いく is a special u verb, its te-form is いって. Then add みます.",
+        tags:["てみる"]
+      },
+      {
+        type:"transform",
+        prompt:"Change to てから (after doing...)",
+        sentence:"まつ (to wait)",
+        accept:["まってから","待ってから"],
+        explain:"つ verbs become って. まつ to まって to まってから",
+        tags:["てから"]
       }
     ]
   },
@@ -903,7 +1007,7 @@ window.SKILLS = [
         words:["ほん","を","よみます"],
         answer:"ほんをよみます",
         explain:"The object takes を and comes before the verb; the verb goes last. ほんを よみます。",
-        tags:["word-order"]
+        tags:["を"]
       },
       {
         type:"order",
@@ -911,7 +1015,7 @@ window.SKILLS = [
         words:["がっこう","へ","いきます"],
         answer:"がっこうへいきます",
         explain:"へ attaches to the destination (がっこうへ), and the verb goes last.",
-        tags:["word-order"]
+        tags:["へ"]
       },
       {
         type:"order",
@@ -919,7 +1023,7 @@ window.SKILLS = [
         words:["ともだち","と","はなします"],
         answer:"ともだちとはなします",
         explain:"と attaches to the person you do something with (ともだちと), and the verb goes last.",
-        tags:["word-order"]
+        tags:["と"]
       },
       {
         type:"gapfill",
@@ -974,6 +1078,46 @@ window.SKILLS = [
         cue:"(particle)",
         accept:["も"],
         explain:"も means 'also/too' — I also want to go to Japan."
+      },
+      {
+        type:"order",
+        prompt:"Put the tiles in order: (I) play in the park.",
+        words:["こうえん","で","あそびます"],
+        answer:"こうえんであそびます",
+        explain:"で marks the place where an action happens, and the verb goes last.",
+        tags:["で"]
+      },
+      {
+        type:"order",
+        prompt:"Put the tiles in order: (I) go to school.",
+        words:["がっこう","に","いきます"],
+        answer:"がっこうにいきます",
+        explain:"に marks the destination you are heading to, and the verb goes last.",
+        tags:["に"]
+      },
+      {
+        type:"order",
+        prompt:"Put the tiles in order: (I) drink water.",
+        words:["みず","を","のみます"],
+        answer:"みずをのみます",
+        explain:"を marks the direct object, the thing being drunk, and the verb goes last.",
+        tags:["を"]
+      },
+      {
+        type:"order",
+        prompt:"Put the tiles in order: (I) study at home.",
+        words:["うち","で","べんきょうします"],
+        answer:"うちでべんきょうします",
+        explain:"で marks where the studying happens. The verb goes last.",
+        tags:["で"]
+      },
+      {
+        type:"order",
+        prompt:"Put the tiles in order: (I) go by train.",
+        words:["でんしゃ","で","いきます"],
+        answer:"でんしゃでいきます",
+        explain:"で also marks the means of transport, how you go.",
+        tags:["で"]
       }
     ]
   },
@@ -1091,6 +1235,71 @@ window.SKILLS = [
         options:["neither...nor (も + negative)","also/too","emphasis","location"],
         answer:"neither...nor (も + negative)",
         explain:"も with a negative verb means 'neither... nor...' — no dogs and no cats."
+      },
+      {
+        type:"order",
+        prompt:"Put the tiles in order: (I) like tennis.",
+        words:["テニス","が","すきです"],
+        answer:"テニスがすきです",
+        explain:"すき takes が, not を. The thing you like is marked with が.",
+        tags:["が"]
+      },
+      {
+        type:"order",
+        prompt:"Put the tiles in order: (I) am in the classroom.",
+        words:["きょうしつ","に","います"],
+        answer:"きょうしつにいます",
+        explain:"います shows existence, so the place takes に, not で.",
+        tags:["に"]
+      },
+      {
+        type:"order",
+        prompt:"Put the tiles in order: let's meet at the cafe.",
+        words:["カフェ","で","あいましょう"],
+        answer:"カフェであいましょう",
+        explain:"あう is an action, so the place takes で.",
+        tags:["で"]
+      },
+      {
+        type:"order",
+        prompt:"Put the tiles in order: my little sister is a student.",
+        words:["いもうと","は","がくせいです"],
+        answer:"いもうとはがくせいです",
+        explain:"は marks the topic, what the sentence is about.",
+        tags:["は"]
+      },
+      {
+        type:"order",
+        prompt:"Put the tiles in order: (I) understand Japanese.",
+        words:["にほんご","が","わかります"],
+        answer:"にほんごがわかります",
+        explain:"わかる takes が, not を. This is the same pattern as すき.",
+        tags:["が"]
+      },
+      {
+        type:"order",
+        prompt:"Put the tiles in order: (I) want to go to the sea.",
+        words:["うみ","へ","いきたいです"],
+        answer:"うみへいきたいです",
+        explain:"へ shows the direction you are heading in.",
+        tags:["へ"]
+      },
+      {
+        type:"order",
+        prompt:"Put the tiles in order: (I) spoke with the teacher.",
+        words:["せんせい","と","はなしました"],
+        answer:"せんせいとはなしました",
+        explain:"と marks the person you do something together with.",
+        tags:["と"]
+      },
+      {
+        type:"order",
+        prompt:"Put the tiles in order: (I) use a pen or a pencil.",
+        words:["ペン","か","えんぴつ","を","つかいます"],
+        answer:"ペンかえんぴつをつかいます",
+        accept:["えんぴつかペンをつかいます"],
+        explain:"か joins two nouns as alternatives, either one or the other. Either noun may come first.",
+        tags:["か"]
       }
     ]
   },
@@ -1194,6 +1403,72 @@ window.SKILLS = [
         cue:"はなす",
         accept:["はなしたり"],
         explain:"う-verbs ending in す become したり in the たり form. はなす→はなしたり"
+      },
+      {
+        type:"order",
+        prompt:"Put the tiles in order: you had better take your medicine.",
+        words:["くすりを","のんだ","ほうがいいです"],
+        answer:"くすりをのんだほうがいいです",
+        explain:"たほうがいい uses the plain past form before ほうがいい.",
+        tags:["たほうがいい"]
+      },
+      {
+        type:"order",
+        prompt:"Put the tiles in order: if it rains, I will stay home.",
+        words:["あめが","ふったら","うちにいます"],
+        answer:"あめがふったらうちにいます",
+        explain:"たら attaches to the plain past form and sets up the condition first.",
+        tags:["たら"]
+      },
+      {
+        type:"order",
+        prompt:"Put the tiles in order: when you arrive at the station, please call.",
+        words:["えきに","ついたら","でんわしてください"],
+        answer:"えきについたらでんわしてください",
+        explain:"たら can mean when as well as if. The condition comes first.",
+        tags:["たら"]
+      },
+      {
+        type:"order",
+        prompt:"Put the tiles in order: you had better go to bed early.",
+        words:["はやく","ねた","ほうがいいです"],
+        answer:"はやくねたほうがいいです",
+        explain:"ねる is an ichidan verb, so the plain past is ねた.",
+        tags:["たほうがいい"]
+      },
+      {
+        type:"order",
+        prompt:"Put the tiles in order: (I) do things like reading books and watching TV.",
+        words:["ほんをよんだり","テレビをみたり","します"],
+        answer:"ほんをよんだりテレビをみたりします",
+        accept:["テレビをみたりほんをよんだりします"],
+        explain:"たり listing gives examples, not a full list. The order of the two examples can swap.",
+        tags:["たり"]
+      },
+      {
+        type:"order",
+        prompt:"Put the tiles in order: if I go to Japan, I will go to Kyoto.",
+        words:["にほんに","いったら","きょうとにいきます"],
+        answer:"にほんにいったらきょうとにいきます",
+        explain:"いく becomes いった in the plain past, so the たら form is いったら.",
+        tags:["たら"]
+      },
+      {
+        type:"order",
+        prompt:"Put the tiles in order: you had better rest a lot.",
+        words:["たくさん","やすんだ","ほうがいいです"],
+        answer:"たくさんやすんだほうがいいです",
+        explain:"やすむ is a む verb, so the plain past is やすんだ.",
+        tags:["たほうがいい"]
+      },
+      {
+        type:"order",
+        prompt:"Put the tiles in order: on the weekend I do things like cleaning and shopping.",
+        words:["そうじをしたり","かいものをしたり","します"],
+        answer:"そうじをしたりかいものをしたりします",
+        accept:["かいものをしたりそうじをしたりします"],
+        explain:"Both activities take たり, and either one may be listed first.",
+        tags:["たり"]
       }
     ]
   },
@@ -1237,6 +1512,70 @@ window.SKILLS = [
         cue:"見る",
         accept:["見に"],
         explain:"Drop ます from the stem and add に. 見ます→見に"
+      },
+      {
+        type:"transform",
+        prompt:"Change to STEM + たいです (want to...)",
+        sentence:"かう (to buy)",
+        accept:["かいたいです","買いたいです"],
+        explain:"The stem of かう is かい. Add たいです. かいます to かいたいです",
+        tags:["u-verbs"]
+      },
+      {
+        type:"transform",
+        prompt:"Change to STEM + たいです (want to...)",
+        sentence:"のむ (to drink)",
+        accept:["のみたいです","飲みたいです"],
+        explain:"The stem of のむ is のみ. Add たいです. のみます to のみたいです",
+        tags:["u-verbs"]
+      },
+      {
+        type:"transform",
+        prompt:"Change to STEM + たいです (want to...)",
+        sentence:"たべる (to eat)",
+        accept:["たべたいです","食べたいです"],
+        explain:"Ichidan verbs drop る to make the stem. たべます to たべたいです",
+        tags:["ichidan-verbs"]
+      },
+      {
+        type:"transform",
+        prompt:"Change to STEM + たいです (want to...)",
+        sentence:"する (to do)",
+        accept:["したいです"],
+        explain:"The stem of する is し. Add たいです. します to したいです",
+        tags:["irregular"]
+      },
+      {
+        type:"transform",
+        prompt:"Change to STEM + たいです (want to...)",
+        sentence:"くる (to come)",
+        accept:["きたいです","来たいです"],
+        explain:"The stem of くる is き. Add たいです. きます to きたいです",
+        tags:["irregular"]
+      },
+      {
+        type:"transform",
+        prompt:"Change to STEM + たいです (want to...)",
+        sentence:"あう (to meet)",
+        accept:["あいたいです","会いたいです"],
+        explain:"The stem of あう is あい. Add たいです. あいます to あいたいです",
+        tags:["u-verbs"]
+      },
+      {
+        type:"transform",
+        prompt:"Change to STEM + に行きます (go in order to...)",
+        sentence:"かう (to buy)",
+        accept:["かいに行きます","かいにいきます","買いに行きます"],
+        explain:"Use the stem, then に行きます to show the purpose of going.",
+        tags:["purpose"]
+      },
+      {
+        type:"transform",
+        prompt:"Change to STEM + に行きます (go in order to...)",
+        sentence:"みる (to see, to watch)",
+        accept:["みに行きます","みにいきます","見に行きます"],
+        explain:"Ichidan verbs drop る to make the stem, then add に行きます.",
+        tags:["purpose"]
       }
     ]
   },
@@ -1365,6 +1704,70 @@ window.SKILLS = [
         cue:"見る",
         accept:["見すぎました"],
         explain:"Drop ます from the stem and add すぎました. 見ます→見すぎました"
+      },
+      {
+        type:"transform",
+        prompt:"Change to STEM + そうです (looks like...)",
+        sentence:"つかれる (to get tired)",
+        accept:["つかれそうです","疲れそうです"],
+        explain:"Ichidan verbs drop る to make the stem, then add そうです.",
+        tags:["そう"]
+      },
+      {
+        type:"transform",
+        prompt:"Change to STEM + かた (the way of doing...)",
+        sentence:"およぐ (to swim)",
+        accept:["およぎかた","泳ぎかた","泳ぎ方"],
+        explain:"The stem of およぐ is およぎ. Add かた to mean the way of swimming.",
+        tags:["かた"]
+      },
+      {
+        type:"transform",
+        prompt:"Change to STEM + にくいです (difficult to...)",
+        sentence:"かく (to write)",
+        accept:["かきにくいです","書きにくいです"],
+        explain:"The stem of かく is かき. Add にくいです to say it is hard to do.",
+        tags:["にくい"]
+      },
+      {
+        type:"transform",
+        prompt:"Change to STEM + やすいです (easy to...)",
+        sentence:"わかる (to understand)",
+        accept:["わかりやすいです","分かりやすいです"],
+        explain:"The stem of わかる is わかり. Add やすいです to say it is easy to do.",
+        tags:["やすい"]
+      },
+      {
+        type:"transform",
+        prompt:"Change to STEM + ながら (while doing...)",
+        sentence:"あるく (to walk)",
+        accept:["あるきながら","歩きながら"],
+        explain:"The stem of あるく is あるき. ながら shows two actions by the same person at once.",
+        tags:["ながら"]
+      },
+      {
+        type:"transform",
+        prompt:"Change to STEM + すぎました (did too much...)",
+        sentence:"のむ (to drink)",
+        accept:["のみすぎました","飲みすぎました"],
+        explain:"The stem of のむ is のみ. Add すぎました to say it was overdone.",
+        tags:["すぎる"]
+      },
+      {
+        type:"transform",
+        prompt:"Change to STEM + やすいです (easy to...)",
+        sentence:"つかう (to use)",
+        accept:["つかいやすいです","使いやすいです"],
+        explain:"The stem of つかう is つかい. Add やすいです to say it is easy to use.",
+        tags:["やすい"]
+      },
+      {
+        type:"transform",
+        prompt:"Change to STEM + かた (the way of doing...)",
+        sentence:"はなす (to speak)",
+        accept:["はなしかた","話しかた","話し方"],
+        explain:"The stem of はなす is はなし. Add かた to mean the way of speaking.",
+        tags:["かた"]
       }
     ]
   },
@@ -1699,6 +2102,70 @@ window.SKILLS = [
         cue:"きます",
         accept:["こなくても"],
         explain:"来ます is irregular — its plain negative is こない. きます→こない→こなくても"
+      },
+      {
+        type:"transform",
+        prompt:"Change to ないほうがいいです (better not to...)",
+        sentence:"のむ (to drink)",
+        accept:["のまないほうがいいです","飲まないほうがいいです"],
+        explain:"Make the plain negative, then add ほうがいいです. のむ to のまない to のまないほうがいいです",
+        tags:["u-verbs"]
+      },
+      {
+        type:"transform",
+        prompt:"Change to なければなりません (must...)",
+        sentence:"いく (to go)",
+        accept:["いかなければなりません","行かなければなりません"],
+        explain:"Make the plain negative, drop い and add ければなりません. いく to いかない to いかなければなりません",
+        tags:["u-verbs"]
+      },
+      {
+        type:"transform",
+        prompt:"Change to なくてもいいです (do not have to...)",
+        sentence:"する (to do)",
+        accept:["しなくてもいいです"],
+        explain:"する is irregular. Its plain negative is しない, giving しなくてもいいです",
+        tags:["irregular"]
+      },
+      {
+        type:"transform",
+        prompt:"Change to なくてもいいです (do not have to...)",
+        sentence:"くる (to come)",
+        accept:["こなくてもいいです","来なくてもいいです"],
+        explain:"くる is irregular. Its plain negative is こない, giving こなくてもいいです",
+        tags:["irregular"]
+      },
+      {
+        type:"transform",
+        prompt:"Change to ないほうがいいです (better not to...)",
+        sentence:"たべる (to eat)",
+        accept:["たべないほうがいいです","食べないほうがいいです"],
+        explain:"Ichidan verbs drop る and add ない. たべる to たべない to たべないほうがいいです",
+        tags:["ichidan-verbs"]
+      },
+      {
+        type:"transform",
+        prompt:"Change to なければなりません (must...)",
+        sentence:"まつ (to wait)",
+        accept:["またなければなりません","待たなければなりません"],
+        explain:"つ verbs change つ to た before ない. まつ to またない to またなければなりません",
+        tags:["u-verbs"]
+      },
+      {
+        type:"transform",
+        prompt:"Change to ないほうがいいです (better not to...)",
+        sentence:"はなす (to speak)",
+        accept:["はなさないほうがいいです","話さないほうがいいです"],
+        explain:"す verbs change す to さ before ない. はなす to はなさない to はなさないほうがいいです",
+        tags:["u-verbs"]
+      },
+      {
+        type:"transform",
+        prompt:"Change to なければなりません (must...)",
+        sentence:"おきる (to get up)",
+        accept:["おきなければなりません","起きなければなりません"],
+        explain:"Ichidan verbs drop る and add ない. おきる to おきない to おきなければなりません",
+        tags:["ichidan-verbs"]
       }
     ]
   },
