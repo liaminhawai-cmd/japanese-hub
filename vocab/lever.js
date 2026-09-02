@@ -5,7 +5,10 @@
    file, hands it a dictionary of four-form strings, and gets:
 
      - a big page lever mounted in the margin (fixed, follows you
-       down the page), pulling kanji -> +kana -> +romaji -> English
+       down the page), pulling kanji -> +kana -> English. The lever
+       has three stops. The romaji form (index 2) is still carried
+       in every string so old data keeps working, but the lever
+       never stops there: the top of the track is English.
      - small section levers for sub-sections, which are MORE
        FORGIVING: they recoil far slower, and they pause entirely
        while your pointer is inside the section you are reading
@@ -19,24 +22,34 @@
 
    No dependencies, no build step. It injects its own CSS so a
    page needs exactly one script tag. Forms are always
-   [kanji, kana, romaji, English].
+   [kanji, kana, romaji, English]; form() reports a FORM index
+   (0, 1 or 3), never a stop index, so consumers can keep indexing
+   their four-form arrays.
    ============================================================ */
 window.HubLever = (function () {
   "use strict";
 
-  var STAGE_NAMES = ["漢字", "かな", "abc", "EN"];
-  /* The stops are deliberately UNEVEN. Adding furigana is a nudge; romaji
-     is a real pull; English is a long stretch to the bottom of the track.
-     The mechanic then says what the pedagogy says: the further you reach
-     from Japanese, the more work it takes and the harder the spring pulls
+  var STAGE_NAMES = ["漢字", "かな", "EN"];
+  /* The stops are deliberately UNEVEN. Adding furigana is a nudge;
+     English is a long stretch to the bottom of the track. The mechanic
+     then says what the pedagogy says: the further you reach from
+     Japanese, the more work it takes and the harder the spring pulls
      you back. Percentages down the track. */
-  var STOPS = [10, 24, 48, 90];
-  var SPAN = STOPS[3] - STOPS[0];
-  var STAGE_ARIA = ["kanji", "kana", "romaji", "English"];
+  var STOPS = [10, 26, 90];
+  var FORMS = [0, 1, 3];   // stop index -> form index in a four-form string
+  var LAST = STOPS.length - 1;
+  var SPAN = STOPS[LAST] - STOPS[0];
+  var STAGE_ARIA = ["kanji", "kana", "English"];
+  // the stop a form index sits on (form 2, romaji, rounds down to kana)
+  function stopOf(f) {
+    var i = 0;
+    for (var k = 0; k < FORMS.length; k++) if (FORMS[k] <= f) i = k;
+    return i;
+  }
 
   var STR = {};        // key -> [kanji, kana, romaji, English]
   var RUBY = {};       // key -> kanji with <ruby> furigana, for stage 1
-  var form = 0;        // the page stage: 0 = kanji
+  var form = 0;        // the page FORM index: 0 kanji, 1 kana, 3 English
   var onChange = null;
   var page = null;
   var sections = [];
@@ -113,6 +126,11 @@ window.HubLever = (function () {
     "  .lever-notch-label{font-size:9.5px;right:calc(100% + 8px)}",
     "  .lever-cap{display:none}",
     "  .lever-page .lever-stage{font-size:10.5px;min-height:13px}}",
+    /* the way back to the main hub, from anywhere */
+    ".hub-home{position:fixed;top:10px;left:10px;z-index:70;font-size:11.5px;font-weight:800;letter-spacing:.3px;",
+    "  color:var(--muted);background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:5px 12px;",
+    "  text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.08)}",
+    ".hub-home:hover{color:var(--accent);border-color:var(--accent)}",
     "@media (prefers-reduced-motion: reduce){.lever-handle{transition:none}",
     "  .lever-handle.wobble,.lever-notch.hit{animation:none}}"
   ].join("\n");
@@ -131,20 +149,17 @@ window.HubLever = (function () {
     var f = stage === undefined ? form : stage;
     return arr[f] || arr[3];
   }
-  // 0 kanji. 1 kanji + furigana where authored, else the kana form.
-  // 2 and 3 stack romaji (and English) UNDER the Japanese on .jt-tap labels,
-  // and replace it outright on plain buttons where space is tight.
+  // stage is a FORM index. 0 kanji. 1 kanji + furigana where authored,
+  // else the kana form. Anything above 1 is English: stacked UNDER the
+  // Japanese on .jt-tap labels, replacing it outright on plain buttons
+  // where space is tight.
   function jtHtml(key, stage, stacked) {
     var f = STR[key];
     if (!f) return null;
     if (stage === 0) return esc(f[0]);
     if (stage === 1) return RUBY[key] || esc(f[1]);
-    if (stacked) {
-      var out = (RUBY[key] || esc(f[1])) + '<span class="jt-sub">' + esc(f[2]) + "</span>";
-      if (stage === 3) out += '<span class="jt-sub">' + esc(f[3]) + "</span>";
-      return out;
-    }
-    return esc(f[stage]);
+    if (stacked) return (RUBY[key] || esc(f[1])) + '<span class="jt-sub">' + esc(f[3]) + "</span>";
+    return esc(f[3]);
   }
   function apply(root) {
     (root || document).querySelectorAll("[data-jt]").forEach(function (el) {
@@ -166,11 +181,11 @@ window.HubLever = (function () {
     var pct = function (i) { return STOPS[i]; };
     // how much longer this stop's recoil takes, given how far it has to travel
     var gapWeight = function (from) {
-      return (STOPS[from] - STOPS[from - 1]) / (SPAN / 3);
+      return (STOPS[from] - STOPS[from - 1]) / (SPAN / LAST);
     };
     var notchLabels = [];
     var i, n, lab;
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < STOPS.length; i++) {
       n = document.createElement("span");
       n.className = "lever-notch";
       n.style.top = pct(i) + "%";
@@ -188,6 +203,7 @@ window.HubLever = (function () {
     handle.className = "lever-handle";
     track.appendChild(handle);
 
+    // stage is a STOP index here; opts.floor and opts.onStage speak stops too
     var stage = 0, timer = null, timer2 = null, dragging = false, resting = false;
     var floor = opts.floor || function () { return 0; };
     var calm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -211,7 +227,7 @@ window.HubLever = (function () {
       notchLabels.forEach(function (l, i2) { l.classList.toggle("on", i2 === stage); });
     }
     function set(s, fromRecoil, snapped) {
-      s = Math.max(floor(), Math.min(3, s));
+      s = Math.max(floor(), Math.min(LAST, s));
       if (s === stage) { if (!fromRecoil) armRecoil(); return; }
       stage = s;
       render();
@@ -243,7 +259,7 @@ window.HubLever = (function () {
       var r = track.getBoundingClientRect();
       var pos = Math.max(0, Math.min(1, (e.clientY - r.top) / r.height)) * 100;
       var best = 0;
-      for (var k = 1; k < 4; k++) {
+      for (var k = 1; k < STOPS.length; k++) {
         if (Math.abs(pos - STOPS[k]) < Math.abs(pos - STOPS[best])) best = k;
       }
       set(best);
@@ -268,7 +284,7 @@ window.HubLever = (function () {
     root.addEventListener("keydown", function (e) {
       if (e.key === "ArrowDown" || e.key === "ArrowRight") { set(stage + 1); e.preventDefault(); }
       else if (e.key === "ArrowUp" || e.key === "ArrowLeft") { set(stage - 1); e.preventDefault(); }
-      else if (e.key === "End") { set(3); e.preventDefault(); }
+      else if (e.key === "End") { set(LAST); e.preventDefault(); }
       else if (e.key === "Home" || e.key === "Escape") { set(floor()); e.preventDefault(); }
     });
     render();
@@ -291,13 +307,13 @@ window.HubLever = (function () {
   var tapTimers = new WeakMap();
   function tapBump(el) {
     var own = el.dataset.form !== undefined ? parseInt(el.dataset.form, 10) : form;
-    el.dataset.form = Math.min(3, own + 1);
+    el.dataset.form = FORMS[Math.min(LAST, stopOf(own) + 1)];
     apply();
     clearTimeout(tapTimers.get(el));
     var decay = function () {
       var cur = parseInt(el.dataset.form, 10);
       if (isNaN(cur) || cur <= form) { delete el.dataset.form; apply(); return; }
-      el.dataset.form = cur - 1;
+      el.dataset.form = FORMS[Math.max(0, stopOf(cur) - 1)];
       apply();
       tapTimers.set(el, setTimeout(decay, 1667));
     };
@@ -306,7 +322,7 @@ window.HubLever = (function () {
 
   /* ---------------- mounting ---------------- */
   function plateHtml(cap) {
-    return (cap ? '<div class="lever-cap" aria-hidden="true">ことば<br>レバー</div>' : "") +
+    return (cap ? '<div class="lever-cap" aria-hidden="true">Language<br>lever</div>' : "") +
       '<div class="lever-track"></div><div class="lever-stage"></div>';
   }
   function mountPage(opts) {
@@ -317,19 +333,19 @@ window.HubLever = (function () {
     host.setAttribute("role", "slider");
     host.setAttribute("aria-label", "Language support lever for the whole page");
     host.setAttribute("aria-valuemin", "0");
-    host.setAttribute("aria-valuemax", "3");
+    host.setAttribute("aria-valuemax", String(LAST));
     host.setAttribute("aria-valuenow", "0");
-    host.title = "Pull down: kanji, kana, romaji, English. It springs back, and arrow keys work too.";
+    host.title = "Pull down: kanji, kana, English. It springs back, and arrow keys work too.";
     host.innerHTML = plateHtml(true);
     document.body.appendChild(host);
     return createLever(host, {
       stepMs: opts.pageStepMs || 845,
       onStage: function (s) {
-        form = s;
+        form = FORMS[s];
         document.querySelectorAll("[data-jt]").forEach(function (el) { delete el.dataset.form; });
         apply();
         sections.forEach(function (sec) { sec.api.floorChanged(); });
-        if (onChange) onChange(s);
+        if (onChange) onChange(form);
       }
     });
   }
@@ -345,16 +361,17 @@ window.HubLever = (function () {
       host.setAttribute("role", "slider");
       host.setAttribute("aria-label", "Language support lever for this section");
       host.setAttribute("aria-valuemin", "0");
-      host.setAttribute("aria-valuemax", "3");
+      host.setAttribute("aria-valuemax", String(LAST));
       host.setAttribute("aria-valuenow", "0");
       if (!host.title) host.title = "Pull down for more help with this section. It lets go slowly.";
       host.innerHTML = plateHtml(false);
       var api = createLever(host, {
         stepMs: opts.sectionStepMs || 4000,
-        floor: function () { return form; },
+        floor: function () { return stopOf(form); },
         onStage: function (s) {
+          var f = FORMS[s];
           scope.querySelectorAll("[data-jt]").forEach(function (el) {
-            if (s <= form) delete el.dataset.form; else el.dataset.form = s;
+            if (f <= form) delete el.dataset.form; else el.dataset.form = f;
           });
           apply();
         }
@@ -368,12 +385,24 @@ window.HubLever = (function () {
     });
   }
 
+  /* Every tool page carries the same fixed chip back to the hub landing
+     page. Tools live one folder down, so the link is always "../". */
+  function mountHub() {
+    if (document.querySelector(".hub-home")) return;
+    var a = document.createElement("a");
+    a.className = "hub-home";
+    a.href = "../";
+    a.textContent = "⌂ にほんごハブ · Hub";
+    a.title = "Back to the Japanese Hub";
+    document.body.appendChild(a);
+  }
   function init(opts) {
     opts = opts || {};
     STR = opts.strings || {};
     RUBY = opts.ruby || {};
     onChange = opts.onChange || null;
     injectCss();
+    if (opts.hub !== false) mountHub();
     if (opts.pageLever !== false) page = mountPage(opts);
     mountSections(opts);
     document.querySelectorAll(".jt-tap").forEach(function (el) {
@@ -393,6 +422,7 @@ window.HubLever = (function () {
     strings: function () { return STR; },
     STAGE_NAMES: STAGE_NAMES,
     STAGE_ARIA: STAGE_ARIA,
-    STOPS: STOPS
+    STOPS: STOPS,
+    FORMS: FORMS
   };
 })();

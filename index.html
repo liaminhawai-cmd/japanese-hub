@@ -23,9 +23,10 @@
   *{margin:0;padding:0;box-sizing:border-box}
   body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:var(--bg);color:var(--ink);
        line-height:1.5;min-height:100vh;padding:16px}
-  .wrap{max-width:860px;margin:0 auto}
+  .wrap{max-width:min(96vw,1180px);margin:0 auto}
   header{text-align:center;padding:34px 16px 26px}
   h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(1.6rem,5vw,2.3rem);letter-spacing:.5px}
+  h1 small{display:block;font-size:.5em;color:var(--muted);font-weight:400;letter-spacing:.12em;font-family:'Segoe UI',Tahoma,sans-serif}
   .jp{display:block;font-size:.55em;color:var(--muted);letter-spacing:.18em;margin-bottom:6px;font-weight:400}
   header p{color:var(--muted);font-size:.95rem;max-width:560px;margin:10px auto 0}
   h2{font-family:Georgia,serif;font-size:1.05rem;padding-bottom:8px;border-bottom:2px solid var(--line-soft);margin-top:26px}
@@ -38,7 +39,7 @@
   a.card:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
   .card .emoji{font-size:1.6rem}
   .card h3{font-size:1rem;font-family:Georgia,serif}
-  .card h3 small{display:block;font-weight:400;color:var(--muted);font-size:.78em;font-family:'Segoe UI',Tahoma,sans-serif}
+  .card h3 small{display:inline;font-weight:400;color:var(--muted);font-size:.78em;font-family:'Segoe UI',Tahoma,sans-serif;margin-left:4px}
   .card p{font-size:.85rem;color:var(--muted)}
   .poc{position:absolute;top:10px;right:10px;font-size:.62rem;font-weight:700;color:var(--accent);
        border:1px solid var(--accent);border-radius:10px;padding:2px 8px;letter-spacing:.03em}
@@ -53,186 +54,106 @@
 <div class="wrap">
 
   <header>
-    <h1 class="jt-tap" data-jt="title">にほんごハブ</h1>
-    <p class="jt-tap" data-jt="intro">Practice tools for secondary Japanese.</p>
+    <h1>にほんごハブ <small>Japanese Hub</small></h1>
+    <p>中高生のための日本語れんしゅう道具 · Practice tools for secondary Japanese. Nothing to install, no account, no login.</p>
   </header>
 
   <main id="tools">
-    <h2 data-jt="hUnits">単元</h2>
+    <h2>単元<small>Units</small></h2>
     <div class="grid">
       <a class="card" href="walk/">
         <span class="poc">ためし中 · trial</span>
         <span class="emoji">🚶</span>
-        <h3 data-jt="cWalk">単元の道</h3>
-        <p data-jt="bWalk">7年生から12年生まで、ぜんぶの単元を五つのステップで</p>
+        <h3>単元の道 <small>Unit Walk</small></h3>
+        <p>Every unit from Year 7 to Year 12 as a stepped walk: gap check, words, building, talk, grammar, craft.</p>
       </a>
       <a class="card" href="unit10/">
         <span class="poc">ためし中 · trial</span>
         <span class="emoji">🗂️</span>
-        <h3 data-jt="cUnit10">ユニット10</h3>
-        <p data-jt="bUnit10">できること・すきなこと。ことばから どっかいまで、ぜんぶ</p>
+        <h3>ユニット10 <small>Unit 10</small></h3>
+        <p>Abilities and preferences: the whole unit, from frontloaded vocabulary through the grammar to a tiered reading, with a report.</p>
       </a>
     </div>
 
-    <h2 data-jt="hGrammar">文法</h2>
+    <h2>文法<small>Grammar</small></h2>
     <div class="grid">
       <a class="card" href="grammar/">
         <span class="emoji">🧩</span>
-        <h3 data-jt="cGrammar">文法ハブ</h3>
-        <p data-jt="bGrammar">Prep から 12年までの文法の道すじ</p>
+        <h3>文法ハブ <small>Grammar Hub</small></h3>
+        <p>The Prep-to-12 grammar timeline. Pick a step, drill it until mastered, get a report.</p>
       </a>
     </div>
 
-    <h2 data-jt="hWords">ことば</h2>
+    <h2>ことば<small>Words and vocabulary</small></h2>
     <div class="grid">
       <a class="card" href="words/">
         <span class="poc">ためし中 · trial</span>
         <span class="emoji">🧱</span>
-        <h3 data-jt="cWords">ことばラボ</h3>
-        <p data-jt="bWords">漢字のかぞくから、ことばを組み立てる</p>
+        <h3>ことばラボ <small>Word Lab</small></h3>
+        <p>Kanji families: meet the words, build them from their parts, work out what they mean.</p>
       </a>
       <a class="card" href="vocab/">
         <span class="poc">ためし中 · trial</span>
         <span class="emoji">📚</span>
-        <h3 data-jt="cVocab">ことばのホーム</h3>
-        <p data-jt="bVocab">スイートのぜんぶのことば、一つの倉庫に</p>
+        <h3>ことばのホーム <small>Vocab Hub</small></h3>
+        <p>Every word in the suite in one warehouse: browse by year or unit, see a word's parts and every unit it lives in, quiz any shelf.</p>
       </a>
       <a class="card" href="builder/">
         <span class="poc">ためし中 · trial</span>
         <span class="emoji">🧰</span>
-        <h3 data-jt="cBuilder">単語ビルダー</h3>
-        <p data-jt="bBuilder">ユニットのことばぜんぶを、一つの漢字バンクから</p>
+        <h3>単語ビルダー <small>Word Builder</small></h3>
+        <p>A whole unit's word list on one page, built from one shared bank of kanji. A kanji is never used up.</p>
       </a>
       <a class="card" href="kanji/">
         <span class="poc">ためし中 · trial</span>
         <span class="emoji">🏭</span>
-        <h3 data-jt="cKanji">かんじこうじょう</h3>
-        <p data-jt="bKanji">ぶひんから漢字をつくる。いみの部分と、おとの部分</p>
+        <h3>かんじこうじょう <small>Kanji Factory</small></h3>
+        <p>Build characters from their parts, and see which part carries the meaning and which carries the sound.</p>
       </a>
       <a class="card" href="yomiwake/">
         <span class="poc">ためし中 · trial</span>
         <span class="emoji">🔀</span>
-        <h3 data-jt="cYomi">よみわけ</h3>
-        <p data-jt="bYomi">同じ漢字でも、ことばがかわれば読み方もかわる</p>
+        <h3>よみわけ <small>Which Reading?</small></h3>
+        <p>The same kanji is read differently from word to word: 兄 vs お兄さん. Which reading is it here?</p>
       </a>
     </div>
 
-    <h2 data-jt="hSpeak">話す・聞く</h2>
+    <h2>話す・聞く<small>Speaking and listening</small></h2>
     <div class="grid">
       <a class="card" href="oral/">
         <span class="poc">ためし中 · trial</span>
         <span class="emoji">🎙️</span>
-        <h3 data-jt="cOral">話す練習</h3>
-        <p data-jt="bOral">口頭試験の47問、音声つき、三つのレベル</p>
+        <h3>話す練習 <small>Oral practice</small></h3>
+        <p>The 47 oral exam questions with audio, in three tiers. Answer out loud, tick your own boxes.</p>
       </a>
     </div>
 
-    <h2 data-jt="hWrite">書く</h2>
+    <h2>書く<small>Writing</small></h2>
     <div class="grid">
       <a class="card" href="levelup/">
         <span class="poc">ためし中 · trial</span>
         <span class="emoji">🪜</span>
-        <h3 data-jt="cLevel">レベルアップの壁</h3>
-        <p data-jt="bLevel">一つの課題を、学年ごとに。次の段が見える</p>
+        <h3>レベルアップの壁 <small>Level Up Wall</small></h3>
+        <p>One task, answered at every level from Prep to Year 12. Find your rung, then look at the one above it.</p>
       </a>
       <a class="card" href="writing/">
         <span class="poc">ためし中 · trial</span>
         <span class="emoji">✍️</span>
-        <h3 data-jt="cWriting">書き方の壁</h3>
-        <p data-jt="bWriting">いい答えが何をしているか、一手ずつ</p>
+        <h3>書き方の壁 <small>Writing Wall</small></h3>
+        <p>What a top answer actually does, move by move. Tap the coloured phrases.</p>
       </a>
     </div>
 
-    <p class="building">「ためし中」のカードは先生がチェック中です。Cards marked ためし中 are trial versions awaiting teacher review — they may change or disappear.</p>
+    <p class="building">「ためし中」のカードは先生がチェック中です。Cards marked ためし中 are trial versions awaiting teacher review. They may change or disappear.</p>
 
     <p class="note">🔒 This hub never asks for your name or student ID, and nothing you do here is sent anywhere. Reports are shown on screen for you to copy or hand in yourself.</p>
-    <span id="toolLever" data-scope="#tools" title="Pull down for more help with these cards. It lets go slowly."></span>
   </main>
 
   <footer>
-    <div class="build-tag">JH build 2026-08-20e</div>
+    <div class="build-tag">JH build 2026-09-02</div>
   </footer>
 
 </div>
-<script src="lever.js"></script>
-<script>
-/* Japanese-led landing page. Forms: [kanji, kana, romaji, English]. */
-window.HubLever.init({
-  strings: {
-    title:    ["にほんごハブ","にほんごハブ","Nihongo habu","Japanese Hub"],
-    intro:    ["中高生のための日本語れんしゅう道具","ちゅうこうせいのためのにほんごれんしゅうどうぐ",
-               "chūkōsei no tame no nihongo renshū dōgu",
-               "Practice tools for secondary Japanese. Nothing to install, no account, no login."],
-    hUnits:   ["単元","たんげん","tangen","Units"],
-    cVocab:   ["ことばのホーム","ことばのホーム","kotoba no hōmu","Vocab Hub"],
-    bVocab:   ["スイートのぜんぶのことば、一つの倉庫に",
-               "スイートのぜんぶのことば、ひとつのそうこに",
-               "suīto no zenbu no kotoba, hitotsu no sōko ni",
-               "Every word in the suite in one warehouse: browse by year or unit, see a word's parts and every unit it lives in, quiz any shelf."],
-    cWalk:    ["単元の道","たんげんのみち","tangen no michi","Unit Walk"],
-    bWalk:    ["7年生から12年生まで、ぜんぶの単元を五つのステップで",
-               "しちねんせいからじゅうにねんせいまで、ぜんぶのたんげんをいつつのステップで",
-               "shichinensei kara jūninensei made, zenbu no tangen o itsutsu no suteppu de",
-               "Every unit from Year 7 to Year 12 as a stepped walk: gap check, words, building, talk, grammar, craft."],
-    cUnit10:  ["ユニット10","ユニット10","yunitto 10","Unit 10"],
-    bUnit10:  ["できること・すきなこと。ことばから どっかいまで、ぜんぶ",
-               "できること・すきなこと。ことばから どっかいまで、ぜんぶ",
-               "dekiru koto, suki na koto. kotoba kara dokkai made, zenbu",
-               "Abilities and preferences: the whole unit, from frontloaded vocabulary through the grammar to a tiered reading, with a report."],
-    hGrammar: ["文法","ぶんぽう","bunpō","Grammar"],
-    hWords:   ["ことば","ことば","kotoba","Words and vocabulary"],
-    hSpeak:   ["話す・聞く","はなす・きく","hanasu, kiku","Speaking and listening"],
-    hWrite:   ["書く","かく","kaku","Writing"],
-    cGrammar: ["文法ハブ","ぶんぽうハブ","bunpō habu","Grammar Hub"],
-    cWords:   ["ことばラボ","ことばラボ","kotoba rabo","Word Lab"],
-    cBuilder: ["単語ビルダー","たんごビルダー","tango birudā","Word Builder"],
-    bBuilder: ["ユニットのことばぜんぶを、一つの漢字バンクから",
-               "ユニットのことばぜんぶを、ひとつのかんじバンクから",
-               "yunitto no kotoba zenbu o, hitotsu no kanji banku kara",
-               "A whole unit's word list on one page, built from one shared bank of kanji. A kanji is never used up."],
-    cKanji:   ["かんじこうじょう","かんじこうじょう","kanji kōjō","Kanji Factory"],
-    bKanji:   ["ぶひんから漢字をつくる。いみの部分と、おとの部分",
-               "ぶひんからかんじをつくる。いみのぶぶんと、おとのぶぶん",
-               "buhin kara kanji o tsukuru: imi no bubun to, oto no bubun",
-               "Build characters from their parts, and see which part carries the meaning and which carries the sound."],
-    cYomi:    ["よみわけ","よみわけ","yomiwake","Which Reading?"],
-    bYomi:    ["同じ漢字でも、ことばがかわれば読み方もかわる",
-               "おなじかんじでも、ことばがかわればよみかたもかわる",
-               "onaji kanji demo, kotoba ga kawareba yomikata mo kawaru",
-               "The same kanji is read differently from word to word: 兄 vs お兄さん. Which reading is it here?"],
-    cOral:    ["話す練習","はなすれんしゅう","hanasu renshū","Oral practice"],
-    cLevel:   ["レベルアップの壁","レベルアップのかべ","reberu appu no kabe","Level Up Wall"],
-    cWriting: ["書き方の壁","かきかたのかべ","kakikata no kabe","Writing Wall"],
-    bGrammar: ["Prep から 12年までの文法の道すじ","プレップから12ねんまでのぶんぽうのみちすじ",
-               "pureppu kara 12-nen made no bunpō no michisuji",
-               "The Prep-to-12 grammar timeline. Pick a step, drill it until mastered, get a report."],
-    bWords:   ["漢字のかぞくから、ことばを組み立てる","かんじのかぞくから、ことばをくみたてる",
-               "kanji no kazoku kara, kotoba o kumitateru",
-               "Kanji families: meet the words, build them from their parts, work out what they mean."],
-    bOral:    ["口頭試験の47問、音声つき、三つのレベル","こうとうしけんの47もん、おんせいつき、みっつのレベル",
-               "kōtō shiken no 47 mon, onsei tsuki, mittsu no reberu",
-               "The 47 oral exam questions with audio, in three tiers. Answer out loud, tick your own boxes."],
-    bLevel:   ["一つの課題を、学年ごとに。次の段が見える","ひとつのかだいを、がくねんごとに。つぎのだんがみえる",
-               "hitotsu no kadai o, gakunen goto ni. tsugi no dan ga mieru",
-               "One task, answered at every level from Prep to Year 12. Find your rung, then look at the one above it."],
-    bWriting: ["いい答えが何をしているか、一手ずつ","いいこたえがなにをしているか、ひとてずつ",
-               "ii kotae ga nani o shite iru ka, hitote zutsu",
-               "What a top answer actually does, move by move. Tap the coloured phrases."],
-  },
-  ruby: {
-    hUnits: "<ruby>単元<rt>たんげん</rt></ruby>",
-    cWalk: "<ruby>単元<rt>たんげん</rt></ruby>の<ruby>道<rt>みち</rt></ruby>",
-    bYomi: "<ruby>同<rt>おな</rt></ruby>じ<ruby>漢字<rt>かんじ</rt></ruby>でも、ことばがかわれば<ruby>読<rt>よ</rt></ruby>み<ruby>方<rt>かた</rt></ruby>もかわる",
-    cVocab: "ことばのホーム",
-    hGrammar: "<ruby>文法<rt>ぶんぽう</rt></ruby>",
-    hSpeak: "<ruby>話<rt>はな</rt></ruby>す・<ruby>聞<rt>き</rt></ruby>く",
-    hWrite: "<ruby>書<rt>か</rt></ruby>く",
-    cGrammar: "<ruby>文法<rt>ぶんぽう</rt></ruby>ハブ",
-    cOral: "<ruby>話<rt>はな</rt></ruby>す<ruby>練習<rt>れんしゅう</rt></ruby>",
-    cLevel: "レベルアップの<ruby>壁<rt>かべ</rt></ruby>",
-    cWriting: "<ruby>書<rt>か</rt></ruby>き<ruby>方<rt>かた</rt></ruby>の<ruby>壁<rt>かべ</rt></ruby>",
-  },
-});
-</script>
+<!-- Bilingual by design: no lever on the landing page. Each tool carries its own. -->
 </body>
 </html>

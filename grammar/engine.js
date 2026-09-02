@@ -79,6 +79,24 @@
     poolVocab: "\u30c8\u30d4\u30c3\u30af\u306e<ruby>\u8a00\u8449<rt>\u3053\u3068\u3070</rt></ruby>",
   };
 
+  /* Metalanguage and action buttons read in English whatever the lever
+     says (Liam, Sept 2026: "all metalanguage should be English by default").
+     The lever still cycles the title, the report heading and the items'
+     own Japanese. The four-form arrays are kept above for the record. */
+  ["selectAll", "clear", "start", "exit", "check", "next", "again", "newSel",
+   "allTasks", "identify", "gapfill", "transform", "order", "poolReading", "poolVocab"].forEach((k) => {
+    const en = UI_STRINGS[k][3];
+    UI_STRINGS[k] = [en, en, en, en];
+    delete RUBY[k];
+  });
+  UI_STRINGS.newSel = ["Back to the skills", "Back to the skills", "Back to the skills", "Back to the skills"];
+
+  /* A session is a sample, not the whole bank: up to PER_SKILL questions
+     from each chosen skill, one main round, one second go at the misses,
+     then the report and back to the matrix with the scores on it. */
+  const PER_SKILL = 5;
+  let lastScores = {};  // skillId -> {right, total} from the last session, shown on the matrix
+
   let uiForm = 0; // the page stage, kept in step with the lever
 
   // pick from a four-form [kanji, kana, romaji, English] array by stage
@@ -188,8 +206,14 @@
         const yearsLabel = uiForm <= 1 ? `${chunk.years}\u5e74` : `Year${chunk.years.indexOf("\u2013") > -1 ? "s" : ""} ${chunk.years}`;
         const chunkTitle = tForm(chunk.t) || chunk.title;
         const noneWord = ["\u307e\u3060\u306a\u3057", "\u307e\u3060\u306a\u3057", "mada nashi", "no items yet"][uiForm];
+        let score = "";
+        const sc = chunk.covers.reduce((a, id) => { const r = lastScores[id]; if (r) { a.right += r.right; a.total += r.total; } return a; }, { right: 0, total: 0 });
+        if (sc.total) {
+          const pct = sc.right / sc.total;
+          score = `<span class="tl-score ${pct === 1 ? "ok" : pct >= 0.5 ? "mid" : "low"}" title="Last session, correct first try">${sc.right}/${sc.total}</span>`;
+        }
         el.innerHTML = `<span class="tl-title">${escapeHtmlE(chunkTitle)}</span>` +
-          `<span class="tl-meta">${escapeHtmlE(yearsLabel)}${n ? ` \u00b7 ${n}` : ` \u00b7 ${noneWord}`}</span>`;
+          `<span class="tl-meta">${escapeHtmlE(yearsLabel)}${n ? ` \u00b7 ${Math.min(n, PER_SKILL * chunkSkills(chunk).length)}` : ` \u00b7 ${noneWord}`}</span>` + score;
 
         if (n) {
           const prev = ci > 0 ? chunks[ci - 1] : null;
@@ -275,13 +299,9 @@
 
   function refreshCount() {
     let items = 0;
-    selectedSkills.forEach((id) => { items += itemsFor(skillById(id)).length; });
+    selectedSkills.forEach((id) => { items += Math.min(PER_SKILL, itemsFor(skillById(id)).length); });
     const k = selectedSkills.size;
-    $("selCount").textContent = uiForm <= 1
-      ? `スキル${k}・${items}問`
-      : uiForm === 2
-        ? `sukiru ${k} · mondai ${items}`
-        : `${k} skill${k === 1 ? "" : "s"} · ${items} item${items === 1 ? "" : "s"}`;
+    $("selCount").textContent = `${k} skill${k === 1 ? "" : "s"} · ${items} question${items === 1 ? "" : "s"}`;
     $("startBtn").disabled = items === 0;
   }
 
@@ -318,7 +338,8 @@
     pool = [];
     selectedSkills.forEach((id) => {
       const skill = skillById(id);
-      itemsFor(skill).forEach((item, i) => {
+      const all = skill.items.map((item, i) => ({ item, i })).filter((x) => typeFilter === "all" || x.item.type === typeFilter);
+      shuffle(all).slice(0, PER_SKILL).forEach(({ item, i }) => {
         pool.push({ uid: id + "#" + i, skillId: id, skillName: skill.name, category: skill.category, band: skill.band, item });
       });
     });
@@ -351,8 +372,8 @@
 
     // progress
     const done = pool.length - countNotMastered();
-    $("remainText").textContent = `${countNotMastered()} to master`;
-    $("roundText").textContent = round === 1 ? "Main round" : `Mastery round ${round - 1}`;
+    $("remainText").textContent = `${countNotMastered()} left`;
+    $("roundText").textContent = round === 1 ? `${idx + 1} of ${currentSet.length}` : `Second go at the misses \u00b7 ${idx + 1} of ${currentSet.length}`;
     $("bar").style.width = Math.round((done / pool.length) * 100) + "%";
   }
 
@@ -390,7 +411,7 @@
     if (idx >= currentSet.length) {
       // close out the round
       nextSet = pool.filter((e) => !correctEver[e.uid]);
-      if (nextSet.length > 0) {
+      if (nextSet.length > 0 && round === 1) {
         currentSet = shuffle(nextSet.slice());
         nextSet = [];
         round++;
@@ -414,10 +435,12 @@
     const firstRight = pool.filter((e) => firstPass[e.uid]).length;
     const totalAttempts = Object.values(attempts).reduce((a, b) => a + b, 0);
 
+    const missed = total - firstRight;
+    const fixed = pool.filter((e) => !firstPass[e.uid] && correctEver[e.uid]).length;
     $("reportSummary").innerHTML =
       `<div class="big-stat">${firstRight}/${total}</div>` +
       `<div class="stat-label">correct first try</div>` +
-      `<p class="muted">Mastered all ${total} after ${totalAttempts} total attempt${totalAttempts === 1 ? "" : "s"}.</p>`;
+      (missed ? `<p class="muted">${fixed} of the ${missed} missed came right on the second go.</p>` : `<p class="muted">Nothing to go back over.</p>`);
 
     // per-skill breakdown, with per-tag sub-rows where items carry `tags`
     const bySkill = {};
@@ -432,6 +455,8 @@
       });
     });
     lastReport = { bySkill, firstRight, total };
+    lastScores = {};
+    Object.entries(bySkill).forEach(([id, s]) => { lastScores[id] = { right: s.right, total: s.total }; });
     let rows = Object.values(bySkill).map((s) => {
       const pct = Math.round((s.right / s.total) * 100);
       const cls = pct === 100 ? "ok" : pct >= 50 ? "mid" : "low";
@@ -453,7 +478,7 @@
           if (skill.resources.video) html += `<a href="${skill.resources.video}" target="_blank">video</a> `;
           (skill.resources.sheets || []).forEach((sh) => { html += `<a href="${sh.url}" target="_blank">${escapeHtmlE(sh.name)}</a> `; });
         } else {
-          html += `<span class="muted">no resources mapped yet — add to skills.js → resources</span>`;
+          html += `<span class="muted">no sheet linked yet</span>`;
         }
         html += `</div>`;
       });
@@ -642,12 +667,12 @@
 
     $("checkBtn").addEventListener("click", onCheck);
     $("nextBtn").addEventListener("click", onNext);
-    $("quitBtn").addEventListener("click", () => show("select"));
+    $("quitBtn").addEventListener("click", () => { buildMatrix(); buildPools(); show("select"); });
 
     $("copyBtn").addEventListener("click", copyTeacher);
     $("downloadCsvBtn").addEventListener("click", downloadCsv);
     $("copyTsvBtn").addEventListener("click", copyTsv);
     $("reviewBtn").addEventListener("click", () => { startSession(); }); // re-run same selection
-    $("restartBtn").addEventListener("click", () => show("select"));
+    $("restartBtn").addEventListener("click", () => { buildMatrix(); buildPools(); show("select"); });
   });
 })();

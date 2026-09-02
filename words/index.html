@@ -125,12 +125,18 @@
   .stat-label{text-align:center;color:var(--muted);font-size:13px;margin-bottom:12px}
   .back{background:none;border:none;color:var(--muted);font-weight:600;font-size:13px;cursor:pointer;margin-bottom:8px}
   .build-tag{position:fixed;left:6px;bottom:5px;font-family:monospace;font-size:9px;color:var(--muted);opacity:.45;pointer-events:none}
+  .modes{text-align:center;margin:-2px 0 12px}
+  .modebtn{font-size:11px;font-weight:700;letter-spacing:.3px;border:1px solid var(--line);border-radius:14px;padding:4px 12px;
+       background:var(--bg);color:var(--muted);cursor:pointer}
+  .modebtn.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+  body.noen .en{display:none!important}
 </style>
 </head>
 <body>
 <div class="container">
   <h1 class="jt-tap" data-jt="title">ことばラボ</h1>
   <p class="subtitle jt-tap" data-jt="subtitle">Kanji families: one shared kanji, many words</p>
+  <p class="modes"><button type="button" class="modebtn" id="noenBtn" title="For students who already read the kanji: English meanings are hidden and the quiz asks for the reading instead">中文 · no English</button></p>
   <span class="poc"><b>Proof of concept</b> for Andrew's review — four kanji families, three from the 給食 unit plus the 〜手 suffix family. The mechanic is Liam's morpheme word-builder, ported to kanji compounds.</span>
 
   <section class="screen active" id="pick">
@@ -253,11 +259,20 @@ const UI_RUBY = {
   const shuffle=(a)=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
   let fam=null, queue=[], idx=0, first={}, attempts=0, graded=false;
 
+  /* 中文 mode: students with a Chinese-reading background do not need the
+     English meanings, so the glosses are hidden and the meaning quiz
+     becomes a reading quiz. Remembered on this device only. */
+  const noEn=()=>document.body.classList.contains("noen");
+  const setNoEn=(on)=>{ document.body.classList.toggle("noen",on); $("noenBtn").classList.toggle("on",on);
+    try{ localStorage.setItem("jh_noen",on?"1":""); }catch(e){} };
+  try{ setNoEn(localStorage.getItem("jh_noen")==="1"); }catch(e){}
+  $("noenBtn").addEventListener("click",()=>{ setNoEn(!noEn()); if(screens.task.classList.contains("active"))render(); });
+
   /* family picker */
   FAMILIES.forEach((f,i)=>{
     const c=document.createElement("div");
     c.className="fam-card";
-    c.innerHTML=`<span class="fam-kanji">${f.head}</span><div class="fam-gloss">${esc(f.headRead)} · ${esc(f.headGloss)}</div><div class="fam-count">${f.words.length} words</div>`;
+    c.innerHTML=`<span class="fam-kanji">${f.head}</span><div class="fam-gloss">${esc(f.headRead)}<span class="en"> · ${esc(f.headGloss)}</span></div><div class="fam-count">${f.words.length} words</div>`;
     c.addEventListener("click",()=>{fam=f;meet();});
     $("famGrid").appendChild(c);
   });
@@ -281,7 +296,7 @@ const UI_RUBY = {
     const jp=colourWord(w);
     if(stage===0)return jp;
     if(stage===1)return `${jp} <small style="color:var(--muted)">${esc(w.read)}</small>`;
-    return `${jp} <small style="color:var(--muted)">${esc(w.read)} · ${esc(w.gloss)}</small>`;
+    return `${jp} <small style="color:var(--muted)">${esc(w.read)}<span class="en"> · ${esc(w.gloss)}</span></small>`;
   }
   function meet(){
     $("meetKanji").textContent=fam.head;
@@ -345,8 +360,9 @@ const UI_RUBY = {
       FAMILIES.forEach(f=>{if(f!==fam)f.words.forEach(w2=>w2.parts.forEach(p=>{
         if(p[0].length===1&&!tiles.includes(p[0])&&decoys.length<2&&!decoys.includes(p[0]))decoys.push(p[0]);}));});
       const bank=shuffle(tiles.concat(decoys));
-      area.innerHTML=`<div class="task-prompt">Build the word: <b>${esc(q.w.gloss)}</b></div>
-        <div class="task-cue">${esc(q.w.read)}</div>
+      area.innerHTML=(noEn()
+          ? `<div class="task-prompt">Build the word: <b>${esc(q.w.read)}</b></div>`
+          : `<div class="task-prompt">Build the word: <b>${esc(q.w.gloss)}</b></div><div class="task-cue">${esc(q.w.read)}</div>`)+`
         <div class="slots" id="slots" data-need="${tiles.length}"></div>
         <div class="rolekey"><span class="rk-prefix">せっとうじ prefix</span><span class="rk-root">こん root</span><span class="rk-suffix">せつびじ suffix</span></div>
         <p class="rolenote">The ring marks this family's own kanji. Colour is the job it does in <i>this</i> word: 費 is a suffix in 給食費 but the root of 費用.</p>
@@ -357,10 +373,14 @@ const UI_RUBY = {
         $("checkBtn").disabled=slots.children.length!==tiles.length;
       }));
     }else{
-      const others=shuffle(fam.words.filter(w2=>w2!==q.w)).slice(0,2).map(w2=>w2.gloss);
-      const distract=shuffle(others.concat(FAMILIES.filter(f=>f!==fam)[0].words[0].gloss)).slice(0,3);
-      const opts=shuffle([q.w.gloss].concat(distract));
-      area.innerHTML=`<div class="task-prompt">${q.w.parts.filter(p=>p[1]).map(p=>`${p[0]} (${esc(p[1])})`).join(" + ")} → <b>${esc(q.w.jp)}</b> means?</div>
+      /* no-English mode asks for the READING instead of the meaning */
+      const f=noEn()?(w2)=>w2.read:(w2)=>w2.gloss;
+      const others=shuffle(fam.words.filter(w2=>w2!==q.w)).slice(0,2).map(f);
+      const distract=shuffle(others.concat(f(FAMILIES.filter(x=>x!==fam)[0].words[0]))).slice(0,3);
+      const opts=shuffle([f(q.w)].concat(distract));
+      area.innerHTML=`<div class="task-prompt">${noEn()
+          ? `<b>${esc(q.w.jp)}</b> reads?`
+          : `${q.w.parts.filter(p=>p[1]).map(p=>`${p[0]} (${esc(p[1])})`).join(" + ")} → <b>${esc(q.w.jp)}</b> means?`}</div>
         <div class="options">${opts.map(o=>`<button type="button" class="option" data-v="${esc(o)}">${esc(o)}</button>`).join("")}</div>`;
       area.querySelectorAll(".option").forEach(b=>b.addEventListener("click",()=>{
         area.querySelectorAll(".option").forEach(x=>x.dataset.sel="");b.dataset.sel="1";$("checkBtn").disabled=false;
@@ -378,10 +398,11 @@ const UI_RUBY = {
       document.querySelectorAll(".tile").forEach(t=>t.disabled=true);
     }else{
       const sel=document.querySelector('.option[data-sel="1"]');
-      ok=sel&&sel.dataset.v===q.w.gloss;expected=q.w.gloss;
+      const want=noEn()?q.w.read:q.w.gloss;
+      ok=sel&&sel.dataset.v===want;expected=want;
       document.querySelectorAll(".option").forEach(b=>{
         b.disabled=true;
-        if(b.dataset.v===q.w.gloss)b.classList.add("correct");
+        if(b.dataset.v===want)b.classList.add("correct");
         else if(b.dataset.sel==="1")b.classList.add("incorrect");
       });
     }

@@ -103,6 +103,10 @@
   .tl-chunk.no-items{border-style:dashed;opacity:.7}
   .tl-title{font-size:11px;font-weight:600;line-height:1.3;color:var(--ink)}
   .tl-meta{font-size:8.5px;font-weight:600;letter-spacing:.2px;color:var(--muted)}
+  .tl-score{align-self:flex-start;font-size:9.5px;font-weight:800;border-radius:8px;padding:0 6px;line-height:1.5}
+  .tl-score.ok{color:var(--correct);background:var(--okbg)}
+  .tl-score.mid{color:#8a6d1e;background:#f6efda}
+  .tl-score.low{color:var(--wrong);background:var(--badbg)}
 
   .matrix-legend{font-size:11px;color:var(--muted);line-height:1.6;margin:14px auto 0;
        text-align:center;max-width:640px}
@@ -272,13 +276,13 @@
       <button class="btn btn-ghost" id="downloadCsvBtn">Download CSV</button>
       <button class="btn btn-ghost" id="copyTsvBtn">Copy row for sheet</button>
       <button class="btn btn-ghost" id="reviewBtn" data-jt="again">Run again</button>
-      <button class="btn btn-primary" id="restartBtn" data-jt="newSel">New selection</button>
+      <button class="btn btn-primary" id="restartBtn" data-jt="newSel">Back to the skills</button>
       <span id="reportLever" data-scope="#reportScreen"></span>
     </div>
     <div id="copyNote"></div>
   </section>
 </div>
-<div class="build-tag" aria-hidden="true">JGH build 2026-08-27b</div>
+<div class="build-tag" aria-hidden="true">JGH build 2026-09-02</div>
 
 <!-- load order matters: content, then task types, then engine -->
 <script src="lever.js"></script>
