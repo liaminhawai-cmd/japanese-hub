@@ -19,6 +19,19 @@
      and 銀行, so the third one is nearly free.
      ============================================================ */
   :root{
+    /* ---- typography: two scripts, two faces ----
+       Calibri carries the English, UD Digi Kyokasho N-R carries the Japanese.
+       UD Digi Kyokasho is the UD textbook face: correct stroke shapes for
+       handwriting models, which is why it is the classroom default. Both
+       fonts are already installed on the school machines (Windows/Office),
+       so nothing is downloaded and nothing breaks offline.
+       One stack does both jobs because the browser falls back per character:
+       Latin resolves inside --font-en, kana and kanji fall straight through
+       to --font-jp. Never write a font name outside this block. */
+    --font-en:Calibri,Carlito,'Segoe UI',Tahoma,Geneva,Verdana;
+    --font-jp:'UD Digi Kyokasho N-R','UD Digi Kyokasho NP-R','UDデジタル教科書体N-R','Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic',YuGothic,Meiryo;
+    --font:var(--font-en),var(--font-jp),sans-serif;
+
     --bg:#f4efe6; --paper:#fbf7ee; --ink:#1f1f1f; --muted:#6b6256;
     --line:#d8cfbb; --line-soft:#e8e0cd; --accent:#a83232;
     --correct:#2f6a3e; --wrong:#a83232; --okbg:#eef5ee; --badbg:#f7ecec;
@@ -41,13 +54,13 @@
     --held:#a83232;                            /* the part in your hand */
   }
   *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:var(--bg);color:var(--ink);
+  body{font-family:var(--font);background:var(--bg);color:var(--ink);
        line-height:1.5;min-height:100vh;padding:16px}
   .wrap{max-width:1000px;margin:0 auto}
   .container{background:var(--paper);border:1px solid var(--line);border-radius:12px;
        padding:24px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
-  h1{text-align:center;font-size:22px;font-family:Georgia,'Times New Roman',serif;letter-spacing:.5px}
-  h2{font-family:Georgia,serif;font-size:17px;margin:0 0 4px}
+  h1{text-align:center;font-size:22px;font-family:var(--font);letter-spacing:.5px}
+  h2{font-family:var(--font);font-size:17px;margin:0 0 4px}
   .subtitle{color:var(--muted);text-align:center;margin:6px 0 4px;font-size:13px}
   .poc{display:block;text-align:center;font-size:11px;color:var(--muted);margin-bottom:14px}
   .poc b{color:var(--accent)}
@@ -63,14 +76,14 @@
   .intro{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px}
 
   /* ---- unit picker ---- */
-  .theme-head{font-family:Georgia,serif;font-size:14px;font-weight:700;margin:18px 0 2px;
+  .theme-head{font-family:var(--font);font-size:14px;font-weight:700;margin:18px 0 2px;
        border-bottom:2px solid var(--line-soft);padding-bottom:6px}
   .theme-head small{font-weight:400;color:var(--muted);font-size:.85em;margin-left:7px}
   .units{display:grid;gap:11px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));margin-top:10px}
   .unit{text-align:left;background:var(--paper);border:1px solid var(--line);border-radius:11px;
        padding:15px 17px;cursor:pointer}
   .unit:hover{border-color:var(--accent);transform:translateY(-2px)}
-  .unit .ut{font-family:Georgia,serif;font-size:16px;font-weight:700}
+  .unit .ut{font-family:var(--font);font-size:16px;font-weight:700}
   .unit .ud{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.45}
   .unit .un{font-size:10px;font-weight:800;color:var(--muted);margin-top:7px;letter-spacing:.05em}
 
@@ -85,7 +98,7 @@
        transition:border-color .12s,background .12s,transform .1s}
   .chip:hover{border-color:var(--accent)}
   .chip:active{transform:translateY(1px)}
-  .chip .k{font-family:Georgia,serif;font-size:21px;font-weight:700}
+  .chip .k{font-family:var(--font);font-size:21px;font-weight:700}
   .chip .g{font-size:10.5px;color:var(--muted)}
   .chip .r{font-size:9.5px;color:var(--muted);opacity:.75}
   .chip.cap-sense{border-color:#e5b8b2;background:var(--sense-bg)} .chip.cap-sense .k{color:var(--sense)}
@@ -114,7 +127,7 @@
   .def .en{color:var(--ink)}
   .slots{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-left:auto}
   .slot{min-width:52px;height:52px;border:2px dashed var(--line);border-radius:10px;
-       background:var(--bg);font-family:Georgia,serif;font-size:26px;font-weight:700;
+       background:var(--bg);font-family:var(--font);font-size:26px;font-weight:700;
        color:var(--kanji);cursor:pointer;display:grid;place-items:center;padding:0 8px}
   .slot.filled{border-style:solid;background:var(--kanji-bg);border-color:var(--kanji)}
   .slot.filled.cap-sense{background:var(--sense-bg);border-color:var(--sense);color:var(--sense)}
@@ -122,7 +135,7 @@
   .slot.filled.cap-both{background:var(--both-bg);border-color:var(--both);color:var(--both)}
   .slot.aim{border-color:var(--accent);background:#faf5f0}
   .built{display:flex;align-items:baseline;gap:9px;margin-left:auto}
-  .built .w{font-family:Georgia,serif;font-size:27px;font-weight:700;color:var(--correct)}
+  .built .w{font-family:var(--font);font-size:27px;font-weight:700;color:var(--correct)}
   /* purple-lab move: once a word is built, colour its own spelling by each
      kanji's capacity (sense/sound/both) rather than leaving it plain green */
   .built .w span.cap-sense{color:var(--sense)}
@@ -139,11 +152,11 @@
   .finish{background:var(--band);border:1px solid var(--line-soft);border-left:4px solid var(--correct);
        border-radius:11px;padding:14px 17px;margin-top:16px;font-size:13.5px;line-height:1.65;display:none}
   .finish.show{display:block}
-  .finish b{font-family:Georgia,serif}
+  .finish b{font-family:var(--font)}
   .reuse{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
   .reuse .rk{background:var(--shared-bg);border:1px solid var(--shared);border-radius:9px;
        padding:5px 11px;font-size:12px}
-  .reuse .rk b{font-family:Georgia,serif;font-size:18px;color:var(--shared)}
+  .reuse .rk b{font-family:var(--font);font-size:18px;color:var(--shared)}
   .privacy{background:var(--bg);border:1px solid var(--line-soft);border-radius:9px;padding:10px 14px;
        font-size:11.5px;color:var(--muted);margin-top:14px;line-height:1.55}
   .build-tag{position:fixed;left:6px;bottom:5px;font-family:monospace;font-size:9px;color:var(--muted);
@@ -184,7 +197,7 @@
 
 </div>
 </div>
-<div class="build-tag">Builder PoC 2026-08-31</div>
+<div class="build-tag">Builder PoC 2026-09-02</div>
 <script src="lever.js"></script>
 <script>
 /* ============================================================

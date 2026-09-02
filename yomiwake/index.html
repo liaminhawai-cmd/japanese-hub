@@ -12,6 +12,19 @@
      from Lisa's request (reading of 兄 vs お兄さん). The kanji set is a
      draft seed for review, not agreed content. */
   :root{
+    /* ---- typography: two scripts, two faces ----
+       Calibri carries the English, UD Digi Kyokasho N-R carries the Japanese.
+       UD Digi Kyokasho is the UD textbook face: correct stroke shapes for
+       handwriting models, which is why it is the classroom default. Both
+       fonts are already installed on the school machines (Windows/Office),
+       so nothing is downloaded and nothing breaks offline.
+       One stack does both jobs because the browser falls back per character:
+       Latin resolves inside --font-en, kana and kanji fall straight through
+       to --font-jp. Never write a font name outside this block. */
+    --font-en:Calibri,Carlito,'Segoe UI',Tahoma,Geneva,Verdana;
+    --font-jp:'UD Digi Kyokasho N-R','UD Digi Kyokasho NP-R','UDデジタル教科書体N-R','Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic',YuGothic,Meiryo;
+    --font:var(--font-en),var(--font-jp),sans-serif;
+
     --bg:#f4efe6; --paper:#fbf7ee; --ink:#1f1f1f; --muted:#6b6256;
     --line:#d8cfbb; --line-soft:#e8e0cd; --accent:#a83232;
     --correct:#2f6a3e; --wrong:#a83232; --okbg:#eef5ee; --badbg:#f7ecec;
@@ -19,11 +32,11 @@
     --read:#1f6f78;   --read-bg:#dceef0;   /* a reading (kana) */
   }
   *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:var(--bg);
+  body{font-family:var(--font);background:var(--bg);
        min-height:100vh;padding:16px;display:flex;justify-content:center;align-items:flex-start;color:var(--ink)}
   .container{background:var(--paper);border:1px solid var(--line);border-radius:12px;
        max-width:720px;width:100%;padding:26px;margin-top:12px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
-  h1{text-align:center;font-size:22px;font-family:Georgia,serif;letter-spacing:.5px}
+  h1{text-align:center;font-size:22px;font-family:var(--font);letter-spacing:.5px}
   .subtitle{color:var(--muted);text-align:center;margin:6px 0 4px;font-size:13px}
   .poc{display:block;text-align:center;font-size:11px;color:var(--muted);margin-bottom:16px}
   .poc b{color:var(--accent)}
@@ -42,7 +55,7 @@
   .fam-card{border:1px solid var(--line);border-radius:12px;background:var(--paper);padding:14px;
        cursor:pointer;text-align:center;transition:border-color .12s ease}
   .fam-card:hover{border-color:var(--accent)}
-  .fam-kanji{font-size:44px;font-family:Georgia,serif;color:var(--head)}
+  .fam-kanji{font-size:44px;font-family:var(--font);color:var(--head)}
   .fam-gloss{font-size:12px;color:var(--muted);margin-top:4px}
   .fam-count{font-size:11px;font-weight:700;color:var(--accent);margin-top:6px}
 
@@ -57,18 +70,18 @@
   .words{display:flex;flex-direction:column;gap:8px;max-width:460px;margin:0 auto}
   .word-row{display:flex;align-items:center;gap:12px;border:1px solid var(--line-soft);border-radius:10px;
        background:var(--bg);padding:10px 14px}
-  .word-jp{font-size:26px;font-family:Georgia,serif;min-width:150px;cursor:pointer;line-height:1.9}
+  .word-jp{font-size:26px;font-family:var(--font);min-width:150px;cursor:pointer;line-height:1.9}
   .word-jp .h{color:var(--head)}
   .word-jp rt{font-size:11px;color:var(--read);font-weight:600}
   .word-reveal{font-size:13px;color:var(--muted);flex:1}
   .tap-hint{font-size:11px;color:var(--muted);text-align:center;margin-top:10px}
 
   /* ---- tasks ---- */
-  .task-prompt{font-family:Georgia,serif;font-size:17px;text-align:center;margin:14px 0 4px;line-height:1.6}
-  .task-word{font-size:44px;font-family:Georgia,serif;text-align:center;margin:8px 0 14px}
+  .task-prompt{font-family:var(--font);font-size:17px;text-align:center;margin:14px 0 4px;line-height:1.6}
+  .task-word{font-size:44px;font-family:var(--font);text-align:center;margin:8px 0 14px}
   .task-word b{color:var(--head);font-weight:700}
   .options{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:520px;margin:0 auto}
-  .options.kana .option{font-size:22px;font-family:Georgia,serif;text-align:center}
+  .options.kana .option{font-size:22px;font-family:var(--font);text-align:center}
   .option{font-size:15px;font-weight:600;text-align:left;padding:12px 14px;border-radius:10px;
        border:2px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
   .option[data-sel="1"]{border-color:var(--accent)}
@@ -80,7 +93,7 @@
   .feedback.bad{background:var(--badbg);color:#7a2020}
   .actions{display:flex;justify-content:center;gap:10px;margin-top:16px}
   .progress{text-align:center;font-size:11px;color:var(--muted);margin-top:10px}
-  .big-stat{font-family:Georgia,serif;font-size:40px;font-weight:700;color:var(--accent);text-align:center}
+  .big-stat{font-family:var(--font);font-size:40px;font-weight:700;color:var(--accent);text-align:center}
   .stat-label{text-align:center;color:var(--muted);font-size:13px;margin-bottom:12px}
   .back{background:none;border:none;color:var(--muted);font-weight:600;font-size:13px;cursor:pointer;margin-bottom:8px}
   .build-tag{position:fixed;left:6px;bottom:5px;font-family:monospace;font-size:9px;color:var(--muted);opacity:.45;pointer-events:none}
@@ -132,7 +145,7 @@
   </div>
 </div>
 
-<div class="build-tag">Yomiwake PoC 2026-08-27</div>
+<div class="build-tag">Yomiwake PoC 2026-09-02</div>
 
 <script src="lever.js"></script>
 <script>

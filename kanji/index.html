@@ -25,6 +25,19 @@
      function. 聞 wraps its SOUND part around the outside.
      ============================================================ */
   :root{
+    /* ---- typography: two scripts, two faces ----
+       Calibri carries the English, UD Digi Kyokasho N-R carries the Japanese.
+       UD Digi Kyokasho is the UD textbook face: correct stroke shapes for
+       handwriting models, which is why it is the classroom default. Both
+       fonts are already installed on the school machines (Windows/Office),
+       so nothing is downloaded and nothing breaks offline.
+       One stack does both jobs because the browser falls back per character:
+       Latin resolves inside --font-en, kana and kanji fall straight through
+       to --font-jp. Never write a font name outside this block. */
+    --font-en:Calibri,Carlito,'Segoe UI',Tahoma,Geneva,Verdana;
+    --font-jp:'UD Digi Kyokasho N-R','UD Digi Kyokasho NP-R','UDデジタル教科書体N-R','Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic',YuGothic,Meiryo;
+    --font:var(--font-en),var(--font-jp),sans-serif;
+
     --bg:#f4efe6; --paper:#fbf7ee; --ink:#1f1f1f; --muted:#6b6256;
     --line:#d8cfbb; --line-soft:#e8e0cd; --accent:#a83232;
     --correct:#2f6a3e; --wrong:#a83232; --okbg:#eef5ee; --badbg:#f7ecec;
@@ -42,12 +55,12 @@
     --pos:#8d8577;
   }
   *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:var(--bg);color:var(--ink);
+  body{font-family:var(--font);background:var(--bg);color:var(--ink);
        line-height:1.5;min-height:100vh;padding:16px}
   .wrap{max-width:840px;margin:0 auto}
   .container{background:var(--paper);border:1px solid var(--line);border-radius:12px;
        padding:24px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
-  h1{text-align:center;font-size:22px;font-family:Georgia,'Times New Roman',serif;letter-spacing:.5px}
+  h1{text-align:center;font-size:22px;font-family:var(--font);letter-spacing:.5px}
   .subtitle{color:var(--muted);text-align:center;margin:6px 0 4px;font-size:13px}
   .poc{display:block;text-align:center;font-size:11px;color:var(--muted);margin-bottom:16px}
   .poc b{color:var(--accent)}
@@ -68,13 +81,13 @@
   /* ---- home ---- */
   .how{background:var(--band);border:1px solid var(--line-soft);border-left:4px solid var(--sense);
        border-radius:10px;padding:13px 16px;font-size:13px;line-height:1.65;margin-bottom:16px}
-  .how b{font-family:Georgia,serif}
+  .how b{font-family:var(--font)}
   .fams{display:grid;gap:11px;grid-template-columns:repeat(auto-fill,minmax(238px,1fr))}
   .fam{text-align:left;background:var(--paper);border:1px solid var(--line);border-radius:11px;
        padding:14px 16px;cursor:pointer;display:flex;gap:13px;align-items:center}
   .fam:hover{border-color:var(--accent);transform:translateY(-2px)}
-  .fam .fc{font-family:Georgia,serif;font-size:38px;line-height:1;color:var(--ink)}
-  .fam .ft{font-weight:700;font-size:14px;font-family:Georgia,serif}
+  .fam .fc{font-family:var(--font);font-size:38px;line-height:1;color:var(--ink)}
+  .fam .ft{font-weight:700;font-size:14px;font-family:var(--font)}
   .fam .fd{font-size:11.5px;color:var(--muted);line-height:1.4;margin-top:2px}
   .fam .tag{margin-left:auto;font-size:9.5px;font-weight:800;color:var(--muted);
        border:1px solid var(--line-soft);border-radius:9px;padding:2px 8px;white-space:nowrap}
@@ -82,7 +95,7 @@
 
   /* ---- the workbench ---- */
   .prompt{text-align:center;font-size:15px;line-height:1.6;margin-bottom:4px}
-  .prompt b{font-family:Georgia,serif;font-size:17px}
+  .prompt b{font-family:var(--font);font-size:17px}
   .promptread{text-align:center;font-size:13px;color:var(--muted);margin-bottom:16px}
   .posname{text-align:center;font-size:10.5px;font-weight:800;letter-spacing:.09em;
        color:var(--pos);text-transform:uppercase;margin-bottom:7px}
@@ -93,7 +106,7 @@
   .frame.kamae{grid-template-columns:150px;position:relative}
   .frame.tb{grid-template-columns:110px}
   .slot{height:96px;border:2px dashed var(--line);border-radius:12px;background:var(--bg);
-       display:grid;place-items:center;font-family:Georgia,serif;font-size:44px;color:var(--ink);
+       display:grid;place-items:center;font-family:var(--font);font-size:44px;color:var(--ink);
        position:relative;transition:border-color .15s,background .3s,color .3s}
   /* the enclosing part's glyph sits high in the slot so the inner slot,
      which is positioned on top of it, does not hide it */
@@ -115,14 +128,14 @@
   @keyframes popin{0%{transform:translateX(-50%) scale(1)}40%{transform:translateX(-50%) scale(1.13)}100%{transform:translateX(-50%) scale(1)}}
   .rolebadge{position:absolute;top:-9px;left:50%;transform:translateX(-50%);font-size:9px;font-weight:800;
        letter-spacing:.06em;padding:1px 8px;border-radius:9px;text-transform:uppercase;white-space:nowrap;
-       font-family:'Segoe UI',sans-serif}
+       font-family:var(--font)}
   .rb-sense{background:var(--sense);color:#fff}
   .rb-sound{background:var(--sound);color:#fff}
   /* the both badge is literally the two colours running together */
   .rb-both{background:linear-gradient(90deg,var(--sound),var(--both) 50%,var(--sense));color:#fff}
 
   .built{text-align:center;margin:14px 0 4px;min-height:0}
-  .built .bc{font-family:Georgia,serif;font-size:80px;line-height:1.1;animation:formin .5s ease-out}
+  .built .bc{font-family:var(--font);font-size:80px;line-height:1.1;animation:formin .5s ease-out}
   @keyframes formin{0%{opacity:0;transform:scale(.6)}100%{opacity:1;transform:scale(1)}}
   .built .br{font-size:14px;color:var(--muted)}
 
@@ -134,7 +147,7 @@
        border:1px solid var(--line);border-radius:10px;padding:7px 11px;cursor:grab;min-width:66px}
   .piece:hover{border-color:var(--accent)}
   .piece.used{opacity:.28;pointer-events:none}
-  .piece .pc{font-family:Georgia,serif;font-size:29px;line-height:1.1}
+  .piece .pc{font-family:var(--font);font-size:29px;line-height:1.1}
   .piece .pg{font-size:9.5px;color:var(--muted);font-weight:600}
   .piece .pn{font-size:8.5px;color:var(--pos)}
   .piece.dragging{opacity:.4}
@@ -152,7 +165,7 @@
   .partrow{display:flex;gap:9px;align-items:flex-start;font-size:12.5px;line-height:1.55;
        padding:7px 0;border-bottom:1px solid var(--line-soft)}
   .partrow:last-child{border-bottom:0}
-  .partrow .pk{font-family:Georgia,serif;font-size:24px;flex:none;width:34px;text-align:center}
+  .partrow .pk{font-family:var(--font);font-size:24px;flex:none;width:34px;text-align:center}
   .partrow.ok .pk{color:var(--correct)} .partrow.no .pk{color:var(--amber)}
 
   /* ---- the three bins: where the sort round happens ---- */
@@ -167,7 +180,7 @@
   .bin-sense .bh{color:var(--sense)} .bin-sound .bh{color:var(--sound)} .bin-both .bh{color:var(--both)}
   .bin .bh small{display:block;font-size:8.5px;font-weight:600;opacity:.8;letter-spacing:0}
   .bin .drop{display:flex;flex-wrap:wrap;gap:5px;justify-content:center}
-  .chip{font-family:Georgia,serif;font-size:24px;border:1px solid var(--line);background:var(--paper);
+  .chip{font-family:var(--font);font-size:24px;border:1px solid var(--line);background:var(--paper);
        border-radius:8px;padding:3px 10px;cursor:grab}
   .chip.correct{border-color:var(--correct);background:var(--okbg)}
   .chip.incorrect{border-color:var(--amber);background:#f6ecd9}
@@ -178,12 +191,12 @@
   .predict{background:var(--band);border:1px solid var(--line-soft);border-left:4px solid var(--amber);
        border-radius:10px;padding:13px 16px;margin-top:14px}
   .predict p{font-size:13.5px;margin-bottom:9px}
-  .predict p b{font-family:Georgia,serif}
+  .predict p b{font-family:var(--font)}
   .guesses{display:flex;gap:8px;flex-wrap:wrap}
   .guess{border:1px solid var(--line);background:var(--paper);border-radius:9px;padding:8px 14px;
-       font-family:Georgia,serif;font-size:22px;cursor:pointer}
+       font-family:var(--font);font-size:22px;cursor:pointer}
   .guess:hover:not(:disabled){border-color:var(--accent)}
-  .guess small{display:block;font-family:'Segoe UI',sans-serif;font-size:9.5px;color:var(--muted)}
+  .guess small{display:block;font-family:var(--font);font-size:9.5px;color:var(--muted)}
   .guess.correct{border-color:var(--correct);background:var(--okbg)}
   .guess.incorrect{border-color:var(--wrong);background:var(--badbg)}
 
@@ -211,14 +224,14 @@
   .klegend .note{font-weight:400;color:var(--muted)}
   .kcard{border:1px solid var(--line-soft);border-radius:10px;padding:14px 16px;margin-bottom:10px;background:var(--paper)}
   .kcard.locked{opacity:.72}
-  .kcard .w{font-family:Georgia,serif;font-size:38px;font-weight:700;line-height:1.15;vertical-align:middle}
+  .kcard .w{font-family:var(--font);font-size:38px;font-weight:700;line-height:1.15;vertical-align:middle}
   .kcard .w .kglyph{vertical-align:middle;margin:-4px 0}
   .kcard .rd{font-size:12px;color:var(--muted);font-style:italic;margin-left:8px}
   .kcard .meaning{font-size:14px;margin:6px 0;line-height:1.5}
   .kcard .comp{font-size:13.5px;color:var(--muted);line-height:1.8;border-top:1px dashed var(--line-soft);
        padding-top:6px;margin-top:6px}
   .kcard .comp b,.kcard .comp i{color:var(--ink)}
-  .kcard .comp code{font-family:Georgia,serif;font-weight:700;font-size:21px;vertical-align:-1px}
+  .kcard .comp code{font-family:var(--font);font-weight:700;font-size:21px;vertical-align:-1px}
   .kcard .comp code.c-sense{color:var(--sense)} .kcard .comp code.c-sound{color:var(--sound)}
   .kcard .comp code.c-both{color:var(--both)} .kcard .comp code.c-none{color:var(--muted)}
   .kcard .rad{font-size:11px;font-weight:700;color:var(--muted)}
@@ -226,11 +239,11 @@
   .kcard .todo{font-size:11.5px;color:var(--muted);font-style:italic;margin-top:5px}
 
   /* ---- report ---- */
-  .bigstat{text-align:center;font-family:Georgia,serif;font-size:42px;font-weight:700;color:var(--accent);margin:6px 0}
-  .bigstat small{display:block;font-size:12px;font-family:'Segoe UI',sans-serif;color:var(--muted);font-weight:400}
+  .bigstat{text-align:center;font-family:var(--font);font-size:42px;font-weight:700;color:var(--accent);margin:6px 0}
+  .bigstat small{display:block;font-size:12px;font-family:var(--font);color:var(--muted);font-weight:400}
   .rrow{display:flex;justify-content:space-between;align-items:center;gap:10px;border:1px solid var(--line-soft);
        border-radius:9px;padding:11px 14px;margin-bottom:7px;font-size:13.5px}
-  .rrow .sc{font-weight:800;font-family:Georgia,serif}
+  .rrow .sc{font-weight:800;font-family:var(--font)}
   .rrow.full{border-color:var(--correct)} .rrow.full .sc{color:var(--correct)}
   .rrow.part{border-color:var(--amber)}   .rrow.part .sc{color:var(--amber)}
   .privacy{background:var(--bg);border:1px solid var(--line-soft);border-radius:9px;padding:10px 14px;
@@ -273,7 +286,7 @@
       <span class="progress" data-jt="pList">かんじリスト</span>
       <span id="listLever" data-scope="#scr-list"></span>
     </div>
-    <h2 style="font-family:Georgia,serif;font-size:19px;margin:4px 0 4px">The characters, part by part</h2>
+    <h2 style="font-family:var(--font);font-size:19px;margin:4px 0 4px">The characters, part by part</h2>
     <p style="color:var(--muted);font-size:13px;line-height:1.55;margin-bottom:10px">Each character with the
       parts that build it, and the job each part does <b>in that character</b>. A part stays grey until you have
       built the character it sits in — the colour is the lesson, so it has to be earned.</p>
@@ -304,7 +317,7 @@
 
 </div>
 </div>
-<div class="build-tag">Factory PoC 2026-08-31</div>
+<div class="build-tag">Factory PoC 2026-09-02</div>
 <script src="../kanji-strokes.js"></script>
 <script src="lever.js"></script>
 <script>

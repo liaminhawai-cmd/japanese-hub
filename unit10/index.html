@@ -19,6 +19,19 @@
      takes an optional first name only, never a student ID.
      ============================================================ */
   :root{
+    /* ---- typography: two scripts, two faces ----
+       Calibri carries the English, UD Digi Kyokasho N-R carries the Japanese.
+       UD Digi Kyokasho is the UD textbook face: correct stroke shapes for
+       handwriting models, which is why it is the classroom default. Both
+       fonts are already installed on the school machines (Windows/Office),
+       so nothing is downloaded and nothing breaks offline.
+       One stack does both jobs because the browser falls back per character:
+       Latin resolves inside --font-en, kana and kanji fall straight through
+       to --font-jp. Never write a font name outside this block. */
+    --font-en:Calibri,Carlito,'Segoe UI',Tahoma,Geneva,Verdana;
+    --font-jp:'UD Digi Kyokasho N-R','UD Digi Kyokasho NP-R','UDデジタル教科書体N-R','Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic',YuGothic,Meiryo;
+    --font:var(--font-en),var(--font-jp),sans-serif;
+
     --bg:#f4efe6; --paper:#fbf7ee; --ink:#1f1f1f; --muted:#6b6256;
     --line:#d8cfbb; --line-soft:#e8e0cd; --accent:#a83232;
     --correct:#2f6a3e; --wrong:#a83232; --okbg:#eef5ee; --badbg:#f7ecec;
@@ -27,12 +40,12 @@
     --s1:#1f6f78; --s2:#7a5cad; --s3:#b0561f; --s4:#3f5aa6;
   }
   *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:var(--bg);color:var(--ink);
+  body{font-family:var(--font);background:var(--bg);color:var(--ink);
        line-height:1.5;min-height:100vh;padding:16px}
   .wrap{max-width:820px;margin:0 auto}
   .container{background:var(--paper);border:1px solid var(--line);border-radius:12px;
        padding:24px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
-  h1{text-align:center;font-size:22px;font-family:Georgia,'Times New Roman',serif;letter-spacing:.5px}
+  h1{text-align:center;font-size:22px;font-family:var(--font);letter-spacing:.5px}
   .subtitle{color:var(--muted);text-align:center;margin:6px 0 4px;font-size:13px}
   .poc{display:block;text-align:center;font-size:11px;color:var(--muted);margin-bottom:16px}
   .poc b{color:var(--accent)}
@@ -64,7 +77,7 @@
   .step-5 .num{background:var(--s2)} .step-6 .num{background:var(--muted)}
   .step.done .num{background:var(--correct)}
   .step .body{flex:1}
-  .step .t{font-weight:700;font-size:14.5px;font-family:Georgia,serif}
+  .step .t{font-weight:700;font-size:14.5px;font-family:var(--font)}
   .step .d{font-size:12.5px;color:var(--muted);line-height:1.45;margin-top:2px}
   .step .tag{flex:none;font-size:9.5px;font-weight:800;letter-spacing:.06em;color:var(--muted);
        border:1px solid var(--line-soft);border-radius:9px;padding:2px 8px;white-space:nowrap;text-transform:uppercase}
@@ -74,12 +87,12 @@
 
   /* ---- study: the vocabulary frontload ---- */
   .vset{margin-top:16px}
-  .vset h3{font-family:Georgia,serif;font-size:11px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  .vset h3{font-family:var(--font);font-size:11px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
        color:var(--muted);border-bottom:1px solid var(--line-soft);padding-bottom:5px;margin-bottom:9px}
   .vgrid{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(238px,1fr))}
   .vcard{border:1px solid var(--line-soft);border-radius:9px;background:var(--bg);padding:10px 12px;cursor:pointer}
   .vcard:hover{border-color:var(--accent)}
-  .vcard .jp{font-family:Georgia,serif;font-size:16px;font-weight:600}
+  .vcard .jp{font-family:var(--font);font-size:16px;font-weight:600}
   .vcard .rd{font-size:11px;color:var(--muted)}
   .vcard .gl{font-size:12.5px;margin-top:3px}
   .vcard .ex{font-size:12px;color:var(--muted);margin-top:6px;padding-top:6px;
@@ -93,8 +106,8 @@
 
   /* ---- tasks ---- */
   .task-prompt{font-size:15px;line-height:1.6;margin-bottom:12px}
-  .task-prompt b{font-family:Georgia,serif}
-  .cue{font-family:Georgia,serif;font-size:19px;line-height:1.9;background:var(--bg);
+  .task-prompt b{font-family:var(--font)}
+  .cue{font-family:var(--font);font-size:19px;line-height:1.9;background:var(--bg);
        border:1px solid var(--line-soft);border-radius:10px;padding:14px 16px;margin-bottom:12px}
   .options{display:grid;gap:7px}
   .option{text-align:left;background:var(--paper);border:1px solid var(--line);border-radius:9px;
@@ -103,7 +116,7 @@
   .option[data-sel="1"]{border-color:var(--accent);background:#faf5f0}
   .option.correct{background:var(--okbg);border-color:var(--correct);color:var(--correct);font-weight:600}
   .option.incorrect{background:var(--badbg);border-color:var(--wrong);color:var(--wrong)}
-  input[type=text]{font-family:Georgia,serif;font-size:17px;padding:9px 12px;border:1px solid var(--line);
+  input[type=text]{font-family:var(--font);font-size:17px;padding:9px 12px;border:1px solid var(--line);
        border-radius:8px;background:var(--paper);color:var(--ink);width:100%;max-width:340px}
   input[type=text]:focus{outline:2px solid var(--accent);outline-offset:1px}
   input.correct{border-color:var(--correct);background:var(--okbg)}
@@ -113,19 +126,19 @@
        border-radius:9px;padding:8px;background:var(--bg);margin-bottom:9px}
   .slots.correct{border-color:var(--correct);background:var(--okbg);border-style:solid}
   .slots.incorrect{border-color:var(--wrong);background:var(--badbg);border-style:solid}
-  .tile{font-family:Georgia,serif;font-size:16px;padding:7px 13px;border:1px solid var(--line);
+  .tile{font-family:var(--font);font-size:16px;padding:7px 13px;border:1px solid var(--line);
        border-radius:8px;background:var(--paper);cursor:pointer}
   .tile:hover:not(:disabled){border-color:var(--accent)}
   .feedback{margin-top:12px;padding:11px 14px;border-radius:9px;font-size:13.5px;line-height:1.6;display:none}
   .feedback.good{display:block;background:var(--okbg);border:1px solid var(--correct)}
   .feedback.bad{display:block;background:var(--badbg);border:1px solid var(--wrong)}
-  .feedback b{font-family:Georgia,serif}
+  .feedback b{font-family:var(--font)}
   .actions{display:flex;gap:9px;justify-content:flex-end;align-items:center;margin-top:14px;flex-wrap:wrap}
   .ptrack{height:7px;background:var(--line-soft);border-radius:99px;overflow:hidden;margin-bottom:14px}
   .pfill{height:100%;width:0;background:var(--accent);transition:width .3s ease}
 
   /* ---- character builder ---- */
-  .kbig{font-family:Georgia,serif;font-size:76px;line-height:1.1;text-align:center;margin:2px 0 4px}
+  .kbig{font-family:var(--font);font-size:76px;line-height:1.1;text-align:center;margin:2px 0 4px}
   .kgloss{text-align:center;font-size:14px;margin-bottom:2px}
   .kread{text-align:center;font-size:12px;color:var(--muted);margin-bottom:14px}
   .parts{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;min-height:74px;
@@ -133,14 +146,14 @@
   .parts.correct{border-color:var(--correct);background:var(--okbg);border-style:solid}
   .parts.incorrect{border-color:var(--wrong);background:var(--badbg);border-style:solid}
   .parts:empty::after{content:"えらんでください · pick the parts";color:var(--muted);font-size:12px;align-self:center}
-  .ptile{display:flex;flex-direction:column;align-items:center;gap:1px;font-family:Georgia,serif;
+  .ptile{display:flex;flex-direction:column;align-items:center;gap:1px;font-family:var(--font);
        border:1px solid var(--line);border-radius:9px;background:var(--paper);padding:6px 13px;cursor:pointer;min-width:56px}
   .ptile:hover:not(:disabled){border-color:var(--accent)}
   .ptile .pc{font-size:27px;line-height:1.15}
-  .ptile .pg{font-size:9px;color:var(--muted);font-family:'Segoe UI',sans-serif;letter-spacing:.02em}
+  .ptile .pg{font-size:9px;color:var(--muted);font-family:var(--font);letter-spacing:.02em}
   .ptile.wrongpart{border-color:var(--wrong);background:var(--badbg)}
   .bank{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
-  .equation{font-family:Georgia,serif;font-size:30px;text-align:center;margin:10px 0 4px;line-height:1.5}
+  .equation{font-family:var(--font);font-size:30px;text-align:center;margin:10px 0 4px;line-height:1.5}
   .equation .op{color:var(--muted);font-size:20px;margin:0 7px}
   .role{display:inline-block;font-size:9px;font-weight:800;letter-spacing:.05em;border-radius:8px;
        padding:1px 7px;text-transform:uppercase;vertical-align:middle;margin-left:5px}
@@ -162,21 +175,21 @@
   .klegend .c-sense{color:var(--s1)} .klegend .c-sound{color:var(--s3)}
   .klegend .note{font-weight:400;color:var(--muted)}
   .kcard{border:1px solid var(--line-soft);border-radius:10px;padding:14px 16px;background:var(--paper);text-align:left}
-  .kcard .w{font-family:Georgia,serif;font-size:38px;font-weight:700;line-height:1.15;vertical-align:middle}
+  .kcard .w{font-family:var(--font);font-size:38px;font-weight:700;line-height:1.15;vertical-align:middle}
   .kcard .w .kglyph{vertical-align:middle;margin:-4px 0}
   .kcard .rd{font-size:12px;color:var(--muted);font-style:italic;margin-left:8px}
   .kcard .meaning{font-size:14px;margin:6px 0;line-height:1.5}
   .kcard .comp{font-size:13.5px;color:var(--muted);line-height:1.8;border-top:1px dashed var(--line-soft);
        padding-top:6px;margin-top:6px}
   .kcard .comp b,.kcard .comp i{color:var(--ink)}
-  .kcard .comp code{font-family:Georgia,serif;font-weight:700;font-size:21px;vertical-align:-1px}
+  .kcard .comp code{font-family:var(--font);font-weight:700;font-size:21px;vertical-align:-1px}
   .kcard .comp code.c-sense{color:var(--s1)} .kcard .comp code.c-sound{color:var(--s3)}
-  .kcard .comp .eq{font-family:Georgia,serif;font-size:19px;color:var(--ink);margin-left:4px}
+  .kcard .comp .eq{font-family:var(--font);font-size:19px;color:var(--ink);margin-left:4px}
   .kcard .hook{margin-top:9px}
   .hook{background:var(--band);border:1px solid var(--line-soft);border-left:4px solid var(--s2);
        border-radius:9px;padding:11px 14px;font-size:13px;line-height:1.6;margin-top:10px}
   .hook .lab{font-size:9.5px;font-weight:800;letter-spacing:.08em;color:var(--s2);text-transform:uppercase;display:block;margin-bottom:3px}
-  .inwords{font-size:12.5px;color:var(--muted);margin-top:9px;font-family:Georgia,serif}
+  .inwords{font-size:12.5px;color:var(--muted);margin-top:9px;font-family:var(--font)}
 
   /* ---- grammar gym stages ---- */
   .stage-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
@@ -186,7 +199,7 @@
   .stage-btn.done{border-color:var(--correct);color:var(--correct)}
   .mini{background:var(--band);border:1px solid var(--line-soft);border-left:4px solid var(--s3);
        border-radius:9px;padding:12px 15px;font-size:13px;line-height:1.65;margin-bottom:14px}
-  .mini b{font-family:Georgia,serif;color:var(--ink)}
+  .mini b{font-family:var(--font);color:var(--ink)}
   .hublink{display:inline-block;margin-top:8px;font-size:12px;color:var(--accent);font-weight:700;text-decoration:none}
   .hublink:hover{text-decoration:underline}
 
@@ -196,7 +209,7 @@
        font-weight:700;padding:7px 13px;border-radius:8px;cursor:pointer}
   .tier-btn.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
   .tier-note{font-size:11.5px;color:var(--muted);margin-bottom:12px}
-  .passage{font-family:Georgia,serif;font-size:17px;line-height:2.2;background:var(--bg);
+  .passage{font-family:var(--font);font-size:17px;line-height:2.2;background:var(--bg);
        border:1px solid var(--line-soft);border-radius:10px;padding:18px 20px;margin-bottom:14px}
   .passage ruby rt{font-size:.48em;font-weight:400;color:var(--muted)}
   .sent{border-radius:4px;padding:1px 2px;transition:background .12s}
@@ -206,15 +219,15 @@
   .sent.evidence{background:var(--okbg);box-shadow:inset 0 -2px 0 var(--correct)}
   .vbox{display:flex;flex-wrap:wrap;gap:6px 16px;background:var(--band);border:1px solid var(--line-soft);
        border-radius:9px;padding:10px 14px;font-size:12px;color:var(--muted);margin-bottom:14px}
-  .vbox span b{color:var(--ink);font-family:Georgia,serif;font-size:13px}
+  .vbox span b{color:var(--ink);font-family:var(--font);font-size:13px}
   .jobs{display:grid;gap:7px;grid-template-columns:repeat(auto-fill,minmax(215px,1fr))}
 
   /* ---- report ---- */
-  .bigstat{text-align:center;font-family:Georgia,serif;font-size:44px;font-weight:700;color:var(--accent);margin:6px 0}
-  .bigstat small{display:block;font-size:12px;font-family:'Segoe UI',sans-serif;color:var(--muted);font-weight:400;letter-spacing:.05em}
+  .bigstat{text-align:center;font-family:var(--font);font-size:44px;font-weight:700;color:var(--accent);margin:6px 0}
+  .bigstat small{display:block;font-size:12px;font-family:var(--font);color:var(--muted);font-weight:400;letter-spacing:.05em}
   .rrow{display:flex;justify-content:space-between;align-items:center;gap:10px;border:1px solid var(--line-soft);
        border-radius:9px;padding:11px 14px;margin-bottom:7px;font-size:13.5px}
-  .rrow .sc{font-weight:800;font-family:Georgia,serif}
+  .rrow .sc{font-weight:800;font-family:var(--font)}
   .rrow.full{border-color:var(--correct)} .rrow.full .sc{color:var(--correct)}
   .rrow.part{border-color:var(--amber)}   .rrow.part .sc{color:var(--amber)}
   .rrow.none{border-color:var(--line)}    .rrow.none .sc{color:var(--muted)}
@@ -359,7 +372,7 @@
 
 </div>
 </div>
-<div class="build-tag">Unit10 PoC 2026-08-31</div>
+<div class="build-tag">Unit10 PoC 2026-09-02</div>
 <script src="../kanji-strokes.js"></script>
 <script src="lever.js"></script>
 <script>

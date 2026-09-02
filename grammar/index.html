@@ -15,6 +15,19 @@
      MATRIX on the landing screen: the whole ELC progression is visible
      at once, and a cell is the unit of practice. */
   :root{
+    /* ---- typography: two scripts, two faces ----
+       Calibri carries the English, UD Digi Kyokasho N-R carries the Japanese.
+       UD Digi Kyokasho is the UD textbook face: correct stroke shapes for
+       handwriting models, which is why it is the classroom default. Both
+       fonts are already installed on the school machines (Windows/Office),
+       so nothing is downloaded and nothing breaks offline.
+       One stack does both jobs because the browser falls back per character:
+       Latin resolves inside --font-en, kana and kanji fall straight through
+       to --font-jp. Never write a font name outside this block. */
+    --font-en:Calibri,Carlito,'Segoe UI',Tahoma,Geneva,Verdana;
+    --font-jp:'UD Digi Kyokasho N-R','UD Digi Kyokasho NP-R','UDデジタル教科書体N-R','Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic',YuGothic,Meiryo;
+    --font:var(--font-en),var(--font-jp),sans-serif;
+
     --bg:#f4efe6; --paper:#fbf7ee; --ink:#1f1f1f; --muted:#6b6256;
     --line:#d8cfbb; --line-soft:#e8e0cd; --accent:#a83232;
     --correct:#2f6a3e; --wrong:#a83232; --okbg:#eef5ee; --badbg:#f7ecec;
@@ -27,14 +40,14 @@
     --vic:#2f6fa8; --vce:#16375e; --vce-ink:#fbf7ee; --prog:#6b6256;
   }
   *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:var(--bg);
+  body{font-family:var(--font);background:var(--bg);
        min-height:100vh;padding:16px;display:flex;justify-content:center;align-items:flex-start;color:var(--ink)}
   .container{position:relative;background:var(--paper);border:1px solid var(--line);border-radius:12px;
        max-width:1120px;width:100%;padding:26px;margin-top:12px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
   /* the drill and report read better narrow; only the timeline needs the width */
   #taskScreen,#reportScreen{max-width:760px;margin:0 auto}
-  h1{text-align:center;font-size:23px;font-family:Georgia,'Times New Roman',serif;letter-spacing:.5px}
-  h3{font-family:Georgia,serif;font-size:15px;margin:18px 0 8px;color:var(--ink)}
+  h1{text-align:center;font-size:23px;font-family:var(--font);letter-spacing:.5px}
+  h3{font-family:var(--font);font-size:15px;margin:18px 0 8px;color:var(--ink)}
   .subtitle{color:var(--muted);text-align:center;margin:6px 0 18px;font-size:13px}
   .muted{color:var(--muted);font-size:13px;line-height:1.5}
   .screen{display:none}.screen.active{display:block}
@@ -120,7 +133,7 @@
   .progress-track{height:8px;background:var(--line-soft);border-radius:99px;overflow:hidden;margin-bottom:6px}
   .progress-fill{height:100%;width:0;background:var(--accent);transition:width .3s ease}
   .skill-tag{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;text-align:center;margin:10px 0 4px}
-  .prompt{font-family:Georgia,serif;font-size:16px;text-align:center;color:var(--ink);margin-bottom:14px}
+  .prompt{font-family:var(--font);font-size:16px;text-align:center;color:var(--ink);margin-bottom:14px}
   .stimulus{font-size:24px;line-height:1.3;font-weight:700;text-align:center;background:var(--bg);
        border:1px solid var(--line);border-radius:12px;padding:24px 18px;margin-bottom:14px}
   .stimulus b{color:var(--accent);text-decoration:underline;text-underline-offset:4px}
@@ -144,7 +157,7 @@
   .pool-count.zero{color:var(--muted)}
   .pool-card.no-items{opacity:.65;cursor:default}
   .stimulus.gap{font-size:21px;display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap}
-  .gap-input{font-family:Georgia,serif;font-size:20px;font-weight:700;text-align:center;min-width:120px;
+  .gap-input{font-family:var(--font);font-size:20px;font-weight:700;text-align:center;min-width:120px;
        padding:6px 10px;border:2px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink)}
   .gap-input:focus{outline:none;border-color:var(--accent)}
   .gap-input.correct{border-color:var(--correct);background:var(--okbg)}
@@ -181,8 +194,8 @@
   .exit-btn:hover{color:var(--ink)}
 
   /* ---- report ---- */
-  .report-title{font-family:Georgia,serif;font-size:20px;text-align:center;margin-bottom:6px}
-  .big-stat{font-family:Georgia,serif;font-size:46px;font-weight:700;color:var(--accent);text-align:center;line-height:1}
+  .report-title{font-family:var(--font);font-size:20px;text-align:center;margin-bottom:6px}
+  .big-stat{font-family:var(--font);font-size:46px;font-weight:700;color:var(--accent);text-align:center;line-height:1}
   .stat-label{text-align:center;color:var(--muted);font-size:13px;margin-bottom:6px}
   #reportSummary p{text-align:center}
   .skill-row{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border:1px solid var(--line-soft);border-radius:8px;margin-bottom:5px;font-size:13px}
@@ -278,7 +291,7 @@
     <div id="copyNote"></div>
   </section>
 </div>
-<div class="build-tag" aria-hidden="true">JGH build 2026-08-27b</div>
+<div class="build-tag" aria-hidden="true">JGH build 2026-09-02</div>
 
 <!-- load order matters: content, then task types, then engine -->
 <script src="lever.js"></script>

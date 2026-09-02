@@ -8,16 +8,29 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%88%B7%3C/text%3E%3C/svg%3E">
 <style>
   :root{
+    /* ---- typography: two scripts, two faces ----
+       Calibri carries the English, UD Digi Kyokasho N-R carries the Japanese.
+       UD Digi Kyokasho is the UD textbook face: correct stroke shapes for
+       handwriting models, which is why it is the classroom default. Both
+       fonts are already installed on the school machines (Windows/Office),
+       so nothing is downloaded and nothing breaks offline.
+       One stack does both jobs because the browser falls back per character:
+       Latin resolves inside --font-en, kana and kanji fall straight through
+       to --font-jp. Never write a font name outside this block. */
+    --font-en:Calibri,Carlito,'Segoe UI',Tahoma,Geneva,Verdana;
+    --font-jp:'UD Digi Kyokasho N-R','UD Digi Kyokasho NP-R','UDデジタル教科書体N-R','Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic',YuGothic,Meiryo;
+    --font:var(--font-en),var(--font-jp),sans-serif;
+
     --bg:#f4efe6; --paper:#fbf7ee; --ink:#1f1f1f; --muted:#6b6256;
     --line:#d8cfbb; --line-soft:#e8e0cd; --accent:#a83232;
     --correct:#2f6a3e; --okbg:#eef5ee;
   }
   *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:var(--bg);
+  body{font-family:var(--font);background:var(--bg);
        min-height:100vh;padding:16px;display:flex;justify-content:center;align-items:flex-start;color:var(--ink)}
   .container{background:var(--paper);border:1px solid var(--line);border-radius:12px;
        max-width:720px;width:100%;padding:26px;margin-top:12px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
-  h1{text-align:center;font-size:22px;font-family:Georgia,serif}
+  h1{text-align:center;font-size:22px;font-family:var(--font)}
   .subtitle{color:var(--muted);text-align:center;margin:6px 0 4px;font-size:13px}
   .poc{display:block;text-align:center;font-size:11px;color:var(--muted);margin-bottom:14px}
   .poc b{color:var(--accent)}
@@ -39,7 +52,7 @@
   .play{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--bg);
        font-size:15px;cursor:pointer;flex-shrink:0}
   .play:hover{border-color:var(--accent);color:var(--accent)}
-  .qtext{font-size:16px;line-height:1.5;flex:1;font-family:Georgia,serif}
+  .qtext{font-size:16px;line-height:1.5;flex:1;font-family:var(--font)}
   .qnum{font-size:10px;font-weight:700;color:var(--muted);min-width:22px}
   .checks{display:flex;gap:8px;flex-shrink:0}
   .chk{font-size:10px;font-weight:700;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer}
@@ -60,7 +73,7 @@
     <span id="listLever" data-scope="#qlist" title="Pull down for more help with the question list. It lets go slowly."></span></div>
   <div class="qlist" id="qlist"></div>
 </div>
-<div class="build-tag">Oral PoC 2026-08-18</div>
+<div class="build-tag">Oral PoC 2026-09-02</div>
 
 <script src="lever.js"></script>
 <script>

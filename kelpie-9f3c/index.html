@@ -8,11 +8,24 @@
 <link rel="icon" href="data:,">
 <style>
   :root{
+    /* ---- typography: two scripts, two faces ----
+       Calibri carries the English, UD Digi Kyokasho N-R carries the Japanese.
+       UD Digi Kyokasho is the UD textbook face: correct stroke shapes for
+       handwriting models, which is why it is the classroom default. Both
+       fonts are already installed on the school machines (Windows/Office),
+       so nothing is downloaded and nothing breaks offline.
+       One stack does both jobs because the browser falls back per character:
+       Latin resolves inside --font-en, kana and kanji fall straight through
+       to --font-jp. Never write a font name outside this block. */
+    --font-en:Calibri,Carlito,'Segoe UI',Tahoma,Geneva,Verdana;
+    --font-jp:'UD Digi Kyokasho N-R','UD Digi Kyokasho NP-R','UDデジタル教科書体N-R','Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic',YuGothic,Meiryo;
+    --font:var(--font-en),var(--font-jp),sans-serif;
+
     --bg:#f4efe6; --paper:#fbf7ee; --ink:#1f1f1f; --muted:#6b6256;
     --line:#d8cfbb; --line-soft:#e8e0cd; --accent:#a83232; --band:#f5f0e6;
   }
   *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:var(--bg);
+  body{font-family:var(--font);background:var(--bg);
        color:var(--ink);line-height:1.62;padding:14px 14px 60px;
        -webkit-text-size-adjust:100%}
   .wrap{max-width:720px;margin:0 auto}
@@ -23,8 +36,8 @@
   .tab.on{background:var(--accent);border-color:var(--accent);color:#fff}
   .stamp{font-size:11.5px;color:var(--muted);text-align:center;margin-bottom:16px}
   .doc{display:none}.doc.on{display:block}
-  h1{font-family:Georgia,serif;font-size:25px;line-height:1.25;margin:0 0 4px}
-  h2{font-family:Georgia,serif;font-size:19px;line-height:1.3;margin:30px 0 10px;
+  h1{font-family:var(--font);font-size:25px;line-height:1.25;margin:0 0 4px}
+  h2{font-family:var(--font);font-size:19px;line-height:1.3;margin:30px 0 10px;
      padding-top:14px;border-top:1px solid var(--line-soft)}
   h3{font-size:16px;margin:22px 0 8px}
   p{margin:0 0 13px;font-size:15.5px}

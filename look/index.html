@@ -16,17 +16,30 @@
      back to anyone, just so a second visit remembers where he was.
      ============================================================ */
   :root{
+    /* ---- typography: two scripts, two faces ----
+       Calibri carries the English, UD Digi Kyokasho N-R carries the Japanese.
+       UD Digi Kyokasho is the UD textbook face: correct stroke shapes for
+       handwriting models, which is why it is the classroom default. Both
+       fonts are already installed on the school machines (Windows/Office),
+       so nothing is downloaded and nothing breaks offline.
+       One stack does both jobs because the browser falls back per character:
+       Latin resolves inside --font-en, kana and kanji fall straight through
+       to --font-jp. Never write a font name outside this block. */
+    --font-en:Calibri,Carlito,'Segoe UI',Tahoma,Geneva,Verdana;
+    --font-jp:'UD Digi Kyokasho N-R','UD Digi Kyokasho NP-R','UDデジタル教科書体N-R','Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic',YuGothic,Meiryo;
+    --font:var(--font-en),var(--font-jp),sans-serif;
+
     --bg:#f4efe6; --paper:#fbf7ee; --ink:#1f1f1f; --muted:#6b6256;
     --line:#d8cfbb; --line-soft:#e8e0cd; --accent:#a83232;
     --correct:#2f6a3e; --okbg:#eef5ee; --amber:#8a6d1e; --band:#f5f0e6;
   }
   *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:var(--bg);color:var(--ink);
+  body{font-family:var(--font);background:var(--bg);color:var(--ink);
        line-height:1.55;min-height:100vh;padding:16px}
   .wrap{max-width:760px;margin:0 auto}
   .container{background:var(--paper);border:1px solid var(--line);border-radius:12px;
        padding:26px 26px 22px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
-  h1{font-size:22px;font-family:Georgia,'Times New Roman',serif}
+  h1{font-size:22px;font-family:var(--font)}
   .subtitle{color:var(--muted);margin-top:4px;font-size:14px}
   .intro{font-size:14px;color:var(--ink);margin:16px 0 22px;max-width:62ch}
   .intro b{color:var(--accent)}
@@ -41,7 +54,7 @@
        line-height:1;margin-top:1px}
   .card.done .cktick{border-color:var(--correct)}
   .cbody{flex:1;min-width:0}
-  .cname{font-family:Georgia,serif;font-size:16.5px}
+  .cname{font-family:var(--font);font-size:16.5px}
   .chook{font-size:13.5px;color:var(--muted);margin:3px 0 9px}
   .clinks{display:flex;gap:8px;flex-wrap:wrap}
   .clink{font-size:12.5px;font-weight:700;color:var(--accent);text-decoration:none;
@@ -51,7 +64,7 @@
 
   .vision{border:1px solid var(--line);border-left:4px solid var(--amber);border-radius:10px;
        background:#faf6ea;padding:18px 20px;margin-top:6px}
-  .vision h2{font-family:Georgia,serif;font-size:16px;margin-bottom:8px}
+  .vision h2{font-family:var(--font);font-size:16px;margin-bottom:8px}
   .vision p{font-size:13.5px;color:var(--ink);margin-bottom:10px;max-width:64ch}
   .vision p:last-child{margin-bottom:0}
   .vision .tag{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.06em;

@@ -12,6 +12,19 @@
      rung in between. Ported from the bump-it-up / level-anchor-sheet
      pattern in Liam's Year 7 Humanities pages. */
   :root{
+    /* ---- typography: two scripts, two faces ----
+       Calibri carries the English, UD Digi Kyokasho N-R carries the Japanese.
+       UD Digi Kyokasho is the UD textbook face: correct stroke shapes for
+       handwriting models, which is why it is the classroom default. Both
+       fonts are already installed on the school machines (Windows/Office),
+       so nothing is downloaded and nothing breaks offline.
+       One stack does both jobs because the browser falls back per character:
+       Latin resolves inside --font-en, kana and kanji fall straight through
+       to --font-jp. Never write a font name outside this block. */
+    --font-en:Calibri,Carlito,'Segoe UI',Tahoma,Geneva,Verdana;
+    --font-jp:'UD Digi Kyokasho N-R','UD Digi Kyokasho NP-R','UDデジタル教科書体N-R','Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic',YuGothic,Meiryo;
+    --font:var(--font-en),var(--font-jp),sans-serif;
+
     --bg:#f4efe6; --paper:#fbf7ee; --ink:#1f1f1f; --muted:#6b6256;
     --line:#d8cfbb; --line-soft:#e8e0cd; --accent:#a83232;
     --band:#f5f0e6;
@@ -28,18 +41,18 @@
     --aite:#7a6a12;   --aite-soft:#f3eed6;
   }
   *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:var(--bg);color:var(--ink);
+  body{font-family:var(--font);background:var(--bg);color:var(--ink);
        line-height:1.5;min-height:100vh;padding:16px}
   .wrap{max-width:1080px;margin:0 auto}
   .container{background:var(--paper);border:1px solid var(--line);border-radius:12px;
        padding:26px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
-  h1{text-align:center;font-size:23px;font-family:Georgia,'Times New Roman',serif;letter-spacing:.5px}
+  h1{text-align:center;font-size:23px;font-family:var(--font);letter-spacing:.5px}
   .subtitle{color:var(--muted);text-align:center;margin:6px 0 4px;font-size:13px}
   .poc{display:block;text-align:center;font-size:11px;color:var(--muted);margin-bottom:16px}
   .poc b{color:var(--accent)}
   .task{background:var(--bg);border:1px solid var(--line-soft);border-left:4px solid var(--accent);
        border-radius:10px;padding:12px 16px;font-size:13.5px;margin-bottom:18px}
-  .task b{font-family:Georgia,serif}
+  .task b{font-family:var(--font)}
 
   /* ---- the ladder rail ---- */
   .rail{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-bottom:6px}
@@ -67,7 +80,7 @@
   .sheet.next{background:var(--band)}
   .sheet-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
        border-bottom:2px solid var(--ink);padding-bottom:9px;margin-bottom:14px}
-  .sheet-head h2{font-family:Georgia,serif;font-size:22px;letter-spacing:-.01em}
+  .sheet-head h2{font-family:var(--font);font-size:22px;letter-spacing:-.01em}
   .sheet.next .sheet-head h2{color:var(--muted)}
   .whichlv{font-size:9.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
        width:100%;margin-bottom:-4px}
@@ -76,11 +89,11 @@
   .cur-vic{color:var(--vic);border:1px solid var(--vic);background:transparent}
   .cur-vce{color:var(--vce-ink);background:var(--vce);border:1px solid var(--vce)}
 
-  h3{font-family:Georgia,serif;font-size:11px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  h3{font-family:var(--font);font-size:11px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
        color:var(--muted);border-bottom:1px solid var(--line-soft);padding-bottom:5px;margin:16px 0 9px}
   h3:first-of-type{margin-top:0}
 
-  .jp{font-family:Georgia,'Times New Roman',serif;font-size:17.5px;line-height:2.15}
+  .jp{font-family:var(--font);font-size:17.5px;line-height:2.15}
   .sheet.next .jp{font-size:16px}
   ruby rt{font-size:.48em;font-weight:400;color:var(--muted);line-height:1}
   .nofuri rt{display:none}
@@ -179,7 +192,7 @@
 </div>
 </div>
 <div id="printAll"></div>
-<div class="build-tag">LevelUp PoC 2026-08-18</div>
+<div class="build-tag">LevelUp PoC 2026-09-02</div>
 
 <script src="lever.js"></script>
 <script>

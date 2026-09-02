@@ -33,6 +33,19 @@
      the generated app by hand.
      ============================================================ */
   :root{
+    /* ---- typography: two scripts, two faces ----
+       Calibri carries the English, UD Digi Kyokasho N-R carries the Japanese.
+       UD Digi Kyokasho is the UD textbook face: correct stroke shapes for
+       handwriting models, which is why it is the classroom default. Both
+       fonts are already installed on the school machines (Windows/Office),
+       so nothing is downloaded and nothing breaks offline.
+       One stack does both jobs because the browser falls back per character:
+       Latin resolves inside --font-en, kana and kanji fall straight through
+       to --font-jp. Never write a font name outside this block. */
+    --font-en:Calibri,Carlito,'Segoe UI',Tahoma,Geneva,Verdana;
+    --font-jp:'UD Digi Kyokasho N-R','UD Digi Kyokasho NP-R','UDデジタル教科書体N-R','Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic',YuGothic,Meiryo;
+    --font:var(--font-en),var(--font-jp),sans-serif;
+
     --bg:#f4efe6; --paper:#fbf7ee; --ink:#1f1f1f; --muted:#6b6256;
     --line:#d8cfbb; --line-soft:#e8e0cd; --accent:#a83232;
     --correct:#2f6a3e; --wrong:#a83232; --okbg:#eef5ee; --badbg:#f7ecec;
@@ -42,13 +55,13 @@
     --both:#6b4a9e;  --both-bg:#ece4f6;
   }
   *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:var(--bg);color:var(--ink);
+  body{font-family:var(--font);background:var(--bg);color:var(--ink);
        line-height:1.5;min-height:100vh;padding:16px}
   .wrap{max-width:1000px;margin:0 auto}
   .container{background:var(--paper);border:1px solid var(--line);border-radius:12px;
        padding:24px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
-  h1{text-align:center;font-size:22px;font-family:Georgia,'Times New Roman',serif;letter-spacing:.5px}
-  h2{font-family:Georgia,serif;font-size:17px;margin:0 0 4px}
+  h1{text-align:center;font-size:22px;font-family:var(--font);letter-spacing:.5px}
+  h2{font-family:var(--font);font-size:17px;margin:0 0 4px}
   .subtitle{color:var(--muted);text-align:center;margin:6px 0 4px;font-size:13px}
   .poc{display:block;text-align:center;font-size:11px;color:var(--muted);margin-bottom:14px}
   .poc b{color:var(--accent)}
@@ -66,12 +79,12 @@
   /* ---- home: year groups and unit cards ---- */
   .themehead{font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;
        color:var(--muted);margin:18px 0 8px;border-bottom:1px solid var(--line-soft);padding-bottom:4px}
-  .themehead b{color:var(--ink);font-size:14px;letter-spacing:0;text-transform:none;font-family:Georgia,serif;margin-right:8px}
+  .themehead b{color:var(--ink);font-size:14px;letter-spacing:0;text-transform:none;font-family:var(--font);margin-right:8px}
   .unitgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
   .ucard{text-align:left;border:1px solid var(--line);border-radius:10px;background:var(--paper);
        padding:12px 14px;cursor:pointer;display:flex;flex-direction:column;gap:5px}
   .ucard:hover{border-color:var(--accent)}
-  .ucard .ut{font-family:Georgia,serif;font-size:15.5px}
+  .ucard .ut{font-family:var(--font);font-size:15.5px}
   .ucard .ub{font-size:12px;color:var(--muted)}
   .ucard .uth{font-size:10px;color:var(--pos);font-weight:700}
   .udots{display:flex;gap:5px;margin-top:2px}
@@ -81,7 +94,7 @@
 
   /* ---- unit page: gap gate + five step cards ---- */
   .uhead{text-align:center;margin-bottom:4px}
-  .uhead .ut{font-family:Georgia,serif;font-size:19px}
+  .uhead .ut{font-family:var(--font);font-size:19px}
   .uhead .utheme{font-size:11.5px;color:var(--muted)}
   .uhead .ublurb{font-size:13px;color:var(--muted);max-width:640px;margin:4px auto 0}
   .gapcard{display:flex;align-items:center;gap:14px;text-align:left;border:1px dashed var(--amber);
@@ -89,7 +102,7 @@
   .gapcard:hover{border-style:solid}
   .gapcard .sn{width:34px;height:34px;border-radius:50%;border:2px dashed var(--amber);color:var(--amber);
        display:grid;place-items:center;font-weight:800;font-size:15px;flex:none}
-  .gapcard .st{font-family:Georgia,serif;font-size:15px}
+  .gapcard .st{font-family:var(--font);font-size:15px}
   .gapcard .ss{font-size:12px;color:var(--muted)}
   .gapcard .stag{margin-left:auto;font-size:11.5px;font-weight:700;white-space:nowrap;color:var(--amber)}
   .gapcard.ok .stag{color:var(--correct)}
@@ -100,7 +113,7 @@
   .stepcard .sn{width:34px;height:34px;border-radius:50%;border:2px solid var(--line);color:var(--muted);
        display:grid;place-items:center;font-weight:800;font-size:15px;flex:none}
   .stepcard.done .sn{border-color:var(--correct);background:var(--okbg);color:var(--correct)}
-  .stepcard .st{font-family:Georgia,serif;font-size:15.5px}
+  .stepcard .st{font-family:var(--font);font-size:15.5px}
   .stepcard .ss{font-size:12px;color:var(--muted)}
   .stepcard .stag{margin-left:auto;font-size:11.5px;color:var(--correct);font-weight:700;white-space:nowrap}
   .reportrow{text-align:center;margin-top:14px}
@@ -109,7 +122,7 @@
 
   /* ---- generic step chrome ---- */
   .stephead{text-align:center;margin-bottom:12px}
-  .stephead .sh{font-family:Georgia,serif;font-size:18px}
+  .stephead .sh{font-family:var(--font);font-size:18px}
   .stephead .shs{font-size:12.5px;color:var(--muted)}
   .stepfoot{display:flex;justify-content:space-between;align-items:center;margin-top:18px;gap:10px}
   .prog{font-size:12px;color:var(--muted);font-weight:700}
@@ -127,13 +140,13 @@
   .wtable{display:flex;flex-direction:column;gap:8px}
   .wrow{display:flex;align-items:center;gap:14px;border:1px solid var(--line-soft);border-radius:10px;
        background:var(--paper);padding:9px 12px}
-  .wrow .wk{font-family:Georgia,serif;font-size:27px;min-width:96px;text-align:center}
+  .wrow .wk{font-family:var(--font);font-size:27px;min-width:96px;text-align:center}
   .wrow .wr{font-size:12.5px;color:var(--muted);min-width:86px;text-align:center}
   .wrow .wdef{font-size:12.5px;color:var(--muted);flex:1}
   .wrow .wparts{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
   .pchip{display:flex;flex-direction:column;align-items:center;border:1px solid var(--line);border-radius:8px;
        padding:3px 8px;background:var(--bg);min-width:44px}
-  .pchip .pk{font-family:Georgia,serif;font-size:17px;line-height:1.2}
+  .pchip .pk{font-family:var(--font);font-size:17px;line-height:1.2}
   .pchip .pg{font-size:8.5px;color:var(--muted);white-space:nowrap}
 
   /* ---- step 1, kanji units: the purple-lab word card ----
@@ -149,18 +162,18 @@
      neutral, and so does the parts bank in step 2: a part has no job
      until there is a character for it to do the job in. */
   .wcard{border:1px solid var(--line-soft);border-radius:10px;background:var(--paper);padding:13px 15px}
-  .wcard .w{font-family:Georgia,serif;font-size:30px;font-weight:700;line-height:1.2;vertical-align:middle}
+  .wcard .w{font-family:var(--font);font-size:30px;font-weight:700;line-height:1.2;vertical-align:middle}
   .wcard .wr{font-size:12.5px;color:var(--muted);font-style:italic;margin-left:9px}
   .wcard .wdef{display:block;font-size:13.5px;margin:6px 0;line-height:1.5}
   .wcard .comp{font-size:13.5px;color:var(--muted);line-height:1.8;border-top:1px dashed var(--line-soft);
        padding-top:6px;margin-top:6px}
   .wcard .comp b,.wcard .comp i{color:var(--ink)}
-  .wcard .comp code{font-family:Georgia,serif;font-weight:700;font-size:20px;vertical-align:-1px}
+  .wcard .comp code{font-family:var(--font);font-weight:700;font-size:20px;vertical-align:-1px}
   .wcard .comp code.c-sense{color:var(--sense)} .wcard .comp code.c-sound{color:var(--sound)}
   .wcard .comp code.c-both{color:var(--both)} .wcard .comp code.c-none{color:var(--muted)}
   .wcard .rad{font-size:11px;font-weight:700;color:var(--muted)}
   .wcard .kn{font-size:12.5px;color:var(--muted);line-height:1.7;margin-top:6px}
-  .wcard .kn .kc{font-family:Georgia,serif;font-size:19px;font-weight:700;color:var(--ink);vertical-align:-1px}
+  .wcard .kn .kc{font-family:var(--font);font-size:19px;font-weight:700;color:var(--ink);vertical-align:-1px}
   .wcard .kn .kc .kglyph{vertical-align:middle;margin:-3px 0}
   .kvgnote{font-size:11.5px;color:var(--muted);line-height:1.6;margin-top:14px;text-align:left}
   .wcard .kn .hk{display:block;font-size:12px;margin-top:1px}
@@ -169,8 +182,8 @@
   .wlegend .c-sense{color:var(--sense)} .wlegend .c-sound{color:var(--sound)} .wlegend .c-both{color:var(--both)}
   .wlegend .note{font-weight:400;color:var(--muted)}
   .kpchip{border:1px dashed var(--line);border-radius:8px;padding:3px 10px;background:var(--bg);
-       font-family:Georgia,serif;font-size:16px;color:var(--muted)}
-  .kpchip small{display:block;font-family:'Segoe UI',sans-serif;font-size:8.5px}
+       font-family:var(--font);font-size:16px;color:var(--muted)}
+  .kpchip small{display:block;font-family:var(--font);font-size:8.5px}
   body.hidehelp .wr,body.hidehelp .wdef{visibility:hidden}
   .studytools{text-align:center;margin:0 0 12px}
   .vocablink{text-align:center;margin-top:14px;font-size:12.5px}
@@ -185,7 +198,7 @@
   .qcard:hover{border-color:var(--accent)}
   .qcard.sel{border-color:var(--accent);box-shadow:0 0 0 2px rgba(168,50,50,.18)}
   .qcard.built{border-color:var(--correct);background:var(--okbg);cursor:default;
-       font-family:Georgia,serif;font-size:19px;color:var(--correct);text-align:center}
+       font-family:var(--font);font-size:19px;color:var(--correct);text-align:center}
   .bench{border:1px solid var(--line-soft);border-radius:12px;background:var(--band);padding:16px 14px 14px;margin-bottom:8px}
   .prompt{text-align:center;font-size:14px;margin-bottom:14px}
   .prompt b{font-weight:700}
@@ -193,7 +206,7 @@
      FRAME boxes are built from radicals in their real positions. */
   .wordstrip{display:flex;gap:9px;justify-content:center;align-items:flex-end;flex-wrap:wrap;margin-bottom:10px}
   .wbox{width:58px;height:64px;border:2px dashed var(--line);border-radius:10px;background:var(--bg);
-       display:grid;place-items:center;font-family:Georgia,serif;font-size:27px;cursor:pointer}
+       display:grid;place-items:center;font-family:var(--font);font-size:27px;cursor:pointer}
   .wbox.over{border-color:var(--accent);background:#faf5f0}
   .wbox.filled{border-style:solid}
   .wframe{width:106px;height:106px;border:2px dashed var(--amber);border-radius:12px;background:var(--bg);
@@ -201,7 +214,7 @@
   .wframe .wflab{position:absolute;top:-9px;left:50%;transform:translateX(-50%);font-size:8.5px;font-weight:800;
        letter-spacing:.05em;color:#fff;background:var(--amber);border-radius:8px;padding:0 7px;text-transform:uppercase;white-space:nowrap}
   .wsub{position:absolute;border:2px dashed var(--line);border-radius:8px;background:var(--paper);
-       display:grid;place-items:center;font-family:Georgia,serif;font-size:20px;cursor:pointer}
+       display:grid;place-items:center;font-family:var(--font);font-size:20px;cursor:pointer}
   .wsub.over{border-color:var(--accent)}
   .wsub.filled{border-style:solid}
   /* sub-slot geometry per layout */
@@ -219,7 +232,7 @@
   .wsub.lit-sound{border-color:var(--sound);background:var(--sound-bg);color:var(--sound);animation:pop .45s ease-out}
   @keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.13)}100%{transform:scale(1)}}
   .wframe.fusedframe{border:2px solid var(--correct);background:var(--okbg);display:grid;place-items:center;
-       font-family:Georgia,serif;font-size:46px;color:var(--correct);animation:formin .5s ease-out}
+       font-family:var(--font);font-size:46px;color:var(--correct);animation:formin .5s ease-out}
   @keyframes formin{0%{opacity:0;transform:scale(.6)}100%{opacity:1;transform:scale(1)}}
   .wframe.shake,.wordstrip.shake,.wsub.shake{animation:shake .4s}
   @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
@@ -232,7 +245,7 @@
   .piece:hover{border-color:var(--accent)}
   .piece.used{opacity:.28;pointer-events:none}
   .piece.sel{border-color:var(--accent);box-shadow:0 0 0 2px rgba(168,50,50,.18)}
-  .piece .pc{font-family:Georgia,serif;font-size:27px;line-height:1.1}
+  .piece .pc{font-family:var(--font);font-size:27px;line-height:1.1}
   .piece .pg{font-size:9.5px;color:var(--muted);font-weight:600}
   .piece .pn{font-size:8.5px;color:var(--pos)}
   .piece.dragging{opacity:.4}
@@ -241,7 +254,7 @@
   .kbankwrap{position:sticky;top:0;z-index:5;background:var(--band);border:1px solid var(--line-soft);
        border-radius:12px;padding:10px 12px 12px;margin-bottom:14px}
   .kbank{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
-  .ktile{font-family:Georgia,serif;font-size:21px;line-height:1;padding:8px 10px;border:1px solid var(--line);
+  .ktile{font-family:var(--font);font-size:21px;line-height:1;padding:8px 10px;border:1px solid var(--line);
        border-radius:9px;background:var(--paper);cursor:grab;min-width:40px;text-align:center}
   .ktile:hover{border-color:var(--accent)}
   .ktile.sel{border-color:var(--accent);box-shadow:0 0 0 2px rgba(168,50,50,.18)}
@@ -252,22 +265,22 @@
   .krow .kdef{font-size:12.5px;color:var(--muted);flex:1;min-width:200px}
   .krow .kslots{display:flex;gap:5px}
   .kslot{width:44px;height:48px;border:2px dashed var(--line);border-radius:9px;background:var(--bg);
-       display:grid;place-items:center;font-family:Georgia,serif;font-size:22px;cursor:pointer}
+       display:grid;place-items:center;font-family:var(--font);font-size:22px;cursor:pointer}
   .kslot.over{border-color:var(--accent);background:#faf5f0}
   .kslot.filled{border-style:solid}
   .krow.done{border-color:var(--correct);background:var(--okbg)}
-  .krow.done .kbuilt{font-family:Georgia,serif;font-size:23px;color:var(--correct);font-weight:700}
+  .krow.done .kbuilt{font-family:var(--font);font-size:23px;color:var(--correct);font-weight:700}
   .krow.done .kkp{font-size:12px;color:var(--muted)}
   .krow.shake{animation:shake .4s}
   .ktile.kt-kanji{display:flex;flex-direction:column;align-items:center;gap:1px;padding:6px 9px}
-  .ktile .ktg{font-family:'Segoe UI',sans-serif;font-size:8.5px;color:var(--muted);line-height:1.2;max-width:74px;
+  .ktile .ktg{font-family:var(--font);font-size:8.5px;color:var(--muted);line-height:1.2;max-width:74px;
        overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
   /* ---- step 3: QA ---- */
   .qabox{border:1px solid var(--line-soft);border-radius:12px;background:var(--paper);padding:18px 16px;max-width:640px;margin:0 auto}
   .qaq{margin-bottom:12px}
-  .jp{font-family:Georgia,serif;font-size:19px;line-height:1.7}
-  .jp .sub{display:block;font-family:'Segoe UI',sans-serif;font-size:12.5px;color:var(--muted)}
+  .jp{font-family:var(--font);font-size:19px;line-height:1.7}
+  .jp .sub{display:block;font-family:var(--font);font-size:12.5px;color:var(--muted)}
   .qalab{font-size:10.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
   .qaa{border-top:1px dashed var(--line);padding-top:12px;margin-top:6px}
   .qatip{font-size:12.5px;color:var(--amber);margin-top:8px}
@@ -298,7 +311,7 @@
   .edit{border:1px solid var(--line-soft);border-radius:10px;background:var(--paper);padding:14px}
   .edit .weaklab{font-size:10.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--wrong);margin-bottom:3px}
   .edit .opts{display:flex;flex-direction:column;gap:7px;margin-top:10px}
-  .optbtn{text-align:left;font-family:Georgia,serif;font-size:15.5px;padding:9px 12px;border:1px solid var(--line);
+  .optbtn{text-align:left;font-family:var(--font);font-size:15.5px;padding:9px 12px;border:1px solid var(--line);
        border-radius:8px;background:var(--bg);cursor:pointer}
   .optbtn:hover{border-color:var(--accent)}
   .optbtn.good{border-color:var(--correct);background:var(--okbg);color:var(--correct)}

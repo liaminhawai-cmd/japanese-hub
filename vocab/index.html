@@ -23,6 +23,19 @@
      under data/units/, then run tools/gen-units.js.
      ============================================================ */
   :root{
+    /* ---- typography: two scripts, two faces ----
+       Calibri carries the English, UD Digi Kyokasho N-R carries the Japanese.
+       UD Digi Kyokasho is the UD textbook face: correct stroke shapes for
+       handwriting models, which is why it is the classroom default. Both
+       fonts are already installed on the school machines (Windows/Office),
+       so nothing is downloaded and nothing breaks offline.
+       One stack does both jobs because the browser falls back per character:
+       Latin resolves inside --font-en, kana and kanji fall straight through
+       to --font-jp. Never write a font name outside this block. */
+    --font-en:Calibri,Carlito,'Segoe UI',Tahoma,Geneva,Verdana;
+    --font-jp:'UD Digi Kyokasho N-R','UD Digi Kyokasho NP-R','UDデジタル教科書体N-R','Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic',YuGothic,Meiryo;
+    --font:var(--font-en),var(--font-jp),sans-serif;
+
     --bg:#f4efe6; --paper:#fbf7ee; --ink:#1f1f1f; --muted:#6b6256;
     --line:#d8cfbb; --line-soft:#e8e0cd; --accent:#a83232;
     --correct:#2f6a3e; --wrong:#a83232; --okbg:#eef5ee; --badbg:#f7ecec;
@@ -32,12 +45,12 @@
     --both:#6b4a9e;  --both-bg:#ece4f6;
   }
   *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:var(--bg);color:var(--ink);
+  body{font-family:var(--font);background:var(--bg);color:var(--ink);
        line-height:1.5;min-height:100vh;padding:16px}
   .wrap{max-width:1000px;margin:0 auto}
   .container{background:var(--paper);border:1px solid var(--line);border-radius:12px;
        padding:24px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
-  h1{text-align:center;font-size:22px;font-family:Georgia,'Times New Roman',serif;letter-spacing:.5px}
+  h1{text-align:center;font-size:22px;font-family:var(--font);letter-spacing:.5px}
   .subtitle{color:var(--muted);text-align:center;margin:6px 0 4px;font-size:13px}
   .poc{display:block;text-align:center;font-size:11px;color:var(--muted);margin-bottom:14px}
   .poc b{color:var(--accent)}
@@ -70,21 +83,21 @@
   .wcard{text-align:left;border:1px solid var(--line);border-radius:10px;background:var(--paper);
        padding:11px 13px;cursor:pointer;display:flex;flex-direction:column;gap:3px}
   .wcard:hover{border-color:var(--accent)}
-  .wcard .ww{font-family:Georgia,serif;font-size:21px;line-height:1.3}
+  .wcard .ww{font-family:var(--font);font-size:21px;line-height:1.3}
   .wcard .wr{font-size:11.5px;color:var(--muted)}
   .wcard .wd{font-size:11.5px;color:var(--muted)}
   .wcard.open{border-color:var(--accent);box-shadow:0 0 0 2px rgba(168,50,50,.12)}
   .wdetail{grid-column:1/-1;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;
        background:var(--band);padding:14px 16px}
-  .wdetail .dw{font-family:Georgia,serif;font-size:26px}
+  .wdetail .dw{font-family:var(--font);font-size:26px}
   .wdetail .dr{font-size:13px;color:var(--muted);margin-bottom:6px}
   .wdetail .dd{font-size:13px;margin-bottom:8px}
-  .wdetail .dex{font-family:Georgia,serif;font-size:15px;margin:6px 0 2px}
+  .wdetail .dex{font-family:var(--font);font-size:15px;margin:6px 0 2px}
   .wdetail .dexg{font-size:12px;color:var(--muted);margin-bottom:8px}
   .dparts{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 10px}
   .dpart{display:flex;flex-direction:column;align-items:center;border:1px solid var(--line);border-radius:8px;
        padding:4px 10px;background:var(--paper);min-width:52px}
-  .dpart .pk{font-family:Georgia,serif;font-size:20px;line-height:1.2}
+  .dpart .pk{font-family:var(--font);font-size:20px;line-height:1.2}
   .dpart .pg{font-size:9px;color:var(--muted)}
   .dpart.cap-sense{border-color:var(--sense);background:var(--sense-bg)}
   .dpart.cap-sound{border-color:var(--sound);background:var(--sound-bg)}
@@ -94,14 +107,14 @@
        border-radius:7px;padding:4px 10px;background:var(--paper)}
   .dunit:hover{border-color:var(--accent)}
   .kpnote{font-size:11px;color:var(--muted)}
-  .kpnote b{font-family:Georgia,serif;font-size:14px}
+  .kpnote b{font-family:var(--font);font-size:14px}
 
   /* ---- quiz ---- */
   .quizbox{border:1px solid var(--line-soft);border-radius:12px;background:var(--paper);padding:18px 16px;max-width:640px;margin:0 auto}
   .qlab{font-size:10.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
   .qdef{font-size:14.5px;margin-bottom:14px}
   .qopts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  .qopt{font-family:Georgia,serif;font-size:19px;padding:12px;border:1px solid var(--line);border-radius:9px;
+  .qopt{font-family:var(--font);font-size:19px;padding:12px;border:1px solid var(--line);border-radius:9px;
        background:var(--bg);cursor:pointer;text-align:center}
   .qopt:hover{border-color:var(--accent)}
   .qopt.good{border-color:var(--correct);background:var(--okbg);color:var(--correct)}

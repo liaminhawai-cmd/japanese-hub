@@ -8,6 +8,19 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%88%B7%3C/text%3E%3C/svg%3E">
 <style>
   :root{
+    /* ---- typography: two scripts, two faces ----
+       Calibri carries the English, UD Digi Kyokasho N-R carries the Japanese.
+       UD Digi Kyokasho is the UD textbook face: correct stroke shapes for
+       handwriting models, which is why it is the classroom default. Both
+       fonts are already installed on the school machines (Windows/Office),
+       so nothing is downloaded and nothing breaks offline.
+       One stack does both jobs because the browser falls back per character:
+       Latin resolves inside --font-en, kana and kanji fall straight through
+       to --font-jp. Never write a font name outside this block. */
+    --font-en:Calibri,Carlito,'Segoe UI',Tahoma,Geneva,Verdana;
+    --font-jp:'UD Digi Kyokasho N-R','UD Digi Kyokasho NP-R','UDデジタル教科書体N-R','Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic',YuGothic,Meiryo;
+    --font:var(--font-en),var(--font-jp),sans-serif;
+
     --bg:#f4efe6; --paper:#fbf7ee; --ink:#1f1f1f; --muted:#6b6256;
     --line:#d8cfbb; --line-soft:#e8e0cd; --accent:#a83232;
     /* the three moves — Liam's writing-wall trio, Japanese edition.
@@ -17,11 +30,11 @@
     --judge:#8a5a10;--judge-bg:#f6ecd9;/* judgement: the writer's call */
   }
   *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:var(--bg);
+  body{font-family:var(--font);background:var(--bg);
        min-height:100vh;padding:16px;display:flex;justify-content:center;align-items:flex-start;color:var(--ink)}
   .container{background:var(--paper);border:1px solid var(--line);border-radius:12px;
        max-width:760px;width:100%;padding:26px;margin-top:12px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
-  h1{text-align:center;font-size:22px;font-family:Georgia,serif}
+  h1{text-align:center;font-size:22px;font-family:var(--font)}
   .subtitle{color:var(--muted);text-align:center;margin:6px 0 4px;font-size:13px}
   .poc{display:block;text-align:center;font-size:11px;color:var(--muted);margin-bottom:14px}
   .poc b{color:var(--accent)}
@@ -31,7 +44,7 @@
   .leg-bal{color:var(--bal);background:var(--bal-bg);border-color:var(--bal)}
   .leg-judge{color:var(--judge);background:var(--judge-bg);border-color:var(--judge)}
   .hint{text-align:center;font-size:12px;color:var(--muted);margin-bottom:16px}
-  .text{font-family:Georgia,serif;font-size:17px;line-height:2.1;background:var(--bg);
+  .text{font-family:var(--font);font-size:17px;line-height:2.1;background:var(--bg);
        border:1px solid var(--line-soft);border-radius:12px;padding:22px 24px}
   .mv{cursor:pointer;border-bottom:2px solid;padding:1px 2px;border-radius:3px}
   .mv-ex{color:var(--ex);border-color:var(--ex)}
@@ -39,12 +52,12 @@
   .mv-judge{color:var(--judge);border-color:var(--judge)}
   .mv.open{background:var(--paper)}
   .note{display:none;margin:14px 0;border-radius:10px;padding:12px 16px;font-size:13.5px;line-height:1.6;
-       font-family:'Segoe UI',Tahoma,sans-serif;border:1px solid}
+       font-family:var(--font);border:1px solid}
   .note.show{display:block}
   .note-ex{background:var(--ex-bg);border-color:var(--ex)}
   .note-bal{background:var(--bal-bg);border-color:var(--bal)}
   .note-judge{background:var(--judge-bg);border-color:var(--judge)}
-  .note b{font-family:Georgia,serif}
+  .note b{font-family:var(--font)}
   .next{background:var(--paper);border:1px dashed var(--line);border-radius:10px;padding:12px 16px;
        font-size:12px;color:var(--muted);margin-top:18px;text-align:center}
   .build-tag{position:fixed;left:6px;bottom:5px;font-family:monospace;font-size:9px;color:var(--muted);opacity:.45;pointer-events:none}
@@ -70,7 +83,7 @@
   <p class="next">Next, with Andrew's model answers (Q9): the same wall for each VCE writing form, then an
     assemble-your-own task built from these moves — the Bone Sparrow pattern.</p>
 </div>
-<div class="build-tag">Wall PoC 2026-08-18</div>
+<div class="build-tag">Wall PoC 2026-09-02</div>
 
 <script src="lever.js"></script>
 <script>

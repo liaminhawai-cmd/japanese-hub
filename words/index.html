@@ -11,6 +11,19 @@
      matrix idea ported to kanji families, using one small word list from
      Andrew's own 給食 unit. Three families, three tasks each. */
   :root{
+    /* ---- typography: two scripts, two faces ----
+       Calibri carries the English, UD Digi Kyokasho N-R carries the Japanese.
+       UD Digi Kyokasho is the UD textbook face: correct stroke shapes for
+       handwriting models, which is why it is the classroom default. Both
+       fonts are already installed on the school machines (Windows/Office),
+       so nothing is downloaded and nothing breaks offline.
+       One stack does both jobs because the browser falls back per character:
+       Latin resolves inside --font-en, kana and kanji fall straight through
+       to --font-jp. Never write a font name outside this block. */
+    --font-en:Calibri,Carlito,'Segoe UI',Tahoma,Geneva,Verdana;
+    --font-jp:'UD Digi Kyokasho N-R','UD Digi Kyokasho NP-R','UDデジタル教科書体N-R','Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic',YuGothic,Meiryo;
+    --font:var(--font-en),var(--font-jp),sans-serif;
+
     --bg:#f4efe6; --paper:#fbf7ee; --ink:#1f1f1f; --muted:#6b6256;
     --line:#d8cfbb; --line-soft:#e8e0cd; --accent:#a83232;
     --correct:#2f6a3e; --wrong:#a83232; --okbg:#eef5ee; --badbg:#f7ecec;
@@ -30,11 +43,11 @@
     --part-bg:#e3ecf5;
   }
   *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:var(--bg);
+  body{font-family:var(--font);background:var(--bg);
        min-height:100vh;padding:16px;display:flex;justify-content:center;align-items:flex-start;color:var(--ink)}
   .container{background:var(--paper);border:1px solid var(--line);border-radius:12px;
        max-width:720px;width:100%;padding:26px;margin-top:12px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
-  h1{text-align:center;font-size:22px;font-family:Georgia,serif;letter-spacing:.5px}
+  h1{text-align:center;font-size:22px;font-family:var(--font);letter-spacing:.5px}
   .subtitle{color:var(--muted);text-align:center;margin:6px 0 4px;font-size:13px}
   .poc{display:block;text-align:center;font-size:11px;color:var(--muted);margin-bottom:16px}
   .poc b{color:var(--accent)}
@@ -52,7 +65,7 @@
   .fam-card{border:1px solid var(--line);border-radius:12px;background:var(--paper);padding:16px;
        cursor:pointer;text-align:center;transition:border-color .12s ease}
   .fam-card:hover{border-color:var(--accent)}
-  .fam-kanji{font-size:44px;font-family:Georgia,serif;color:var(--head)}
+  .fam-kanji{font-size:44px;font-family:var(--font);color:var(--head)}
   .fam-gloss{font-size:12px;color:var(--muted);margin-top:4px}
   .fam-count{font-size:11px;font-weight:700;color:var(--accent);margin-top:6px}
 
@@ -63,7 +76,7 @@
   .words{display:flex;flex-direction:column;gap:8px;max-width:440px;margin:0 auto}
   .word-row{display:flex;align-items:center;gap:12px;border:1px solid var(--line-soft);border-radius:10px;
        background:var(--bg);padding:10px 14px}
-  .word-jp{font-size:24px;font-family:Georgia,serif;min-width:150px;cursor:pointer}
+  .word-jp{font-size:24px;font-family:var(--font);min-width:150px;cursor:pointer}
   .word-jp .h{color:var(--head)}
   /* purple-lab move: colour the headword's own spelling by morpheme role,
      not just the breakdown line underneath it */
@@ -85,13 +98,13 @@
   .tap-hint{font-size:11px;color:var(--muted);text-align:center;margin-top:10px}
 
   /* ---- build task ---- */
-  .task-prompt{font-family:Georgia,serif;font-size:16px;text-align:center;margin:14px 0 6px}
+  .task-prompt{font-family:var(--font);font-size:16px;text-align:center;margin:14px 0 6px}
   .task-cue{text-align:center;color:var(--muted);font-size:13px;margin-bottom:12px}
   .slots,.bank{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:10px 0}
   .slots{min-height:56px;padding:10px;border:2px dashed var(--line);border-radius:10px;background:var(--bg)}
   .slots.correct{border-style:solid;border-color:var(--correct);background:var(--okbg)}
   .slots.incorrect{border-style:solid;border-color:var(--wrong);background:var(--badbg)}
-  .tile{font-size:26px;font-family:Georgia,serif;padding:6px 14px;border:2px solid var(--part);
+  .tile{font-size:26px;font-family:var(--font);padding:6px 14px;border:2px solid var(--part);
        color:var(--part);background:var(--part-bg);border-radius:10px;cursor:pointer}
   /* colour says the ROLE; the ring says this is the family's own kanji */
   .tile.role-prefix{border-color:var(--prefix);color:var(--prefix);background:var(--prefix-bg)}
@@ -121,7 +134,7 @@
   .option.incorrect{background:var(--badbg);border-color:var(--wrong);color:var(--wrong)}
   @media(max-width:480px){.options{grid-template-columns:1fr}}
   .actions{display:flex;justify-content:center;gap:10px;margin-top:16px}
-  .big-stat{font-family:Georgia,serif;font-size:40px;font-weight:700;color:var(--accent);text-align:center}
+  .big-stat{font-family:var(--font);font-size:40px;font-weight:700;color:var(--accent);text-align:center}
   .stat-label{text-align:center;color:var(--muted);font-size:13px;margin-bottom:12px}
   .back{background:none;border:none;color:var(--muted);font-weight:600;font-size:13px;cursor:pointer;margin-bottom:8px}
   .build-tag{position:fixed;left:6px;bottom:5px;font-family:monospace;font-size:9px;color:var(--muted);opacity:.45;pointer-events:none}
@@ -170,7 +183,7 @@
     </div>
   </section>
 </div>
-<div class="build-tag">WordLab PoC 2026-08-31</div>
+<div class="build-tag">WordLab PoC 2026-09-02</div>
 
 <script src="lever.js"></script>
 <script>
