@@ -21,10 +21,26 @@
      open-ended. The learning loop is unchanged underneath: every check the
      computer marks is markable (choice, gap, typed line with accept lists),
      every miss names the rule. Every line of Japanese is a draft for a teacher. */
-  :root{ --ink:#141414; --lcd:#e6e8dc; --lcd2:#d3d6c6; --frame:#2a2a2a; --frame2:#3d3d3d; --dim:#6a6d60; }
+  :root{
+    /* ---- typography: two scripts, two faces ----
+       Calibri carries the English, UD Digi Kyokasho N-R carries the Japanese.
+       UD Digi Kyokasho is the UD textbook face: correct stroke shapes for
+       handwriting models, which is why it is the classroom default rather
+       than a gothic. Both are already on the school machines, so nothing is
+       downloaded and nothing breaks offline.
+       One stack does both jobs because the browser falls back per character:
+       Latin resolves inside --font-en, kana and kanji fall straight through
+       to --font-jp. The Japanese list puts every textbook face it can ahead
+       of any gothic, so a machine without the UD family still gets kyokasho
+       stroke shapes. Never write a font name outside this block. */
+    --font-en:Calibri,Carlito,'Segoe UI',Tahoma,Geneva,Verdana;
+    --font-jp:'UD Digi Kyokasho N-R','UD Digi Kyokasho NP-R','UD Digi Kyokasho NK-R','UD デジタル教科書体 N-R','UDデジタル教科書体N-R','HGP教科書体','HG教科書体','YuKyokasho Yoko',YuKyokasho,'Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic',YuGothic,Meiryo;
+    --font:var(--font-en),var(--font-jp),sans-serif;
+    --font-mono:"Courier New",Courier,var(--font-jp),monospace;
+ --ink:#141414; --lcd:#e6e8dc; --lcd2:#d3d6c6; --frame:#2a2a2a; --frame2:#3d3d3d; --dim:#6a6d60; }
   *{margin:0;padding:0;box-sizing:border-box}
   html,body{height:100%}
-  body{background:#1b1b1b;color:var(--ink);font-family:"Courier New",Courier,"MS Gothic","Osaka-Mono",monospace;display:flex;justify-content:center;align-items:center;padding:8px}
+  body{background:#1b1b1b;color:var(--ink);font-family:var(--font-mono);display:flex;justify-content:center;align-items:center;padding:8px}
   .device{width:min(1100px,100%);height:min(720px,100%);background:var(--frame);border-radius:18px;padding:14px;display:flex;flex-direction:column;box-shadow:0 0 0 4px #0d0d0d, 0 20px 50px rgba(0,0,0,.6);position:relative}
   .device:before{content:"MISSION: JAPAN · 1-BIT FIELD UNIT";position:absolute;top:2px;left:22px;font-size:9px;letter-spacing:.2em;color:#8a8a8a}
   .lcd{flex:1;min-height:0;background:var(--lcd);border:3px solid #0d0d0d;border-radius:6px;display:flex;flex-direction:column;overflow:hidden;
@@ -210,10 +226,10 @@
   @media (max-width:760px){.pass{grid-template-columns:1fr}}
   /* the dictionary is a window into the Vocab Hub, so it wears the hub's own clothes: full colour,
      the suite palette, Georgia headings, rounded cards. Nothing else in the world does. */
-  .obj-book{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f4efe6;color:#1f1f1f;border:1px solid #d8cfbb;border-radius:14px;box-shadow:0 10px 34px rgba(0,0,0,.4);padding:20px;gap:16px;width:min(900px,94%);line-height:1.5}
+  .obj-book{font-family:var(--font);background:#f4efe6;color:#1f1f1f;border:1px solid #d8cfbb;border-radius:14px;box-shadow:0 10px 34px rgba(0,0,0,.4);padding:20px;gap:16px;width:min(900px,94%);line-height:1.5}
   .obj-book .page{background:#fbf7ee;border:1px solid #d8cfbb;border-radius:12px;padding:14px 16px;min-height:300px}
   .obj-book .page+.page{border-left:1px solid #d8cfbb;box-shadow:none}
-  .obj-book h4{font-family:Georgia,serif;text-transform:none;letter-spacing:0;font-size:18px;color:#1f1f1f;margin-bottom:10px}
+  .obj-book h4{font-family:var(--font);text-transform:none;letter-spacing:0;font-size:18px;color:#1f1f1f;margin-bottom:10px}
   .obj-book h4 rt,.obj-book .card .cw rt{color:#6b6256}
   .obj-book .wl{max-height:360px;font-size:13px}
   .obj-book .wrow{display:grid;grid-template-columns:8em minmax(0,1fr) auto;gap:12px;align-items:center;padding:8px;border-radius:8px;border-bottom:1px solid #e8e0cd;font:inherit;color:#1f1f1f;cursor:pointer}
@@ -226,7 +242,7 @@
   .obj-book .wrow.sel .pick{background:#1f6f78;color:#fff}
   .obj-book .built,.obj-book .w.built{color:#a83232}
   .obj-book .card{border:1px solid #d8cfbb;border-radius:12px;background:#fff;padding:12px 14px;margin:8px 0}
-  .obj-book .card .cw{font-family:Georgia,serif;font-size:32px;font-weight:400;line-height:1.2}
+  .obj-book .card .cw{font-family:var(--font);font-size:32px;font-weight:400;line-height:1.2}
   .obj-book .card .cr{color:#6b6256;font-size:14px}
   .obj-book .card .cd{font-size:14px}
   .obj-book .part{border-radius:8px;border-width:1px;padding:6px 10px;font-size:12.5px}
@@ -241,7 +257,7 @@
   .obj-book .en,.obj-book .legend{color:#6b6256;font-family:inherit;font-size:12.5px}
   .obj-book .close{border-radius:8px;right:12px;top:10px}
   .obj-book .jp{font-family:inherit}
-  .obj-book #bOut .built{font-family:Georgia,serif}
+  .obj-book #bOut .built{font-family:var(--font)}
   .say .spk{border:2px solid var(--ink);background:var(--lcd);font-size:11px;padding:1px 7px;margin-left:8px;vertical-align:middle;letter-spacing:.06em;cursor:pointer}
   .say .spk:disabled{opacity:.35;cursor:default}
   /* Handheld shell. The scene and sprites stay on their original pixel grid. */
@@ -345,7 +361,7 @@
   .ann .jp{font-size:19px;line-height:1.7}
   .ann .tr{font-size:13px;color:var(--dim)}
   .ann .note{font-size:12px;color:var(--dim)}
-  .turn{position:fixed;inset:0;background:var(--frame);color:var(--lcd);display:none;align-items:center;justify-content:center;text-align:center;padding:24px;z-index:50;font-family:"Courier New",Courier,monospace}
+  .turn{position:fixed;inset:0;background:var(--frame);color:var(--lcd);display:none;align-items:center;justify-content:center;text-align:center;padding:24px;z-index:50;font-family:var(--font-mono)}
   .turn.show{display:flex}.turn b{display:block;font-size:18px;margin:8px 0}.turn .en{color:#b4bcaf;max-width:320px;margin:0 auto 14px}
   /* the dictionary stacks on a narrow screen */
   @media (max-width:760px){.obj-book{grid-template-columns:1fr;width:96%;padding:12px;gap:10px}.obj-book .page{min-height:0}.obj-book .page+.page{border-left:1px solid #d8cfbb}.obj-book .wl{max-height:34vh}.obj-book .wrow{grid-template-columns:5.5em minmax(0,1fr) auto;gap:8px}.obj-book .wrow .w{font-size:18px}.obj-book .card .cw{font-size:26px}}
