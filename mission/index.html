@@ -1462,7 +1462,7 @@ const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(M
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 const SAVE_KEY="mission-japan-save-v2";
 /* One number, counted up on every deploy, so a stale tab is obvious. Bump it with each live copy. */
-const BUILD={n:13,date:"2026-09-06"};
+const BUILD={n:14,date:"2026-09-06"};
 ["buildTag","buildEyebrow","buildMenu"].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=(id==="buildTag"?"MISSION · ":"")+`BUILD ${BUILD.n} · ${BUILD.date}`; });
 const INK=getComputedStyle(document.documentElement).getPropertyValue("--ink").trim();
 const PAPER=getComputedStyle(document.documentElement).getPropertyValue("--lcd").trim();
@@ -1560,7 +1560,7 @@ const LOADOUTS={
   ghost:{n:"幽霊 · Ghost",items:["passport","shoes"],worn:["shoes"],yen:15000,desc:"Your passport, your shoes, your Japanese. Buy a dictionary in Ueno if the cover starts to slip."}
 };
 function fill(t,s){ return String(t).replace(/\{\{(\w+)\}\}/g,(m,k)=>s[k]??m); }
-function slots(){ const s={...G.s}; s.realName=s.realName||""; s.realKana=s.realKana||""; s.realShown=s.realKana||s.realName||"サム"; s.realNote=s.realKana?", in katakana":""; s.realLabel=s.realName?`${s.realName}${s.realKana?" · "+s.realKana:""}`:"(your real name)"; s.shoesState=G.worn.includes("shoes")?"on":"off"; s.trainedNote=G.is("trained")?" (You have heard this sentence before, from Taisho.)":""; s.fearNote=G.is("intelFear")?" (Grandpa said he melts for an opinion.)":""; s.nbNote=G.is("notebookOpen")&&!G.is("recipe")?" The notebook is OPEN on the counter. LOOK again to read it.":""; return s; }
+function slots(){ const s={...G.s}; const pr=PROFILE.get(); s.realName=s.realName||pr.real||""; s.realKana=s.realKana||pr.kana||""; s.realKana=s.realKana||""; s.realShown=s.realKana||s.realName||"サム"; s.realNote=s.realKana?", in katakana":""; s.realLabel=s.realName?`${s.realName}${s.realKana?" · "+s.realKana:""}`:"(your real name)"; s.shoesState=G.worn.includes("shoes")?"on":"off"; s.trainedNote=G.is("trained")?" (You have heard this sentence before, from Taisho.)":""; s.fearNote=G.is("intelFear")?" (Grandpa said he melts for an opinion.)":""; s.nbNote=G.is("notebookOpen")&&!G.is("recipe")?" The notebook is OPEN on the counter. LOOK again to read it.":""; return s; }
 function newGame(kit){
   if(!Object.hasOwn(LOADOUTS,kit)) return;
   cur=null;taskBox=null;graded=false;sub=null;
@@ -1829,7 +1829,8 @@ function buildWord(w,box,onDone,label){
 /* the literal object, held up to the screen */
 function showObject(i,text){
   const ov=$("itemOv"); const s=slots();
-  const big=(name,px)=>spriteCanvas(name,px).outerHTML;
+  /* placeholders now, real canvases once the box is in the document: a canvas serialised to HTML loses its drawing */
+  const big=(name,px)=>`<span class="spr" data-spr="${name}" data-px="${px}"></span>`;
   const sp=(name,px)=>`<div class="sp">${big(name,px)}</div>`;
   const box=document.createElement("div"); const close='<button class="k sm close" data-close>×</button>';
   if(i==="phone"){
@@ -1865,6 +1866,7 @@ function showObject(i,text){
     box.innerHTML=`${close}<h4>${esc(ITEMS[i].n)} · ${ITEMS[i].jp}</h4>${sp(i,96)}<div>${esc(text)}</div><div class="en" style="margin-top:8px">${esc(fill(ITEMS[i].desc,s))}</div>`;
   }
   ov.innerHTML=""; ov.appendChild(box); ov.classList.add("show");
+  box.querySelectorAll(".spr").forEach(el=>el.replaceWith(spriteCanvas(el.dataset.spr,+el.dataset.px)));
   ov.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",()=>ov.classList.remove("show")));
 }
 $("itemOv").addEventListener("click",e=>{ if(e.target===$("itemOv")) $("itemOv").classList.remove("show"); });
