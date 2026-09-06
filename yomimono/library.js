@@ -6,8 +6,469 @@ window.YOMIMONO_LIBRARY = [
   "authentic": true,
   "band": "authentic",
   "moves": {},
-  "quick": [],
-  "evidence": [],
+  "quick": [
+   {
+    "ch": 0,
+    "q": "Where did the old woman find the peach?",
+    "a": "In the river, floating down from upstream",
+    "opts": [
+     "In the river, floating down from upstream",
+     "At the market",
+     "On the mountain with the firewood",
+     "In the cupboard at home"
+    ],
+    "why": "川上から、大きな桃が一つ…流れて来ました。 Later she says it herself: 今日川で拾って来たのですよ。"
+   },
+   {
+    "ch": 0,
+    "q": "What happened when the old man looked closely at the peach?",
+    "a": "It split open and a baby jumped out, crying",
+    "opts": [
+     "It split open and a baby jumped out, crying",
+     "It rolled off the table",
+     "It turned to gold",
+     "Nothing at all"
+    ],
+    "why": "桃はぽんと中から二つに割れて… and out comes the baby: 赤さんが元気よくとび出しました。"
+   },
+   {
+    "ch": 0,
+    "q": "What did the old couple say when the baby appeared?",
+    "a": "That the gods had sent them the child they had always wished for",
+    "opts": [
+     "That the gods had sent them the child they had always wished for",
+     "That they should put it back in the river",
+     "That it must belong to a neighbour",
+     "That the peach was poisonous"
+    ],
+    "why": "子供が一人ほしい、ほしいと言っていたものだから、きっと神さまがこの子をさずけて下さったのだ。"
+   },
+   {
+    "ch": 1,
+    "q": "How old was Momotarō when he decided to leave home?",
+    "a": "Fifteen",
+    "opts": [
+     "Fifteen",
+     "Ten",
+     "Twelve",
+     "Twenty"
+    ],
+    "why": "桃太郎は十五になりました。"
+   },
+   {
+    "ch": 1,
+    "q": "What did Momotarō ask his grandfather for?",
+    "a": "Leave to go away for a while",
+    "opts": [
+     "Leave to go away for a while",
+     "A sword and armour",
+     "Money for a boat",
+     "Permission to marry"
+    ],
+    "why": "どうぞ、わたくしにしばらくおひまを下さい。 おひま here is leave, time away."
+   },
+   {
+    "ch": 1,
+    "q": "What special food did the grandparents make him for the journey?",
+    "a": "Millet dumplings, kibidango",
+    "opts": [
+     "Millet dumplings, kibidango",
+     "Rice balls",
+     "Peach jam",
+     "Dried fish"
+    ],
+    "why": "おべんとうのきびだんごをつきはじめました。 He later calls them 日本一のきびだんご, the best in Japan."
+   },
+   {
+    "ch": 2,
+    "q": "In what order did Momotarō meet his three companions?",
+    "a": "Dog, then monkey, then pheasant",
+    "opts": [
+     "Dog, then monkey, then pheasant",
+     "Monkey, dog, pheasant",
+     "Pheasant, dog, monkey",
+     "Dog, pheasant, monkey"
+    ],
+    "why": "犬が一ぴきかけて来ました comes first, on the mountain; the monkey in the forest, the pheasant on the plain."
+   },
+   {
+    "ch": 2,
+    "q": "What did each animal ask for before joining him?",
+    "a": "One millet dumpling",
+    "opts": [
+     "One millet dumpling",
+     "A place on the boat",
+     "Gold from the ogres",
+     "To be made a samurai"
+    ],
+    "why": "一つ下さい、お供しましょう。 The same exchange three times, word for word."
+   },
+   {
+    "ch": 2,
+    "q": "What job did each animal take on the boat?",
+    "a": "The dog rowed, the monkey steered, the pheasant kept watch",
+    "opts": [
+     "The dog rowed, the monkey steered, the pheasant kept watch",
+     "The dog steered, the monkey rowed, the pheasant slept",
+     "They all rowed together",
+     "The monkey kept watch, the pheasant steered, the dog rowed"
+    ],
+    "why": "漕ぎ手 (rower), かじ取り (steersman), 物見 (lookout): 犬, 猿, きじ in that order."
+   },
+   {
+    "ch": 3,
+    "q": "What did each companion do in the attack on the castle?",
+    "a": "The pheasant pecked the ogres' eyes, the monkey climbed in and opened the gate, the dog bit their shins",
+    "opts": [
+     "The pheasant pecked the ogres' eyes, the monkey climbed in and opened the gate, the dog bit their shins",
+     "The dog opened the gate, the monkey bit, the pheasant flew home",
+     "They all pushed the gate together",
+     "The monkey pecked, the dog climbed the wall, the pheasant bit"
+    ],
+    "why": "きじが…目をつつきまわり, 猿が…門を中からあけました, 犬に向こうずねをかみつかれ."
+   },
+   {
+    "ch": 3,
+    "q": "What did the ogre chief offer in exchange for his life?",
+    "a": "All of the treasure",
+    "opts": [
+     "All of the treasure",
+     "His castle",
+     "His daughter",
+     "Half the island"
+    ],
+    "why": "命だけはお助け下さい。その代わりに宝物をのこらずさし上げます。"
+   },
+   {
+    "ch": 3,
+    "q": "How did the grandparents react when Momotarō came home?",
+    "a": "Overjoyed: the grandfather called him the best in Japan, the grandmother was glad he was unhurt",
+    "opts": [
+     "Overjoyed: the grandfather called him the best in Japan, the grandmother was glad he was unhurt",
+     "Angry that he had been away so long",
+     "Frightened of the treasure",
+     "They did not recognise him"
+    ],
+    "why": "えらいぞ、えらいぞ、それこそ日本一だ。 and けががなくって、何よりさ。"
+   }
+  ],
+  "evidence": [
+   {
+    "ch": 0,
+    "q": "Tap a sentence that tells you where the peach came from.",
+    "a": 2,
+    "alt": [
+     37,
+     5
+    ],
+    "why": "川上から、大きな桃が一つ…流れて来ました。 Later she says it herself: 今日川で拾って来たのですよ。"
+   },
+   {
+    "ch": 0,
+    "q": "Tap the sentence where the peach splits open.",
+    "a": 40,
+    "alt": [
+     42
+    ],
+    "why": "桃はぽんと中から二つに割れて… and out comes the baby: 赤さんが元気よくとび出しました。"
+   },
+   {
+    "ch": 0,
+    "q": "Tap the sentence where the couple explain the baby as a gift from the gods.",
+    "a": 45,
+    "alt": [],
+    "why": "子供が一人ほしい、ほしいと言っていたものだから、きっと神さまがこの子をさずけて下さったのだ。"
+   },
+   {
+    "ch": 1,
+    "q": "Tap the sentence that answers: How old was Momotarō when he decided to leave home?",
+    "a": 57,
+    "alt": [],
+    "why": "桃太郎は十五になりました。"
+   },
+   {
+    "ch": 1,
+    "q": "Tap the sentence where Momotarō makes his request.",
+    "a": 66,
+    "alt": [],
+    "why": "どうぞ、わたくしにしばらくおひまを下さい。 おひま here is leave, time away."
+   },
+   {
+    "ch": 1,
+    "q": "Tap the sentence where the dumplings are made.",
+    "a": 82,
+    "alt": [
+     92
+    ],
+    "why": "おべんとうのきびだんごをつきはじめました。 He later calls them 日本一のきびだんご, the best in Japan."
+   },
+   {
+    "ch": 2,
+    "q": "Tap the sentence where the FIRST companion appears.",
+    "a": 99,
+    "alt": [],
+    "why": "犬が一ぴきかけて来ました comes first, on the mountain; the monkey in the forest, the pheasant on the plain."
+   },
+   {
+    "ch": 2,
+    "q": "Tap a sentence where an animal asks for a dumpling.",
+    "a": 106,
+    "alt": [
+     118,
+     130
+    ],
+    "why": "一つ下さい、お供しましょう。 The same exchange three times, word for word."
+   },
+   {
+    "ch": 2,
+    "q": "Tap the sentence where the pheasant takes the lookout.",
+    "a": 140,
+    "alt": [
+     141,
+     136,
+     138
+    ],
+    "why": "漕ぎ手 (rower), かじ取り (steersman), 物見 (lookout): 犬, 猿, きじ in that order."
+   },
+   {
+    "ch": 3,
+    "q": "Tap the sentence where the monkey opens the gate from inside.",
+    "a": 163,
+    "alt": [
+     162,
+     167
+    ],
+    "why": "きじが…目をつつきまわり, 猿が…門を中からあけました, 犬に向こうずねをかみつかれ."
+   },
+   {
+    "ch": 3,
+    "q": "Tap the sentence where the ogre chief makes his offer.",
+    "a": 175,
+    "alt": [
+     174
+    ],
+    "why": "命だけはお助け下さい。その代わりに宝物をのこらずさし上げます。"
+   },
+   {
+    "ch": 3,
+    "q": "Tap the grandfather's words when Momotarō returns.",
+    "a": 188,
+    "alt": [
+     190
+    ],
+    "why": "えらいぞ、えらいぞ、それこそ日本一だ。 and けががなくって、何よりさ。"
+   }
+  ],
+  "cloze": [
+   {
+    "ch": 0,
+    "s": 37,
+    "text": "今日川で＿＿＿って来たのですよ。」",
+    "a": "拾う",
+    "opts": [
+     "拾う",
+     "元気",
+     "声を上げる",
+     "神さま"
+    ],
+    "read": "ひろう"
+   },
+   {
+    "ch": 0,
+    "s": 1,
+    "text": "まいにち、おじいさんは山へしば刈りに、おばあさんは川へ＿＿＿に行きました。",
+    "a": "洗濯",
+    "opts": [
+     "洗濯",
+     "割れる",
+     "元気",
+     "声を上げる"
+    ],
+    "read": "せんたく"
+   },
+   {
+    "ch": 0,
+    "s": 40,
+    "text": "こうおじいさんは言いながら、桃を両手にのせて、ためつ、すがめつ、ながめていますと、だしぬけに、桃はぽんと中から二つに＿＿＿て、",
+    "a": "割れる",
+    "opts": [
+     "割れる",
+     "名をつける",
+     "抱き上げる",
+     "拾う"
+    ],
+    "read": "われる"
+   },
+   {
+    "ch": 0,
+    "s": 42,
+    "text": "と勇ましいうぶ声を上げながら、かわいらしい赤さんが＿＿＿よくとび出しました。",
+    "a": "元気",
+    "opts": [
+     "元気",
+     "拾う",
+     "洗濯",
+     "割れる"
+    ],
+    "read": "げんき"
+   },
+   {
+    "ch": 1,
+    "s": 55,
+    "text": "おじいさんとおばあさんは、それはそれはだいじにして桃太郎を＿＿＿ました。",
+    "a": "育てる",
+    "opts": [
+     "育てる",
+     "見送る",
+     "成長する",
+     "力"
+    ],
+    "read": "そだてる"
+   },
+   {
+    "ch": 1,
+    "s": 59,
+    "text": "桃太郎はどこか外国へ出かけて、腕いっぱい、＿＿＿だめしをしてみたくなりました。",
+    "a": "力",
+    "opts": [
+     "力",
+     "鬼が島",
+     "退治",
+     "きびだんご"
+    ],
+    "read": "ちから"
+   },
+   {
+    "ch": 1,
+    "s": 61,
+    "text": "「もう何年も何年も船をこいで行くと、遠い遠い海のはてに、＿＿＿という所がある。",
+    "a": "鬼が島",
+    "opts": [
+     "鬼が島",
+     "きびだんご",
+     "見送る",
+     "育てる"
+    ],
+    "read": "おにがしま"
+   },
+   {
+    "ch": 1,
+    "s": 88,
+    "text": "「じゃあ、りっぱに鬼を＿＿＿してくるがいい。」",
+    "a": "退治",
+    "opts": [
+     "退治",
+     "鬼が島",
+     "きびだんご",
+     "見送る"
+    ],
+    "read": "たいじ"
+   },
+   {
+    "ch": 2,
+    "s": 133,
+    "text": "犬と、猿と、きじと、これで三にんまで、いい＿＿＿ができたので、桃太郎はいよいよ勇み立って、またずんずん進んで行きますと、やがてひろい海ばたに出ました。",
+    "a": "家来",
+    "opts": [
+     "家来",
+     "かじ取り",
+     "物見",
+     "万歳"
+    ],
+    "read": "けらい"
+   },
+   {
+    "ch": 2,
+    "s": 106,
+    "text": "「一つ下さい、＿＿＿しましょう。」",
+    "a": "お供する",
+    "opts": [
+     "お供する",
+     "かじ取り",
+     "物見",
+     "万歳"
+    ],
+    "read": "おともする"
+   },
+   {
+    "ch": 2,
+    "s": 138,
+    "text": "「わたくしは、＿＿＿になりましょう。」",
+    "a": "かじ取り",
+    "opts": [
+     "かじ取り",
+     "岩",
+     "進む",
+     "家来"
+    ],
+    "read": "かじとり"
+   },
+   {
+    "ch": 2,
+    "s": 140,
+    "text": "「わたくしは＿＿＿をつとめましょう。」",
+    "a": "物見",
+    "opts": [
+     "物見",
+     "家来",
+     "お供する",
+     "かじ取り"
+    ],
+    "read": "ものみ"
+   },
+   {
+    "ch": 3,
+    "s": 161,
+    "text": "鬼はその声を聞くと、ふるえ上がって、よけい一生懸命に、中から＿＿＿ていました。",
+    "a": "押さえる",
+    "opts": [
+     "押さえる",
+     "逃げる",
+     "降参する",
+     "宝物"
+    ],
+    "read": "おさえる"
+   },
+   {
+    "ch": 3,
+    "s": 170,
+    "text": "「どうだ、これでも＿＿＿しないか。」",
+    "a": "降参する",
+    "opts": [
+     "降参する",
+     "宝物",
+     "喜ぶ",
+     "約束"
+    ],
+    "read": "こうさんする"
+   },
+   {
+    "ch": 3,
+    "s": 175,
+    "text": "その代わりに＿＿＿をのこらずさし上げます。」",
+    "a": "宝物",
+    "opts": [
+     "宝物",
+     "逃げる",
+     "押さえる",
+     "降参する"
+    ],
+    "read": "たからもの"
+   },
+   {
+    "ch": 3,
+    "s": 187,
+    "text": "そこへ桃太郎が三にんのりっぱな家来に、ぶんどりの宝物を引かせて、さもとくいらしい様子をして帰って来ましたので、おじいさんもおばあさんも、目も鼻もなくして＿＿＿びました。",
+    "a": "喜ぶ",
+    "opts": [
+     "喜ぶ",
+     "押さえる",
+     "降参する",
+     "約束"
+    ],
+    "read": "よろこぶ"
+   }
+  ],
   "title": "桃太郎",
   "en": "Momotarō (Peach Boy)",
   "author": "楠山正雄 (d. 1950-11-26)",
@@ -452,7 +913,8 @@ window.YOMIMONO_LIBRARY = [
     "ch": 3
    }
   ],
-  "ideas": [
+  "ideas": [],
+  "openQuestions": [
    {
     "q": "Where did the old woman find the peach?",
     "ch": 0
@@ -508,8 +970,465 @@ window.YOMIMONO_LIBRARY = [
   "authentic": true,
   "band": "authentic",
   "moves": {},
-  "quick": [],
-  "evidence": [],
+  "quick": [
+   {
+    "ch": 0,
+    "q": "What were the children doing to the turtle?",
+    "a": "Poking it with sticks, hitting it with stones, flipping it over and burying it in sand",
+    "opts": [
+     "Poking it with sticks, hitting it with stones, flipping it over and burying it in sand",
+     "Feeding it",
+     "Racing it along the beach",
+     "Carrying it to the sea"
+    ],
+    "why": "棒でつついたり、石でたたいたり… then あおむけにひっくりかえして、足でけったり、砂のなかにうずめたり."
+   },
+   {
+    "ch": 0,
+    "q": "How did Urashima save the turtle?",
+    "a": "He paid the children for it and released it into the sea",
+    "opts": [
+     "He paid the children for it and released it into the sea",
+     "He chased the children away",
+     "He fetched their parents",
+     "He traded his fish for it"
+    ],
+    "why": "おじさんがおあしをあげるから、そのかめの子を売っておくれ。 おあし is an old word for money."
+   },
+   {
+    "ch": 0,
+    "q": "Why did the turtle come back to find Urashima?",
+    "a": "To thank him and take him to the Dragon Palace",
+    "opts": [
+     "To thank him and take him to the Dragon Palace",
+     "To ask for more money",
+     "To warn him of a storm",
+     "Because it was lost"
+    ],
+    "why": "きょうはちょっとそのお礼にまいりました。 お礼 is thanks, the same 礼 as in おんがえし."
+   },
+   {
+    "ch": 1,
+    "q": "Who welcomed Urashima at the Dragon Palace?",
+    "a": "Princess Otohime",
+    "opts": [
+     "Princess Otohime",
+     "The Dragon King",
+     "His mother",
+     "The turtle's children"
+    ],
+    "why": "乙姫さまはいって、ていねいにおじぎしました。"
+   },
+   {
+    "ch": 1,
+    "q": "What did Otohime show Urashima after the feast?",
+    "a": "The four seasons, one behind each door",
+    "opts": [
+     "The four seasons, one behind each door",
+     "Her treasure room",
+     "The way home",
+     "A map of the sea"
+    ],
+    "why": "こんどは四季のけしきをお目にかけましょう。 East spring, south summer, west autumn, north winter."
+   },
+   {
+    "ch": 1,
+    "q": "How does the story describe the way Urashima felt there?",
+    "a": "As if he were dreaming inside a dream",
+    "opts": [
+     "As if he were dreaming inside a dream",
+     "Homesick from the first day",
+     "Bored by the fish",
+     "Afraid of the princess"
+    ],
+    "why": "浦島はただもう夢のなかで夢を見ているようでした。"
+   },
+   {
+    "ch": 2,
+    "q": "How long had Urashima been at the palace when he decided to go home?",
+    "a": "Three years",
+    "opts": [
+     "Three years",
+     "Three days",
+     "Three months",
+     "Thirty years"
+    ],
+    "why": "三年めの春になったとき… the third spring."
+   },
+   {
+    "ch": 2,
+    "q": "What rule did Otohime give him about the box?",
+    "a": "Never open it, whatever happens, if he ever wanted to return",
+    "opts": [
+     "Never open it, whatever happens, if he ever wanted to return",
+     "Open it only at New Year",
+     "Give it to his parents",
+     "Sell it for gold"
+    ],
+    "why": "どんなことがあっても、けっしてこの箱をあけてはなりません。"
+   },
+   {
+    "ch": 2,
+    "q": "How did Otohime seem to feel about him leaving?",
+    "a": "Deeply disappointed and sad, but she let him go",
+    "opts": [
+     "Deeply disappointed and sad, but she let him go",
+     "Relieved",
+     "Angry, and she refused",
+     "She did not care"
+    ],
+    "why": "たいそうがっかりした様子をなさいました。 Then, かなしそうにいって."
+   },
+   {
+    "ch": 3,
+    "q": "What did the old woman say about Urashima Tarō?",
+    "a": "He was a man from three hundred years ago who went to sea and never came back",
+    "opts": [
+     "He was a man from three hundred years ago who went to sea and never came back",
+     "He drowned yesterday",
+     "He lives in the next village",
+     "She had never heard the name and nothing more"
+    ],
+    "why": "あれはもう三百年も前の人ですよ。"
+   },
+   {
+    "ch": 3,
+    "q": "What happened to Urashima's body when he opened the box?",
+    "a": "His face wrinkled, his limbs shrank and his hair turned white: he became an old man",
+    "opts": [
+     "His face wrinkled, his limbs shrank and his hair turned white: he became an old man",
+     "He turned into a turtle",
+     "He fell asleep",
+     "Nothing happened"
+    ],
+    "why": "顔じゅうしわになって、手も足もちぢかまって… 髪も白くなり. Three hundred years arrive at once."
+   },
+   {
+    "ch": 3,
+    "q": "What was really kept inside the tamatebako?",
+    "a": "His lifespan, his human years",
+    "opts": [
+     "His lifespan, his human years",
+     "Gold and jewels",
+     "A letter from Otohime",
+     "Seawater"
+    ],
+    "why": "人間のいちばんだいじなたからを入れておく… あれは、人間の寿命だったのだな。 寿命 is lifespan."
+   }
+  ],
+  "evidence": [
+   {
+    "ch": 0,
+    "q": "Tap a sentence that shows how the children treated the turtle.",
+    "a": 4,
+    "alt": [
+     11
+    ],
+    "why": "棒でつついたり、石でたたいたり… then あおむけにひっくりかえして、足でけったり、砂のなかにうずめたり."
+   },
+   {
+    "ch": 0,
+    "q": "Tap the sentence where Urashima offers money for the turtle.",
+    "a": 13,
+    "alt": [
+     17,
+     25
+    ],
+    "why": "おじさんがおあしをあげるから、そのかめの子を売っておくれ。 おあし is an old word for money."
+   },
+   {
+    "ch": 0,
+    "q": "Tap the sentence where the turtle says why it has come.",
+    "a": 35,
+    "alt": [
+     42,
+     34
+    ],
+    "why": "きょうはちょっとそのお礼にまいりました。 お礼 is thanks, the same 礼 as in おんがえし."
+   },
+   {
+    "ch": 1,
+    "q": "Tap the sentence where Otohime bows to Urashima.",
+    "a": 69,
+    "alt": [
+     66
+    ],
+    "why": "乙姫さまはいって、ていねいにおじぎしました。"
+   },
+   {
+    "ch": 1,
+    "q": "Tap the sentence where Otohime announces the four seasons.",
+    "a": 76,
+    "alt": [],
+    "why": "こんどは四季のけしきをお目にかけましょう。 East spring, south summer, west autumn, north winter."
+   },
+   {
+    "ch": 1,
+    "q": "Tap the sentence that answers: How does the story describe the way Urashima felt there?",
+    "a": 72,
+    "alt": [],
+    "why": "浦島はただもう夢のなかで夢を見ているようでした。"
+   },
+   {
+    "ch": 2,
+    "q": "Tap the sentence that tells you how much time has passed.",
+    "a": 93,
+    "alt": [],
+    "why": "三年めの春になったとき… the third spring."
+   },
+   {
+    "ch": 2,
+    "q": "Tap the sentence that answers: What rule did Otohime give him about the box?",
+    "a": 113,
+    "alt": [],
+    "why": "どんなことがあっても、けっしてこの箱をあけてはなりません。"
+   },
+   {
+    "ch": 2,
+    "q": "Tap a sentence that shows Otohime's disappointment.",
+    "a": 106,
+    "alt": [
+     107,
+     110
+    ],
+    "why": "たいそうがっかりした様子をなさいました。 Then, かなしそうにいって."
+   },
+   {
+    "ch": 3,
+    "q": "Tap the sentence where the old woman says how long ago Urashima lived.",
+    "a": 152,
+    "alt": [
+     153
+    ],
+    "why": "あれはもう三百年も前の人ですよ。"
+   },
+   {
+    "ch": 3,
+    "q": "Tap the sentence that describes what happens to his face and hair.",
+    "a": 171,
+    "alt": [
+     170
+    ],
+    "why": "顔じゅうしわになって、手も足もちぢかまって… 髪も白くなり. Three hundred years arrive at once."
+   },
+   {
+    "ch": 3,
+    "q": "Tap the sentence where Urashima works out what the box held.",
+    "a": 173,
+    "alt": [],
+    "why": "人間のいちばんだいじなたからを入れておく… あれは、人間の寿命だったのだな。 寿命 is lifespan."
+   }
+  ],
+  "cloze": [
+   {
+    "ch": 0,
+    "s": 0,
+    "text": "むかし、むかし、丹後の国水の江の浦に、浦島太郎という＿＿＿がありました。",
+    "a": "りょうし",
+    "opts": [
+     "りょうし",
+     "いじめる",
+     "かめ",
+     "助ける"
+    ],
+    "read": "りょうし"
+   },
+   {
+    "ch": 0,
+    "s": 4,
+    "text": "何かとおもって浦島がのぞいてみると、小さいかめの子を一ぴきつかまえて、棒でつついたり、石でたたいたり、さんざんに＿＿＿ているのです。",
+    "a": "いじめる",
+    "opts": [
+     "いじめる",
+     "背中",
+     "門",
+     "りょうし"
+    ],
+    "read": "いじめる"
+   },
+   {
+    "ch": 0,
+    "s": 11,
+    "text": "といいながら、また＿＿＿の子を、あおむけにひっくりかえして、足でけったり、砂のなかにうずめたりしました。",
+    "a": "かめ",
+    "opts": [
+     "かめ",
+     "りゅう宮",
+     "背中",
+     "門"
+    ],
+    "read": "かめ"
+   },
+   {
+    "ch": 0,
+    "s": 35,
+    "text": "きょうはちょっとその＿＿＿にまいりました」",
+    "a": "お礼",
+    "opts": [
+     "お礼",
+     "りょうし",
+     "いじめる",
+     "かめ"
+    ],
+    "read": "おれい"
+   },
+   {
+    "ch": 1,
+    "s": 61,
+    "text": "たいや、ひらめやかれいや、いろいろのおさかなが、ものめずらしそうな目で見ているなかをとおって、はいって行きますと、＿＿＿さまがおおぜいの腰元をつれて、お迎えに出てきました。",
+    "a": "乙姫",
+    "opts": [
+     "乙姫",
+     "けしき",
+     "夢",
+     "案内する"
+    ],
+    "read": "おとひめ"
+   },
+   {
+    "ch": 1,
+    "s": 60,
+    "text": "と、浦島を御殿のなかへ＿＿＿しました。",
+    "a": "案内する",
+    "opts": [
+     "案内する",
+     "乙姫",
+     "ごちそう",
+     "四季"
+    ],
+    "read": "あんないする"
+   },
+   {
+    "ch": 1,
+    "s": 73,
+    "text": "ごちそうがすむと、浦島はまた乙姫さまの案内で、＿＿＿のなかをのこらず見せてもらいました。",
+    "a": "御殿",
+    "opts": [
+     "御殿",
+     "咲く",
+     "けしき",
+     "夢"
+    ],
+    "read": "ごてん"
+   },
+   {
+    "ch": 1,
+    "s": 70,
+    "text": "やがて、たいをかしらに、かつおだの、ふぐだの、えびだの、たこだの、大小いろいろのおさかなが、めずらしい＿＿＿うを山とはこんできて、にぎやかなお酒盛がはじまりました。",
+    "a": "ごちそう",
+    "opts": [
+     "ごちそう",
+     "乙姫",
+     "案内する",
+     "御殿"
+    ],
+    "read": "ごちそう"
+   },
+   {
+    "ch": 2,
+    "s": 93,
+    "text": "三年めの春になったとき、浦島はときどき、ひさしくわすれていた＿＿＿の夢を見るようになりました。",
+    "a": "ふるさと",
+    "opts": [
+     "ふるさと",
+     "玉手箱",
+     "わかれ",
+     "あける"
+    ],
+    "read": "ふるさと"
+   },
+   {
+    "ch": 2,
+    "s": 100,
+    "text": "その様子を見ると、乙姫さまは＿＿＿して、",
+    "a": "心配する",
+    "opts": [
+     "心配する",
+     "玉手箱",
+     "わかれ",
+     "あける"
+    ],
+    "read": "しんぱいする"
+   },
+   {
+    "ch": 2,
+    "s": 106,
+    "text": "といいますと、乙姫さまはきゅうに、たいそう＿＿＿した様子をなさいました。",
+    "a": "がっかりする",
+    "opts": [
+     "がっかりする",
+     "心配する",
+     "玉手箱",
+     "わかれ"
+    ],
+    "read": "がっかりする"
+   },
+   {
+    "ch": 2,
+    "s": 111,
+    "text": "「これは＿＿＿といって、なかには、人間のいちばんだいじなたからがこめてございます。",
+    "a": "玉手箱",
+    "opts": [
+     "玉手箱",
+     "見送り",
+     "ふるさと",
+     "心配する"
+    ],
+    "read": "たまてばこ"
+   },
+   {
+    "ch": 3,
+    "s": 136,
+    "text": "「＿＿＿だ。",
+    "a": "ふしぎ",
+    "opts": [
+     "ふしぎ",
+     "寿命",
+     "開ける",
+     "しわ"
+    ],
+    "read": "ふしぎ"
+   },
+   {
+    "ch": 3,
+    "s": 139,
+    "text": "するとそこへ、よぼよぼのおばあさんがひとり、＿＿＿にすがってやってきました。",
+    "a": "つえ",
+    "opts": [
+     "つえ",
+     "まっしろ",
+     "見知らない",
+     "ふしぎ"
+    ],
+    "read": "つえ"
+   },
+   {
+    "ch": 3,
+    "s": 152,
+    "text": "「ああ、そうそう、浦島太郎さんというと、あれはもう＿＿＿も前の人ですよ。",
+    "a": "三百年",
+    "opts": [
+     "三百年",
+     "しわ",
+     "まっしろ",
+     "見知らない"
+    ],
+    "read": "さんびゃくねん"
+   },
+   {
+    "ch": 3,
+    "s": 173,
+    "text": "「なるほど、乙姫さまが、人間のいちばんだいじなたからを入れておくとおっしゃったあれは、人間の＿＿＿だったのだな」",
+    "a": "寿命",
+    "opts": [
+     "寿命",
+     "しわ",
+     "まっしろ",
+     "見知らない"
+    ],
+    "read": "じゅみょう"
+   }
+  ],
   "title": "浦島太郎",
   "en": "Urashima Tarō",
   "author": "楠山正雄 (d. 1950-11-26)",
@@ -934,7 +1853,8 @@ window.YOMIMONO_LIBRARY = [
     "ch": 3
    }
   ],
-  "ideas": [
+  "ideas": [],
+  "openQuestions": [
    {
     "q": "What were the children doing to the turtle when Urashima found them?",
     "ch": 0
@@ -990,8 +1910,695 @@ window.YOMIMONO_LIBRARY = [
   "authentic": true,
   "band": "authentic",
   "moves": {},
-  "quick": [],
-  "evidence": [],
+  "quick": [
+   {
+    "ch": 0,
+    "q": "Who treats Sandrillon badly?",
+    "a": "Her stepmother and two stepsisters",
+    "opts": [
+     "Her stepmother and two stepsisters",
+     "Her father and his friend",
+     "The king and queen",
+     "The servants"
+    ],
+    "why": "こんどのおかあさんは、さっそくいじわるの本性をさらけ出しました。"
+   },
+   {
+    "ch": 0,
+    "q": "Where does Sandrillon have to sleep?",
+    "a": "In the attic, on a straw bed among the cobwebs",
+    "opts": [
+     "In the attic, on a straw bed among the cobwebs",
+     "In a warm room with mirrors",
+     "In the kitchen by the fire",
+     "In the stable"
+    ],
+    "why": "屋根うらの、くもの巣だらけなすみで、わらのねどこに、犬のようにまるくなって."
+   },
+   {
+    "ch": 0,
+    "q": "Why do the stepsisters call her Sandrillon?",
+    "a": "Because she crouched in the ashes and cinders by the hearth",
+    "opts": [
+     "Because she crouched in the ashes and cinders by the hearth",
+     "It was her mother's name",
+     "She was born in a sandstorm",
+     "The prince named her"
+    ],
+    "why": "消炭や灰の中にうずくまっていましたから… サンドリヨンというあだ名をつけました。 灰だらけ娘: the ash-covered girl."
+   },
+   {
+    "ch": 1,
+    "q": "What did the fairy godmother turn the pumpkin into?",
+    "a": "A gilded carriage",
+    "opts": [
+     "A gilded carriage",
+     "A horse",
+     "A dress",
+     "A footman"
+    ],
+    "why": "かぼちゃは、みるみる、金ぬりの、りっぱな馬車にかわりました。"
+   },
+   {
+    "ch": 1,
+    "q": "What did she turn the six mice, the big rat and the lizards into?",
+    "a": "Six horses, a coachman and six footmen",
+    "opts": [
+     "Six horses, a coachman and six footmen",
+     "Six dogs, a cook and six guards",
+     "A band of musicians",
+     "Nothing, they ran away"
+    ],
+    "why": "ねずみ → 馬車馬が六とう; 大ねずみ → 御者; とかげ → 六人のべっとう."
+   },
+   {
+    "ch": 1,
+    "q": "What rule did the fairy give, and what would happen if it was broken?",
+    "a": "Be home before midnight, or everything turns back to what it was",
+    "opts": [
+     "Be home before midnight, or everything turns back to what it was",
+     "Never speak to the prince, or lose her voice",
+     "Dance only once, or the shoes vanish",
+     "Keep both slippers on, or the carriage stops"
+    ],
+    "why": "夜なか十二時すぎまで、ぶとう会にいてはならない… 馬車はまたかぼちゃになるし、馬は小ねずみになるし."
+   },
+   {
+    "ch": 2,
+    "q": "What happened in the ballroom the moment Cinderella arrived?",
+    "a": "Everything fell silent and the dancing stopped",
+    "opts": [
+     "Everything fell silent and the dancing stopped",
+     "Everyone laughed",
+     "The music got louder",
+     "The guards seized her"
+    ],
+    "why": "広間の中はたちまち、しんと静まりかえって、みんなダンスをやめました。"
+   },
+   {
+    "ch": 2,
+    "q": "What did Cinderella do for her stepsisters at the ball?",
+    "a": "Sat beside them and shared the oranges and lemons the prince had given her",
+    "opts": [
+     "Sat beside them and shared the oranges and lemons the prince had given her",
+     "Ignored them",
+     "Told them who she was",
+     "Mocked their dresses"
+    ],
+    "why": "王子からもらったオレンジや、レモンを分けてやったりして."
+   },
+   {
+    "ch": 2,
+    "q": "When did Cinderella leave the ball, and why?",
+    "a": "At a quarter to twelve, to keep the fairy's rule",
+    "opts": [
+     "At a quarter to twelve, to keep the fairy's rule",
+     "At dawn, when the prince left",
+     "At midnight exactly",
+     "At ten, because she was bored"
+    ],
+    "why": "時計が十二時十五分前を打ちました。 Fifteen minutes to twelve."
+   },
+   {
+    "ch": 3,
+    "q": "What excuse does Cinderella give for seeming sleepy?",
+    "a": "She pretends she has just woken from a nap, yawning and rubbing her eyes",
+    "opts": [
+     "She pretends she has just woken from a nap, yawning and rubbing her eyes",
+     "She says she worked all night",
+     "She says she is ill",
+     "She says nothing"
+    ],
+    "why": "あくびをして、目をこすって、のびをしました。 それは、うたたねをしていて… というようなふうでした."
+   },
+   {
+    "ch": 3,
+    "q": "What does Cinderella ask to borrow, and what is the answer?",
+    "a": "Jabotte's everyday yellow dress; Jabotte refuses with contempt",
+    "opts": [
+     "Jabotte's everyday yellow dress; Jabotte refuses with contempt",
+     "Her sister's shoes; she agrees",
+     "A carriage; her sister laughs and agrees",
+     "A mirror; her sister lends it"
+    ],
+    "why": "黄いろい着物を、わたしにかしてくださらないこと。 → わたしの着物を…灰のかたまりなんかに、かしてやられるもんか。"
+   },
+   {
+    "ch": 3,
+    "q": "Why is Cinderella secretly glad her sister refused?",
+    "a": "If her sister had lent the dress as a joke, Cinderella would have felt terrible",
+    "opts": [
+     "If her sister had lent the dress as a joke, Cinderella would have felt terrible",
+     "She preferred her rags",
+     "The dress was ugly",
+     "She never planned to go"
+    ],
+    "why": "じょうだんをいったのを真にうけて、着物をかしてくれたら、どんなになさけなくおもったでしょう。"
+   },
+   {
+    "ch": 4,
+    "q": "Why did Cinderella lose track of time on the second night?",
+    "a": "The prince kept her company with compliments and sweet words and she forgot the warning",
+    "opts": [
+     "The prince kept her company with compliments and sweet words and she forgot the warning",
+     "The clock was broken",
+     "Her sisters distracted her",
+     "She fell asleep"
+    ],
+    "why": "ついうかうか、妖女にいましめられていたことも忘れていました。"
+   },
+   {
+    "ch": 4,
+    "q": "What did she leave behind as she ran away?",
+    "a": "One golden slipper",
+    "opts": [
+     "One golden slipper",
+     "Her mask",
+     "The pumpkin carriage",
+     "A glove"
+    ],
+    "why": "金の上ぐつを片足落しました。 Note: in this translation the slipper is gold (or squirrel fur), and the glass slipper is mentioned as another version."
+   },
+   {
+    "ch": 4,
+    "q": "What did the guard tell the prince's men?",
+    "a": "Only a poorly dressed young girl had gone out, who looked like a country girl",
+    "opts": [
+     "Only a poorly dressed young girl had gone out, who looked like a country girl",
+     "A princess in gold",
+     "Nobody at all",
+     "Two sisters in a hurry"
+    ],
+    "why": "ひどくみすぼらしいなりをした若いむすめでした。 ただのいなかむすめとしか、おもわれないふう."
+   },
+   {
+    "ch": 5,
+    "q": "Why could the stepsisters not make the slipper fit?",
+    "a": "They forced their feet in, but it was useless",
+    "opts": [
+     "They forced their feet in, but it was useless",
+     "The slipper was too big",
+     "They refused to try",
+     "The official skipped them"
+    ],
+    "why": "むりに足をつっこもうとしましたが… それはみんな、気のどくな、むだな骨おりでした。 骨おり: effort, literally bone-breaking."
+   },
+   {
+    "ch": 5,
+    "q": "How did Cinderella prove she was the mystery princess?",
+    "a": "The slipper slid on perfectly, and she produced the other one from her pocket",
+    "opts": [
+     "The slipper slid on perfectly, and she produced the other one from her pocket",
+     "She sang the song from the ball",
+     "The prince recognised her face",
+     "The fairy told everyone"
+    ],
+    "why": "かくしの中から、もう片かたの上ぐつを出して見せました。 かくし is an old word for pocket."
+   },
+   {
+    "ch": 5,
+    "q": "How does Cinderella treat her stepsisters at the end, and what does the story say matters most?",
+    "a": "She forgives them and finds them noble husbands; a kind heart matters more than beauty",
+    "opts": [
+     "She forgives them and finds them noble husbands; a kind heart matters more than beauty",
+     "She banishes them",
+     "She makes them her servants",
+     "She never speaks to them again"
+    ],
+    "why": "やさしく、しおらしい心こそ、妖女のこの上ないおくりものだ. The final gift is the kind heart, not the dress."
+   }
+  ],
+  "evidence": [
+   {
+    "ch": 0,
+    "q": "Tap the sentence where the new mother shows her true nature.",
+    "a": 4,
+    "alt": [
+     6,
+     12
+    ],
+    "why": "こんどのおかあさんは、さっそくいじわるの本性をさらけ出しました。"
+   },
+   {
+    "ch": 0,
+    "q": "Tap the sentence that answers: Where does Sandrillon have to sleep?",
+    "a": 8,
+    "alt": [],
+    "why": "屋根うらの、くもの巣だらけなすみで、わらのねどこに、犬のようにまるくなって."
+   },
+   {
+    "ch": 0,
+    "q": "Tap the sentence that explains the nickname.",
+    "a": 12,
+    "alt": [
+     13
+    ],
+    "why": "消炭や灰の中にうずくまっていましたから… サンドリヨンというあだ名をつけました。 灰だらけ娘: the ash-covered girl."
+   },
+   {
+    "ch": 1,
+    "q": "Tap the sentence that answers: What did the fairy godmother turn the pumpkin into?",
+    "a": 63,
+    "alt": [],
+    "why": "かぼちゃは、みるみる、金ぬりの、りっぱな馬車にかわりました。"
+   },
+   {
+    "ch": 1,
+    "q": "Tap the sentence where the lizards become footmen.",
+    "a": 66,
+    "alt": [
+     75,
+     80
+    ],
+    "why": "ねずみ → 馬車馬が六とう; 大ねずみ → 御者; とかげ → 六人のべっとう."
+   },
+   {
+    "ch": 1,
+    "q": "Tap the sentence that lists what would turn back at midnight.",
+    "a": 92,
+    "alt": [
+     93
+    ],
+    "why": "夜なか十二時すぎまで、ぶとう会にいてはならない… 馬車はまたかぼちゃになるし、馬は小ねずみになるし."
+   },
+   {
+    "ch": 2,
+    "q": "Tap the sentence that answers: What happened in the ballroom the moment Cinderella arrived?",
+    "a": 98,
+    "alt": [
+     99
+    ],
+    "why": "広間の中はたちまち、しんと静まりかえって、みんなダンスをやめました。"
+   },
+   {
+    "ch": 2,
+    "q": "Tap the sentence that answers: What did Cinderella do for her stepsisters at the ball?",
+    "a": 113,
+    "alt": [],
+    "why": "王子からもらったオレンジや、レモンを分けてやったりして."
+   },
+   {
+    "ch": 2,
+    "q": "Tap the sentence that gives the time on the clock.",
+    "a": 115,
+    "alt": [
+     116
+    ],
+    "why": "時計が十二時十五分前を打ちました。 Fifteen minutes to twelve."
+   },
+   {
+    "ch": 3,
+    "q": "Tap the sentence that answers: What excuse does Cinderella give for seeming sleepy?",
+    "a": 122,
+    "alt": [
+     123
+    ],
+    "why": "あくびをして、目をこすって、のびをしました。 それは、うたたねをしていて… というようなふうでした."
+   },
+   {
+    "ch": 3,
+    "q": "Tap the sentence where Jabotte refuses.",
+    "a": 136,
+    "alt": [
+     140
+    ],
+    "why": "黄いろい着物を、わたしにかしてくださらないこと。 → わたしの着物を…灰のかたまりなんかに、かしてやられるもんか。"
+   },
+   {
+    "ch": 3,
+    "q": "Tap the sentence that explains why the refusal was a relief.",
+    "a": 144,
+    "alt": [
+     143
+    ],
+    "why": "じょうだんをいったのを真にうけて、着物をかしてくれたら、どんなになさけなくおもったでしょう。"
+   },
+   {
+    "ch": 4,
+    "q": "Tap the sentence that says she forgot the fairy's warning.",
+    "a": 148,
+    "alt": [
+     147
+    ],
+    "why": "ついうかうか、妖女にいましめられていたことも忘れていました。"
+   },
+   {
+    "ch": 4,
+    "q": "Tap the sentence that answers: What did she leave behind as she ran away?",
+    "a": 151,
+    "alt": [],
+    "why": "金の上ぐつを片足落しました。 Note: in this translation the slipper is gold (or squirrel fur), and the glass slipper is mentioned as another version."
+   },
+   {
+    "ch": 4,
+    "q": "Tap the guard's description of the girl he saw.",
+    "a": 158,
+    "alt": [
+     159
+    ],
+    "why": "ひどくみすぼらしいなりをした若いむすめでした。 ただのいなかむすめとしか、おもわれないふう."
+   },
+   {
+    "ch": 5,
+    "q": "Tap the sentence that answers: Why could the stepsisters not make the slipper fit?",
+    "a": 173,
+    "alt": [],
+    "why": "むりに足をつっこもうとしましたが… それはみんな、気のどくな、むだな骨おりでした。 骨おり: effort, literally bone-breaking."
+   },
+   {
+    "ch": 5,
+    "q": "Tap the sentence where she produces the second slipper.",
+    "a": 180,
+    "alt": [
+     182
+    ],
+    "why": "かくしの中から、もう片かたの上ぐつを出して見せました。 かくし is an old word for pocket."
+   },
+   {
+    "ch": 5,
+    "q": "Tap the last line, the moral of the story.",
+    "a": 186,
+    "alt": [
+     193,
+     191
+    ],
+    "why": "やさしく、しおらしい心こそ、妖女のこの上ないおくりものだ. The final gift is the kind heart, not the dress."
+   }
+  ],
+  "cloze": [
+   {
+    "ch": 0,
+    "s": 1,
+    "text": "ところが、その二どめにもらったおくさんというのは、それはそれは、ふたりとない、こうまんで＿＿＿な、いばりやでした。",
+    "a": "わがまま",
+    "opts": [
+     "わがまま",
+     "台所",
+     "そうじ",
+     "眠る"
+    ],
+    "read": "わがまま"
+   },
+   {
+    "ch": 0,
+    "s": 6,
+    "text": "そこで、ままむすめを＿＿＿にさげて、女中のするしごとに追いつかいました。",
+    "a": "台所",
+    "opts": [
+     "台所",
+     "灰",
+     "わがまま",
+     "こうまん"
+    ],
+    "read": "だいどころ"
+   },
+   {
+    "ch": 0,
+    "s": 7,
+    "text": "お皿を洗ったり、おぜんごしらえをしたり、おくさまのおへやの＿＿＿から、おじょうさまたちのお居間のそうじまで、させられました。",
+    "a": "そうじ",
+    "opts": [
+     "そうじ",
+     "わがまま",
+     "こうまん",
+     "気だて"
+    ],
+    "read": "そうじ"
+   },
+   {
+    "ch": 0,
+    "s": 8,
+    "text": "そうして、じぶんは、うちのてっぺんの、屋根うらの、くもの巣だらけなすみで、わらのねどこに、犬のようにまるくなって＿＿＿らなければなりませんでした。",
+    "a": "眠る",
+    "opts": [
+     "眠る",
+     "こうまん",
+     "気だて",
+     "台所"
+    ],
+    "read": "ねむる"
+   },
+   {
+    "ch": 1,
+    "s": 15,
+    "text": "さてあるとき、その国の王様の王子が、さかんな＿＿＿をもよおして、おおぜい身分のいい人たちを、ダンスにおまねきになったことがありました。",
+    "a": "ぶとう会",
+    "opts": [
+     "ぶとう会",
+     "妖女",
+     "かぼちゃ",
+     "馬車"
+    ],
+    "read": "ぶとうかい"
+   },
+   {
+    "ch": 1,
+    "s": 16,
+    "text": "サンドリヨンのふたりのきょうだいも、はばのきくおとうさんのむすめたちでしたから、やはり、ぶとう会にお＿＿＿きをうけていました。",
+    "a": "まねく",
+    "opts": [
+     "まねく",
+     "かぼちゃ",
+     "馬車",
+     "御者"
+    ],
+    "read": "まねく"
+   },
+   {
+    "ch": 1,
+    "s": 45,
+    "text": "そのとき、ふと、サンドリヨンの洗礼式に立ち合った、名づけ親の＿＿＿が出て来て、むすめが泣きふしているのを見ると、どうしたのだといって、たずねました。",
+    "a": "教母",
+    "opts": [
+     "教母",
+     "御者",
+     "上ぐつ",
+     "十二時"
+    ],
+    "read": "きょうぼ"
+   },
+   {
+    "ch": 1,
+    "s": 49,
+    "text": "このサンドリヨンの教母というのは、やはり＿＿＿でした。",
+    "a": "妖女",
+    "opts": [
+     "妖女",
+     "ぶとう会",
+     "まねく",
+     "かぼちゃ"
+    ],
+    "read": "ようじょ"
+   },
+   {
+    "ch": 2,
+    "s": 96,
+    "text": "さて、＿＿＿は、その晩、たれも知らない、どこぞのりっぱな王女が、いましがた馬車にのって、ぶとう会についたという知らせを聞いて、わざわざ迎えに出て来ました。",
+    "a": "王子",
+    "opts": [
+     "王子",
+     "静まりかえる",
+     "しとやかに",
+     "名誉"
+    ],
+    "read": "おうじ"
+   },
+   {
+    "ch": 2,
+    "s": 98,
+    "text": "すると、広間の中はたちまち、しんと＿＿＿って、みんなダンスをやめました。",
+    "a": "静まりかえる",
+    "opts": [
+     "静まりかえる",
+     "名誉",
+     "あいさつ",
+     "時計"
+    ],
+    "read": "しずまりかえる"
+   },
+   {
+    "ch": 2,
+    "s": 111,
+    "text": "サンドリヨンは、それはそれは、＿＿＿おどったので、みんなは、いよいよびっくりしてしまいました。",
+    "a": "しとやかに",
+    "opts": [
+     "しとやかに",
+     "あいさつ",
+     "時計",
+     "打つ"
+    ],
+    "read": "しとやかに"
+   },
+   {
+    "ch": 2,
+    "s": 110,
+    "text": "王子は、サンドリヨンを、そのなかでいちばん＿＿＿の上席へ案内して、それからまた、つれ出して、いっしょにダンスをはじめました。",
+    "a": "名誉",
+    "opts": [
+     "名誉",
+     "静まりかえる",
+     "しとやかに",
+     "あいさつ"
+    ],
+    "read": "めいよ"
+   },
+   {
+    "ch": 3,
+    "s": 117,
+    "text": "さて、うちへかえると、サンドリヨンは、そこに待っていた妖女にあって、たくさん＿＿＿をいったのち、あしたもまた、ぜひぶとう会へやってくださいといってたのみました。",
+    "a": "お礼",
+    "opts": [
+     "お礼",
+     "むちゅうになる",
+     "ばかにする",
+     "ことわる"
+    ],
+    "read": "おれい"
+   },
+   {
+    "ch": 3,
+    "s": 118,
+    "text": "それは、王子の熱心なお＿＿＿であったからです。",
+    "a": "のぞみ",
+    "opts": [
+     "のぞみ",
+     "ばかにする",
+     "ことわる",
+     "お礼"
+    ],
+    "read": "のぞみ"
+   },
+   {
+    "ch": 3,
+    "s": 119,
+    "text": "こうして、サンドリヨンが、ぶとう会であったことを、妖女にせっせと話をしていますと、やがて、ふたりのきょうだいが＿＿＿えって来て、こつ、こつ、戸をたたきました。",
+    "a": "かす",
+    "opts": [
+     "かす",
+     "ことわる",
+     "お礼",
+     "のぞみ"
+    ],
+    "read": "かす"
+   },
+   {
+    "ch": 3,
+    "s": 141,
+    "text": "ひとを＿＿＿しているよ。」",
+    "a": "ばかにする",
+    "opts": [
+     "ばかにする",
+     "のぞみ",
+     "むちゅうになる",
+     "ことわる"
+    ],
+    "read": "ばかにする"
+   },
+   {
+    "ch": 4,
+    "s": 147,
+    "text": "王子は、しじゅうサンドリヨンのそばにつきっきりで、ありったけの＿＿＿や、やさしいことばをかけていました。",
+    "a": "おせじ",
+    "opts": [
+     "おせじ",
+     "片足",
+     "番兵",
+     "みすぼらしい"
+    ],
+    "read": "おせじ"
+   },
+   {
+    "ch": 4,
+    "s": 148,
+    "text": "それがサンドリヨンには、うるさいどころではありませんでしたから、ついうかうか、妖女に＿＿＿られていたことも忘れていました。",
+    "a": "いましめる",
+    "opts": [
+     "いましめる",
+     "番兵",
+     "みすぼらしい",
+     "おせじ"
+    ],
+    "read": "いましめる"
+   },
+   {
+    "ch": 4,
+    "s": 151,
+    "text": "けれど、サンドリヨンも、＿＿＿たまぎれに、金の上ぐつを片足落しました。",
+    "a": "あわてる",
+    "opts": [
+     "あわてる",
+     "いましめる",
+     "片足",
+     "番兵"
+    ],
+    "read": "あわてる"
+   },
+   {
+    "ch": 4,
+    "s": 154,
+    "text": "もう馬車も、べっとうもなくて、また、いつもの古着のぼろにくるまったなり、ただ＿＿＿だけはいてかえった、金の上ぐつを持っていました。",
+    "a": "片足",
+    "opts": [
+     "片足",
+     "みすぼらしい",
+     "おせじ",
+     "いましめる"
+    ],
+    "read": "かたあし"
+   },
+   {
+    "ch": 5,
+    "s": 171,
+    "text": "それから二三日すると、王子はラッパを吹いて＿＿＿をまわして、その金の上ぐつの、しっくり足にはまるむすめをさがして、お妃にするといわせました。",
+    "a": "おふれ",
+    "opts": [
+     "おふれ",
+     "お役人",
+     "わびる",
+     "だきしめる"
+    ],
+    "read": "おふれ"
+   },
+   {
+    "ch": 5,
+    "s": 172,
+    "text": "そうして、王子は、＿＿＿たちに、その金の上ぐつを持たせて、王女たちから貴族のお姫さまたち、それから御殿じゅう、のこらずの足をためさせてみましたが、みんなだめでした。",
+    "a": "家来",
+    "opts": [
+     "家来",
+     "わびる",
+     "だきしめる",
+     "ご婚礼"
+    ],
+    "read": "けらい"
+   },
+   {
+    "ch": 5,
+    "s": 185,
+    "text": "ふたりは、サンドリヨンの足もとにつっぷして、これまでひどい目にあわせた罪を＿＿＿ました。",
+    "a": "わびる",
+    "opts": [
+     "わびる",
+     "おふれ",
+     "家来",
+     "お役人"
+    ],
+    "read": "わびる"
+   },
+   {
+    "ch": 5,
+    "s": 186,
+    "text": "サンドリヨンは、ふたりの手をとっておこして、やさしく＿＿＿ました。",
+    "a": "だきしめる",
+    "opts": [
+     "だきしめる",
+     "家来",
+     "お役人",
+     "わびる"
+    ],
+    "read": "だきしめる"
+   }
+  ],
   "title": "灰だらけ姫（ガラスの上ぐつ）",
   "en": "Cinderella (The Glass Slipper)",
   "author": "ペロー（Charles Perrault, 1628–1703） (d. 1703)",
@@ -1502,7 +3109,8 @@ window.YOMIMONO_LIBRARY = [
     "ch": 5
    }
   ],
-  "ideas": [
+  "ideas": [],
+  "openQuestions": [
    {
     "q": "Who are the two people who treat Sandrillon (Cinderella) badly?",
     "ch": 0
@@ -1582,8 +3190,474 @@ window.YOMIMONO_LIBRARY = [
   "authentic": true,
   "band": "authentic",
   "moves": {},
-  "quick": [],
-  "evidence": [],
+  "quick": [
+   {
+    "ch": 0,
+    "q": "How many fairies were invited, and why not the old one?",
+    "a": "Seven; the old fairy had shut herself in a tower for fifty years and was thought dead or enchanted",
+    "opts": [
+     "Seven; the old fairy had shut herself in a tower for fifty years and was thought dead or enchanted",
+     "Twelve; she was rude",
+     "Seven; she lived too far away",
+     "Three; she was ill"
+    ],
+    "why": "その数は、みんなで七人でした。 The old one: 五十年もまえ、ある塔の中にこもったなり… 死んでしまっているか、魔法にでもかけられて."
+   },
+   {
+    "ch": 0,
+    "q": "What curse did the old fairy place on the princess?",
+    "a": "She would prick her hand on a spindle and die",
+    "opts": [
+     "She would prick her hand on a spindle and die",
+     "She would turn into a frog",
+     "She would never speak",
+     "She would grow ugly"
+    ],
+    "why": "その手を糸車のつむにさされて、けがをして死ぬだろうよ。 つむ is a spindle."
+   },
+   {
+    "ch": 0,
+    "q": "How did the young fairy soften the curse?",
+    "a": "She would not die but sleep for a hundred years, until a prince came to wake her",
+    "opts": [
+     "She would not die but sleep for a hundred years, until a prince came to wake her",
+     "The spindle would break",
+     "She lifted the curse entirely",
+     "She would sleep for one night"
+    ],
+    "why": "ぐっすりと、ねこんでおしまいになって、それは百年のあいだ、目をおさましになることがないでしょう。"
+   },
+   {
+    "ch": 1,
+    "q": "What law did the king make to stop the curse?",
+    "a": "No one may use or even keep a spindle, on pain of death",
+    "opts": [
+     "No one may use or even keep a spindle, on pain of death",
+     "No one may enter the castle",
+     "All old women must leave the kingdom",
+     "The princess must never leave her room"
+    ],
+    "why": "それにそむいたものは死刑にする。 死刑: the death penalty."
+   },
+   {
+    "ch": 1,
+    "q": "Where did the princess find the old woman, and what happened?",
+    "a": "In a little room at the top of the tower; the spindle pricked her hand and she fell",
+    "opts": [
+     "In a little room at the top of the tower; the spindle pricked her hand and she fell",
+     "In the kitchen; she cut her finger",
+     "In the garden; she fainted in the heat",
+     "In the stable; she fell asleep on the hay"
+    ],
+    "why": "塔のてっぺんの、ちいさなへや… つむは、いきなり王女の手にささって、王女はばったり、そこに倒れてしまいました。"
+   },
+   {
+    "ch": 1,
+    "q": "What did the good fairy do so the princess would not wake alone?",
+    "a": "She touched everyone and everything in the castle with her wand so they slept too",
+    "opts": [
+     "She touched everyone and everything in the castle with her wand so they slept too",
+     "She built a wall around the castle",
+     "She carried the princess away",
+     "She left a letter by the bed"
+    ],
+    "why": "お城のなかの物のこらず… 杖でさわりました。 Then the brambles grow to keep everyone out."
+   },
+   {
+    "ch": 2,
+    "q": "What did people say the tower in the forest was?",
+    "a": "A haunted ruin, a meeting place for witches, or an ogre's castle where children were eaten",
+    "opts": [
+     "A haunted ruin, a meeting place for witches, or an ogre's castle where children were eaten",
+     "A treasure vault",
+     "A hunting lodge",
+     "A church"
+    ],
+    "why": "人くい鬼の住んでいるお城で、ちいさなこどもをつかまえては… 人くい鬼: a man-eating ogre."
+   },
+   {
+    "ch": 2,
+    "q": "What happened to the forest when the prince walked in?",
+    "a": "The trees and brambles parted to let him through, then closed behind him",
+    "opts": [
+     "The trees and brambles parted to let him through, then closed behind him",
+     "It caught fire",
+     "It vanished",
+     "It grew thicker and stopped him"
+    ],
+    "why": "大きな木も低い木も、草やぶもいばらも、みんな道をよけて通しました。"
+   },
+   {
+    "ch": 2,
+    "q": "What does the story say finally woke the princess?",
+    "a": "The magic ran out as the prince knelt before her",
+    "opts": [
+     "The magic ran out as the prince knelt before her",
+     "A kiss",
+     "A trumpet call",
+     "The smell of dinner"
+    ],
+    "why": "これで魔法の力もいよいよつきたのでしょう、王女は、ふと目をさましました。 No kiss in this telling."
+   },
+   {
+    "ch": 3,
+    "q": "What were the two children called?",
+    "a": "Morning (朝) and Day (昼)",
+    "opts": [
+     "Morning (朝) and Day (昼)",
+     "Sun and Moon",
+     "Spring and Summer",
+     "Dawn and Dusk"
+    ],
+    "why": "上の子は女の子で、これは「朝」という名でした。 下の子は男の子で… 「昼」."
+   },
+   {
+    "ch": 3,
+    "q": "What did the prince tell his father about where he had been?",
+    "a": "That he got lost hunting and slept at a charcoal-burner's hut",
+    "opts": [
+     "That he got lost hunting and slept at a charcoal-burner's hut",
+     "The truth",
+     "That he had been at war",
+     "That he had visited his grandmother"
+    ],
+    "why": "森の中で道にまよって、一軒の炭焼小屋にとまって、チーズや黒パンをたべさせてもらった. His mother was not fooled."
+   },
+   {
+    "ch": 3,
+    "q": "What does the last line say about waiting for happiness?",
+    "a": "Waiting can only increase happiness, never lessen it",
+    "opts": [
+     "Waiting can only increase happiness, never lessen it",
+     "Waiting is a waste of time",
+     "Beauty fades while you wait",
+     "Never wait for anyone"
+    ],
+    "why": "待つことによって、幸福はましこそすれ、へるということはありません。"
+   }
+  ],
+  "evidence": [
+   {
+    "ch": 0,
+    "q": "Tap the sentence that explains why the old fairy was not invited.",
+    "a": 13,
+    "alt": [
+     6,
+     12
+    ],
+    "why": "その数は、みんなで七人でした。 The old one: 五十年もまえ、ある塔の中にこもったなり… 死んでしまっているか、魔法にでもかけられて."
+   },
+   {
+    "ch": 0,
+    "q": "Tap the sentence that answers: What curse did the old fairy place on the princess?",
+    "a": 29,
+    "alt": [],
+    "why": "その手を糸車のつむにさされて、けがをして死ぬだろうよ。 つむ is a spindle."
+   },
+   {
+    "ch": 0,
+    "q": "Tap the sentence that names the hundred years.",
+    "a": 36,
+    "alt": [
+     37,
+     35
+    ],
+    "why": "ぐっすりと、ねこんでおしまいになって、それは百年のあいだ、目をおさましになることがないでしょう。"
+   },
+   {
+    "ch": 1,
+    "q": "Tap the sentence with the king's punishment for breaking the law.",
+    "a": 39,
+    "alt": [
+     40,
+     41
+    ],
+    "why": "それにそむいたものは死刑にする。 死刑: the death penalty."
+   },
+   {
+    "ch": 1,
+    "q": "Tap the sentence where the spindle pierces her hand.",
+    "a": 59,
+    "alt": [
+     45,
+     46
+    ],
+    "why": "塔のてっぺんの、ちいさなへや… つむは、いきなり王女の手にささって、王女はばったり、そこに倒れてしまいました。"
+   },
+   {
+    "ch": 1,
+    "q": "Tap the sentence where the fairy touches everyone with her wand.",
+    "a": 78,
+    "alt": [
+     80,
+     76
+    ],
+    "why": "お城のなかの物のこらず… 杖でさわりました。 Then the brambles grow to keep everyone out."
+   },
+   {
+    "ch": 2,
+    "q": "Tap the sentence with the most widely held rumour, the ogre.",
+    "a": 99,
+    "alt": [
+     97,
+     98
+    ],
+    "why": "人くい鬼の住んでいるお城で、ちいさなこどもをつかまえては… 人くい鬼: a man-eating ogre."
+   },
+   {
+    "ch": 2,
+    "q": "Tap the sentence where the forest makes way for the prince.",
+    "a": 105,
+    "alt": [
+     108
+    ],
+    "why": "大きな木も低い木も、草やぶもいばらも、みんな道をよけて通しました。"
+   },
+   {
+    "ch": 2,
+    "q": "Tap the sentence where the princess opens her eyes.",
+    "a": 123,
+    "alt": [
+     122
+    ],
+    "why": "これで魔法の力もいよいよつきたのでしょう、王女は、ふと目をさましました。 No kiss in this telling."
+   },
+   {
+    "ch": 3,
+    "q": "Tap the sentence that names the daughter.",
+    "a": 155,
+    "alt": [
+     156
+    ],
+    "why": "上の子は女の子で、これは「朝」という名でした。 下の子は男の子で… 「昼」."
+   },
+   {
+    "ch": 3,
+    "q": "Tap the sentence that answers: What did the prince tell his father about where he had been?",
+    "a": 150,
+    "alt": [],
+    "why": "森の中で道にまよって、一軒の炭焼小屋にとまって、チーズや黒パンをたべさせてもらった. His mother was not fooled."
+   },
+   {
+    "ch": 3,
+    "q": "Tap the final line.",
+    "a": 163,
+    "alt": [
+     162
+    ],
+    "why": "待つことによって、幸福はましこそすれ、へるということはありません。"
+   }
+  ],
+  "cloze": [
+   {
+    "ch": 0,
+    "s": 0,
+    "text": "むかしむかし、王様と＿＿＿がありました。",
+    "a": "お妃",
+    "opts": [
+     "お妃",
+     "洗礼",
+     "妖女",
+     "おくりもの"
+    ],
+    "read": "おきさき"
+   },
+   {
+    "ch": 0,
+    "s": 5,
+    "text": "それでさっそく、さかんな＿＿＿の式をあげることになって、お姫さまの名づけ親になる教母には、国じゅうの妖女が、のこらず呼び出されました。",
+    "a": "洗礼",
+    "opts": [
+     "洗礼",
+     "けがをする",
+     "お妃",
+     "おくりもの"
+    ],
+    "read": "せんれい"
+   },
+   {
+    "ch": 0,
+    "s": 7,
+    "text": "そのじぶんの＿＿＿なかまのならわしにしたがい、七人の妖女は、めいめい、ひとつずつ、りっぱなおくりものを持って来るはずでした。",
+    "a": "妖女",
+    "opts": [
+     "妖女",
+     "のろい",
+     "糸車",
+     "けがをする"
+    ],
+    "read": "ようじょ"
+   },
+   {
+    "ch": 0,
+    "s": 21,
+    "text": "そうこうするうちに、いよいよ、妖女たちは、それぞれ、お姫さまに＿＿＿のことばをのべることになりました。",
+    "a": "おくりもの",
+    "opts": [
+     "おくりもの",
+     "糸車",
+     "つむ",
+     "けがをする"
+    ],
+    "read": "おくりもの"
+   },
+   {
+    "ch": 1,
+    "s": 39,
+    "text": "そこで、その日さっそく、国じゅうに＿＿＿をまわして、たれでも、糸車につむをつかうことはならぬ。",
+    "a": "おふれ",
+    "opts": [
+     "おふれ",
+     "よげん",
+     "魔法の杖",
+     "眠りこける"
+    ],
+    "read": "おふれ"
+   },
+   {
+    "ch": 1,
+    "s": 41,
+    "text": "それにそむいたものは＿＿＿にすると、きびしくおいいわたしになりました。",
+    "a": "死刑",
+    "opts": [
+     "死刑",
+     "眠りこける",
+     "おふれ",
+     "塔"
+    ],
+    "read": "しけい"
+   },
+   {
+    "ch": 1,
+    "s": 45,
+    "text": "するうち、下のへやから上のへやへと、かけあがって行って、とうとう＿＿＿のてっぺんの、ちいさなへやにはいりました。",
+    "a": "塔",
+    "opts": [
+     "塔",
+     "倒れる",
+     "よげん",
+     "魔法の杖"
+    ],
+    "read": "とう"
+   },
+   {
+    "ch": 1,
+    "s": 46,
+    "text": "見ると、そこには、人のよさそうなおばあさんが、ひとりぼっちですわっていて、つむで＿＿＿いでいました。",
+    "a": "糸をつむぐ",
+    "opts": [
+     "糸をつむぐ",
+     "よげん",
+     "魔法の杖",
+     "眠りこける"
+    ],
+    "read": "いとをつむぐ"
+   },
+   {
+    "ch": 2,
+    "s": 93,
+    "text": "そのじぶん、その国をおさめていた新しい王様の王子が、ある日、＿＿＿の近くを通りかかりました。",
+    "a": "眠る森",
+    "opts": [
+     "眠る森",
+     "勇気",
+     "しずまりかえる",
+     "ひざまづく"
+    ],
+    "read": "ねむるもり"
+   },
+   {
+    "ch": 2,
+    "s": 97,
+    "text": "なかのひとりは、あれは、ゆうれいが出るというひょうばんの、古い＿＿＿だといいました。",
+    "a": "荒城",
+    "opts": [
+     "荒城",
+     "ご婚礼",
+     "眠る森",
+     "百姓"
+    ],
+    "read": "あれじろ"
+   },
+   {
+    "ch": 2,
+    "s": 100,
+    "text": "王子は、このうちのどれを信じていいか、わからないので、まよっていますと、そのとき、ひとり、この土地に古くからいる年よりのお＿＿＿が、こういいました。",
+    "a": "百姓",
+    "opts": [
+     "百姓",
+     "勇気",
+     "しずまりかえる",
+     "ひざまづく"
+    ],
+    "read": "ひゃくしょう"
+   },
+   {
+    "ch": 2,
+    "s": 110,
+    "text": "若いやさしい、そして火のようにあつい心をもった王子は、いつも＿＿＿のあるものです。",
+    "a": "勇気",
+    "opts": [
+     "勇気",
+     "目をさます",
+     "ご婚礼",
+     "眠る森"
+    ],
+    "read": "ゆうき"
+   },
+   {
+    "ch": 3,
+    "s": 158,
+    "text": "それからまた二年たって、王様がおかくれになって、王子が、新しい王様の＿＿＿につくことになりました。",
+    "a": "位",
+    "opts": [
+     "位",
+     "儀式",
+     "迎える",
+     "行列"
+    ],
+    "read": "くらい"
+   },
+   {
+    "ch": 3,
+    "s": 161,
+    "text": "王女はふたりのこどもを両わきにのせ、美しい＿＿＿の馬車をそろえて、王様のお城に乗りこみました。",
+    "a": "行列",
+    "opts": [
+     "行列",
+     "幸福",
+     "儀式",
+     "迎える"
+    ],
+    "read": "ぎょうれつ"
+   },
+   {
+    "ch": 3,
+    "s": 163,
+    "text": "でも、待つことによって、＿＿＿はましこそすれ、へるということはありません。",
+    "a": "幸福",
+    "opts": [
+     "幸福",
+     "迎える",
+     "位",
+     "行列"
+    ],
+    "read": "こうふく"
+   },
+   {
+    "ch": 3,
+    "s": 160,
+    "text": "そうして、りっぱな＿＿＿をととのえて、あらためて、眠る森から、お姫さまをお迎えになりました。",
+    "a": "儀式",
+    "opts": [
+     "儀式",
+     "行列",
+     "幸福",
+     "位"
+    ],
+    "read": "ぎしき"
+   }
+  ],
   "title": "眠る森のお姫さま",
   "en": "Sleeping Beauty",
   "author": "ペロー（Charles Perrault, 1628–1703） (d. 1703)",
@@ -1974,7 +4048,8 @@ window.YOMIMONO_LIBRARY = [
     "ch": 3
    }
   ],
-  "ideas": [
+  "ideas": [],
+  "openQuestions": [
    {
     "q": "How many fairies were invited to the christening, and why wasn't the old fairy invited?",
     "ch": 0

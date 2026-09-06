@@ -162,7 +162,7 @@
 <div class="container">
   <h1 class="jt-tap" data-jt="title">よみもの</h1>
   <p class="subtitle jt-tap" data-jt="subtitle">Read a story, open the notebook when you need it, then show what you understood</p>
-  <span class="poc"><b>Proof of concept</b> for review. Six original retellings levelled on the same ladder as the Grammar Hub, plus an authentic shelf: four real storybooks by 楠山正雄 from Aozora Bunko, verbatim, with a word list and questions per chapter. Anything marked ★ is beyond the Victorian Curriculum for that level: great to know, never required. The Japanese is a draft for a teacher to check before any class reads it.</span>
+  <span class="poc"><b>Proof of concept</b> for review. Six original retellings levelled on the same ladder as the Grammar Hub, plus an authentic shelf: four real storybooks by 楠山正雄 from Aozora Bunko, verbatim, with a word list per chapter and three graded checks at the end of each: quick read, fill the gap, tap the sentence that shows it. Anything marked ★ is beyond the Victorian Curriculum for that level: great to know, never required. The Japanese is a draft for a teacher to check before any class reads it.</span>
 
   <!-- PICK -->
   <div class="screen active" id="pick">
@@ -220,7 +220,7 @@
   </div>
 </div>
 
-<div class="build-tag">Yomimono PoC 2026-09-06</div>
+<div class="build-tag">Yomimono PoC 2026-09-06b</div>
 
 <script src="lever.js"></script>
 <script src="library.js"></script>
@@ -246,7 +246,7 @@ const BAND_META = {
   choices:    {head:"Choices",    vic:"VIC Levels 7 and 8",  cur:"VIC", has:"Kana assumed, no chart. Some kanji. Sequencing ideas with the て-form; choosing the right particle and structure."},
   links:      {head:"Links",      vic:"VIC Levels 9 and 10", cur:"VIC", has:"A range of kanji, compounds and multiple readings. Complex sentences, a variety of tenses, cohesion across a text."},
   paragraphs: {head:"Paragraphs", vic:"VCE Units 1 and 2",   cur:"VCE", has:"Plain-form narration and extended recount. This is how real Japanese storybooks are written."},
-  authentic:  {head:"Authentic",  vic:"Aozora Bunko, public domain", cur:"AUTH", has:"Real Japanese storybooks written for Japanese children, from 青空文庫 (Aozora Bunko), verbatim. Above every VIC level. Read one chapter at a time with that chapter's word list; comprehension is open questions your teacher reads."}
+  authentic:  {head:"Authentic",  vic:"Aozora Bunko, public domain", cur:"AUTH", has:"Real Japanese storybooks written for Japanese children, from 青空文庫 (Aozora Bunko), verbatim. Above every VIC level. Read one chapter at a time with that chapter's word list; every chapter ends with graded tasks: quick read, fill the gap from the chapter's word list, and tap the sentence that shows it."}
 };
 const BAND_ORDER = ["words","sentences","choices","links","paragraphs","authentic"];
 const STAR_RULE = "<b>★ means beyond the Victorian Curriculum for that level.</b> It is there so you can read the real story if you want to. Learning it is a bonus, never a test. Nothing marked ★ is required knowledge for the Victorian Curriculum at that level.";
@@ -723,8 +723,8 @@ const UI_RUBY = {
     if(st.authentic){
       c.innerHTML=`${bandChip(st)}<span class="long">long read · ${st.chapters.length} chapters</span><h3>${esc(st.title)}</h3><div class="en">${esc(st.en)}</div>
         <div class="needs"><b>${esc(st.author)}${st.translator?`, translated by ${esc(st.translator)}`:""}.</b> ${st.beyond.map(esc).join(" ")}</div>
-        <div class="beyond">A real book: everything here is above the VIC levels. The chapter word list is your way in.</div>
-        <div class="meta">${st.sentences.length} sentences · ${st.notebook.length} words in the lists · ${st.ideas.length} open questions</div>`;
+        <div class="beyond">A real book: everything here is above the VIC levels. The chapter word list is your way in, and every chapter is checked.</div>
+        <div class="meta">${st.sentences.length} sentences · ${st.notebook.length} words in the lists · ${st.quick.length} questions, ${(st.cloze||[]).length} gap-fills, ${st.evidence.length} evidence taps</div>`;
     }else{
       c.innerHTML=`${bandChip(st)}${st.chapters?`<span class="long">long read · ${st.chapters.length} chapters</span>`:""}<h3>${st.titleRuby}</h3><div class="en">${esc(st.en)}</div>
         <div class="needs"><b>You will need:</b> ${esc(st.needs)}</div>
@@ -767,7 +767,7 @@ const UI_RUBY = {
     renderChapterNav();
     $("gnote").className="gnote";$("gnote").innerHTML="";
     if(story.authentic){
-      $("toTasks").textContent=`Questions for chapter ${chap+1}`;
+      $("toTasks").textContent=`Tasks for chapter ${chap+1}`;
       const last=chap===story.chapters.length-1;
       $("attrib").style.display=last?"":"none";
       if(last)$("attrib").innerHTML=`<b>青空文庫 · Aozora Bunko attribution</b><br>${story.attribution.map(esc).join("<br>")}`;
@@ -841,8 +841,11 @@ const UI_RUBY = {
   function startTasks(){
     queue=[];
     if(story.authentic){
-      queue=story.ideas.filter(i=>i.ch===chap).map(t=>({type:"idea",t}));
-      if(!queue.length){ if(chap<story.chapters.length-1){chap++;showChapter();} else finish(); return; }
+      queue=[];
+      shuffle(story.quick.filter(t=>t.ch===chap)).forEach(t=>queue.push({type:"quick",t}));
+      shuffle((story.cloze||[]).filter(t=>t.ch===chap)).forEach(t=>queue.push({type:"cloze",t}));
+      shuffle(story.evidence.filter(t=>t.ch===chap)).forEach(t=>queue.push({type:"evidence",t}));
+      if(!queue.length){ afterChapterQuestions(); return; }
       idx=0;show("task");render();return;
     }
     shuffle(story.quick.slice()).forEach(t=>queue.push({type:"quick",t}));
@@ -855,7 +858,7 @@ const UI_RUBY = {
     else finish();
   }
   $("toTasks").addEventListener("click",startTasks);
-  const key=(q)=>q.type+"|"+q.t.q;
+  const key=(q)=>q.type+"|"+(q.t.q||q.t.text);
 
   function render(){
     graded=false;pickedIdx=null;
@@ -867,14 +870,22 @@ const UI_RUBY = {
     $("progress").textContent=`${Math.min(idx+1,queue.length)} of ${queue.length}${(!story.authentic&&closed>story.quick.length+story.evidence.length)?" (missed ones come back)":""}`;
     if(q.type==="quick"){
       const opts=shuffle(q.t.opts.slice());
-      area.innerHTML=`<span class="task-kind">QUICK READ</span><div class="task-prompt">${esc(q.t.q)}</div>
+      area.innerHTML=`<span class="task-kind">${story.authentic?`CHAPTER ${chap+1} · `:""}QUICK READ</span><div class="task-prompt">${esc(q.t.q)}</div>
         <div class="options">${opts.map(o=>`<button type="button" class="option" data-v="${esc(o)}">${esc(o)}</button>`).join("")}</div>`;
       area.querySelectorAll(".option").forEach(b=>b.addEventListener("click",()=>{
         if(graded)return;area.querySelectorAll(".option").forEach(x=>x.dataset.sel="");b.dataset.sel="1";$("checkBtn").disabled=false;
       }));
+    }else if(q.type==="cloze"){
+      const opts=shuffle(q.t.opts.slice());
+      area.innerHTML=`<span class="task-kind">${story.authentic?`CHAPTER ${chap+1} · `:""}FILL THE GAP</span><div class="task-prompt">Which word from this chapter's list fills the gap?</div>
+        <div class="story small tasking" style="font-size:19px;line-height:1.9">${esc(q.t.text)}</div>
+        <div class="options kana">${opts.map(o=>`<button type="button" class="option" data-v="${esc(o)}">${esc(o)}</button>`).join("")}</div>`;
+      area.querySelectorAll(".option").forEach(b=>b.addEventListener("click",()=>{
+        if(graded)return;area.querySelectorAll(".option").forEach(x=>x.dataset.sel="");b.dataset.sel="1";$("checkBtn").disabled=false;
+      }));
     }else if(q.type==="evidence"){
-      area.innerHTML=`<span class="task-kind">FIND THE EVIDENCE</span><div class="task-prompt">${esc(q.t.q)}</div><div class="story small tasking" id="evStory"></div>`;
-      const st=$("evStory");renderStory(st,true);
+      area.innerHTML=`<span class="task-kind">${story.authentic?`CHAPTER ${chap+1} · `:""}FIND THE EVIDENCE</span><div class="task-prompt">${esc(q.t.q)}</div><div class="story small tasking${story.authentic?" auth":""}" id="evStory"></div>`;
+      const st=$("evStory");renderStory(st,true,story.authentic?chapterRange():null);
       st.querySelectorAll(".sent").forEach(s=>s.addEventListener("click",()=>{
         if(graded)return;st.querySelectorAll(".sent").forEach(x=>x.classList.remove("picked"));
         s.classList.add("picked");pickedIdx=+s.dataset.i;$("checkBtn").disabled=false;
@@ -901,7 +912,7 @@ const UI_RUBY = {
       fb.className="feedback neutral";fb.textContent="Kept. Your teacher will read this.";
     }else{
       let ok;
-      if(q.type==="quick"){
+      if(q.type==="quick"||q.type==="cloze"){
         const sel=document.querySelector('.option[data-sel="1"]');ok=!!sel&&sel.dataset.v===q.t.a;
         document.querySelectorAll(".option").forEach(b=>{b.disabled=true;if(b.dataset.v===q.t.a)b.classList.add("correct");else if(b.dataset.sel==="1")b.classList.add("incorrect");});
       }else{
@@ -912,7 +923,8 @@ const UI_RUBY = {
       const k=key(q);if(!(k in first))first[k]=ok;
       if(!ok)queue.splice(queue.findIndex((x,i)=>i>idx&&x.type==="idea")<0?queue.length:queue.findIndex((x,i)=>i>idx&&x.type==="idea"),0,q); /* comes back before the ideas round */
       fb.className="feedback "+(ok?"good":"bad");
-      fb.innerHTML=(ok?"✓ ":"✗ ")+esc(q.t.why)+(ok?"":" This one will come back around.");
+      const why=q.type==="cloze"?`${esc(q.t.a)}${q.t.read?` (${esc(q.t.read)})`:""} is the word from the list that fits here.`:esc(q.t.why||"");
+      fb.innerHTML=(ok?"✓ ":"✗ ")+why+(ok?"":" This one will come back around.");
     }
     $("checkBtn").style.display="none";$("nextBtn").style.display="";$("nextBtn").focus();
   });
@@ -922,14 +934,10 @@ const UI_RUBY = {
   });
   function finish(){
     const total=Object.keys(first).length,right=Object.values(first).filter(Boolean).length;
-    if(story.authentic){
-      const answered=Object.values(open).filter(a=>a&&a.trim()).length;
-      $("stat").textContent=`${answered}/${story.ideas.length}`;
-      $("statLabel").textContent="questions answered across the chapters. Nothing here is marked by the computer; your teacher reads what you wrote.";
-    }else{
-      $("stat").textContent=`${right}/${total}`;
-      $("statLabel").textContent="right first try on quick read and find the evidence. Missed ones came back until you got them.";
-    }
+    $("stat").textContent=`${right}/${total}`;
+    $("statLabel").textContent=story.authentic
+      ?"right first try across the chapters: quick read, fill the gap, find the evidence. Missed ones came back until you got them."
+      :"right first try on quick read and find the evidence. Missed ones came back until you got them.";
     $("openOut").innerHTML=Object.entries(open).map(([q,a])=>`<div class="open-out"><b>${esc(q)}</b>${esc(a)||"<i>(left blank)</i>"}</div>`).join("");
     $("copied").textContent="";
     show("report");
