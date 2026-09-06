@@ -349,6 +349,21 @@
   .turn.show{display:flex}.turn b{display:block;font-size:18px;margin:8px 0}.turn .en{color:#b4bcaf;max-width:320px;margin:0 auto 14px}
   /* the dictionary stacks on a narrow screen */
   @media (max-width:760px){.obj-book{grid-template-columns:1fr;width:96%;padding:12px;gap:10px}.obj-book .page{min-height:0}.obj-book .page+.page{border-left:1px solid #d8cfbb}.obj-book .wl{max-height:34vh}.obj-book .wrow{grid-template-columns:5.5em minmax(0,1fr) auto;gap:8px}.obj-book .wrow .w{font-size:18px}.obj-book .card .cw{font-size:26px}}
+  /* a phone on its side is short, not narrow: one-line HUD, small inventory, short buttons, more log */
+  @media (max-height:520px) and (min-width:600px){
+    body{padding:0}.device{height:100%;width:100%;border-radius:0;padding:14px 4px 14px;box-shadow:none}
+    .device:before{top:1px;left:10px;font-size:8px}.buildtag,.hubchip{bottom:0;font-size:8px}
+    .view{width:190px}.view canvas#scene{height:56px}.view .locname{padding:3px 8px;font-size:11px}#locJp{display:none}
+    .present{padding:4px 6px;font-size:12px;min-height:0}.present b{display:none}.person{min-height:30px;padding:2px 4px;gap:6px}.person canvas{width:18px!important;height:18px!important}.person .seen{display:none}
+    .view>.goals{display:none}
+    .channel{padding:2px 8px;gap:6px}.channel strong{font-size:10px}.channel .en{font-size:10px}.channel .k.sm{min-height:26px;font-size:11px;padding:2px 8px}
+    .log{padding:6px 10px;font-size:13px}.log .say .jp{font-size:18px;line-height:1.6}.log .say{margin:6px 0}.log .narr{margin:5px 0;padding:3px 0 3px 8px}
+    .dock{max-height:44%;padding:0 8px}.task{padding:8px;margin:6px 0}.task .prompt{font-size:13px;margin:2px 0 6px}.opt{font-size:16px;padding:6px 8px;min-height:34px}.opts{gap:6px}
+    .hud{padding:2px 8px;gap:4px 10px;min-height:0;font-size:12px}.hud .lab{display:none}.hud .clock{font-size:11px}.hud .k.sm{min-height:26px;font-size:11px;padding:2px 8px}
+    .inv{min-height:0;padding:2px 8px;gap:6px}.inv>.lab{display:none}.item{min-height:28px;padding:2px 5px}.item canvas{width:20px!important;height:20px!important}.item .n{font-size:10px}
+    .acts{padding:4px 8px;gap:6px;max-height:36%}.acts>.k{min-height:30px;font-size:12px;padding:3px 4px}.acts .sub .k{min-height:28px;font-size:12px}
+    .k,.k.sm{min-height:28px}
+  }
   [hidden]{display:none!important}
   @media (min-width:681px) and (max-height:700px){body{padding:6px}.device{padding:19px 10px 21px}.title{padding:18px;gap:12px}.title-head{padding-bottom:12px}#titleScene{width:176px;height:88px}.load button{min-height:170px}.view{width:240px}.view canvas#scene{max-height:105px;object-fit:contain}.channel{padding:4px 12px}.log{padding:10px 16px}.hud{padding:5px 10px}.inv{min-height:50px}.acts{padding:7px 10px}}
   @media (max-width:900px){.view{width:230px}.load{gap:10px}.load button{padding:12px}.load button[data-k="agent"]{padding:10px}.load .kit canvas{width:24px!important;height:24px!important}.hud{gap:6px 10px}.hud .time{margin-left:0}}
@@ -1482,7 +1497,7 @@ const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(M
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 const SAVE_KEY="mission-japan-save-v2";
 /* One number, counted up on every deploy, so a stale tab is obvious. Bump it with each live copy. */
-const BUILD={n:17,date:"2026-09-06"};
+const BUILD={n:18,date:"2026-09-06"};
 ["buildTag","buildEyebrow","buildMenu"].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=(id==="buildTag"?"MISSION · ":"")+`BUILD ${BUILD.n} · ${BUILD.date}`; });
 const INK=getComputedStyle(document.documentElement).getPropertyValue("--ink").trim();
 const PAPER=getComputedStyle(document.documentElement).getPropertyValue("--lcd").trim();
@@ -1711,6 +1726,7 @@ function load(){
     const p=g.pending;
     if(p&&(!obj(p)||typeof p.topic!=="string"||p.loc!==g.loc||!obj(p.line)||typeof p.line.jp!=="string"||typeof p.line.en!=="string"||p.options!=null&&(!Array.isArray(p.options)||!p.options.length||!p.options.every(o=>obj(o)&&typeof o.jp==="string"&&typeof o.en==="string"&&typeof o.why==="string"&&(typeof o.ok==="boolean"||o.ok==="faux")))||p.feedback!=null&&(!obj(p.feedback)||typeof p.feedback.html!=="string")))g.pending=null;
     if(g.pending)g.pending.typed=typeof g.pending.typed==="string"?g.pending.typed:"";
+    const pr=PROFILE.get(); if(!g.s.realName&&pr.real) g.s.realName=pr.real; if(!g.s.realKana&&pr.kana) g.s.realKana=pr.kana;
     attach(g);return g;
   }catch(e){return null;}
 }
@@ -2078,7 +2094,7 @@ function renderTask(pending=null){
 }
 function fold(str){ return String(str).normalize("NFKC").replace(/[\s　]/g,"").replace(/[。．\.、，,！!？?「」]/g,"").replace(/[ァ-ヶ]/g,ch=>String.fromCharCode(ch.charCodeAt(0)-0x60)).toLowerCase(); }
 function matches(val,accept){
-  const v=fold(val), s=G.s, sl={...s,name:fold(s.name),town:fold(s.town),ramen:fold(s.ramen),secret:fold(s.secret),jobKana:s.jobKana,jobPlain:fold(s.jobPlain),realAccept:[s.realKana,s.realName].filter(Boolean).length?[s.realKana,s.realName].filter(Boolean).map(x=>fold(x).replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).join("|"):".{1,20}"};
+  const v=fold(val), s=slots(), sl={...s,name:fold(s.name),town:fold(s.town),ramen:fold(s.ramen),secret:fold(s.secret),jobKana:s.jobKana,jobPlain:fold(s.jobPlain),realAccept:[s.realKana,s.realName].filter(Boolean).length?[s.realKana,s.realName].filter(Boolean).map(x=>fold(x).replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).join("|"):".{1,20}"};
   return accept.some(a=>a instanceof RegExp?new RegExp(fill(a.source,sl),"i").test(v):fold(fill(a,s))===v);
 }
 function check(box){
