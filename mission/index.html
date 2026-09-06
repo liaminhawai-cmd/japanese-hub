@@ -168,6 +168,22 @@
   .tile{border:2px solid var(--ink);background:var(--lcd);font-size:20px;padding:4px 10px;box-shadow:2px 2px 0 var(--ink);font-family:inherit;cursor:pointer;min-width:40px}
   .tile:disabled{opacity:.3;box-shadow:none;cursor:default}
   .slots{min-height:44px;border:2px dashed var(--ink);padding:6px 10px;font-size:24px;letter-spacing:.1em;margin:6px 0;background:#fff}
+  /* the dictionary is the one place in the world that is allowed colour */
+  .obj-book .wrow{cursor:pointer;border:0;background:transparent;width:100%;text-align:left;font:inherit;color:var(--ink)}
+  .obj-book .wrow:hover{background:var(--lcd2)}
+  .obj-book .wrow .w.plain{color:var(--ink)}
+  .obj-book .wrow .pick{margin-left:auto;font-size:11px;letter-spacing:.06em;border:2px solid var(--ink);padding:1px 6px}
+  .obj-book .wrow.sel .pick{background:var(--ink);color:var(--lcd)}
+  .card{border:2px solid var(--ink);padding:8px 10px;margin:6px 0;background:#fff}
+  .card .cw{font-size:24px;font-weight:700}
+  .card .cr{color:var(--dim);font-size:13px}
+  .card .cd{font-size:13.5px;margin:4px 0}
+  .parts{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+  .part{border:2px solid currentColor;padding:2px 8px;font-size:13px;line-height:1.3}
+  .part b{display:block;font-size:20px}
+  .part.sense{color:#1f6f78}.part.sound{color:#a83232}.part.both{color:#7a5cad}
+  .legend{font-size:11px;color:var(--dim);margin-top:6px}
+  .legend i{display:inline-block;width:10px;height:10px;border:2px solid currentColor;vertical-align:middle;margin-right:3px}
   .say .spk{border:2px solid var(--ink);background:var(--lcd);font-size:11px;padding:1px 7px;margin-left:8px;vertical-align:middle;letter-spacing:.06em;cursor:pointer}
   .say .spk:disabled{opacity:.35;cursor:default}
   /* Handheld shell. The scene and sprites stay on their original pixel grid. */
@@ -242,7 +258,7 @@
   input.jp{font-size:20px;max-width:none;background:var(--lcd);color:var(--ink)}
   .hint{font-size:14px}.taskbtns{gap:10px}.taskbtns .leave{margin-left:auto;background:transparent;box-shadow:none;border:0;font-size:13px;text-transform:none;text-decoration:underline}
   .feedback{padding:10px 12px;margin-top:12px;font-size:15px;border:2px solid var(--ink)}
-  .feedback.bad{border-style:double;border-width:4px}.feedback .rule{font-size:14px;line-height:1.6}
+  .feedback.bad{border-style:double;border-width:4px}.feedback.nudge{border-style:dashed;font-style:italic}.feedback .rule{font-size:14px;line-height:1.6}
   .hud{padding:8px 12px;gap:8px 18px;min-height:48px;font-size:14px;flex:none}
   .hud .lab{font-size:12px;letter-spacing:0}.hud .clock{font-size:13px}
   .hud .susp{width:48px}.hud .hearts canvas{width:16px!important;height:16px!important}
@@ -258,6 +274,18 @@
   .menu .row{gap:10px;margin:14px 0}.cover{border:2px solid var(--ink);padding:10px 12px;margin:12px 0;font-size:14px}
   .save-status{font-size:12px;color:var(--dim)}
   .deb{font-size:16px}.deb .en,.memo{font-size:14px}th{font-size:12px}td{font-size:14px}input.name{min-height:40px}
+  /* the active question is docked below the log, so it can never scroll out of sight */
+  .dock{flex:none;max-height:58%;overflow:auto;border-top:3px solid var(--ink);padding:0 14px;background:var(--lcd2)}
+  .dock:empty{display:none}
+  .dock .task{margin:10px 0;background:var(--lcd)}
+  /* announcements and radio: a speaker, a play button, subtitles on request */
+  .ann{display:flex;gap:10px;align-items:flex-start;margin:10px 0;padding:8px 10px;border:2px dotted var(--ink)}
+  .ann canvas{width:28px;height:28px;flex:none}
+  .ann .who{font-size:12px;letter-spacing:.06em;font-weight:700}
+  .ann .btns{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0}
+  .ann .jp{font-size:19px;line-height:1.7}
+  .ann .tr{font-size:13px;color:var(--dim)}
+  .ann .note{font-size:12px;color:var(--dim)}
   [hidden]{display:none!important}
   @media (min-width:681px) and (max-height:700px){body{padding:6px}.device{padding:19px 10px 21px}.title{padding:18px;gap:12px}.title-head{padding-bottom:12px}#titleScene{width:176px;height:88px}.load button{min-height:170px}.view{width:240px}.view canvas#scene{max-height:105px;object-fit:contain}.channel{padding:4px 12px}.log{padding:10px 16px}.hud{padding:5px 10px}.inv{min-height:50px}.acts{padding:7px 10px}}
   @media (max-width:900px){.view{width:230px}.load{gap:10px}.load button{padding:12px}.load button[data-k="agent"]{padding:10px}.load .kit canvas{width:24px!important;height:24px!important}.hud{gap:6px 10px}.hud .time{margin-left:0}}
@@ -307,6 +335,7 @@
       <div class="main">
         <div class="channel"><strong id="channelName">記録 · FIELD LOG</strong><span class="en" id="translationState"></span><button class="k sm" id="menuBtn" aria-haspopup="dialog">メニュー · Menu</button></div>
         <div class="log" id="log" role="region" aria-label="Field log and conversation" tabindex="0"></div>
+        <div class="dock" id="dock" role="region" aria-label="Your reply"></div>
         <div class="hud">
           <span><span class="lab">元気 · Energy</span><span class="hearts" id="hearts"></span></span>
           <span><span class="lab">お金 · Cash</span><b id="yen"></b></span>
@@ -333,7 +362,7 @@
 <div class="menu" id="menu" role="dialog" aria-modal="true" aria-labelledby="menuTitle"><div class="box">
   <h3 id="menuTitle">メニュー · Field menu</h3>
   <p class="save-status" id="saveStatus" role="status"></p>
-  <div class="row"><button class="k sm inv" id="saveLeave">保存して出る · Save and leave</button><button class="k sm" id="fsBtn">全画面 · Full screen</button><button class="k sm" id="closeMenu">もどる · Back</button></div>
+  <div class="row"><button class="k sm inv" id="saveLeave">保存して出る · Save and leave</button><button class="k sm" id="fsBtn">全画面 · Full screen</button><button class="k sm" id="subsBtn"></button><button class="k sm" id="closeMenu">もどる · Back</button></div>
   <div id="menuCover" class="cover"></div><div id="menuGoals" class="goals"></div>
   <h3 style="margin-top:12px">調べる · Look things up</h3>
   <div class="row" id="menuLinks"></div>
@@ -343,7 +372,7 @@
   <p class="en" id="menuTeacher"></p>
 </div></div>
 <span class="hubchip"><a href="../">⌂ にほんごハブ · Hub</a></span>
-<span class="buildtag">MISSION 2026-09-06e</span>
+<span class="buildtag">MISSION 2026-09-06h</span>
 </div>
 <script src="words.js"></script>
 <script>
@@ -914,6 +943,23 @@ hq:[
 ".#...........#..",
 "..###########...",
 "................"],
+speaker:[
+"................",
+"..........#.....",
+".........##..#..",
+"........#.#...#.",
+"..######..#.#..#",
+"..#.....#.#..#.#",
+"..#.....#.#..#.#",
+"..#.....#.#..#.#",
+"..#.....#.#..#.#",
+"..#.....#.#..#.#",
+"..######..#.#..#",
+"........#.#...#.",
+".........##..#..",
+"..........#.....",
+"................",
+"................"],
 tatami:[
 "................",
 "................",
@@ -1357,9 +1403,42 @@ const SND=(()=>{
 /* speech: the device's own Japanese voice, if it has one. Honest when it does not. */
 const SPEAK=(()=>{
   const ok=()=>"speechSynthesis" in window;
-  function voice(){ const vs=speechSynthesis.getVoices(); return vs.find(v=>/^ja/i.test(v.lang))||null; }
-  return { available:ok, say(text){ if(!ok()) return "This device has no speech."; const v=voice(); if(!v) return "No Japanese voice on this device. Chrome, Edge and Safari usually have one."; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text); u.voice=v; u.lang="ja-JP"; u.rate=0.9; speechSynthesis.speak(u); return null; } };
+  /* browsers load the voice list late; anything that asks too early must ask again */
+  const waiting=[]; let settled=false;
+  if(ok()){ try{ if(speechSynthesis.getVoices().length) settled=true; speechSynthesis.addEventListener("voiceschanged",()=>{ settled=true; waiting.splice(0).forEach(f=>f()); }); setTimeout(()=>{ settled=true; waiting.splice(0).forEach(f=>f()); },2000); }catch(e){} }
+  const ready=fn=>{ if(!ok()||settled) fn(); else waiting.push(fn); };
+  const find=re=>{ const vs=speechSynthesis.getVoices(); return vs.find(v=>re.test(v.lang))||null; };
+  function speak(text,v,lang,rate){ speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text); u.voice=v; u.lang=lang; u.rate=rate; speechSynthesis.speak(u); return null; }
+  return {
+    available:ok, ready, hasJa:()=>ok()&&!!find(/^ja/i),
+    say(text){ if(!ok()) return "This device has no speech."; const v=find(/^ja/i); if(!v) return "No Japanese voice on this device. Chrome, Edge and Safari usually have one."; return speak(text,v,"ja-JP",0.9); },
+    sayEn(text){ if(!ok()) return "This device has no speech."; const v=find(/^en-AU/i)||find(/^en/i); if(!v) return "No English voice on this device."; return speak(text,v,v.lang,1); }
+  };
 })();
+/* subtitles for announcements: off by default where a Japanese voice exists, on where it does not */
+const SUBS={ get on(){ try{ return localStorage.getItem("mission-subs")==="on"; }catch(e){ return false; } }, toggle(){ const v=!SUBS.on; try{ localStorage.setItem("mission-subs",v?"on":"off"); }catch(e){} return v; } };
+/* announcements and radio: the world talks over a speaker. Some of it matters. */
+const ANNOUNCE={
+  airport:[{who:"空港アナウンス · airport PA",jp:"上野行きのバスは、{{gate}}のりばから発車します。",en:"The bus for Ueno departs from stop {{gateN}}.",plot:true},{who:"空港アナウンス · airport PA",jp:"ご搭乗のみなさま、成田空港へようこそ。",en:"Welcome to Narita Airport."}],
+  station:[{who:"お忘れ物のお知らせ · lost property notice",jp:"お忘れ物のお知らせです。{{bag}}かばんをお預かりしています。",en:"Lost property notice: we are holding a {{bagEn}} bag.",plot:true,when:G=>G.is("bagQuest")&&!G.is("bagDone")},{who:"駅のアナウンス · station PA",jp:"まもなく電車がまいります。黄色い線までお下がりください。",en:"A train is arriving. Please stand behind the yellow line."}],
+  konbini:[{who:"店内放送 · in-store radio",jp:"本日、おにぎり二つで{{priceKana}}。",en:"Today, two onigiri for {{priceN}} yen.",plot:true},{who:"店内放送 · in-store radio",jp:"わたしのこころは、つけものいろ。",en:"'My heart is the colour of pickles.' (a 2009 idol single, number 38)"}],
+  hotel:[{who:"テレビ · the TV",jp:"ストゥルース！",en:"'Strewth!' (the soap opera, dubbed)"},{who:"テレビ · the TV",jp:"つぎは天気予報です。東京はあした、晴れでしょう。",en:"Next, the weather. Tokyo tomorrow: probably fine."}],
+  alley:[{who:"町内放送 · neighbourhood radio",jp:"ラーメン横丁へようこそ。「ほしの」は{{open}}から。",en:"Welcome to Ramen Alley. Hoshino opens at {{openEn}}.",plot:true},{who:"屋台のラジオ · the yatai's radio",jp:"つぎは野球です。",en:"Next, the baseball."}],
+  michelin:[{who:"厨房のラジオ · kitchen radio",jp:"ミシュランの星の発表は、来週です。",en:"The Michelin star announcements are next week.",plot:true}],
+  hospital:[{who:"院内放送 · clinic PA",jp:"森先生、受付までお願いします。",en:"Dr Mori to reception, please."}]
+};
+function announce(){
+  const list=(ANNOUNCE[G.loc]||[]).filter(a=>!a.when||a.when(G)); if(!list.length) return;
+  G.heard=G.heard||{}; const key=a=>G.loc+"|"+a.jp;
+  const a=list.find(x=>x.plot&&!G.heard[key(x)])||pick(list); G.heard[key(a)]=true;
+  const s=slots(), jp=fill(a.jp,s), en=fill(a.en,s);
+  const el=logEl(`<span class="s" data-spr="speaker"></span><div><div class="who">${esc(a.who)}</div><div class="btns"><button class="k sm spk">▶ きく</button><button class="k sm sub">字幕 · subtitles</button></div><div class="jp" ${SUBS.on?"":"hidden"}>${jp}</div><div class="tr" ${SUBS.on&&G.worn.includes("glasses")?"":"hidden"}>${esc(en)}</div><div class="note" hidden>No Japanese voice on this device, so the subtitles are on.</div></div>`,"ann");
+  el.querySelector(".s").replaceWith(spriteCanvas("speaker",28));
+  const spk=el.querySelector(".spk"), note=el.querySelector(".note"), j=el.querySelector(".jp"), tr=el.querySelector(".tr");
+  spk.addEventListener("click",()=>{ const r=SPEAK.say(plainJp(jp)); if(r) toast(r); });
+  el.querySelector(".sub").addEventListener("click",()=>{ j.hidden=!j.hidden; tr.hidden=j.hidden||!G.worn.includes("glasses"); });
+  SPEAK.ready(()=>{ if(SPEAK.hasJa()){ if(SND.on&&!replaying) SPEAK.say(plainJp(jp)); } else { spk.disabled=true; note.hidden=false; j.hidden=false; tr.hidden=!G.worn.includes("glasses"); } });
+}
 /* the in-world dictionary: a word is grey until you have built it once; then it is yours,
    in colour, in every game on this device. */
 const DICT=(()=>{ let set={}; try{ set=JSON.parse(localStorage.getItem("mission-dict-v1")||"{}"); }catch(e){} return { has:w=>!!set[w], add(w){ set[w]=true; try{ localStorage.setItem("mission-dict-v1",JSON.stringify(set)); }catch(e){} }, count:()=>Object.keys(set).length, all:()=>Object.keys(set) }; })();
@@ -1403,7 +1482,7 @@ function newGame(kit){
   const L=LOADOUTS[kit]; const bag={}; L.items.forEach(i=>bag[i]=1);
   G={kit,loc:"airport",day:1,hour:14,energy:5,yen:L.yen,susp:0,moves:0,s:newSlots(pick),bag,worn:L.worn.slice(),flags:{},did:{},first:{},memos:[],log:[],visited:{airport:true}};
   attach(G); save(); startPlay();
-  narr("Narita. 2pm. A real passport, a mission, and a strong smell of aeroplane. Officer Tanaka is jogging behind the immigration desk. He holds out his hand.");save();
+  narr("Narita. 2pm. A real passport, a mission, and a strong smell of aeroplane. Officer Tanaka is jogging behind the immigration desk. He holds out his hand.");announce();save();
 }
 function attach(G){
   G.has=i=>(G.bag[i]||0)>0; G.count=i=>G.bag[i]||0;
@@ -1461,7 +1540,7 @@ function renderTitle(){
 /* ---- play rendering ---- */
 function startPlay(){
   const pending=G.pending;show("playS");$("log").innerHTML="";cur=null;taskBox=null;graded=false;sub=null;replaying=true;
-  G.log.forEach(r=>{if(r&&["narr","say","sys","hq","good","bad"].includes(r.cls)&&typeof r.html==="string")logEl(cleanLog(r.html),r.cls);});
+  G.log.forEach(r=>{if(r&&["narr","say","sys","hq","good","bad","ann"].includes(r.cls)&&typeof r.html==="string")logEl(cleanLog(r.html),r.cls);});
   if(pending&&pending.loc===G.loc){
     const topic=pending.npc&&NPCS[pending.npc]?.topics.find(t=>t.id===pending.topic);
     if(topic&&presentNpcs().includes(pending.npc))startTopic(pending.npc,topic,pending);
@@ -1532,11 +1611,11 @@ function cleanLog(html){
   return t.innerHTML;
 }
 function remember(html,cls){if(!G||replaying)return;G.log.push({html,cls});G.log=G.log.slice(-60);}
-function logEl(html,cls){ const d=document.createElement("div"); d.className=cls; d.innerHTML=html; $("log").appendChild(d);if(["narr","say","sys","hq","good","bad"].includes(cls))remember(html,cls); $("log").scrollTop=$("log").scrollHeight; return d; }
+function logEl(html,cls){ const d=document.createElement("div"); d.className=cls; d.innerHTML=html; $("log").appendChild(d);if(["narr","say","sys","hq","good","bad","ann"].includes(cls))remember(html,cls); $("log").scrollTop=$("log").scrollHeight; return d; }
 function narr(t){ if(t) logEl(fill(t,slots()),"narr"); }
 function sys(t){ logEl(fill(t,slots()),"sys"); }
 function say(npc,line){ const en=G.worn.includes("glasses"); const el=logEl(`<div class="who">${esc(NPCS[npc].name)} · ${NPCS[npc].jp} <button class="spk" title="hear it">▶ きく</button></div><div class="jp">${colourBuilt(fill(line.jp,slots()))}</div><div class="tr" ${en?"":"hidden"}>${esc(fill(line.en,slots()))}</div>`,"say"); wireSpeak(el); return el; }
-function wireSpeak(el){ const b=el.querySelector(".spk"); if(!b) return; if(!SPEAK.available()){ b.disabled=true; b.title="no speech on this device"; return; } b.addEventListener("click",()=>{ const r=SPEAK.say(plainJp(el.querySelector(".jp").innerHTML)); if(r) toast(r); }); }
+function wireSpeak(el){ const b=el.querySelector(".spk"); if(!b) return; if(!SPEAK.available()){ b.disabled=true; b.title="no speech on this device"; return; } SPEAK.ready(()=>{ if(!SPEAK.hasJa()){ b.disabled=true; b.title="no Japanese voice on this device"; } }); b.addEventListener("click",()=>{ const r=SPEAK.say(plainJp(el.querySelector(".jp").innerHTML)); if(r) toast(r); }); }
 function renderTranslations(){
   const glasses=G.worn.includes("glasses");
   $("log").querySelectorAll(".say .tr").forEach(t=>{t.hidden=!(glasses||t.parentElement===cur?.speech&&cur.translated);t.style.display="";});
@@ -1545,7 +1624,8 @@ function renderTranslations(){
 }
 function showEn(){if(cur)cur.translated=true;renderTranslations();}
 function retireMenus(){ $("log").querySelectorAll(".topics button").forEach(b=>b.disabled=true); }
-function retireTask(){if(taskBox){taskBox.querySelectorAll("button,input").forEach(b=>{b.disabled=true;if(b.closest(".taskbtns"))b.hidden=true;});taskBox.querySelectorAll("[id]").forEach(el=>el.removeAttribute("id"));}}
+function retireTask(){if(taskBox){taskBox.querySelectorAll("button,input").forEach(b=>{b.disabled=true;if(b.closest(".taskbtns"))b.hidden=true;});taskBox.querySelectorAll("[id]").forEach(el=>el.removeAttribute("id"));$("log").appendChild(taskBox);$("log").scrollTop=$("log").scrollHeight;}}
+function dockEl(html){ const d=document.createElement("div"); d.className="task"; d.innerHTML=html; $("dock").innerHTML=""; $("dock").appendChild(d); $("dock").scrollTop=0; return d; }
 function leaveConversation(){
   if(!cur)return;if(graded){finishTopic();return;}
   retireTask();cur=null;taskBox=null;pickedOpt=null;graded=false;retireMenus();narr("You leave the conversation there.");renderAll();
@@ -1583,6 +1663,7 @@ function go(x){
   G.loc=x; G.visited=G.visited||{}; G.visited[x]=true; tick(1); G.moves++; SND.step(); if(G.moves%2===0) G.energy=Math.max(0,G.energy-1);
   delete G.flags.phoneRang; if(x!=="michelin") delete G.flags.notebookOpen;
   narr(`You go to ${LOCS[x].name}.`+(x==="michelin"&&!G.is("shownId")?" The door opens a crack. 「身分証は？」":""));
+  announce();
   const ev=EVENTS.find(e=>e.when(G)); if(ev){ narr(ev.text(G)); if(ev.spr==="crow") SND.crow(); }
   if(G.energy<=0){ G.loc="hospital"; G.energy=1; narr("Your legs stop. The pavement arrives. You wake in a clinic with a doctor asking about coins. TALK to Dr Mori."); }
   checkDeported(); renderAll();
@@ -1597,15 +1678,18 @@ function useItem(i){
   showObject(i,text);
   checkDeported(); renderAll();
 }
-/* build a word: given its meaning, assemble it from shuffled pieces. Kana words are built from
-   their kana; kanji words are built as their reading, with the written form shown after. */
-function buildWord(w,box){
+/* a word card: meaning, reading, and the kanji it is made of, coloured by what each part carries */
+function wordCard(w){ const parts=(w.k||[]).map(p=>`<span class="part ${p.cap||""}"><b>${esc(p.c)}</b>${esc(p.g||"")}${p.r?`<br><small>${esc(p.r)}</small>`:""}</span>`).join(""); return `<div class="card"><div class="cw">${esc(w.w)}</div><div class="cr">${esc(w.r!==w.w?w.r:"")}</div><div class="cd">${esc(w.def)}</div>${parts?`<div class="parts">${parts}</div>`:""}</div>`; }
+/* build a batch: each word in turn, from its pieces. Kana words are built from their kana; kanji words
+   are built as their reading, with the written form shown. A miss shows the answer and asks again. */
+function buildBatch(list,box){ let i=0; const next=()=>{ if(i>=list.length){ G.batch=[]; save(); SND.chime(); toast(`${list.length} word${list.length===1?"":"s"} built. They are yours now, in colour.`); showObject("dictionary",""); return; } buildWord(list[i],box,()=>{ i++; next(); },`${i+1} of ${list.length}`); }; next(); }
+function buildWord(w,box,onDone,label){
   const right=box.querySelector("#dictRight"); const target=[...(w.r||w.w)]; const hasKanji=/[一-鿿]/.test(w.w);
   const decoys=[...new Set(wordsHere().flatMap(x=>[...(x.r||x.w)]).filter(ch=>!target.includes(ch)))].sort(()=>Math.random()-.5).slice(0,Math.max(2,Math.min(4,8-target.length)));
   const tiles=shuffle(target.concat(decoys)); let placed=[];
-  right.innerHTML=`<h4>build the word</h4><div><b>${esc(w.def)}</b></div><div class="en">${hasKanji?"Written "+esc(w.w)+". Build its reading from the pieces, in order.":"Build the word from the pieces, in order."}</div>
+  right.innerHTML=`<h4>${R("作","つく")}る · build the word${label?" · "+label:""}</h4><div><b>${esc(w.def)}</b></div><div class="en">${hasKanji?"Written "+esc(w.w)+". Build its reading from the pieces, in order.":"Build the word from the pieces, in order."}</div>
     <div class="slots" id="bSlots">　</div><div class="tiles" id="bTiles">${tiles.map((t,k)=>`<button class="tile" data-k="${k}">${esc(t)}</button>`).join("")}</div>
-    <div class="taskbtns"><button class="k inv" id="bCheck" disabled>Check</button><button class="k sm" id="bUndo">Undo</button><button class="k sm" id="bBack">Back</button></div><div id="bOut" style="margin-top:8px"></div>`;
+    <div class="taskbtns"><button class="k inv" id="bCheck" disabled>${R("答","こた")}える · Check</button><button class="k sm" id="bUndo">もどす · Undo</button><button class="k sm" id="bBack">やめる · Stop</button></div><div id="bOut" style="margin-top:8px"></div>`;
   const slots=right.querySelector("#bSlots"), out=right.querySelector("#bOut"), check=right.querySelector("#bCheck");
   const paint=()=>{ slots.textContent=placed.map(k=>tiles[k]).join("")||"　"; right.querySelectorAll(".tile").forEach(t=>t.disabled=placed.includes(+t.dataset.k)); check.disabled=!placed.length; };
   right.querySelectorAll(".tile").forEach(t=>t.addEventListener("click",()=>{ placed.push(+t.dataset.k); paint(); }));
@@ -1613,8 +1697,8 @@ function buildWord(w,box){
   right.querySelector("#bBack").addEventListener("click",()=>showObject("dictionary",""));
   check.addEventListener("click",()=>{
     const got=placed.map(k=>tiles[k]).join("");
-    if(got===target.join("")){ DICT.add(w.w); SND.coin(); out.innerHTML=`<span class="built" style="font-size:22px">${esc(w.w)}</span> <span class="en">${esc(w.r!==w.w?w.r:"")} · built. It is yours now, in colour.</span>`; setTimeout(()=>showObject("dictionary",""),1400); }
-    else { SND.bad(); out.innerHTML=`<span class="en">Not quite. You built 「${esc(got)}」. It is 「${esc(target.join(""))}」${hasKanji?" (written "+esc(w.w)+")":""}. Try again; nothing is lost.</span>`; placed=[]; paint(); }
+    if(got===target.join("")){ DICT.add(w.w); SND.coin(); out.innerHTML=`<span class="built" style="font-size:22px">${esc(w.w)}</span> <span class="en">${esc(w.r!==w.w?w.r:"")} · built.</span>`; right.querySelectorAll(".tile,#bCheck,#bUndo").forEach(b=>b.disabled=true); setTimeout(()=>onDone?onDone():showObject("dictionary",""),900); }
+    else { SND.bad(); out.innerHTML=`<span class="en">Not quite. You built 「${esc(got)}」. It is 「${esc(target.join(""))}」${hasKanji?" (written "+esc(w.w)+")":""}. Again; nothing is lost.</span>`; placed=[]; paint(); }
   });
 }
 /* the literal object, held up to the screen */
@@ -1625,15 +1709,20 @@ function showObject(i,text){
   const box=document.createElement("div"); const close='<button class="k sm close" data-close>×</button>';
   if(i==="phone"){
     box.className="obj obj-phone";
-    box.innerHTML=`${close}<div class="screen"><h4>HQ · Melbourne · roaming</h4>${text?`<div class="bubble">${esc(text)}</div>`:""}<div class="bubble" style="border-radius:10px 10px 2px 10px;text-align:right">キットカット、${R("買","か")}った？</div><div class="en" style="margin-top:8px">¥500 a call. Under cover, a phone out is a phone noticed.</div></div><div class="btn"></div>`;
+    box.innerHTML=`${close}<div class="screen"><h4>HQ · Melbourne · roaming</h4>${text?`<div class="bubble">${esc(text)}</div>`:""}<div class="bubble" style="border-radius:10px 10px 2px 10px;text-align:right">キットカット、${R("買","か")}った？</div><div class="en" style="margin-top:8px">¥500 a call. Under cover, a phone out is a phone noticed.</div>${text?`<button class="k sm" data-hq>▶ hear HQ</button>`:""}</div><div class="btn"></div>`;
+    setTimeout(()=>{ const b=box.querySelector("[data-hq]"); if(b) b.addEventListener("click",()=>{ const r=SPEAK.sayEn(text); if(r) toast(r); }); },0);
   }else if(i==="dictionary"){
     box.className="obj obj-book";
-    const line=cur&&cur.line?fill(cur.line.jp,s):"", en=cur&&cur.en?cur.en:"", hint=cur&&cur.task?fill(cur.task.hint||(cur.task.rule||cur.task.prompt||"").split(":")[0],s):"";
-    const list=wordsHere();
-    const rows=list.map((w,k)=>DICT.has(w.w)?`<div class="wrow"><span class="w built">${esc(w.w)}</span><span class="r">${esc(w.r!==w.w?w.r:"")}</span><span class="d">${esc(w.def)}</span></div>`:`<div class="wrow"><span class="w locked">${"＿".repeat(Math.min(6,Math.max(2,[...w.w].length)))}</span><span class="d en">${esc(w.def)}</span><button class="k sm" data-build="${k}">build</button></div>`).join("");
-    box.innerHTML=`${close}<div class="page"><h4>${R("辞書","じしょ")} · ${esc(LOCS[G.loc].name)} · ${list.filter(w=>DICT.has(w.w)).length}/${list.length} built</h4><div class="wl">${rows||'<span class="en">No word list for this place yet.</span>'}</div><div style="margin-top:10px"><a class="k sm" href="../vocab/#unit:${VOCAB_KEY[G.loc]}" target="_blank" rel="noopener">ことばのホーム · this shelf in the Vocab Hub →</a></div></div>
-      <div class="page" id="dictRight"><h4>what was just said</h4><div class="jp">${line?colourBuilt(line):'<span class="en">Nothing yet. Talk to someone, then open this.</span>'}</div><div style="margin-top:6px">${esc(en)}</div>${hint?`<div class="en" style="margin-top:8px">Pattern: ${esc(hint)}</div>`:""}<div class="en" style="margin-top:10px">${esc(text)}</div><div class="en" style="margin-top:12px">A grey word is one you have not built. Build it once from its pieces and it is yours, in colour, here and in every conversation, on this device, for good.</div></div>`;
-    box.querySelectorAll("[data-build]").forEach(b=>b.addEventListener("click",()=>buildWord(list[+b.dataset.build],box)));
+    const line=cur&&cur.line?fill(cur.line.jp,s):"", en=cur&&cur.en?cur.en:"";
+    const list=wordsHere(); G.batch=(G.batch||[]).filter(w=>list.some(x=>x.w===w)&&!DICT.has(w));
+    const rows=list.map((w,k)=>{ const built=DICT.has(w.w), sel=G.batch.includes(w.w);
+      return built?`<button class="wrow" data-k="${k}"><span class="w built">${esc(w.w)}</span><span class="r">${esc(w.r!==w.w?w.r:"")}</span><span class="d">${esc(w.def)}</span></button>`
+                  :`<button class="wrow${sel?" sel":""}" data-k="${k}"><span class="w plain">${esc(w.w)}</span><span class="d en">${sel?esc(w.def):"tap to study"}</span><span class="pick">${sel?"✓ in batch":"study"}</span></button>`; }).join("");
+    const cards=G.batch.map(wn=>list.find(x=>x.w===wn)).filter(Boolean).map(w=>wordCard(w)).join("");
+    box.innerHTML=`${close}<div class="page"><h4>${R("辞書","じしょ")} · ${esc(LOCS[G.loc].name)} · ${list.filter(w=>DICT.has(w.w)).length}/${list.length} built</h4><div class="wl">${rows||'<span class="en">No word list for this place yet.</span>'}</div><div class="en" style="margin-top:8px">Tap a word to see what it means and what it is made of. Pick up to four, then build them. Built words turn to colour, here and in every conversation, on this device, for good.</div><div style="margin-top:8px"><a class="k sm" href="../vocab/#unit:${VOCAB_KEY[G.loc]}" target="_blank" rel="noopener">ことばのホーム · this shelf in the Vocab Hub →</a></div></div>
+      <div class="page" id="dictRight">${G.batch.length?`<h4>${R("予習","よしゅう")} · study these, then build</h4>${cards}<div class="legend"><i class="part sense" style="border-color:#1f6f78"></i>carries the meaning <i class="part sound" style="border-color:#a83232;margin-left:8px"></i>carries the sound <i class="part both" style="border-color:#7a5cad;margin-left:8px"></i>both</div><div class="taskbtns"><button class="k inv" id="bStart">${R("作","つく")}る · Build these ${G.batch.length} →</button></div>`:`<h4>what was just said</h4><div class="jp">${line?colourBuilt(line):'<span class="en">Nothing yet. Talk to someone, then open this.</span>'}</div><div style="margin-top:6px">${esc(en)}</div><div class="en" style="margin-top:10px">${esc(text)}</div>`}</div>`;
+    box.querySelectorAll(".wrow").forEach(b=>b.addEventListener("click",()=>{ const w=list[+b.dataset.k]; if(DICT.has(w.w)){ toast(`${w.w} · ${w.r!==w.w?w.r+" · ":""}${w.def}`); return; } if(G.batch.includes(w.w)) G.batch=G.batch.filter(x=>x!==w.w); else { if(G.batch.length>=4){ toast("Four at a time. Build these first."); return; } G.batch.push(w.w); } save(); showObject("dictionary",""); }));
+    const st=box.querySelector("#bStart"); if(st) st.addEventListener("click",()=>buildBatch(G.batch.map(wn=>list.find(x=>x.w===wn)).filter(Boolean),box));
   }else if(i==="notes"||i==="photo"){
     box.className="obj obj-diary";
     const memos=G.memos.map(m=>`<div class="line"><b>${esc(m.what)}</b></div><div class="line en">${esc(m.rule)}</div>`).join("");
@@ -1686,7 +1775,7 @@ function renderTask(pending=null){
   else if(task.kind==="gap"){ const typed=!task.opts||G.loc==="michelin"||G.loc==="alley"; cur.typed=typed; html+=`<div class="gapline">${fill(task.jp,s).replace("＿＿＿",`<span class="blank" id="blank">　</span>`)}<div class="en" data-translation ${en?"":"hidden"}>${esc(fill(task.en,s))}</div></div>`+(typed?`<input class="jp" id="typed" lang="ja" aria-label="Missing Japanese words" autocomplete="off" placeholder="type the missing part">`:`<div class="opts">${shuffle(task.opts).map((o,j)=>`<button type="button" class="opt" data-v="${esc(o)}" data-key="${j+1}"><span class="option-key" aria-hidden="true">${j+1}</span>${esc(o)}</button>`).join("")}</div>`)+`<div class="hint">Pattern: ${esc(task.rule.split(":")[0])}</div>`; }
   else { cur.typed=true; html+=`<input class="jp" id="typed" lang="ja" aria-label="Your reply in Japanese" autocomplete="off" placeholder="type your line in Japanese"><div class="hint">Pattern: ${esc(fill(task.hint,s))}</div>`; }
   html+=`<div class="taskbtns"><button class="k inv" id="checkBtn" disabled>答える · Check reply</button><button class="k" id="nextBtn" style="display:none">つづく · Continue</button><button class="k leave" id="leaveBtn">話をやめる · Leave conversation</button></div>`;
-  const box=logEl(html,"task"), active=cur;taskBox=box;
+  const box=dockEl(html), active=cur;taskBox=box;
   if(en)box.querySelector(".hint")?.classList.add("show");
   const cb=box.querySelector("#checkBtn"), nb=box.querySelector("#nextBtn");
   box.querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{ if(cur!==active||graded)return;box.querySelectorAll(".opt").forEach(x=>{x.dataset.sel="";x.setAttribute("aria-pressed","false");}); b.dataset.sel="1";b.setAttribute("aria-pressed","true"); pickedOpt=b; cb.disabled=false;save(); }));
@@ -1715,18 +1804,54 @@ function check(box){
   else if(t.kind==="gap"){ const val=cur.typed?box.querySelector("#typed").value:pickedOpt.dataset.v; ok=matches(val,t.accept); rule=fill(t.rule,s); if(cur.typed) box.querySelector("#typed").disabled=true; else box.querySelectorAll(".opt").forEach(b=>{ b.disabled=true; if(t.accept.includes(b.dataset.v)) b.classList.add("correct"); else if(b===pickedOpt) b.classList.add("incorrect"); }); const bl=box.querySelector("#blank"); if(bl) bl.textContent=ok?val:val+" → "+t.accept[0]; why=ok?"":`You put 「${val}」. It takes 「${t.accept[0]}」.`; }
   else { const val=box.querySelector("#typed").value; ok=matches(val,t.accept); box.querySelector("#typed").disabled=true; rule=fill(t.rule,s); if(t.slotCheck==="name"&&!ok&&!fold(val).includes(fold(G.s.name))) why=`You did not use your cover name, ${G.s.name}. `; why+=ok?"":`A line that works: 「${fill(t.model,s)}」`; }
   if(!(cur.key in G.first)) G.first[cur.key]={ok,skill:cur.topic.skill,loc:G.loc};
+  if(!ok&&kind!=="faux"&&G.kit!=="tourist"&&(cur.tries||0)<2){
+    cur.tries=(cur.tries||0)+1; SND.bad();
+    if(cur.undercover){ const hit=cur.tries===1?15:5; G.susp=Math.min(100,G.susp+hit); }
+    else if(G.loc==="airport"&&cur.npc==="officer"&&cur.tries===1) G.susp=Math.min(100,G.susp+5);
+    if(cur.tries===1) G.memos.push({what:"A language slip: "+fill(t.prompt,s),rule:(why+(rule?" "+rule:"")).trim(),skill:cur.topic.skill});
+    graded=false;
+    box.querySelectorAll(".opt").forEach(b=>{ b.classList.remove("correct"); b.dataset.sel=""; b.setAttribute("aria-pressed","false"); if(!b.classList.contains("incorrect")) b.disabled=false; });
+    const inp=box.querySelector("#typed"); if(inp){ inp.disabled=false; inp.focus(); inp.select(); }
+    pickedOpt=null; box.querySelector("#checkBtn").disabled=true;
+    nudge(box,t,s); renderHud(); save(); return;
+  }
   if(ok) SND.ok(); else if(kind==="faux") SND.faux(); else SND.bad();
   let zone="";
   if(!ok){
     if(cur.undercover){ const hit=kind==="faux"?25:15; G.susp=Math.min(100,G.susp+hit); zone=` Suspicion +${hit}.`; }
     else if(G.loc==="airport"&&cur.npc==="officer"){ G.susp=Math.min(100,G.susp+5); zone=" Officer Tanaka jogs a little faster. Suspicion +5."; }
     else zone=" Nobody here minds. You just learned something for free.";
-    G.memos.push({what:(kind==="faux"?"A cultural slip: ":"A language slip: ")+fill(t.prompt,s),rule:why+(rule?" "+rule:""),skill:cur.topic.skill});
+    if(!cur.tries) G.memos.push({what:(kind==="faux"?"A cultural slip: ":"A language slip: ")+fill(t.prompt,s),rule:why+(rule?" "+rule:""),skill:cur.topic.skill});
+    if(cur.tries) zone+=" Third time; here is the whole of it.";
   }
   cur.feedback={html:`<b>${ok?"✓ Reply accepted":kind==="faux"?"! Cultural slip":"✗ Check this reply"}</b><div>${esc(why)}${esc(zone)}</div>${rule?`<span class="rule">${esc(rule)}</span>`:""}${cur.topic.skill&&SKILLS[cur.topic.skill]?`<span class="rule">Grammar Hub: ${esc(SKILLS[cur.topic.skill][0])}</span>`:""}`,cls:ok?"good":"bad"};
   paintFeedback(box,cur.feedback);
   box.querySelector("#checkBtn").style.display="none"; const nb=box.querySelector("#nextBtn"); nb.style.display=""; nb.focus();
   box.querySelector("#leaveBtn").hidden=true;cur.ok=ok; renderHud(); save();
+}
+/* real people do not hand you the answer. Outside the Tourist kit, a wrong reply gets a shake of the
+   head, a repeat, a gesture or some broken English, and another go; the explanation comes on the third miss. */
+const NUDGES={
+  officer:["Tanaka shakes his head without breaking stride. 「もう一回、おねがいします。」","「Passport… say again, prease.」 He mimes it, jogging.","He taps the sign behind him and waits, running on the spot."],
+  traveller:["「Sorry, what? My Japanese is worse than yours, mate.」 They wait, hopefully."],
+  busstaff:["They point at the timetable and say the number again, slower, with a finger for each digit."],
+  stationstaff:["Sato bows and repeats it slowly, holding up fingers: 「いち、に、さん…」","「Ticket… sen… one thousand… and more!」 Sato does the sum in the air."],
+  clerk:["Nakamura gives the shop smile and says it again, one syllable at a time.","Nakamura writes something in the novel and repeats the question. It might be about you."],
+  fixer:["「ちがう。もう一回。」 Yamada does the hand gesture.","Yamada mouths the first sound at you like a stage mother."],
+  hotelclerk:["Suzuki wakes slightly and says it again in soap-opera English: 「Sorry, love?」"],
+  owner:["Taisho glares and repeats it, louder, which does not help.","「Ticket! Ma-shi-n!」 He points at the machine he hates."],
+  waiter:["The poet counts syllables on his fingers and waits for you to try again."],
+  oldman:["Grandpa laughs, pats the stool, and asks again the way you ask a grandchild.","「Love, love,」 he says, unhelpfully, and asks again."],
+  chef:["He does not repeat himself. He looks at you. The soup looks at you.","「…もう一回。」 The knife keeps moving."],
+  doctor:["Dr Mori repeats it and, for some reason, shows you a Finnish coin."],
+  hq:["「Say again? Line's bad. Kit Kats?」"]
+};
+function nudge(box,t,s){
+  const who=cur.npc?NPCS[cur.npc].name:"the page"; const pool=NUDGES[cur.npc]||[`${who} tilts their head. 「もう一度おねがいします。」`];
+  let text=pool[(cur.tries-1)%pool.length];
+  if(t.kind==="gap") text+=` The gap again, slowly: 「${plainJp(fill(t.jp,s)).replace("＿＿＿","＿＿＿")}」`;
+  if(t.kind==="type"&&cur.npc&&cur.topic.lines&&cur.topic.lines.length>1){ const other=cur.topic.lines.find(l=>l.jp!==cur.line.jp); if(other){ say(cur.npc,other); text+=" They put it another way."; } }
+  const fb=document.createElement("div"); fb.className="feedback nudge"; fb.innerHTML=`<b>${cur.tries===1?"?":"??"}</b> ${esc(text)}`; box.insertBefore(fb,box.querySelector(".taskbtns"));
 }
 function paintFeedback(box,feedback){const el=document.createElement("div");el.className="feedback "+feedback.cls;el.setAttribute("role","status");el.setAttribute("aria-live","polite");el.innerHTML=feedback.html;box.insertBefore(el,box.querySelector(".taskbtns"));}
 function finishTopic(){
@@ -1755,7 +1880,7 @@ $("sndBtn").textContent=SND.on?"音 · Snd":"消音 · Mute"; $("sndBtn").classL
 function menuLinks(){ if(!G) return ""; const vk=VOCAB_KEY[G.loc]; const last=cur&&cur.topic&&cur.topic.skill?cur.topic.skill:(Object.values(G.first).slice(-1)[0]||{}).skill; return `<a class="k sm" href="../vocab/#unit:${vk}" target="_blank" rel="noopener">Words for ${esc(LOCS[G.loc].name)} →</a>`+(last&&SKILLS[last]?` <a class="k sm" href="../grammar/#${encodeURIComponent(last)}" target="_blank" rel="noopener">Grammar: ${esc(SKILLS[last][0])} →</a>`:""); }
 function openMenu(){
   if(!G)return;menuFocus=document.activeElement;save();$("fsBtn").textContent=document.fullscreenElement?"全画面をやめる · Leave full screen":"全画面 · Full screen";
-  $("menuGoals").innerHTML=$("goals").innerHTML;$("menuLinks").innerHTML=menuLinks();
+  $("menuGoals").innerHTML=$("goals").innerHTML;$("menuLinks").innerHTML=menuLinks();$("subsBtn").textContent="字幕 · Subtitles: "+(SUBS.on?"on":"off");
   $("menuCover").hidden=!G.has("idcard");$("menuCover").innerHTML=G.has("idcard")?`<b>YOUR COVER</b><br>${esc(G.s.name)} · ${esc(G.s.jobEn)} · ${esc(G.s.townEn)}<br>Stay: ${esc(G.s.stayEn)} · Hoshino opens ${esc(G.s.openEn)}`:"";
   $("menuTeacher").innerHTML=`<button class="k sm" id="debBtn">${G.is("reported")?"Mission debrief":"Progress report"}</button><p class="en">First-try results and the rules from your missed replies. Copy a row for your teacher at any time.</p>`;
   $("debBtn").addEventListener("click",()=>{closeMenu(false);debrief();});$("lcd").inert=true;$("menu").classList.add("show");$("closeMenu").focus();
@@ -1763,6 +1888,7 @@ function openMenu(){
 function closeMenu(restoreFocus=true){$("menu").classList.remove("show");$("lcd").inert=false;if(restoreFocus&&menuFocus?.isConnected)menuFocus.focus();}
 $("menuBtn").addEventListener("click",openMenu);
 $("closeMenu").addEventListener("click",()=>closeMenu());
+$("subsBtn").addEventListener("click",()=>{ const on=SUBS.toggle(); $("subsBtn").textContent="字幕 · Subtitles: "+(on?"on":"off"); $("log").querySelectorAll(".ann .jp").forEach(j=>{ j.hidden=!on; j.parentElement.querySelector(".tr").hidden=!on||!G.worn.includes("glasses"); }); });
 $("fsBtn").addEventListener("click",()=>{ if(document.fullscreenElement){ leavingCleanly=true; document.exitFullscreen().finally(()=>setTimeout(()=>leavingCleanly=false,500)); } else if(document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(()=>toast("This browser will not go full screen. Same game without it.")); closeMenu(); });
 $("saveLeave").addEventListener("click",()=>{ leavingCleanly=true; save();if(!saveOK){leavingCleanly=false;toast("This browser could not save. Your mission is still open here.");return;} const done=()=>{closeMenu(false); show("titleS"); renderTitle(); setTimeout(()=>leavingCleanly=false,500); }; if(document.fullscreenElement) document.exitFullscreen().finally(done); else done(); });
 window.addEventListener("pagehide",save);
