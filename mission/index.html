@@ -188,6 +188,56 @@
   .part.sense{color:#1f6f78}.part.sound{color:#a83232}.part.both{color:#7a5cad}
   .legend{font-size:11px;color:var(--dim);margin-top:6px}
   .legend i{display:inline-block;width:10px;height:10px;border:2px solid currentColor;vertical-align:middle;margin-right:3px}
+  /* passport office: draw yourself, name yourself */
+  .pass{flex:1;min-height:0;overflow:auto;padding:18px 26px;display:grid;grid-template-columns:auto 1fr;gap:22px;align-content:start}
+  .pass h2{grid-column:1/-1;letter-spacing:.12em;text-transform:uppercase;font-size:18px;border-bottom:3px solid var(--ink);padding-bottom:8px}
+  .pass h4{letter-spacing:.12em;text-transform:uppercase;font-size:12px;margin:8px 0 6px}
+  .pxgrid{display:grid;grid-template-columns:repeat(16,20px);grid-auto-rows:20px;gap:0;border:3px solid var(--ink);background:#fff;touch-action:none;user-select:none;width:max-content}
+  .pxgrid .cell{border:1px solid var(--lcd2);background:#fff;cursor:crosshair}
+  .pxgrid .cell.on{background:var(--ink)}
+  .tools{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;align-items:center}
+  .preview{display:flex;gap:12px;align-items:center;margin-top:10px}
+  .preview canvas{border:3px solid var(--ink);background:var(--lcd)}
+  .pass label{display:block;font-size:13px;margin:10px 0 4px;letter-spacing:.04em}
+  .pass input.jp{max-width:420px}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+  .chips .k.sm{text-transform:none;font-size:16px}
+  .pass .go{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+  @media (max-width:760px){.pass{grid-template-columns:1fr}}
+  /* the dictionary is a window into the Vocab Hub, so it wears the hub's own clothes: full colour,
+     the suite palette, Georgia headings, rounded cards. Nothing else in the world does. */
+  .obj-book{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f4efe6;color:#1f1f1f;border:1px solid #d8cfbb;border-radius:14px;box-shadow:0 10px 34px rgba(0,0,0,.4);padding:20px;gap:16px;width:min(900px,94%);line-height:1.5}
+  .obj-book .page{background:#fbf7ee;border:1px solid #d8cfbb;border-radius:12px;padding:14px 16px;min-height:300px}
+  .obj-book .page+.page{border-left:1px solid #d8cfbb;box-shadow:none}
+  .obj-book h4{font-family:Georgia,serif;text-transform:none;letter-spacing:0;font-size:18px;color:#1f1f1f;margin-bottom:10px}
+  .obj-book h4 rt,.obj-book .card .cw rt{color:#6b6256}
+  .obj-book .wl{max-height:360px;font-size:13px}
+  .obj-book .wrow{display:grid;grid-template-columns:8em minmax(0,1fr) auto;gap:12px;align-items:center;padding:8px;border-radius:8px;border-bottom:1px solid #e8e0cd;font:inherit;color:#1f1f1f;cursor:pointer}
+  .obj-book .wrow:hover{background:#f1ebdd}
+  .obj-book .wrow .w{font-size:21px;min-width:0;line-height:1.25}
+  .obj-book .wrow .w .r{display:block;font-size:12px;color:#6b6256;letter-spacing:0}
+  .obj-book .wrow .w.plain{color:#1f1f1f}
+  .obj-book .wrow .d{font-size:13px;color:#6b6256;min-width:0}
+  .obj-book .wrow .pick{margin:0;border:1px solid #1f6f78;color:#1f6f78;background:#dceef0;border-radius:9px;padding:3px 10px;font-size:11px;letter-spacing:.04em;font-weight:700;white-space:nowrap}
+  .obj-book .wrow.sel .pick{background:#1f6f78;color:#fff}
+  .obj-book .built,.obj-book .w.built{color:#a83232}
+  .obj-book .card{border:1px solid #d8cfbb;border-radius:12px;background:#fff;padding:12px 14px;margin:8px 0}
+  .obj-book .card .cw{font-family:Georgia,serif;font-size:32px;font-weight:400;line-height:1.2}
+  .obj-book .card .cr{color:#6b6256;font-size:14px}
+  .obj-book .card .cd{font-size:14px}
+  .obj-book .part{border-radius:8px;border-width:1px;padding:6px 10px;font-size:12.5px}
+  .obj-book .part b{font-size:26px}
+  .obj-book .k,.obj-book .tile{font-family:inherit;border-radius:8px;box-shadow:none;border:1px solid #d8cfbb;background:#fbf7ee;color:#1f1f1f;text-transform:none;letter-spacing:0;font-weight:600}
+  .obj-book .k.inv{background:#a83232;border-color:#a83232;color:#fff}
+  .obj-book .k.on{background:#1f6f78;border-color:#1f6f78;color:#fff}
+  .obj-book .k:active,.obj-book .k.on{transform:none}
+  .obj-book .tile{background:#fff;font-size:22px;font-weight:400;padding:6px 12px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+  .obj-book .tile:disabled{opacity:.25}
+  .obj-book .slots{border:2px dashed #7a5cad;background:#ece4f6;border-radius:10px;font-family:inherit;font-size:26px}
+  .obj-book .en,.obj-book .legend{color:#6b6256;font-family:inherit;font-size:12.5px}
+  .obj-book .close{border-radius:8px;right:12px;top:10px}
+  .obj-book .jp{font-family:inherit}
+  .obj-book #bOut .built{font-family:Georgia,serif}
   .say .spk{border:2px solid var(--ink);background:var(--lcd);font-size:11px;padding:1px 7px;margin-left:8px;vertical-align:middle;letter-spacing:.06em;cursor:pointer}
   .say .spk:disabled{opacity:.35;cursor:default}
   /* Handheld shell. The scene and sprites stay on their original pixel grid. */
@@ -320,11 +370,33 @@
 
   <div class="screen on" id="titleS">
     <div class="title">
-      <div class="title-head"><div><p class="eyebrow">01 / THE RAMEN RECIPE</p><h1>MISSION: JAPAN<small lang="ja">ミッション：日本</small></h1></div><canvas id="titleScene" class="px" width="112" height="56" aria-hidden="true"></canvas></div>
+      <div class="title-head"><div><p class="eyebrow">01 / THE RAMEN RECIPE · <span id="buildEyebrow"></span></p><h1>MISSION: JAPAN<small lang="ja">ミッション：日本</small></h1></div><canvas id="titleScene" class="px" width="112" height="56" aria-hidden="true"></canvas></div>
       <div class="briefing"><h2>任務 · YOUR ASSIGNMENT</h2><p class="blurb">An Aussie ramen chain wants a Tokyo chef's secret recipe. Get into his kitchen, get the recipe out, and report to Melbourne. Everyone you meet has their own problems. Most of them are more interesting than yours.</p></div>
       <div id="resume"></div>
-      <div><h2 class="load-label">持ち物 · CHOOSE YOUR KIT</h2><div class="load" id="load"></div></div>
+      <div><h2 class="load-label">持ち物 · CHOOSE YOUR KIT <button class="k sm" id="passEdit" style="margin-left:10px;text-transform:none">旅券 · Passport</button></h2><div class="load" id="load"></div></div>
       <p class="fine">Field trial · Japanese dialogue awaiting teacher review.<br>Progress saves on this device. Use the menu to leave safely; switching away during play means zoning out in public.</p>
+    </div>
+  </div>
+
+  <div class="screen" id="passS">
+    <div class="pass">
+      <h2>旅券 · Passport office</h2>
+      <div>
+        <h4>写真 · Your photo · 16×16, one colour</h4>
+        <div class="pxgrid" id="pxgrid" aria-label="pixel editor"></div>
+        <div class="tools"><button class="k sm on" id="toolDraw">えんぴつ · Draw</button><button class="k sm" id="toolErase">けしごむ · Erase</button><button class="k sm" id="toolClear">クリア · Clear</button><button class="k sm" id="toolDefault">エージェント · Default</button></div>
+        <div class="preview"><canvas id="pxPrev" class="px" width="16" height="16" style="width:64px;height:64px"></canvas><canvas id="pxPrev2" class="px" width="16" height="16" style="width:32px;height:32px"></canvas><span class="en">how you will look in the world</span></div>
+      </div>
+      <div>
+        <h4>名前 · Names</h4>
+        <label for="realName">Your Australian name, as your passport has it</label><input class="jp" id="realName" autocomplete="off" placeholder="e.g. Liam">
+        <label for="realKana">The same name in katakana, how a Japanese form would write it <span class="en">(Officer Tanaka will ask for this one)</span></label><input class="jp" id="realKana" lang="ja" autocomplete="off" placeholder="e.g. リアム">
+        <label>Your Japanese cover name, for the fake ID</label>
+        <div class="chips" id="jpChips"></div>
+        <input class="jp" id="jpName" lang="ja" autocomplete="off" placeholder="or write your own, in katakana or hiragana">
+        <p class="en" style="margin-top:8px">Names stay on this device only. Nothing here is sent anywhere.</p>
+        <div class="go"><button class="k inv" id="passGo">スタンプ · Stamp it and go</button><button class="k sm" id="passBack">もどる · Back</button></div>
+      </div>
     </div>
   </div>
 
@@ -364,7 +436,7 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="item-ov" id="itemOv"></div>
 <div class="menu" id="menu" role="dialog" aria-modal="true" aria-labelledby="menuTitle"><div class="box">
-  <h3 id="menuTitle">メニュー · Field menu</h3>
+  <h3 id="menuTitle">メニュー · Field menu <span class="en" id="buildMenu" style="font-weight:400;text-transform:none;letter-spacing:0"></span></h3>
   <p class="save-status" id="saveStatus" role="status"></p>
   <div class="row"><button class="k sm inv" id="saveLeave">保存して出る · Save and leave</button><button class="k sm" id="fsBtn">全画面 · Full screen</button><button class="k sm" id="subsBtn"></button><button class="k sm" id="closeMenu">もどる · Back</button></div>
   <div id="menuCover" class="cover"></div><div id="menuGoals" class="goals"></div>
@@ -376,7 +448,7 @@
   <p class="en" id="menuTeacher"></p>
 </div></div>
 <span class="hubchip"><a href="../">⌂ にほんごハブ · Hub</a></span>
-<span class="buildtag">MISSION 2026-09-06j</span>
+<span class="buildtag" id="buildTag"></span>
 </div>
 <script src="words.js"></script>
 <script>
@@ -1067,7 +1139,7 @@ officer:{name:"Officer Tanaka",jp:R("入国審査官","にゅうこくしんさ�
     after:(G,ok)=>{return "He stamps it without breaking stride.";}},
    {id:"name",title:"Your name",skill:"greet-y34",
     lines:[{jp:"お"+R("名前","なまえ")+"は？",en:"Your name?"},{jp:"お"+R("名前","なまえ")+"は"+R("何","なん")+"ですか。",en:"What is your name?"}],
-    task:{kind:"type",prompt:"Give your name. Any name; this is your real passport. The pattern is on the sign behind him.",hint:"NAME + です",model:"サムです。",accept:[/^.{1,20}です$/],rule:"X です: the plainest way to say who you are. X と申します is politer than he expects from someone who has just got off a plane."}},
+    task:{kind:"type",prompt:"Give your real name, the one in your passport{{realNote}}. The pattern is on the sign behind him.",hint:"{{realShown}}です",model:"{{realShown}}です。",accept:[/^(?:{{realAccept}})です$/],rule:"X です: the plainest way to say who you are. X と申します is politer than he expects from someone who has just got off a plane.",slotCheck:"real"}},
    {id:"from",title:"Where from",skill:"greet-y34",
     lines:[{jp:"どこから"+R("来","き")+"ましたか。",en:"Where did you come from?"},{jp:"ご"+R("出身","しゅっしん")+"は？",en:"Where are you from?"}],
     task:{kind:"choice",prompt:"You are Australian. Say so.",options:[
@@ -1389,6 +1461,9 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 const SAVE_KEY="mission-japan-save-v2";
+/* One number, counted up on every deploy, so a stale tab is obvious. Bump it with each live copy. */
+const BUILD={n:12,date:"2026-09-06"};
+["buildTag","buildEyebrow","buildMenu"].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=(id==="buildTag"?"MISSION · ":"")+`BUILD ${BUILD.n} · ${BUILD.date}`; });
 const INK=getComputedStyle(document.documentElement).getPropertyValue("--ink").trim();
 const PAPER=getComputedStyle(document.documentElement).getPropertyValue("--lcd").trim();
 const VOCAB_KEY={airport:"mairport",station:"mstation",konbini:"mkonbini",hotel:"mhotel",alley:"malley",michelin:"mhoshino",hospital:"mclinic"};
@@ -1479,12 +1554,13 @@ const LOADOUTS={
   ghost:{n:"幽霊 · Ghost",items:["passport","shoes"],worn:["shoes"],yen:15000,desc:"Your passport, your shoes, your Japanese. Buy a dictionary in Ueno if the cover starts to slip."}
 };
 function fill(t,s){ return String(t).replace(/\{\{(\w+)\}\}/g,(m,k)=>s[k]??m); }
-function slots(){ const s={...G.s}; s.shoesState=G.worn.includes("shoes")?"on":"off"; s.trainedNote=G.is("trained")?" (You have heard this sentence before, from Taisho.)":""; s.fearNote=G.is("intelFear")?" (Grandpa said he melts for an opinion.)":""; s.nbNote=G.is("notebookOpen")&&!G.is("recipe")?" The notebook is OPEN on the counter. LOOK again to read it.":""; return s; }
+function slots(){ const s={...G.s}; s.realName=s.realName||""; s.realKana=s.realKana||""; s.realShown=s.realKana||s.realName||"サム"; s.realNote=s.realKana?", in katakana":""; s.realLabel=s.realName?`${s.realName}${s.realKana?" · "+s.realKana:""}`:"(your real name)"; s.shoesState=G.worn.includes("shoes")?"on":"off"; s.trainedNote=G.is("trained")?" (You have heard this sentence before, from Taisho.)":""; s.fearNote=G.is("intelFear")?" (Grandpa said he melts for an opinion.)":""; s.nbNote=G.is("notebookOpen")&&!G.is("recipe")?" The notebook is OPEN on the counter. LOOK again to read it.":""; return s; }
 function newGame(kit){
   if(!Object.hasOwn(LOADOUTS,kit)) return;
   cur=null;taskBox=null;graded=false;sub=null;
   const L=LOADOUTS[kit]; const bag={}; L.items.forEach(i=>bag[i]=1);
   G={kit,loc:"airport",day:1,hour:14,energy:5,yen:L.yen,susp:0,moves:0,s:newSlots(pick),bag,worn:L.worn.slice(),flags:{},did:{},first:{},memos:[],log:[],visited:{airport:true}};
+  const pr=PROFILE.get(); if(pr.jp) G.s.name=pr.jp; G.s.realName=pr.real||""; G.s.realKana=pr.kana||"";
   attach(G); save(); startPlay();
   narr("Narita. 2pm. A real passport, a mission, and a strong smell of aeroplane. Officer Tanaka is jogging behind the immigration desk. He holds out his hand.");announce();save();
 }
@@ -1529,6 +1605,45 @@ function show(id){ document.querySelectorAll(".screen").forEach(s=>s.classList.r
 function toast(msg){ const t=$("toast"); t.innerHTML=msg; t.classList.add("show"); clearTimeout(toast.h); toast.h=setTimeout(()=>t.classList.remove("show"),4500); }
 
 /* ---- title ---- */
+/* the agent is you: a drawn photo, your real name, your chosen cover name. Kept on this device only. */
+SPR.agentDefault=SPR.agent.slice();
+const PROFILE=(()=>{ let p={}; try{ p=JSON.parse(localStorage.getItem("mission-profile-v1")||"{}"); }catch(e){} return { get(){return p;}, set(v){ p=v; try{ localStorage.setItem("mission-profile-v1",JSON.stringify(p)); }catch(e){} applyProfile(); }, complete(){ return !!(p.jp&&p.real); } }; })();
+function applyProfile(){ const p=PROFILE.get(); SPR.agent=(Array.isArray(p.px)&&p.px.length===16&&p.px.every(r=>typeof r==="string"&&r.length===16))?p.px:SPR.agentDefault; }
+applyProfile();
+let pendingKit=null, pxState=SPR.agentDefault.slice(), pxMode="draw", pxDown=false;
+function openPassport(kit){
+  pendingKit=kit; const p=PROFILE.get(); pxState=(Array.isArray(p.px)&&p.px.length===16)?p.px.slice():SPR.agentDefault.slice();
+  $("realName").value=p.real||""; $("realKana").value=p.kana||""; $("jpName").value=p.jp&&!POOLS.name.includes(p.jp)?p.jp:"";
+  $("jpChips").innerHTML=POOLS.name.map(n=>`<button class="k sm${p.jp===n?" on":""}" data-n="${n}">${n}</button>`).join("");
+  $("jpChips").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{ $("jpChips").querySelectorAll("button").forEach(x=>x.classList.remove("on")); b.classList.add("on"); $("jpName").value=""; }));
+  $("jpName").addEventListener("input",()=>{ if($("jpName").value.trim()) $("jpChips").querySelectorAll("button").forEach(x=>x.classList.remove("on")); });
+  paintGrid(); show("passS"); $("realName").focus();
+}
+function paintGrid(){
+  const g=$("pxgrid"); if(!g.childElementCount){ for(let i=0;i<256;i++){ const c=document.createElement("div"); c.className="cell"; c.dataset.i=i; g.appendChild(c); }
+    const set=(el)=>{ if(!el||!el.classList.contains("cell")) return; const i=+el.dataset.i, r=Math.floor(i/16), col=i%16; const row=pxState[r].split(""); row[col]=pxMode==="draw"?"#":"."; pxState[r]=row.join(""); el.classList.toggle("on",pxMode==="draw"); paintPreview(); };
+    g.addEventListener("pointerdown",e=>{ pxDown=true; set(e.target); }); g.addEventListener("pointerover",e=>{ if(pxDown) set(e.target); }); document.addEventListener("pointerup",()=>pxDown=false);
+    $("toolDraw").addEventListener("click",()=>{ pxMode="draw"; $("toolDraw").classList.add("on"); $("toolErase").classList.remove("on"); });
+    $("toolErase").addEventListener("click",()=>{ pxMode="erase"; $("toolErase").classList.add("on"); $("toolDraw").classList.remove("on"); });
+    $("toolClear").addEventListener("click",()=>{ pxState=Array(16).fill("................"); paintGrid(); });
+    $("toolDefault").addEventListener("click",()=>{ pxState=SPR.agentDefault.slice(); paintGrid(); });
+  }
+  g.querySelectorAll(".cell").forEach((c,i)=>c.classList.toggle("on",pxState[Math.floor(i/16)][i%16]==="#"));
+  paintPreview();
+}
+function paintPreview(){ SPR._preview=pxState; ["pxPrev","pxPrev2"].forEach(id=>{ const c=$(id), ctx=c.getContext("2d"); ctx.clearRect(0,0,16,16); drawSprite(ctx,"_preview",0,0,1); }); }
+$("passBack").addEventListener("click",()=>{ show("titleS"); });
+$("passGo").addEventListener("click",()=>{
+  const real=$("realName").value.trim().slice(0,30), kana=$("realKana").value.trim().slice(0,30);
+  const chip=$("jpChips").querySelector("button.on"); const jp=($("jpName").value.trim()||(chip?chip.dataset.n:"")).slice(0,12);
+  if(!jp){ toast("Pick or write a Japanese cover name first."); $("jpName").focus(); return; }
+  if(!real){ toast("Your passport needs your Australian name."); $("realName").focus(); return; }
+  if(kana&&!/^[ぁ-んァ-ヶー・\s]+$/.test(kana)){ toast("The katakana line should be kana only, e.g. リアム."); $("realKana").focus(); return; }
+  if(!/^[ぁ-んァ-ヶー・\s]+$/.test(jp)){ toast("A cover name in kana, please. 山田 will laminate anything, but the game reads kana."); $("jpName").focus(); return; }
+  PROFILE.set({px:pxState.slice(),real,kana,jp});
+  if(pendingKit){ goFull(); newGame(pendingKit); pendingKit=null; } else { show("titleS"); renderTitle(); }
+});
+$("passEdit").addEventListener("click",()=>openPassport(null));
 function renderTitle(){
   const tc=$("titleScene").getContext("2d");tc.clearRect(0,0,112,56);drawSprite(tc,"airport",0,4,3);drawSprite(tc,"michelin",64,4,3);drawSprite(tc,"agent",47,31,1);tc.fillStyle=INK;tc.fillRect(0,52,112,1);
   const saved=load();
@@ -1537,7 +1652,7 @@ function renderTitle(){
   $("load").innerHTML=Object.entries(LOADOUTS).map(([k,L])=>`<button data-k="${k}"><b>${L.n}</b><span class="kit" id="kit-${k}"></span><small class="desc">${esc(L.desc)}</small><span class="deploy">TAKE THIS KIT →</span></button>`).join("");
   Object.entries(LOADOUTS).forEach(([k,L])=>{ const box=$("kit-"+k); L.items.forEach(i=>box.appendChild(spriteCanvas(i,32))); const y=document.createElement("small"); y.style.display="inline"; y.textContent="¥"+L.yen.toLocaleString(); box.appendChild(y); });
   $("load").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
-    if(saved){toast("A mission is saved. Continue it, or choose Start over first.");$("resumeBtn").focus();return;}goFull();newGame(b.dataset.k);
+    if(saved){toast("A mission is saved. Continue it, or choose Start over first.");$("resumeBtn").focus();return;}if(!PROFILE.complete()){ openPassport(b.dataset.k); return; } goFull();newGame(b.dataset.k);
   }));
 }
 
@@ -1720,7 +1835,7 @@ function showObject(i,text){
     const line=cur&&cur.line?fill(cur.line.jp,s):"", en=cur&&cur.en?cur.en:"";
     const list=wordsHere(); G.batch=(G.batch||[]).filter(w=>list.some(x=>x.w===w)&&!DICT.has(w));
     const rows=list.map((w,k)=>{ const built=DICT.has(w.w), sel=G.batch.includes(w.w);
-      return built?`<button class="wrow" data-k="${k}"><span class="w built">${esc(w.w)}</span><span class="r">${esc(w.r!==w.w?w.r:"")}</span><span class="d">${esc(w.def)}</span></button>`
+      return built?`<button class="wrow" data-k="${k}"><span class="w built">${esc(w.w)}${w.r!==w.w?`<span class="r">${esc(w.r)}</span>`:""}</span><span class="d">${esc(w.def)}</span><span class="pick" style="visibility:hidden">built</span></button>`
                   :`<button class="wrow${sel?" sel":""}" data-k="${k}"><span class="w plain">${esc(w.w)}</span><span class="d en">${sel?esc(w.def):"tap to study"}</span><span class="pick">${sel?"✓ in batch":"study"}</span></button>`; }).join("");
     const cards=G.batch.map(wn=>list.find(x=>x.w===wn)).filter(Boolean).map(w=>wordCard(w)).join("");
     box.innerHTML=`${close}<div class="page"><h4>${R("辞書","じしょ")} · ${esc(LOCS[G.loc].name)} · ${list.filter(w=>DICT.has(w.w)).length}/${list.length} built</h4><div class="wl">${rows||'<span class="en">No word list for this place yet.</span>'}</div><div class="en" style="margin-top:8px">Tap a word to see what it means and what it is made of. Pick up to four, then build them. Built words turn to colour, here and in every conversation, on this device, for good.</div><div style="margin-top:8px"><a class="k sm" href="../vocab/#unit:${VOCAB_KEY[G.loc]}" target="_blank" rel="noopener">ことばのホーム · this shelf in the Vocab Hub →</a></div></div>
@@ -1734,7 +1849,7 @@ function showObject(i,text){
   }else if(i==="idcard"||i==="passport"){
     box.className="obj obj-card";
     const fake=i==="idcard";
-    box.innerHTML=`${close}<div><div class="photo">${big("agent",64)}</div><div class="en" style="font-size:10px;margin-top:4px">${fake?"photo of someone else":"photo of you, tired"}</div></div><div><h4>${fake?R("身分証明書","みぶんしょうめいしょ")+" · ID":"PASSPORT · AUSTRALIA"}</h4><div class="field">${R("名前","なまえ")}<b>${fake?esc(s.name):"(your real name)"}</b></div><div class="field">${R("出身","しゅっしん")}<b>${fake?s.town+" · "+esc(s.townEn):"オーストラリア"}</b></div>${fake?`<div class="field">${R("職業","しょくぎょう")}<b>${s.job} · ${esc(s.jobEn)}</b></div><div class="field">${R("滞在","たいざい")}<b>${s.stay} · ${esc(s.stayEn)}</b></div>`:`<div class="field">${R("目的","もくてき")}<b>${R("観光","かんこう")}… or ラーメン</b></div>`}<div class="en" style="margin-top:8px">${esc(text)}</div></div>`;
+    box.innerHTML=`${close}<div><div class="photo">${big("agent",64)}</div><div class="en" style="font-size:10px;margin-top:4px">${fake?"photo of someone else":"photo of you, tired"}</div></div><div><h4>${fake?R("身分証明書","みぶんしょうめいしょ")+" · ID":"PASSPORT · AUSTRALIA"}</h4><div class="field">${R("名前","なまえ")}<b>${fake?esc(s.name):esc(s.realLabel)}</b></div><div class="field">${R("出身","しゅっしん")}<b>${fake?s.town+" · "+esc(s.townEn):"オーストラリア"}</b></div>${fake?`<div class="field">${R("職業","しょくぎょう")}<b>${s.job} · ${esc(s.jobEn)}</b></div><div class="field">${R("滞在","たいざい")}<b>${s.stay} · ${esc(s.stayEn)}</b></div>`:`<div class="field">${R("目的","もくてき")}<b>${R("観光","かんこう")}… or ラーメン</b></div>`}<div class="en" style="margin-top:8px">${esc(text)}</div></div>`;
   }else if(i==="camera"){
     box.className="obj obj-cam";
     box.innerHTML=`${close}<h4>viewfinder</h4><div class="finder"><canvas class="px" width="112" height="56" id="finderCv"></canvas></div><div style="margin-top:10px">${esc(text)}</div>`;
@@ -1798,7 +1913,7 @@ function renderTask(pending=null){
 }
 function fold(str){ return String(str).normalize("NFKC").replace(/[\s　]/g,"").replace(/[。．\.、，,！!？?「」]/g,"").replace(/[ァ-ヶ]/g,ch=>String.fromCharCode(ch.charCodeAt(0)-0x60)).toLowerCase(); }
 function matches(val,accept){
-  const v=fold(val), s=G.s, sl={...s,name:fold(s.name),town:fold(s.town),ramen:fold(s.ramen),secret:fold(s.secret),jobKana:s.jobKana,jobPlain:fold(s.jobPlain)};
+  const v=fold(val), s=G.s, sl={...s,name:fold(s.name),town:fold(s.town),ramen:fold(s.ramen),secret:fold(s.secret),jobKana:s.jobKana,jobPlain:fold(s.jobPlain),realAccept:[s.realKana,s.realName].filter(Boolean).length?[s.realKana,s.realName].filter(Boolean).map(x=>fold(x).replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).join("|"):".{1,20}"};
   return accept.some(a=>a instanceof RegExp?new RegExp(fill(a.source,sl),"i").test(v):fold(fill(a,s))===v);
 }
 function check(box){
@@ -1806,7 +1921,7 @@ function check(box){
   const t=cur.task, s=slots(); let ok, kind="bad", why="", rule="";
   if(t.kind==="choice"){ const o=t.options[+pickedOpt.dataset.i]; ok=o.ok===true; why=fill(o.why,s); if(o.ok==="faux") kind="faux"; box.querySelectorAll(".opt").forEach(b=>{ b.disabled=true; if(t.options[+b.dataset.i].ok===true) b.classList.add("correct"); else if(b===pickedOpt) b.classList.add("incorrect"); }); }
   else if(t.kind==="gap"){ const val=cur.typed?box.querySelector("#typed").value:pickedOpt.dataset.v; ok=matches(val,t.accept); rule=fill(t.rule,s); if(cur.typed) box.querySelector("#typed").disabled=true; else box.querySelectorAll(".opt").forEach(b=>{ b.disabled=true; if(t.accept.includes(b.dataset.v)) b.classList.add("correct"); else if(b===pickedOpt) b.classList.add("incorrect"); }); const bl=box.querySelector("#blank"); if(bl) bl.textContent=ok?val:val+" → "+t.accept[0]; why=ok?"":`You put 「${val}」. It takes 「${t.accept[0]}」.`; }
-  else { const val=box.querySelector("#typed").value; ok=matches(val,t.accept); box.querySelector("#typed").disabled=true; rule=fill(t.rule,s); if(t.slotCheck==="name"&&!ok&&!fold(val).includes(fold(G.s.name))) why=`You did not use your cover name, ${G.s.name}. `; why+=ok?"":`A line that works: 「${fill(t.model,s)}」`; }
+  else { const val=box.querySelector("#typed").value; ok=matches(val,t.accept); box.querySelector("#typed").disabled=true; rule=fill(t.rule,s); if(t.slotCheck==="name"&&!ok&&!fold(val).includes(fold(G.s.name))) why=`You did not use your cover name, ${G.s.name}. `; if(t.slotCheck==="real"&&!ok&&G.s.realKana) why=`Your passport says ${G.s.realName}, ${G.s.realKana} on a Japanese form. `; why+=ok?"":`A line that works: 「${fill(t.model,s)}」`; }
   if(!(cur.key in G.first)) G.first[cur.key]={ok,skill:cur.topic.skill,loc:G.loc};
   if(!ok&&kind!=="faux"&&G.kit!=="tourist"&&(cur.tries||0)<2){
     cur.tries=(cur.tries||0)+1; SND.bad();
@@ -1931,7 +2046,7 @@ function debrief(){
   const byLoc={}; Object.values(G.first).forEach(f=>{ if(!f.loc) return; byLoc[f.loc]=byLoc[f.loc]||{n:0,ok:0}; byLoc[f.loc].n++; if(f.ok) byLoc[f.loc].ok++; });
   const placeRows=Object.keys(LOCS).filter(l=>(G.visited||{})[l]||byLoc[l]).map(l=>`<tr><td><b>${esc(LOCS[l].name)}</b> ${LOCS[l].jp}</td><td>${byLoc[l]?`${byLoc[l].ok}/${byLoc[l].n}`:"visited"}</td><td><a href="../vocab/#unit:${VOCAB_KEY[l]}" target="_blank" rel="noopener">Vocab Hub: words for ${esc(LOCS[l].name)} →</a></td></tr>`).join("");
   $("debBody").innerHTML=`<h2>${R("報告書","ほうこくしょ")} · Debrief</h2><div class="stamp">${esc(outcome)}</div>
-    <p class="en">Agent ${esc(G.s.name)} (${esc(G.s.jobEn)}, ${esc(G.s.townEn)}). Kit: ${esc(LOADOUTS[G.kit].n)}. Days in country: ${G.day}. Suspicion at the end: ${G.susp}/100. Cash left: ¥${G.yen.toLocaleString()}. Side quests: ${["bagDone","trained"].filter(f=>G.is(f)).length}/2. Words built in the dictionary (all games on this device): ${DICT.count()}.</p>
+    <p class="en">${G.s.realName?esc(G.s.realName)+", travelling as ":"Agent "}${esc(G.s.name)} (${esc(G.s.jobEn)}, ${esc(G.s.townEn)}). Kit: ${esc(LOADOUTS[G.kit].n)}. Days in country: ${G.day}. Suspicion at the end: ${G.susp}/100. Cash left: ¥${G.yen.toLocaleString()}. Side quests: ${["bagDone","trained"].filter(f=>G.is(f)).length}/2. Words built in the dictionary (all games on this device): ${DICT.count()}.</p>
     <p style="margin-top:6px"><b>${right}/${total}</b> <span class="en">right first time across everything you tried. Every miss is below with the rule, which is the part worth keeping.</span></p>
     <table><tr><th>Skill (Grammar Hub)</th><th>VIC level</th><th>First try</th><th>Practise exactly this</th></tr>${rows||`<tr><td colspan="4" class="en">Nothing graded yet.</td></tr>`}</table>
     <h2 style="margin-top:14px">Places</h2>
