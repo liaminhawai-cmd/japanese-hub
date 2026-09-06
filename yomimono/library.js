@@ -2,6 +2,1604 @@
    Public-domain texts from Aozora Bunko, verbatim; ruby converted from 《》 to <ruby>. */
 window.YOMIMONO_LIBRARY = [
  {
+  "id": "the-death-of-the-goddess",
+  "authentic": true,
+  "band": "authentic",
+  "moves": {},
+  "quick": [
+   {
+    "ch": 0,
+    "q": "What did Izanami tell Izanagi never to do while she went to speak with the gods of the underworld?",
+    "a": "Look at her (do not look at her figure)",
+    "opts": [
+     "Look at her (do not look at her figure)",
+     "Follow her into the palace",
+     "Speak to the underworld gods himself",
+     "Bring a torch into Yomi"
+    ],
+    "why": "Izanami directly begs Izanagi never to look at her figure, no matter what happens, while she is away speaking with the underworld gods."
+   },
+   {
+    "ch": 0,
+    "q": "What did Izanagi see when he broke his promise and looked at Izanami's body?",
+    "a": "Her body had rotted and was covered in maggots, with thunder gods crouching on it",
+    "opts": [
+     "Her body had rotted and was covered in maggots, with thunder gods crouching on it",
+     "She had turned to stone",
+     "She had transformed into a serpent",
+     "Nothing had changed"
+    ],
+    "why": "The text says that when he looked at her by the light, her whole body had already rotted into a sticky, decaying mess giving off a terrible smell."
+   },
+   {
+    "ch": 0,
+    "q": "How many people per day did Izanami vow to kill as revenge, once Izanagi sealed the entrance to Yomi with a boulder?",
+    "a": "One thousand people a day",
+    "opts": [
+     "One thousand people a day",
+     "Five hundred a day",
+     "Fifteen hundred a day",
+     "One hundred a day"
+    ],
+    "why": "Speaking through the boulder, Izanami tells Izanagi that, as revenge, she will strangle one thousand people a day across Japan."
+   }
+  ],
+  "evidence": [
+   {
+    "ch": 0,
+    "q": "Tap the sentence that shows this: Look at her (do not look at her figure)",
+    "a": 37,
+    "alt": [],
+    "why": "Izanami directly begs Izanagi never to look at her figure, no matter what happens, while she is away speaking with the underworld gods."
+   },
+   {
+    "ch": 0,
+    "q": "Tap the sentence that shows this: Her body had rotted and was covered in maggots, with thunder gods crouching on it",
+    "a": 43,
+    "alt": [],
+    "why": "The text says that when he looked at her by the light, her whole body had already rotted into a sticky, decaying mess giving off a terrible smell."
+   },
+   {
+    "ch": 0,
+    "q": "Tap the sentence that shows this: One thousand people a day",
+    "a": 76,
+    "alt": [],
+    "why": "Speaking through the boulder, Izanami tells Izanagi that, as revenge, she will strangle one thousand people a day across Japan."
+   }
+  ],
+  "cloze": [
+   {
+    "ch": 0,
+    "s": 22,
+    "text": "女神は、そこから、＿＿＿の国という、死んだ人の行くまっくらな国へたっておしまいになりました。",
+    "a": "黄泉",
+    "opts": [
+     "黄泉",
+     "剣",
+     "姿",
+     "恥"
+    ],
+    "read": "よみ"
+   },
+   {
+    "ch": 0,
+    "s": 35,
+    "text": "私はもはや、この国の＿＿＿た火で炊いたものを食べましたから、もう二度とあちらへ帰ることはできますまい。",
+    "a": "けがれ",
+    "opts": [
+     "けがれ",
+     "黄泉",
+     "剣",
+     "姿"
+    ],
+    "read": "けがれ"
+   },
+   {
+    "ch": 0,
+    "s": 23,
+    "text": "伊弉諾神は、そのあとで、さっそく十拳の＿＿＿という長い剣を引きぬいて、女神の災のもとになった火の神を、一うちに斬り殺してしまいになりました。",
+    "a": "剣",
+    "opts": [
+     "剣",
+     "姿",
+     "恥",
+     "御殿"
+    ],
+    "read": "つるぎ"
+   },
+   {
+    "ch": 0,
+    "s": 37,
+    "text": "どうぞその間は、どんなことがありましても、けっして私の＿＿＿をご覧にならないでくださいましな。",
+    "a": "姿",
+    "opts": [
+     "姿",
+     "剣",
+     "恥",
+     "御殿"
+    ],
+    "read": "すがた"
+   }
+  ],
+  "title": "女神の死",
+  "titleRuby": "<ruby>女神<rt>めがみ</rt></ruby>の<ruby>死<rt>し</rt></ruby>",
+  "culture": "Izanagi's broken promise not to look at his dead wife cannot be undone, and the story treats this as a permanent cosmic rupture rather than a moral failing that could be forgiven or apologised away. Izanami's decaying body is a source of kegare (defilement) that must be washed off through ritual purification, not confessed or repented: pollution here is a physical and ritual state, not primarily a matter of guilt. The birth of the sun goddess Amaterasu comes directly out of Izanagi's purification bath, so renewal follows from washing away contact with death, not from atonement. The curse exchange at the end, in which Izanami vows to kill a thousand people a day and Izanagi answers that fifteen hundred will be born, is presented flatly as the mythological reason more people are born than die each day, with neither god condemned for making the exchange.",
+  "en": "The Death of the Goddess",
+  "author": "鈴木三重吉 (d. 1936-06-27)",
+  "translator": "",
+  "died": "1936-06-27",
+  "card": "https://www.aozora.gr.jp/cards/000107/card1530.html",
+  "orthography": "新字新仮名",
+  "beyond": [
+   "Extensive sonkeigo (respectful honorific) verb forms for the gods' actions: お生まれになる, ご覧になる, おっしゃる, お怒りになる: a systematic honorific register Year 9 students have not yet met",
+   "Classical/literary continuous form ～ておりました (て-form + おる) rather than ～ていました",
+   "Archaic verbs reserved for gods and nobility: おぼしめす (\"to think, to be pleased to think\"), いらっしゃる"
+  ],
+  "attribution": [
+   "底本：「古事記物語」角川文庫、角川書店",
+   "1955（昭和30）年1月20日初版発行",
+   "1968（昭和43）年8月10日31版発行",
+   "1980（昭和55）年9月30日改版19刷",
+   "初出：女神の死「赤い鳥」赤い鳥社",
+   "1919（大正8）年7月",
+   "天の岩屋「赤い鳥」赤い鳥社",
+   "1919（大正8）年8月",
+   "八俣の大蛇「赤い鳥」赤い鳥社",
+   "1919（大正8）年9月",
+   "むかでの室、へびの室「赤い鳥」赤い鳥社",
+   "1919（大正8）年10月",
+   "きじのお使い「赤い鳥」赤い鳥社",
+   "1919（大正8）年11月",
+   "笠沙のお宮「赤い鳥」赤い鳥社",
+   "1919（大正8）年12月",
+   "満潮の玉、干潮の玉「古事記物語上卷」赤い鳥社",
+   "1920（大正9）年12月",
+   "八咫烏「赤い鳥」赤い鳥社",
+   "1920（大正9）年1月",
+   "赤い盾、黒い盾「赤い鳥」赤い鳥社",
+   "1920（大正9）年2月",
+   "おしの皇子「赤い鳥」赤い鳥社",
+   "1920（大正9）年3月",
+   "白い鳥「赤い鳥」赤い鳥社",
+   "1920（大正9）年4月",
+   "朝鮮征伐「赤い鳥」赤い鳥社",
+   "1920（大正9）年5月",
+   "赤い玉「古事記物語下卷」赤い鳥社",
+   "1920（大正9）年12月",
+   "宇治の渡し「赤い鳥」赤い鳥社",
+   "1920（大正9）年6月",
+   "難波のお宮「赤い鳥」赤い鳥社",
+   "1920（大正9）年7月",
+   "大鈴小鈴「赤い鳥」赤い鳥社",
+   "1920（大正9）年8月",
+   "しかの群、ししの群「赤い鳥」赤い鳥社",
+   "1920（大正9）年9月",
+   "とんぼのお歌「古事記物語下卷」赤い鳥社",
+   "1920（大正9）年12月",
+   "うし飼、うま飼「古事記物語下卷」赤い鳥社",
+   "1920（大正9）年12月",
+   "※「八俣の大蛇」の初出時の表題は「赤い猪 」です。",
+   "※「八咫烏」の初出時の表題は「毒の大熊」です。",
+   "※「朝鮮征伐」の初出時の表題は「神功皇后」です。",
+   "※「白日子王」に対するルビの「しろひこのみこ」と「しらひこのみこ」の混在は、底本通りです。",
+   "入力：jupiter",
+   "校正：鈴木厚司",
+   "2001年11月19日公開",
+   "2014年8月2日修正",
+   "青空文庫作成ファイル：",
+   "このファイルは、インターネットの図書館、青空文庫（http://www.aozora.gr.jp/）で作られました。入力、校正、制作にあたったのは、ボランティアの皆さんです。"
+  ],
+  "chapters": [
+   {
+    "t": "第一章",
+    "en": "The Death of the Goddess",
+    "from": 0,
+    "to": 101
+   }
+  ],
+  "sentences": [
+   "一",
+   "世界ができたそもそものはじめ。",
+   "まず天と地とができあがりますと、それといっしょにわれわれ日本人のいちばんご先祖の、<ruby>天御中主神<rt>あめのみなかぬしのかみ</rt></ruby>とおっしゃる神さまが、天の上の<ruby>高天原<rt>たかまのはら</rt></ruby>というところへお生まれになりました。",
+   "そのつぎには<ruby>高皇産霊神<rt>たかみむすびのかみ</rt></ruby>、<ruby>神産霊神<rt>かみむすびのかみ</rt></ruby>のお<ruby>二方<rt>ふたかた</rt></ruby>がお生まれになりました。",
+   "そのときには、天も地もまだしっかり<ruby>固<rt>かた</rt></ruby>まりきらないで、両方とも、ただ油を<ruby>浮<rt>う</rt></ruby>かしたように、とろとろになって、くらげのように、ふわりふわりと浮かんでおりました。",
+   "その中へ、ちょうどあしの<ruby>芽<rt>め</rt></ruby>がはえ出るように、二人の神さまがお生まれになりました。",
+   "それからまたお二人、そのつぎには<ruby>男神<rt>おがみ</rt></ruby><ruby>女神<rt>めがみ</rt></ruby>とお二人ずつ、八人の神さまが、つぎつぎにお生まれになった後に、<ruby>伊弉諾神<rt>いざなぎのかみ</rt></ruby>と<ruby>伊弉冉神<rt>いざなみのかみ</rt></ruby>とおっしゃる男神女神がお生まれになりました。",
+   "<ruby>天御中主神<rt>あめのみなかぬしのかみ</rt></ruby>はこのお二方の神さまをお<ruby>召<rt>め</rt></ruby>しになって、",
+   "「あの、ふわふわしている地を固めて、日本の国を作りあげよ」",
+   "とおっしゃって、りっぱな<ruby>矛<rt>ほこ</rt></ruby>を一ふりお<ruby>授<rt>さず</rt></ruby>けになりました。",
+   "それでお二人は、さっそく、<ruby>天<rt>あめ</rt></ruby>の<ruby>浮橋<rt>うきはし</rt></ruby>という、雲の中に浮かんでいる橋の上へお出ましになって、いただいた<ruby>矛<rt>ほこ</rt></ruby>でもって、下のとろとろしているところをかきまわして、さっとお引きあげになりますと、その矛の<ruby>刃先<rt>はさき</rt></ruby>についた<ruby>潮水<rt>しおみず</rt></ruby>が、ぽたぽたと下へおちて、それが<ruby>固<rt>かた</rt></ruby>まって一つの小さな島になりました。",
+   "お二人はその島へおりていらしって、そこへ<ruby>御殿<rt>ごてん</rt></ruby>をたててお住まいになりました。",
+   "そして、まずいちばんさきに<ruby>淡路島<rt>あわじしま</rt></ruby>をおこしらえになり、それから<ruby>伊予<rt>いよ</rt></ruby>、<ruby>讃岐<rt>さぬき</rt></ruby>、<ruby>阿波<rt>あわ</rt></ruby>、<ruby>土佐<rt>とさ</rt></ruby>とつづいた四国の島と、そのつぎには<ruby>隠岐<rt>おき</rt></ruby>の島、それから、そのじぶん<ruby>筑紫<rt>つくし</rt></ruby>といった今の九州と、<ruby>壱岐<rt>いき</rt></ruby>、<ruby>対島<rt>つしま</rt></ruby>、<ruby>佐渡<rt>さど</rt></ruby>の三つの島をお作りになりました。",
+   "そして、いちばんしまいに、とかげの形をした、いちばん大きな本州をおこしらえになって、それに<ruby>大日本豊秋津島<rt>おおやまととよあきつしま</rt></ruby>というお名まえをおつけになりました。",
+   "これで、淡路の島からかぞえて、すっかりで八つの島ができました。",
+   "ですからいちばんはじめには、日本のことを、<ruby>大八島国<rt>おおやしまぐに</rt></ruby>と<ruby>呼<rt>よ</rt></ruby>び、またの名を<ruby>豊葦原水穂国<rt>とよあしはらのみずほのくに</rt></ruby>とも<ruby>称<rt>とな</rt></ruby>えていました。",
+   "こうして、いよいよ国ができあがったので、お二人は、こんどはおおぜいの神さまをお生みになりました。",
+   "それといっしょに、風の神や、海の神や、山の神や、野の神、川の神、火の神をもお生みになりました。",
+   "ところがおいたわしいことには、<ruby>伊弉冉神<rt>いざなみのかみ</rt></ruby>は、そのおしまいの火の神をお生みになるときに、おからだにおやけどをなすって、そのためにとうとうおかくれになりました。",
+   "<ruby>伊弉諾神<rt>いざなぎのかみ</rt></ruby>は、",
+   "「ああ、わが妻の神よ、あの一人の子ゆえに、大事なおまえをなくするとは」とおっしゃって、それはそれはたいそうお<ruby>嘆<rt>なげ</rt></ruby>きになりました。",
+   "そして、お<ruby>涙<rt>なみだ</rt></ruby>のうちに、やっと、女神のおなきがらを、<ruby>出雲<rt>いずも</rt></ruby>の国と<ruby>伯耆<rt>ほうき</rt></ruby>の国とのさかいにある<ruby>比婆<rt>ひば</rt></ruby>の山にお<ruby>葬<rt>ほうむ</rt></ruby>りになりました。",
+   "女神は、そこから、<ruby>黄泉<rt>よみ</rt></ruby>の国という、死んだ人の行くまっくらな国へたっておしまいになりました。",
+   "<ruby>伊弉諾神<rt>いざなぎのかみ</rt></ruby>は、そのあとで、さっそく<ruby>十拳<rt>とつか</rt></ruby>の<ruby>剣<rt>つるぎ</rt></ruby>という長い剣を引きぬいて、女神の<ruby>災<rt>わざわい</rt></ruby>のもとになった火の神を、一うちに<ruby>斬<rt>き</rt></ruby>り殺してしまいになりました。",
+   "しかし、神のおくやしみは、そんなことではお<ruby>癒<rt>い</rt></ruby>えになるはずもありませんでした。",
+   "神は、どうかしてもう一度、女神に会いたくおぼしめして、とうとうそのあとを追って、まっくらな<ruby>黄泉<rt>よみ</rt></ruby>の国までお出かけになりました。",
+   "二",
+   "<ruby>女神<rt>めがみ</rt></ruby>はむろん、もうとっくに、<ruby>黄泉<rt>よみ</rt></ruby>の神の<ruby>御殿<rt>ごてん</rt></ruby>に着いていらっしゃいました。",
+   "すると、そこへ、夫の神が、はるばるたずねておいでになったので、女神は急いで戸口へお出迎えになりました。",
+   "<ruby>伊弉諾神<rt>いざなぎのかみ</rt></ruby>は、まっくらな中から、女神をお<ruby>呼<rt>よ</rt></ruby>びかけになって、",
+   "「いとしきわが妻の女神よ。",
+   "おまえといっしょに作る国が、まだできあがらないでいる。",
+   "どうぞもう一度帰ってくれ」とおっしゃいました。",
+   "すると女神は、残念そうに、",
+   "「それならば、もっと早く迎えにいらしってくださいませばよいものを。",
+   "私はもはや、この国のけがれた火で<ruby>炊<rt>た</rt></ruby>いたものを食べましたから、もう二度とあちらへ帰ることはできますまい。",
+   "しかし、せっかくおいでくださいましたのですから、ともかくいちおう<ruby>黄泉<rt>よみ</rt></ruby>の神たちに相談をしてみましょう。",
+   "どうぞその間は、どんなことがありましても、けっして私の<ruby>姿<rt>すがた</rt></ruby>をご<ruby>覧<rt>らん</rt></ruby>にならないでくださいましな。",
+   "<ruby>後生<rt>ごしょう</rt></ruby>でございますから」と、女神はかたくそう申しあげておいて、<ruby>御殿<rt>ごてん</rt></ruby>の<ruby>奥<rt>おく</rt></ruby>へおはいりになりました。",
+   "<ruby>伊弉諾神<rt>いざなぎのかみ</rt></ruby>は<ruby>永<rt>なが</rt></ruby>い間戸口にじっと待っていらっしゃいました。",
+   "しかし、女神は、それなり、いつまでたっても出ていらっしゃいません。",
+   "<ruby>伊弉諾神<rt>いざなぎのかみ</rt></ruby>はしまいには、もう待ちどおしくてたまらなくなって、とうとう、左のびんのくしをおぬきになり、その<ruby>片<rt>かた</rt></ruby>はしの、<ruby>大歯<rt>おおは</rt></ruby>を一本<ruby>欠<rt>か</rt></ruby>き取って、それへ火をともして、わずかにやみの中をてらしながら、足さぐりに、御殿の中深くはいっておいでになりました。",
+   "そうすると、御殿のいちばん奥に、女神は寝ていらっしゃいました。",
+   "そのお姿をあかりでご覧になりますと、おからだじゅうは、もうすっかりべとべとに<ruby>腐<rt>くさ</rt></ruby>りくずれていて、<ruby>臭<rt>くさ</rt></ruby>い臭いいやなにおいが、ぷんぷん鼻へきました。",
+   "そして、そのべとべとに腐ったからだじゅうには、うじがうようよとたかっておりました。",
+   "それから、頭と、胸と、お<ruby>腹<rt>なか</rt></ruby>と、両ももと、両手両足のところには、そのけがれから生まれた<ruby>雷神<rt>らいじん</rt></ruby>が一人ずつ、すべてで八人で、<ruby>怖<rt>おそ</rt></ruby>ろしい顔をしてうずくまっておりました。",
+   "<ruby>伊弉諾神<rt>いざなぎのかみ</rt></ruby>は、そのありさまをご覧になると、びっくりなすって、怖ろしさのあまりに、急いで<ruby>遁<rt>に</rt></ruby>げ出しておしまいになりました。",
+   "女神はむっくりと起きあがって、",
+   "「おや、あれほどお止め申しておいたのに、とうとう私のこの<ruby>姿<rt>すがた</rt></ruby>をご覧になりましたね。",
+   "まあ、なんという<ruby>憎<rt>にく</rt></ruby>いお<ruby>方<rt>かた</rt></ruby>でしょう。",
+   "人にひどい<ruby>恥<rt>はじ</rt></ruby>をおかかせになった。",
+   "ああ、くやしい」と、それはそれはひどくお怒りになって、さっそく女の<ruby>悪鬼<rt>わるおに</rt></ruby>たちを<ruby>呼<rt>よ</rt></ruby>んで、",
+   "「さあ、早く、あの神をつかまえておいで」と歯がみをしながらお言いつけになりました。",
+   "女の悪鬼たちは、",
+   "「おのれ、待て」と言いながら、どんどん追っかけて行きました。",
+   "<ruby>伊弉諾神<rt>いざなぎのかみ</rt></ruby>は、その鬼どもにつかまってはたいへんだとおぼしめして、走りながら<ruby>髪<rt>かみ</rt></ruby>の<ruby>飾<rt>かざ</rt></ruby>りにさしてある黒いかつらの葉を<ruby>抜<rt>ぬ</rt></ruby>き取っては、どんどんうしろへお投げつけになりました。",
+   "そうすると、見る見るうちに、そのかつらの葉の落ちたところへ、ぶどうの実がふさふさとなりました。",
+   "女鬼どもは、いきなりそのぶどうを取って食べはじめました。",
+   "神はその間に、いっしょうけんめいにかけだして、やっと少しばかり<ruby>遁<rt>に</rt></ruby>げのびたとお思いになりますと、女鬼どもは、まもなく、またじきうしろまで追いつめて来ました。",
+   "神は、",
+   "「おや、これはいけない」とお思いになって、こんどは、右のびんのくしをぬいて、その歯をひっ欠いては投げつけ、ひっ欠いては投げつけなさいました。",
+   "そうすると、そのくしの歯が<ruby>片<rt>かた</rt></ruby>はしからたけのこになってゆきました。",
+   "<ruby>女鬼<rt>おんなおに</rt></ruby>たちは、そのたけのこを見ると、またさっそく引き抜いて、もぐもぐ食べだしました。",
+   "<ruby>伊弉諾神<rt>いざなぎのかみ</rt></ruby>は、そのすきをねらって、こんどこそは、だいぶ向こうまでお<ruby>遁<rt>に</rt></ruby>げになりました。",
+   "そしてもうこれならだいじょうぶだろうとおぼしめして、ひょいとうしろをふりむいてご覧になりますと、意外にも、こんどはさっきの女神のまわりにいた八人の<ruby>雷人<rt>らいじん</rt></ruby>どもが、千五百人の鬼の軍勢をひきつれて、死にものぐるいでおっかけて来るではありませんか。",
+   "神はそれをご覧になると、あわてて<ruby>十拳<rt>とつか</rt></ruby>の<ruby>剣<rt>つるぎ</rt></ruby>を抜きはなして、それでもってうしろをぐんぐん切りまわしながら、それこそいっしょうけんめいにお遁げになりました。",
+   "そして、ようよう、この世界と<ruby>黄泉<rt>よみ</rt></ruby>の国との<ruby>境<rt>さかい</rt></ruby>になっている、<ruby>黄泉比良坂<rt>よもつひらざか</rt></ruby>という坂の下まで遁げのびていらっしゃいました。",
+   "三",
+   "すると、その坂の下には、ももの木が一本ありました。",
+   "神はそのももの実を三つ取って、鬼どもが近づいて来るのを待ち受けていらしって、その三つのももを力いっぱいお投げつけになりました。",
+   "そうすると、雷神たちはびっくりして、みんなちりぢりばらばらに<ruby>遁<rt>に</rt></ruby>げてしまいました。",
+   "神はそのももに向かって、",
+   "「おまえは、これから先も、日本じゅうの者がだれでも苦しい目に会っているときには、今わしを助けてくれたとおりに、みんな助けてやってくれ」とおっしゃって、わざわざ<ruby>大神実命<rt>おおかんつみのみこと</rt></ruby>というお名まえをおやりになりました。",
+   "そこへ、女神は、とうとうじれったくおぼしめして、こんどはご自分で追っかけていらっしゃいました。",
+   "神はそれをご覧になると、急いでそこにあった大きな大岩をひっかかえていらしって、それを<ruby>押<rt>お</rt></ruby>しつけて、坂の口をふさいでおしまいになりました。",
+   "女神は、その岩にさえぎられて、それより先へは一足も<ruby>踏<rt>ふ</rt></ruby>み出すことができないものですから、<ruby>恨<rt>うら</rt></ruby>めしそうに岩をにらみつけながら、",
+   "「わが夫の神よ、それではこのしかえしに、日本じゅうの人を一日に千人ずつ<ruby>絞<rt>し</rt></ruby>め殺してゆきますから、そう思っていらっしゃいまし」とおっしゃいました。",
+   "神は、",
+   "「わが妻の神よ、おまえがそんなひどいことをするなら、わしは日本じゅうに一日に千五百人の子供を生ませるから、いっこうかまわない」とおっしゃって、そのまま、どんどんこちらへお帰りになりました。",
+   "神は、",
+   "「ああ、きたないところへ行った。",
+   "急いでからだを洗ってけがれを<ruby>払<rt>はら</rt></ruby>おう」とおっしゃって、<ruby>日向<rt>ひゅうが</rt></ruby>の国の<ruby>阿波岐原<rt>あわきはら</rt></ruby>というところへお出かけになりました。",
+   "そこにはきれいな川が流れていました。",
+   "神はその川の岸へつえをお投げすてになり、それからお帯やお下ばかまや、お<ruby>上衣<rt>うわぎ</rt></ruby>や、お<ruby>冠<rt>かんむり</rt></ruby>や、右左のお<ruby>腕<rt>うで</rt></ruby>にはまった<ruby>腕輪<rt>うでわ</rt></ruby>などを、すっかりお取りはずしになりました。",
+   "そうすると、それだけの物を一つ一つお取りになるたんびに、ひょいひょいと一人ずつ、すべてで十二人の神さまがお生まれになりました。",
+   "神は、川の流れをご覧になりながら、",
+   "<ruby>上<rt>かみ</rt></ruby>の<ruby>瀬<rt>せ</rt></ruby>は瀬が早い、",
+   "<ruby>下<rt>しも</rt></ruby>の瀬は瀬が弱い。",
+   "とおっしゃって、ちょうどいいころあいの、中ほどの瀬におおりになり、水をかぶって、おからだじゅうをお洗いになりました。",
+   "すると、おからだについたけがれのために、二人の<ruby>禍<rt>わざわい</rt></ruby>の神が生まれました。",
+   "それで<ruby>伊弉諾神<rt>いざなぎのかみ</rt></ruby>は、その神がつくりだす禍をおとりになるために、こんどは三人のよい神さまをお生みになりました。",
+   "それから水の底へもぐって、おからだをお清めになるときに、また二人の神さまがお生まれになり、そのつぎに、水の中にこごんでお洗いになるときにもお二人、それから水の上へ出ておすすぎになるときにもお二人の神さまがお生まれになりました。",
+   "そしてしまいに、左の目をお洗いになると、それといっしょに、それはそれは美しい、<ruby>貴<rt>とうと</rt></ruby>い<ruby>女神<rt>めがみ</rt></ruby>がお生まれになりました。",
+   "<ruby>伊弉諾神<rt>いざなぎのかみ</rt></ruby>は、この女神さまに<ruby>天照大神<rt>あまてらすおおかみ</rt></ruby>というお名前をおつけになりました。",
+   "そのつぎに右のお目をお洗いになりますと、<ruby>月読命<rt>つきよみのみこと</rt></ruby>という神さまがお生まれになり、いちばんしまいにお鼻をお洗いになるときに、<ruby>建速須佐之男命<rt>たけはやすさのおのみこと</rt></ruby>という神さまがお生まれになりました。",
+   "<ruby>伊弉諾神<rt>いざなぎのかみ</rt></ruby>はこのお<ruby>三方<rt>さんかた</rt></ruby>をご覧になって、",
+   "「わしもこれまでいくたりも子供を生んだが、とうとうしまいに、一等よい子供を生んだ」と、それはそれは大喜びををなさいまして、さっそく玉の<ruby>首飾<rt>くびかざ</rt></ruby>りをおはずしになって、それをさらさらとゆり鳴らしながら、<ruby>天照大神<rt>あまてらすおおかみ</rt></ruby>におあげになりました。",
+   "そして、",
+   "「おまえは天へのぼって<ruby>高天原<rt>たかまのはら</rt></ruby>を治めよ」とおっしゃいました。",
+   "それから<ruby>月読命<rt>つきよみのみこと</rt></ruby>には、",
+   "「おまえは夜の国を治めよ」とお言いつけになり、三ばんめの<ruby>須佐之男命<rt>すさのおのみこと</rt></ruby>には、",
+   "「おまえは<ruby>大海<rt>おおうみ</rt></ruby>の上を治めよ」とお言いわたしになりました。"
+  ],
+  "notebook": [
+   {
+    "w": "黄泉",
+    "read": "よみ",
+    "def": "the underworld, land of the dead",
+    "ch": 0
+   },
+   {
+    "w": "けがれ",
+    "read": "けがれ",
+    "def": "defilement, ritual impurity",
+    "ch": 0
+   },
+   {
+    "w": "剣",
+    "read": "つるぎ",
+    "def": "sword",
+    "ch": 0
+   },
+   {
+    "w": "姿",
+    "read": "すがた",
+    "def": "form, appearance",
+    "ch": 0
+   },
+   {
+    "w": "恥",
+    "read": "はじ",
+    "def": "shame, humiliation",
+    "ch": 0
+   },
+   {
+    "w": "御殿",
+    "read": "ごてん",
+    "def": "palace, hall",
+    "ch": 0
+   },
+   {
+    "w": "遁げる",
+    "read": "にげる",
+    "def": "to flee (note: written with the less common kanji 遁, not 逃)",
+    "ch": 0
+   },
+   {
+    "w": "御覧になる",
+    "read": "ごらんになる",
+    "def": "to look, to see (honorific)",
+    "ch": 0
+   }
+  ],
+  "ideas": [],
+  "openQuestions": []
+ },
+ {
+  "id": "the-heavenly-rock-cave",
+  "authentic": true,
+  "band": "authentic",
+  "moves": {},
+  "quick": [
+   {
+    "ch": 0,
+    "q": "What excuse did Amaterasu give for the mess Susanoo made in her rice fields?",
+    "a": "That he probably thought it a waste to leave good land as ditches",
+    "opts": [
+     "That he probably thought it a waste to leave good land as ditches",
+     "That he was drunk",
+     "That he was testing her strength",
+     "That another god had done it"
+    ],
+    "why": "Amaterasu explicitly explains away the destruction of the ridges and ditches as Susanoo probably thinking it a waste to leave good land as ditches, rather than condemning him."
+   },
+   {
+    "ch": 0,
+    "q": "What finally made Amaterasu hide in the rock cave?",
+    "a": "A weaving maiden died after being startled by a flayed horse Susanoo threw through the roof",
+    "opts": [
+     "A weaving maiden died after being startled by a flayed horse Susanoo threw through the roof",
+     "Susanoo defeated her in single combat",
+     "The other gods voted to imprison her",
+     "She was cursed by Izanami"
+    ],
+    "why": "The weaving maiden panicked and accidentally stabbed herself with the shuttle, dying, and immediately after this, Amaterasu shut herself into the rock cave."
+   },
+   {
+    "ch": 0,
+    "q": "What convinced Amaterasu to open the cave door and look outside?",
+    "a": "The noise of all the other gods laughing loudly",
+    "opts": [
+     "The noise of all the other gods laughing loudly",
+     "Susanoo apologising",
+     "The sound of the roosters alone",
+     "A direct order from Izanagi"
+    ],
+    "why": "The dance was so funny that thousands of gods burst out laughing at once, and it was this noise that made Amaterasu open the door to see what was happening."
+   }
+  ],
+  "evidence": [
+   {
+    "ch": 0,
+    "q": "Tap the sentence that shows this: That he probably thought it a waste to leave good land as ditches",
+    "a": 54,
+    "alt": [],
+    "why": "Amaterasu explicitly explains away the destruction of the ridges and ditches as Susanoo probably thinking it a waste to leave good land as ditches, rather than condemning him."
+   },
+   {
+    "ch": 0,
+    "q": "Tap the sentence that shows this: A weaving maiden died after being startled by a flayed horse Susanoo threw through the roof",
+    "a": 57,
+    "alt": [],
+    "why": "The weaving maiden panicked and accidentally stabbed herself with the shuttle, dying, and immediately after this, Amaterasu shut herself into the rock cave."
+   },
+   {
+    "ch": 0,
+    "q": "Tap the sentence that shows this: The noise of all the other gods laughing loudly",
+    "a": 71,
+    "alt": [],
+    "why": "The dance was so funny that thousands of gods burst out laughing at once, and it was this noise that made Amaterasu open the door to see what was happening."
+   }
+  ],
+  "cloze": [
+   {
+    "ch": 0,
+    "s": 14,
+    "text": "「それでは、お姉上さまにおいとま乞いをしてこよう」とおっしゃりながら、そのまま大空の上の、＿＿＿をめざして、どんどんのぼっていらっしゃいました。",
+    "a": "高天原",
+    "opts": [
+     "高天原",
+     "乱暴",
+     "岩屋",
+     "隠れる"
+    ],
+    "read": "たかまのはら"
+   },
+   {
+    "ch": 0,
+    "s": 15,
+    "text": "すると、力の強い、大男の命ですから、力いっぱいずしんずしんと＿＿＿にお歩きになると、山も川もめりめりとゆるぎだし、世界じゅうがみしみしと震い動きました。",
+    "a": "乱暴",
+    "opts": [
+     "乱暴",
+     "岩屋",
+     "隠れる",
+     "鏡"
+    ],
+    "read": "らんぼう"
+   },
+   {
+    "ch": 0,
+    "s": 58,
+    "text": "女神は、命のあまりの乱暴さにとうとういたたまれなくおなりになって、天の＿＿＿という石室の中へお隠れになりました。",
+    "a": "岩屋",
+    "opts": [
+     "岩屋",
+     "罰",
+     "曲玉",
+     "高天原"
+    ],
+    "read": "いわや"
+   },
+   {
+    "ch": 0,
+    "s": 75,
+    "text": "「これこれ私がここに、＿＿＿ていれば、空の上もまっくらなはずだのに、おまえはなにをおもしろがって踊っているのか。",
+    "a": "隠れる",
+    "opts": [
+     "隠れる",
+     "鏡",
+     "罰",
+     "曲玉"
+    ],
+    "read": "かくれる"
+   }
+  ],
+  "title": "天の岩屋",
+  "titleRuby": "<ruby>天<rt>あめ</rt></ruby>の<ruby>岩屋<rt>いわや</rt></ruby>",
+  "culture": "Susanoo's destruction of the rice fields, defiling of the ritual hall and killing of a weaving maiden all pass without punishment for some time, and Amaterasu's first response to serious misconduct by her own brother is to make excuses for him rather than judge him: family standing outweighs an objective reckoning of the harm done. When the other gods do act, they do not confront Amaterasu with an argument; they use spectacle and trickery, making her curious enough to peek outside on her own. Once Susanoo is finally expelled, the punishment is bodily and material (his beard, nails and possessions are stripped from him) rather than aimed at his conscience or announced as a moral lesson. The episode assumes a world in which the sun itself can disappear because one deity is offended, and order is restored through cleverness and noise, not through repentance.",
+  "en": "The Heavenly Rock Cave",
+  "author": "鈴木三重吉 (d. 1936-06-27)",
+  "translator": "",
+  "died": "1936-06-27",
+  "card": "https://www.aozora.gr.jp/cards/000107/card1530.html",
+  "orthography": "新字新仮名",
+  "beyond": [
+   "The same sonkeigo pattern continues throughout (お～になる／ご～になる) for every action of Amaterasu and Susanoo",
+   "Long multi-clause sentences listing ritual objects and actions in sequence (the mirror, the jewels, the sakaki branch): dense noun strings Year 9 learners have not met",
+   "おっしゃる and おぼしめす again used only for the gods, never the lesser characters"
+  ],
+  "attribution": [
+   "底本：「古事記物語」角川文庫、角川書店",
+   "1955（昭和30）年1月20日初版発行",
+   "1968（昭和43）年8月10日31版発行",
+   "1980（昭和55）年9月30日改版19刷",
+   "初出：女神の死「赤い鳥」赤い鳥社",
+   "1919（大正8）年7月",
+   "天の岩屋「赤い鳥」赤い鳥社",
+   "1919（大正8）年8月",
+   "八俣の大蛇「赤い鳥」赤い鳥社",
+   "1919（大正8）年9月",
+   "むかでの室、へびの室「赤い鳥」赤い鳥社",
+   "1919（大正8）年10月",
+   "きじのお使い「赤い鳥」赤い鳥社",
+   "1919（大正8）年11月",
+   "笠沙のお宮「赤い鳥」赤い鳥社",
+   "1919（大正8）年12月",
+   "満潮の玉、干潮の玉「古事記物語上卷」赤い鳥社",
+   "1920（大正9）年12月",
+   "八咫烏「赤い鳥」赤い鳥社",
+   "1920（大正9）年1月",
+   "赤い盾、黒い盾「赤い鳥」赤い鳥社",
+   "1920（大正9）年2月",
+   "おしの皇子「赤い鳥」赤い鳥社",
+   "1920（大正9）年3月",
+   "白い鳥「赤い鳥」赤い鳥社",
+   "1920（大正9）年4月",
+   "朝鮮征伐「赤い鳥」赤い鳥社",
+   "1920（大正9）年5月",
+   "赤い玉「古事記物語下卷」赤い鳥社",
+   "1920（大正9）年12月",
+   "宇治の渡し「赤い鳥」赤い鳥社",
+   "1920（大正9）年6月",
+   "難波のお宮「赤い鳥」赤い鳥社",
+   "1920（大正9）年7月",
+   "大鈴小鈴「赤い鳥」赤い鳥社",
+   "1920（大正9）年8月",
+   "しかの群、ししの群「赤い鳥」赤い鳥社",
+   "1920（大正9）年9月",
+   "とんぼのお歌「古事記物語下卷」赤い鳥社",
+   "1920（大正9）年12月",
+   "うし飼、うま飼「古事記物語下卷」赤い鳥社",
+   "1920（大正9）年12月",
+   "※「八俣の大蛇」の初出時の表題は「赤い猪 」です。",
+   "※「八咫烏」の初出時の表題は「毒の大熊」です。",
+   "※「朝鮮征伐」の初出時の表題は「神功皇后」です。",
+   "※「白日子王」に対するルビの「しろひこのみこ」と「しらひこのみこ」の混在は、底本通りです。",
+   "入力：jupiter",
+   "校正：鈴木厚司",
+   "2001年11月19日公開",
+   "2014年8月2日修正",
+   "青空文庫作成ファイル：",
+   "このファイルは、インターネットの図書館、青空文庫（http://www.aozora.gr.jp/）で作られました。入力、校正、制作にあたったのは、ボランティアの皆さんです。"
+  ],
+  "chapters": [
+   {
+    "t": "第一章",
+    "en": "The Heavenly Rock Cave",
+    "from": 0,
+    "to": 97
+   }
+  ],
+  "sentences": [
+   "一",
+   "<ruby>天照大神<rt>あまてらすおおかみ</rt></ruby>と、二番目の弟さまの<ruby>月読命<rt>つきよみのみこと</rt></ruby>とは、おとうさまのご命令に従って、それぞれ大空と夜の国とをお治めになりました。",
+   "ところが末のお子さまの<ruby>須佐之男命<rt>すさのおのみこと</rt></ruby>だけは、おとうさまのお言いつけをお聞きにならないで、いつまでたっても<ruby>大海<rt>おおうみ</rt></ruby>を治めようとなさらないばかりか、りっぱな長いおひげが<ruby>胸<rt>むね</rt></ruby>の上までたれさがるほどの、大きなおとなにおなりになっても、やっぱり、赤んぼうのように、絶えまもなくわんわんわんわんお<ruby>泣<rt>な</rt></ruby>き狂いになって、どうにもこうにも手のつけようがありませんでした。",
+   "そのひどいお泣き方といったら、それこそ、青い山々の草木も、やかましい泣き声で泣き<ruby>枯<rt>か</rt></ruby>らされてしまい、川や海の水も、その火のつくような泣き声のために、すっかり<ruby>干<rt>ひ</rt></ruby>あがったほどでした。",
+   "すると、いろんな悪い神々たちが、そのさわぎにつけこんで、わいわいとうるさくさわぎまわりました。",
+   "そのおかげで、地の上にはありとあらゆる<ruby>災<rt>わざわい</rt></ruby>が一どきに起こってきました。",
+   "<ruby>伊弉諾命<rt>いざなぎのみこと</rt></ruby>は、それをご<ruby>覧<rt>らん</rt></ruby>になると、びっくりなすって、さっそく<ruby>須佐之男命<rt>すさのおのみこと</rt></ruby>をお<ruby>呼<rt>よ</rt></ruby>びになって、",
+   "「いったい、おまえは、わしの言うことも聞かないで、何をそんなに泣き狂ってばかりいるのか」ときびしくおとがめになりました。",
+   "すると<ruby>須佐之男命<rt>すさのおのみこと</rt></ruby>はむきになって、",
+   "「<ruby>私<rt>わたし</rt></ruby>はおかあさまのおそばへ行きたいから<ruby>泣<rt>な</rt></ruby>くのです」とおっしゃいました。",
+   "<ruby>伊弉諾命<rt>いざなぎのみこと</rt></ruby>はそれをお聞きになると、たいそうお<ruby>腹立<rt>はらだ</rt></ruby>ちになって、",
+   "「そんなかってな子は、この国へおくわけにゆかない。",
+   "どこへなりと出て行け」とおっしゃいました。",
+   "<ruby>命<rt>みこと</rt></ruby>は平気で、",
+   "「それでは、お姉上さまにおいとま<ruby>乞<rt>ご</rt></ruby>いをしてこよう」とおっしゃりながら、そのまま大空の上の、<ruby>高天原<rt>たかまのはら</rt></ruby>をめざして、どんどんのぼっていらっしゃいました。",
+   "すると、力の強い、大男の<ruby>命<rt>みこと</rt></ruby>ですから、力いっぱいずしんずしんと<ruby>乱暴<rt>らんぼう</rt></ruby>にお歩きになると、山も川もめりめりとゆるぎだし、世界じゅうがみしみしと<ruby>震<rt>ふる</rt></ruby>い動きました。",
+   "<ruby>天照大神<rt>あまてらすおおかみ</rt></ruby>は、その<ruby>響<rt>ひび</rt></ruby>きにびっくりなすって、",
+   "「弟があんな勢いでのぼって来るのは、必ずただごとではない。",
+   "きっと<ruby>私<rt>わたし</rt></ruby>の国を<ruby>奪<rt>うば</rt></ruby>い取ろうと思って出て来たに<ruby>相違<rt>そうい</rt></ruby>ない」",
+   "こうおっしゃって、さっそく、お身じたくをなさいました。",
+   "女神はまず急いで<ruby>髪<rt>かみ</rt></ruby>をといて、男まげにおゆいになり、両方のびんと両方の<ruby>腕<rt>うで</rt></ruby>とに、<ruby>八尺<rt>やさか</rt></ruby>の<ruby>曲玉<rt>まがたま</rt></ruby>というりっぱな玉の<ruby>飾<rt>かざ</rt></ruby>りをおつけになりました。",
+   "そして、お背中には、五百本、千本というたいそうな矢をお<ruby>負<rt>お</rt></ruby>いになり、右手に弓を取ってお突きたてになりながら、勢いこんで足を<ruby>踏<rt>ふ</rt></ruby>みならして待ちかまえていらっしゃいました。",
+   "そのきついお力ぶみで、お庭の<ruby>堅<rt>かた</rt></ruby>い土が、まるで<ruby>粉雪<rt>こなゆき</rt></ruby>のようにもうもうと飛びちりました。",
+   "二",
+   "まもなく<ruby>須佐之男命<rt>すさのおのみこと</rt></ruby>は大空へお着きになりました。",
+   "女神はそのお<ruby>姿<rt>すがた</rt></ruby>をご<ruby>覧<rt>らん</rt></ruby>になると、声を張りあげて、",
+   "「<ruby>命<rt>みこと</rt></ruby>、そちは何をしに来た」と、いきなりおしかりつけになりました。",
+   "すると命は、",
+   "「いえ、私はけっして悪いことをしにまいったのではございません。",
+   "おとうさまが、私の泣いているのをご<ruby>覧<rt>らん</rt></ruby>になって、なぜ泣くかとおとがめになったので、お母上のいらっしゃるところへ行きたいからですと申しあげると、たいそうお<ruby>怒<rt>おこ</rt></ruby>りになって、いきなり、出て行ってしまえとおっしゃるので、あなたにお別れをしにまいったのです」とお言いわけをなさいました。",
+   "でも女神はすぐにはご信用にならないで、",
+   "「それではおまえに悪い心のない<ruby>証拠<rt>しょうこ</rt></ruby>を見せよ」とおっしゃいました。",
+   "<ruby>命<rt>みこと</rt></ruby>は、",
+   "「ではお<ruby>互<rt>たが</rt></ruby>いに子を生んであかしを立てましょう。",
+   "生まれた子によって、二人の心のよしあしがわかります」とおっしゃいました。",
+   "そこでごきょうだいは、<ruby>天安河<rt>あめのやすのかわ</rt></ruby>という<ruby>河<rt>かわ</rt></ruby>の両方の岸に分かれてお立ちになりました。",
+   "そしてまず<ruby>女神<rt>めがみ</rt></ruby>が、いちばん先に、<ruby>命<rt>みこと</rt></ruby>の<ruby>十拳<rt>とつか</rt></ruby>の<ruby>剣<rt>つるぎ</rt></ruby>をお取りになって、それを三つに折って、<ruby>天真名井<rt>あめのまない</rt></ruby>という井戸で洗って、がりがりとおかみになり、ふっと<ruby>霧<rt>きり</rt></ruby>をお吹きになりますと、そのお息の中から、三人の女神がお生まれになりました。",
+   "そのつぎには<ruby>命<rt>みこと</rt></ruby>が、女神の左のびんにおかけになっている、<ruby>八尺<rt>やさか</rt></ruby>の<ruby>曲玉<rt>まがたま</rt></ruby>の<ruby>飾<rt>かざ</rt></ruby>りをいただいて、玉の音をからからいわせながら、<ruby>天真名井<rt>あめのまない</rt></ruby>という井戸で洗いすすいで、それをがりがりかんで霧をお吹き出しになりますと、それといっしょに一人の男の神さまがお生まれになりました。",
+   "その神さまが、<ruby>天忍穂耳命<rt>あめのおしほみみのみこと</rt></ruby>です。",
+   "それからつぎには、女神の右のびんの<ruby>玉飾<rt>たまかざ</rt></ruby>りをお取りになって、<ruby>先<rt>せん</rt></ruby>と同じようにして息をお吹きになりますと、その中からまた男の神が一人お生まれになりました。",
+   "つづいてこんどは、おかずらの玉飾りを受け取って、やはり<ruby>真名井<rt>まない</rt></ruby>で洗って、がりがりかんで息をお吹きになりますと、その中から、また男の神が一人お生まれになり、いちばんしまいに、女神の右と左のお<ruby>腕<rt>うで</rt></ruby>の玉飾りをかんで、息をお吹きになりますと、そのたんびに、同じ男神が一人ずつ――これですべてで五人の男神がお生まれになりました。",
+   "<ruby>天照大神<rt>あまてらすおおかみ</rt></ruby>は、",
+   "「はじめに生まれた三人の女神は、おまえの<ruby>剣<rt>つるぎ</rt></ruby>からできたのだから、おまえの子だ。",
+   "あとの五人の男神は<ruby>私<rt>わたし</rt></ruby>の玉飾りからできたのだから、私の子だ」とおっしゃいました。",
+   "命は、",
+   "「そうら、私が勝った。",
+   "私になんの<ruby>悪心<rt>あくしん</rt></ruby>もない<ruby>印<rt>しるし</rt></ruby>には、私の子は、みんなおとなしい女神ではありませんか。",
+   "どうです、それでも私は悪人ですか」と、それはそれは大いばりにおいばりになりました。",
+   "そして、その勢いに乗ってお<ruby>暴<rt>あば</rt></ruby>れだしになって、女神がお作らせになっている田の<ruby>畔<rt>あぜ</rt></ruby>をこわしたり、みぞを<ruby>埋<rt>う</rt></ruby>めたり、しまいには女神がお<ruby>初穂<rt>はつほ</rt></ruby>を<ruby>召<rt>め</rt></ruby>しあがる<ruby>御殿<rt>ごてん</rt></ruby>へ、うんこをひりちらすというような、ひどい<ruby>乱暴<rt>らんぼう</rt></ruby>をなさいました。",
+   "ほかの神々は、それを見てあきれてしまって、女神に言いつけにまいりました。",
+   "しかし女神はちっともお<ruby>怒<rt>おこ</rt></ruby>りにならないで、",
+   "「何、ほっておけ。",
+   "けっして悪い気でするのではない。",
+   "きたないものは、<ruby>酔<rt>よ</rt></ruby>ったまぎれに<ruby>吐<rt>は</rt></ruby>いたのであろう。",
+   "<ruby>畔<rt>あぜ</rt></ruby>やみぞをこわしたのは、せっかくの地面を、そんなみぞなぞにしておくのが<ruby>惜<rt>お</rt></ruby>しいからであろう」",
+   "こうおっしゃって、かえって<ruby>命<rt>みこと</rt></ruby>をかばっておあげになりました。",
+   "すると命は、ますます<ruby>図<rt>ず</rt></ruby>に乗って、しまいには、女たちが女神のお<ruby>召物<rt>めしもの</rt></ruby>を織っている、<ruby>機織場<rt>はたおりば</rt></ruby>の屋根を破って、その<ruby>穴<rt>あな</rt></ruby>から、ぶちのうまの皮をはいで、血まぶれにしたのを、どしんと投げこんだりなさいました。",
+   "<ruby>機織女<rt>はたおりおんな</rt></ruby>は、びっくりして<ruby>遁<rt>に</rt></ruby>げ<ruby>惑<rt>まど</rt></ruby>うはずみに、おさで<ruby>下腹<rt>したはら</rt></ruby>を<ruby>突<rt>つ</rt></ruby>いて死んでしまいました。",
+   "女神は、命のあまりの乱暴さにとうとういたたまれなくおなりになって、<ruby>天<rt>あめ</rt></ruby>の<ruby>岩屋<rt>いわや</rt></ruby>という<ruby>石室<rt>いしむろ</rt></ruby>の中へお<ruby>隠<rt>かく</rt></ruby>れになりました。",
+   "そして入口の岩の戸をぴっしりとおしめになったきり、そのままひきこもっていらっしゃいました。",
+   "すると女神は日の神さまでいらっしゃるので、そのお方がお<ruby>姿<rt>すがた</rt></ruby>をお<ruby>隠<rt>かく</rt></ruby>しになるといっしょに、<ruby>高天原<rt>たかまのはら</rt></ruby>も下界の地の上も、一度にみんなまっ<ruby>暗<rt>くら</rt></ruby>がりになって、それこそ、昼と夜との区別もない、長い長いやみの世界になってしまいました。",
+   "そうすると、いろいろの悪い神たちが、その暗がりにつけこんで、わいわいとさわぎだしました。",
+   "そのために、世界じゅうにはありとあらゆる<ruby>禍<rt>わざわい</rt></ruby>が、一度にわきあがって来ました。",
+   "そんなわけで、大空の神々たちは、たいそうお<ruby>困<rt>こま</rt></ruby>りになりまして、みんなで<ruby>安河原<rt>やすのかわら</rt></ruby>という、空の上の<ruby>河原<rt>かわら</rt></ruby>に集まって、どうかして、天照大神に岩屋からお出ましになっていただく方法はあるまいかといっしょうけんめいに、相談をなさいました。",
+   "そうすると、<ruby>思金神<rt>おもいかねのかみ</rt></ruby>という、いちばんかしこい神さまが、いいことをお考えつきになりました。",
+   "みんなはその神のさしずで、さっそく、にわとりをどっさり集めて来て、岩屋の前で、ひっきりなしに鳴かせました。",
+   "それから一方では、<ruby>安河<rt>やすのかわ</rt></ruby>の河上から<ruby>固<rt>かた</rt></ruby>い岩をはこんで来て、それを<ruby>鉄床<rt>てつどこ</rt></ruby>にして、<ruby>八咫<rt>やた</rt></ruby>の<ruby>鏡<rt>かがみ</rt></ruby>というりっぱな鏡を作らせ、<ruby>八尺<rt>やさか</rt></ruby>の<ruby>曲玉<rt>まがたま</rt></ruby>というりっぱな玉で<ruby>胸飾<rt>むなかざ</rt></ruby>りを作らせました。",
+   "そして、<ruby>天香具山<rt>あめのかぐやま</rt></ruby>という山からさかきを根<ruby>抜<rt>ぬ</rt></ruby>きにして来て、その上の方の<ruby>枝<rt>えだ</rt></ruby>へ、<ruby>八尺<rt>やさか</rt></ruby>の<ruby>曲玉<rt>まがたま</rt></ruby>をつけ、中ほどの枝へ<ruby>八咫<rt>やた</rt></ruby>の<ruby>鏡<rt>かがみ</rt></ruby>をかけ、下の枝へは、白や青のきれをつりさげました。",
+   "そしてある一人の神さまが、そのさかきを持って天の岩屋に立ち、ほかの一人の神さまが、そのそばでのりとをあげました。",
+   "それからやはり岩屋の前へ、あきだるを<ruby>伏<rt>ふ</rt></ruby>せて、<ruby>天宇受女命<rt>あめのうずめのみこと</rt></ruby>という女神に、<ruby>天香具山<rt>あめのかぐやま</rt></ruby>のかつらのつるをたすきにかけさせ、かつらの葉を<ruby>髪飾<rt>かみかざ</rt></ruby>りにさせて、そのおけの上へあがって踊りを踊らせました。",
+   "<ruby>宇受女命<rt>うずめのみこと</rt></ruby>は、お<ruby>乳<rt>ちち</rt></ruby>もお<ruby>腹<rt>なか</rt></ruby>も、もももまるだしにして、足をとんとん<ruby>踏<rt>ふ</rt></ruby>みならしながら、まるでつきものでもしたように、くるくるくるくると<ruby>踊<rt>おど</rt></ruby>り<ruby>狂<rt>くる</rt></ruby>いました。",
+   "するとそのようすがいかにもおかしいので、何千人という神たちが、一度にどっとふきだして、みんなでころがりまわって笑いました。",
+   "そこへにわとりは声をそろえて、コッケコー、コッケコーと鳴きたてるので、そのさわぎといったら、まったく耳もつぶれるほどでした。",
+   "天照大神は、そのたいそうなさわぎの声をお聞きになると、何ごとが起こったのかとおぼしめして、岩屋の戸を細めにあけて、そっとのぞいてご<ruby>覧<rt>らん</rt></ruby>になりました。",
+   "そして<ruby>宇受女命<rt>うずめのみこと</rt></ruby>に向かって、",
+   "「これこれ<ruby>私<rt>わたし</rt></ruby>がここに、隠れていれば、空の上もまっくらなはずだのに、おまえはなにをおもしろがって踊っているのか。",
+   "ほかの神々たちも、なんであんなに笑いくずれているのか」とおたずねになりました。",
+   "すると宇受女命は、",
+   "「それは、あなたよりも、もっと<ruby>貴<rt>とうと</rt></ruby>い神さまが出ていらっしゃいましたので、みんなが喜んでさわいでおりますのでございます」と申しあげました。",
+   "それと同時に一人の神さまは、例の、<ruby>八咫<rt>やた</rt></ruby>の<ruby>鏡<rt>かがみ</rt></ruby>をつけたさかきを、ふいに大神の前へ突き出しました。",
+   "鏡には、さっと、大神のお顔がうつりました。",
+   "大神はそのうつった顔をご覧になると、",
+   "「おや、これはだれであろう」とおっしゃりながら、もっとよく見ようとおぼしめして、少しばかり戸の外へお出ましになりました。",
+   "すると、さっきから、岩屋のそばに<ruby>隠<rt>かく</rt></ruby>れて待ちかまえていた、<ruby>手力男命<rt>たぢからおのみこと</rt></ruby>という大力の神さまが、いきなり、女神のお手を取って、すっかり外へお引き出し申しました。",
+   "それといっしょに、一人の神さまは、女神のおうしろへまわって、",
+   "「どうぞ、もうこれからうちへはおはいりくださいませんように」と申しあげて、そこへしめなわを張りわたしてしまいました。",
+   "それで世界じゅうは、やっと長い夜があけて、再び明るい昼が来ました。",
+   "神々たちは、それでようやく安心なさいました。",
+   "そこでさっそく、みんなで相談して、<ruby>須佐之男命<rt>すさのおのみこと</rt></ruby>には、あんなひどい<ruby>乱暴<rt>らんぼう</rt></ruby>をなすった<ruby>罰<rt>ばつ</rt></ruby>として、ご身代をすっかりさし出させ、そのうえに、りっぱなおひげも切りとり、手足の<ruby>爪<rt>つめ</rt></ruby>まではぎとって、下界へ追いくだしてしまいました。",
+   "そのとき<ruby>須佐之男命<rt>すさのおのみこと</rt></ruby>は、<ruby>大気都比売命<rt>おおけつひめのみこと</rt></ruby>という女神に、何か物を食べさせよとおおせになりました。",
+   "<ruby>大気都比売命<rt>おおけつひめのみこと</rt></ruby>は、おことばに従って、さっそく、鼻の<ruby>穴<rt>あな</rt></ruby>や口の中からいろいろの食べものを出して、それをいろいろにお料理してさしあげました。",
+   "すると<ruby>須佐之男命<rt>すさのおのみこと</rt></ruby>は<ruby>大気都比売命<rt>おおけつひめのみこと</rt></ruby>のすることを見ていらしって、",
+   "「こら、そんな、お前の口や鼻から出したものがおれに食えるか。",
+   "無礼なやつだ」と、たいそうお<ruby>腹立<rt>はらだ</rt></ruby>ちになって、いきなり剣を<ruby>抜<rt>ぬ</rt></ruby>いて、<ruby>大気都比売命<rt>おおけつひめのみこと</rt></ruby>を一うちに切り殺しておしまいになりました。",
+   "そうすると、その死がいの頭から、かいこが生まれ、両方の目にいねがなり、二つの耳にあわがなりました。",
+   "それから鼻にはあずきがなり、おなかに、むぎとだいずがなりました。",
+   "それを<ruby>神産霊神<rt>かみむすびのかみ</rt></ruby>がお取り集めになって、日本じゅうの<ruby>穀物<rt>こくもつ</rt></ruby>の種になさいました。",
+   "<ruby>須佐之男命<rt>すさのおのみこと</rt></ruby>は、そのまま下界へおりておいでになりました。"
+  ],
+  "notebook": [
+   {
+    "w": "高天原",
+    "read": "たかまのはら",
+    "def": "the Plain of High Heaven, realm of the gods",
+    "ch": 0
+   },
+   {
+    "w": "乱暴",
+    "read": "らんぼう",
+    "def": "violence, outrageous conduct",
+    "ch": 0
+   },
+   {
+    "w": "岩屋",
+    "read": "いわや",
+    "def": "rock cave, stone chamber",
+    "ch": 0
+   },
+   {
+    "w": "隠れる",
+    "read": "かくれる",
+    "def": "to hide, to conceal oneself",
+    "ch": 0
+   },
+   {
+    "w": "鏡",
+    "read": "かがみ",
+    "def": "mirror",
+    "ch": 0
+   },
+   {
+    "w": "踊る",
+    "read": "おどる",
+    "def": "to dance",
+    "ch": 0
+   },
+   {
+    "w": "罰",
+    "read": "ばつ",
+    "def": "punishment",
+    "ch": 0
+   },
+   {
+    "w": "曲玉",
+    "read": "まがたま",
+    "def": "curved sacred jewel bead",
+    "ch": 0
+   }
+  ],
+  "ideas": [],
+  "openQuestions": []
+ },
+ {
+  "id": "the-eight-forked-serpent",
+  "authentic": true,
+  "band": "authentic",
+  "moves": {},
+  "quick": [
+   {
+    "ch": 0,
+    "q": "Why did the old man and woman say they were crying when Susanoo found them?",
+    "a": "The eight-headed serpent had already eaten seven of their eight daughters, one a year, and was coming for the last one",
+    "opts": [
+     "The eight-headed serpent had already eaten seven of their eight daughters, one a year, and was coming for the last one",
+     "Their house had burned down",
+     "They had lost all their money",
+     "Their daughter had run away"
+    ],
+    "why": "The old man explains that of their original eight daughters, the eight-headed serpent has come every year and eaten one, leaving only this last daughter, Kushinada-hime."
+   },
+   {
+    "ch": 0,
+    "q": "What did Susanoo ask for in exchange for killing the serpent?",
+    "a": "To marry the daughter, Kushinada-hime",
+    "opts": [
+     "To marry the daughter, Kushinada-hime",
+     "All of the family's gold",
+     "To become the region's ruler immediately",
+     "Nothing, he asked for no reward"
+    ],
+    "why": "Susanoo directly asks the old man to give him the daughter as his wife, if she is truly his child."
+   },
+   {
+    "ch": 0,
+    "q": "How did Susanoo get the serpent drunk enough to kill it?",
+    "a": "He had the family brew strong rice wine and set out eight tubs of it, one for each head",
+    "opts": [
+     "He had the family brew strong rice wine and set out eight tubs of it, one for each head",
+     "He poisoned a river the serpent drank from",
+     "He tricked it into fighting itself",
+     "He simply attacked it while it slept, without any trick"
+    ],
+    "why": "The text says the serpent saw the eight tubs of wine lined up, plunged each of its eight heads into one, and gulped down all the wine at once, letting Susanoo strike while it lay drunk and asleep."
+   }
+  ],
+  "evidence": [
+   {
+    "ch": 0,
+    "q": "Tap the sentence that shows this: The eight-headed serpent had already eaten seven of their eight daughters, one a year, and was coming for the last one",
+    "a": 13,
+    "alt": [],
+    "why": "The old man explains that of their original eight daughters, the eight-headed serpent has come every year and eaten one, leaving only this last daughter, Kushinada-hime."
+   },
+   {
+    "ch": 0,
+    "q": "Tap the sentence that shows this: To marry the daughter, Kushinada-hime",
+    "a": 24,
+    "alt": [],
+    "why": "Susanoo directly asks the old man to give him the daughter as his wife, if she is truly his child."
+   },
+   {
+    "ch": 0,
+    "q": "Tap the sentence that shows this: He had the family brew strong rice wine and set out eight tubs of it, one for each head",
+    "a": 40,
+    "alt": [],
+    "why": "The text says the serpent saw the eight tubs of wine lined up, plunged each of its eight heads into one, and gulped down all the wine at once, letting Susanoo strike while it lay drunk and asleep."
+   }
+  ],
+  "cloze": [
+   {
+    "ch": 0,
+    "s": 13,
+    "text": "「私たち二人には、もとは八人の娘がおりましたのでございますが、その娘たちを、八俣の＿＿＿と申します怖ろしい大じゃが、毎年出てきて、一人ずつ食べて行ってしまいまして、とうとうこの子一人だけになりました。",
+    "a": "大蛇",
+    "opts": [
+     "大蛇",
+     "剣",
+     "尾",
+     "御殿"
+    ],
+    "read": "おろち"
+   },
+   {
+    "ch": 0,
+    "s": 5,
+    "text": "そうすると、あるおじいさんとおばあさんとが、まん中に一人の＿＿＿をすわらせて三人でおんおん泣いておりました。",
+    "a": "娘",
+    "opts": [
+     "娘",
+     "探す",
+     "献上",
+     "大蛇"
+    ],
+    "read": "むすめ"
+   },
+   {
+    "ch": 0,
+    "s": 34,
+    "text": "「おまえたちは、これからこめをかんで、よい＿＿＿をどっさり作れ。",
+    "a": "酒",
+    "opts": [
+     "酒",
+     "献上",
+     "大蛇",
+     "娘"
+    ],
+    "read": "さか"
+   },
+   {
+    "ch": 0,
+    "s": 42,
+    "text": "須佐之男命は、そっとその寝息をうかがっていらっしゃいましたが、やがて、さあ今だとお思いになって、十拳の＿＿＿を引き抜くが早いか、おのれ、おのれと、つづけさまにお切りつけになりました。",
+    "a": "剣",
+    "opts": [
+     "剣",
+     "大蛇",
+     "娘",
+     "酒"
+    ],
+    "read": "つるぎ"
+   }
+  ],
+  "title": "八俣の大蛇",
+  "titleRuby": "<ruby>八俣<rt>やまた</rt></ruby>の<ruby>大蛇<rt>おろち</rt></ruby>",
+  "culture": "The serpent is beaten by a trick rather than a fair fight: it is deliberately deceived into gorging itself on rice wine until helpless, then killed while drunk and asleep, and the story treats this as clever rather than dishonourable. The reward Susanoo names for the rescue is not thanks or a place in the family but the outright transfer of the daughter to him as a wife, agreed to at once by her parents, with her own voice absent from the account. A sword found inside the serpent's tail is handed straight up the divine hierarchy to Amaterasu as a gift, so even a monster-slayer's trophy belongs by default to the highest-ranking deity rather than to the one who found it. The whole episode treats the girl's survival and marriage as the direct, unremarkable outcome of a transaction for services rendered.",
+  "en": "The Eight-Forked Serpent",
+  "author": "鈴木三重吉 (d. 1936-06-27)",
+  "translator": "",
+  "died": "1936-06-27",
+  "card": "https://www.aozora.gr.jp/cards/000107/card1530.html",
+  "orthography": "新字新仮名",
+  "beyond": [
+   "The honorific register for Susanoo continues, now set against the humble/formal speech of the human characters (おじいさん uses ～でございます, ～ましてでございます)",
+   "でございます as a humble formal copula: a register contrast Year 9 learners have not been taught to notice",
+   "Sequential narrative clauses stacking several actions in one sentence without a full stop"
+  ],
+  "attribution": [
+   "底本：「古事記物語」角川文庫、角川書店",
+   "1955（昭和30）年1月20日初版発行",
+   "1968（昭和43）年8月10日31版発行",
+   "1980（昭和55）年9月30日改版19刷",
+   "初出：女神の死「赤い鳥」赤い鳥社",
+   "1919（大正8）年7月",
+   "天の岩屋「赤い鳥」赤い鳥社",
+   "1919（大正8）年8月",
+   "八俣の大蛇「赤い鳥」赤い鳥社",
+   "1919（大正8）年9月",
+   "むかでの室、へびの室「赤い鳥」赤い鳥社",
+   "1919（大正8）年10月",
+   "きじのお使い「赤い鳥」赤い鳥社",
+   "1919（大正8）年11月",
+   "笠沙のお宮「赤い鳥」赤い鳥社",
+   "1919（大正8）年12月",
+   "満潮の玉、干潮の玉「古事記物語上卷」赤い鳥社",
+   "1920（大正9）年12月",
+   "八咫烏「赤い鳥」赤い鳥社",
+   "1920（大正9）年1月",
+   "赤い盾、黒い盾「赤い鳥」赤い鳥社",
+   "1920（大正9）年2月",
+   "おしの皇子「赤い鳥」赤い鳥社",
+   "1920（大正9）年3月",
+   "白い鳥「赤い鳥」赤い鳥社",
+   "1920（大正9）年4月",
+   "朝鮮征伐「赤い鳥」赤い鳥社",
+   "1920（大正9）年5月",
+   "赤い玉「古事記物語下卷」赤い鳥社",
+   "1920（大正9）年12月",
+   "宇治の渡し「赤い鳥」赤い鳥社",
+   "1920（大正9）年6月",
+   "難波のお宮「赤い鳥」赤い鳥社",
+   "1920（大正9）年7月",
+   "大鈴小鈴「赤い鳥」赤い鳥社",
+   "1920（大正9）年8月",
+   "しかの群、ししの群「赤い鳥」赤い鳥社",
+   "1920（大正9）年9月",
+   "とんぼのお歌「古事記物語下卷」赤い鳥社",
+   "1920（大正9）年12月",
+   "うし飼、うま飼「古事記物語下卷」赤い鳥社",
+   "1920（大正9）年12月",
+   "※「八俣の大蛇」の初出時の表題は「赤い猪 」です。",
+   "※「八咫烏」の初出時の表題は「毒の大熊」です。",
+   "※「朝鮮征伐」の初出時の表題は「神功皇后」です。",
+   "※「白日子王」に対するルビの「しろひこのみこ」と「しらひこのみこ」の混在は、底本通りです。",
+   "入力：jupiter",
+   "校正：鈴木厚司",
+   "2001年11月19日公開",
+   "2014年8月2日修正",
+   "青空文庫作成ファイル：",
+   "このファイルは、インターネットの図書館、青空文庫（http://www.aozora.gr.jp/）で作られました。入力、校正、制作にあたったのは、ボランティアの皆さんです。"
+  ],
+  "chapters": [
+   {
+    "t": "第一章",
+    "en": "The Eight-Forked Serpent",
+    "from": 0,
+    "to": 60
+   }
+  ],
+  "sentences": [
+   "一",
+   "<ruby>須佐之男命<rt>すさのおのみこと</rt></ruby>は、大空から追いおろされて、<ruby>出雲<rt>いずも</rt></ruby>の国の、<ruby>肥<rt>ひ</rt></ruby>の<ruby>河<rt>かわ</rt></ruby>の<ruby>河上<rt>かわかみ</rt></ruby>の、<ruby>鳥髪<rt>とりかみ</rt></ruby>というところへおくだりになりました。",
+   "すると、その<ruby>河<rt>かわ</rt></ruby>の中にはしが流れて来ました。",
+   "<ruby>命<rt>みこと</rt></ruby>は、それをご<ruby>覧<rt>らん</rt></ruby>になって、",
+   "「では、この河の上の方には人が住んでいるな」とお察しになり、さっそくそちらの方へ向かって<ruby>探<rt>さが</rt></ruby>し探しおいでになりました。",
+   "そうすると、あるおじいさんとおばあさんとが、まん中に一人の<ruby>娘<rt>むすめ</rt></ruby>をすわらせて三人でおんおん<ruby>泣<rt>な</rt></ruby>いておりました。",
+   "命は、おまえたちは何者かとおたずねになりました。",
+   "おじいさんは、",
+   "「私は、この国の<ruby>大山津見<rt>おおやまつみ</rt></ruby>と申します神の子で、<ruby>足名椎<rt>あしなずち</rt></ruby>と申します者でございます。",
+   "妻の名は<ruby>手名椎<rt>てなずち</rt></ruby>、この娘の名は<ruby>櫛名田媛<rt>くしなだひめ</rt></ruby>と申します」とお答えいたしました。",
+   "命は、",
+   "「それで三人ともどうして泣いているのか」と、かさねてお聞きになりました。",
+   "おじいさんは涙をふいて、",
+   "「私たち二人には、もとは八人の<ruby>娘<rt>むすめ</rt></ruby>がおりましたのでございますが、その娘たちを、<ruby>八俣<rt>やまた</rt></ruby>の<ruby>大蛇<rt>おろち</rt></ruby>と申します<ruby>怖<rt>おそ</rt></ruby>ろしい大じゃが、毎年出てきて、一人ずつ食べて行ってしまいまして、とうとうこの子一人だけになりました。",
+   "そういうこの子も、今にその大じゃが食べにまいりますのでございます」",
+   "こう言って、みんなが泣いているわけをお話しいたしました。",
+   "「いったいその大じゃはどんな形をしている」と、<ruby>命<rt>みこと</rt></ruby>はお聞きになりました。",
+   "「その大じゃと申しますのは、からだは一つでございますが、頭と<ruby>尾<rt>お</rt></ruby>は八つにわかれておりまして、その八つの頭には、赤ほおずきのようなまっかな目が、燃えるように光っております。",
+   "それからからだじゅうには、こけや、ひのきやすぎの木などがはえ<ruby>茂<rt>しげ</rt></ruby>っております。",
+   "そのからだのすっかりの長さが、八つの谷と八つの山のすそをとりまくほどの、大きな大きな大じゃでございます。",
+   "その<ruby>腹<rt>はら</rt></ruby>はいつも血にただれてまっかになっております」と怖ろしそうにお話しいたしました。",
+   "命は、",
+   "「ふん、よしよし」とおうなずきになりました。",
+   "そして改めておじいさんに向かって、",
+   "「その娘はおまえの子ならば、わしのお<ruby>嫁<rt>よめ</rt></ruby>にくれないか」とおっしゃいました。",
+   "「おことばではございますが、あなたさまはどこのどなただか存じませんので」とおじいさんは<ruby>危<rt>あや</rt></ruby>ぶんで怖る怖るこう申しました。",
+   "命は、",
+   "「じつはおれは<ruby>天照大神<rt>あまてらすおおかみ</rt></ruby>の同じ<ruby>腹<rt>はら</rt></ruby>の弟で、たった今、大空からおりて来たばかりだ」と、うちあけてお名まえをおっしゃいました。",
+   "すると、<ruby>足名椎<rt>あしなずち</rt></ruby>も<ruby>手名椎<rt>てなずち</rt></ruby>も、",
+   "「さようでございますか。",
+   "これはこれはおそれおおい。",
+   "それでは、おおせのままさしあげますでございます」と、両手をついて申しあげました。",
+   "命は、<ruby>櫛名田媛<rt>くしなだひめ</rt></ruby>をおもらいになると、たちまち媛をくしに化けさせておしまいになりました。",
+   "そして、そのくしをすぐにご自分のびんの<ruby>巻髪<rt>まきがみ</rt></ruby>におさしになって、<ruby>足名椎<rt>あしなずち</rt></ruby>と<ruby>手名椎<rt>てなずち</rt></ruby>に向かっておっしゃいました。",
+   "「おまえたちは、これからこめをかんで、よい酒をどっさり作れ。",
+   "それから、ここへぐるりとかきをこしらえて、そのかきへ、<ruby>八<rt>や</rt></ruby>ところに門をあけよ。",
+   "そしてその門のうちへ、一つずつさじきをこしらえて、そのさじきの上に、大おけを一つずつおいて、その中へ、二人でこしらえたよい酒を一ぱい入れて待っておれ」とお言いつけになりました。",
+   "二人は、おおせのとおりに、すっかり準備をととのえて、待っておりました。",
+   "そのうちに、そろそろ大じゃの出て来る時間が近づいて来ました。",
+   "命は、それを聞いて、じっと待ちかまえていらっしゃいますと、まもなく、二人が言ったように、大きな大きな<ruby>八俣<rt>やまた</rt></ruby>の<ruby>大蛇<rt>おろち</rt></ruby>が、大きなまっかな目をぎらぎら光らして、のそのそと出て来ました。",
+   "大じゃは、目の前に八つの<ruby>酒<rt>さか</rt></ruby>おけが<ruby>並<rt>なら</rt></ruby>んでいるのを見ると、いきなり八つの頭を一つずつその中へつっこんで、そのたいそうなお酒を、がぶがぶがぶがぶとまたたくまに飲み<ruby>干<rt>ほ</rt></ruby>してしまいました。",
+   "そうするとまもなくからだじゅうによいがまわって、その場へ倒れたなり、ぐうぐう<ruby>寝<rt>ね</rt></ruby>いってしまいました。",
+   "<ruby>須佐之男命<rt>すさのおのみこと</rt></ruby>は、そっとその<ruby>寝息<rt>ねいき</rt></ruby>をうかがっていらっしゃいましたが、やがて、さあ今だとお思いになって、<ruby>十拳<rt>とつか</rt></ruby>の<ruby>剣<rt>つるぎ</rt></ruby>を引き<ruby>抜<rt>ぬ</rt></ruby>くが早いか、おのれ、おのれと、つづけさまにお切りつけになりました。",
+   "そのうちに八つの<ruby>尾<rt>お</rt></ruby>の中の、中ほどの尾をお切りつけになりますと、その尾の中に何か<ruby>固<rt>かた</rt></ruby>い物があって、剣の<ruby>刃先<rt>はさき</rt></ruby>が、少しばかりほろりと欠けました。",
+   "<ruby>命<rt>みこと</rt></ruby>は、",
+   "「おや、変だな」とおぼしめして、そのところを切り<ruby>裂<rt>さ</rt></ruby>いてご覧になりますと、中から、それはそれは刃の鋭い、りっぱな剣が出て来ました。",
+   "命は、これはふしぎなものが手にはいったとお思いになりました。",
+   "その剣はのちに<ruby>天照大神<rt>あまてらすおおかみ</rt></ruby>へご<ruby>献上<rt>けんじょう</rt></ruby>になりました。",
+   "命はとうとう、大きな大きな大じゃの胴体をずたずたに切り<ruby>刻<rt>きざ</rt></ruby>んでおしまいになりました。",
+   "そして、",
+   "「<ruby>足名椎<rt>あしなずち</rt></ruby>、<ruby>手名椎<rt>てなずち</rt></ruby>、来て見よ。",
+   "このとおりだ」とお<ruby>呼<rt>よ</rt></ruby>びになりました。",
+   "二人はがたがたふるえながら出て来ますと、そこいら一面は、きれぎれになった大じゃの胴体から吹き出る血でいっぱいになっておりました。",
+   "その血がどんどん<ruby>肥<rt>ひ</rt></ruby>の<ruby>河<rt>かわ</rt></ruby>へ流れこんで、河の水もまっかになって落ちて行きました。",
+   "命はそれから、<ruby>櫛名田媛<rt>くしなだひめ</rt></ruby>とお二人で、そのまま<ruby>出雲<rt>いずも</rt></ruby>の国にお住まいになるおつもりで、<ruby>御殿<rt>ごてん</rt></ruby>をおたてになるところを、そちこちと、<ruby>探<rt>さが</rt></ruby>してお歩きになりました。",
+   "そして、しまいに、<ruby>須加<rt>すか</rt></ruby>というところまでおいでになると、",
+   "「ああ、ここへ来たら、心持がせいせいしてきた。",
+   "これはよいところだ」とおっしゃって、そこへ御殿をおたてになりました。",
+   "そして、<ruby>足名椎神<rt>あしなずちのかみ</rt></ruby>をそのお宮の役人の<ruby>頭<rt>かしら</rt></ruby>になさいました。",
+   "命にはつぎつぎにお子さまお孫さまがどんどんおできになりました。",
+   "その八代目のお孫さまのお子さまに、<ruby>大国主神<rt>おおくにぬしのかみ</rt></ruby>、またの名を<ruby>大穴牟遅神<rt>おおなむちのかみ</rt></ruby>とおっしゃるりっぱな神さまがお生まれになりました。"
+  ],
+  "notebook": [
+   {
+    "w": "大蛇",
+    "read": "おろち",
+    "def": "giant serpent",
+    "ch": 0
+   },
+   {
+    "w": "娘",
+    "read": "むすめ",
+    "def": "daughter",
+    "ch": 0
+   },
+   {
+    "w": "酒",
+    "read": "さか",
+    "def": "rice wine (as in 酒おけ, wine tub)",
+    "ch": 0
+   },
+   {
+    "w": "剣",
+    "read": "つるぎ",
+    "def": "sword",
+    "ch": 0
+   },
+   {
+    "w": "尾",
+    "read": "お",
+    "def": "tail",
+    "ch": 0
+   },
+   {
+    "w": "御殿",
+    "read": "ごてん",
+    "def": "palace, hall",
+    "ch": 0
+   },
+   {
+    "w": "探す",
+    "read": "さがす",
+    "def": "to search for",
+    "ch": 0
+   },
+   {
+    "w": "献上",
+    "read": "けんじょう",
+    "def": "presenting a gift to a superior",
+    "ch": 0
+   }
+  ],
+  "ideas": [],
+  "openQuestions": []
+ },
+ {
+  "id": "the-spider-s-thread",
+  "authentic": true,
+  "band": "authentic",
+  "moves": {},
+  "quick": [
+   {
+    "ch": 0,
+    "q": "What one good deed had Kandata done in his life, despite being a great thief and murderer?",
+    "a": "He spared a small spider's life instead of stepping on it",
+    "opts": [
+     "He spared a small spider's life instead of stepping on it",
+     "He gave money to a poor family",
+     "He saved a child from a fire",
+     "He confessed his crimes to a priest"
+    ],
+    "why": "The text explains that Kandata thought better of crushing a spider on a forest path and decided to spare it instead of killing it."
+   },
+   {
+    "ch": 0,
+    "q": "Why did Buddha decide to try to save Kandata from hell?",
+    "a": "As a reward for the one good deed of sparing the spider",
+    "opts": [
+     "As a reward for the one good deed of sparing the spider",
+     "Because Kandata prayed to him",
+     "Because another sinner asked for mercy on his behalf",
+     "Because Kandata had never actually committed any crime"
+    ],
+    "why": "The text says Buddha thought of trying to rescue Kandata from hell specifically as a reward (報い) for that one good deed."
+   },
+   {
+    "ch": 0,
+    "q": "What did Buddha use to try to pull Kandata out of hell?",
+    "a": "A single strand of a spider's silk thread from a spider in paradise",
+    "opts": [
+     "A single strand of a spider's silk thread from a spider in paradise",
+     "A golden ladder",
+     "His own hand reaching down",
+     "A lotus flower petal"
+    ],
+    "why": "Buddha gently takes hold of the spider's silk thread and lowers it straight down from among the white lotuses to the bottom of hell."
+   },
+   {
+    "ch": 1,
+    "q": "What did Kandata see below him when he paused to look down partway up the thread?",
+    "a": "Countless other sinners climbing up the same thread behind him, like a line of ants",
+    "opts": [
+     "Countless other sinners climbing up the same thread behind him, like a line of ants",
+     "The thread was already broken",
+     "Buddha looking down at him",
+     "Nothing, the hole in hell had closed"
+    ],
+    "why": "Kandata notices countless sinners climbing the same thread below him in a line, like ants, following the path he made."
+   },
+   {
+    "ch": 1,
+    "q": "What did Kandata shout at the other sinners climbing below him?",
+    "a": "That the thread was his and they should get off it",
+    "opts": [
+     "That the thread was his and they should get off it",
+     "That he would share the thread with them",
+     "That they should climb faster",
+     "Nothing, he stayed silent"
+    ],
+    "why": "Kandata shouts down that the spider's thread belongs to him alone, ordering the other sinners off it."
+   },
+   {
+    "ch": 1,
+    "q": "What happened to the thread immediately after Kandata shouted at the other sinners?",
+    "a": "It snapped at the point where Kandata was hanging, and he fell back down to hell",
+    "opts": [
+     "It snapped at the point where Kandata was hanging, and he fell back down to hell",
+     "It grew stronger and pulled everyone up",
+     "Buddha cut it himself",
+     "It turned to gold"
+    ],
+    "why": "The thread, which had been fine until then, suddenly snapped with a sound right at the point where Kandata was hanging."
+   },
+   {
+    "ch": 2,
+    "q": "What was Buddha's expression as he watched Kandata sink back down into the pool of blood?",
+    "a": "A sad face",
+    "opts": [
+     "A sad face",
+     "An angry face",
+     "A satisfied, smiling face",
+     "No expression at all, he had already left"
+    ],
+    "why": "The text says Buddha's face looked sad as Kandata sank like a stone back to the bottom of the pool of blood."
+   },
+   {
+    "ch": 2,
+    "q": "According to the text, what made Kandata's fall look shallow/pitiful (浅間しい) in Buddha's eyes?",
+    "a": "Kandata's heart cared only about saving himself, with no thought for the other sinners",
+    "opts": [
+     "Kandata's heart cared only about saving himself, with no thought for the other sinners",
+     "Kandata had never truly believed in Buddha",
+     "Kandata was too weak to climb properly",
+     "The thread itself was poorly made"
+    ],
+    "why": "The text attributes Kandata's fall directly to his merciless heart, which thought only of escaping hell himself, and says this looked shallow and pitiful in Buddha's eyes."
+   },
+   {
+    "ch": 2,
+    "q": "How does the lotus in the pond react to Kandata's fall back into hell?",
+    "a": "It takes no notice at all and goes on giving off its fragrance as before",
+    "opts": [
+     "It takes no notice at all and goes on giving off its fragrance as before",
+     "Its petals close in sorrow",
+     "It wilts and dies",
+     "It turns black"
+    ],
+    "why": "The text states plainly that the lotus in the paradise pond pays not the slightest attention to what has just happened."
+   }
+  ],
+  "evidence": [
+   {
+    "ch": 0,
+    "q": "Tap the sentence that shows this: He spared a small spider's life instead of stepping on it",
+    "a": 11,
+    "alt": [],
+    "why": "The text explains that Kandata thought better of crushing a spider on a forest path and decided to spare it instead of killing it."
+   },
+   {
+    "ch": 0,
+    "q": "Tap the sentence that shows this: As a reward for the one good deed of sparing the spider",
+    "a": 13,
+    "alt": [],
+    "why": "The text says Buddha thought of trying to rescue Kandata from hell specifically as a reward (報い) for that one good deed."
+   },
+   {
+    "ch": 0,
+    "q": "Tap the sentence that shows this: A single strand of a spider's silk thread from a spider in paradise",
+    "a": 15,
+    "alt": [],
+    "why": "Buddha gently takes hold of the spider's silk thread and lowers it straight down from among the white lotuses to the bottom of hell."
+   },
+   {
+    "ch": 1,
+    "q": "Tap the sentence that shows this: Countless other sinners climbing up the same thread behind him, like a line of ants",
+    "a": 38,
+    "alt": [],
+    "why": "Kandata notices countless sinners climbing the same thread below him in a line, like ants, following the path he made."
+   },
+   {
+    "ch": 1,
+    "q": "Tap the sentence that shows this: That the thread was his and they should get off it",
+    "a": 46,
+    "alt": [],
+    "why": "Kandata shouts down that the spider's thread belongs to him alone, ordering the other sinners off it."
+   },
+   {
+    "ch": 1,
+    "q": "Tap the sentence that shows this: It snapped at the point where Kandata was hanging, and he fell back down to hell",
+    "a": 52,
+    "alt": [],
+    "why": "The thread, which had been fine until then, suddenly snapped with a sound right at the point where Kandata was hanging."
+   },
+   {
+    "ch": 2,
+    "q": "Tap the sentence that shows this: A sad face",
+    "a": 56,
+    "alt": [],
+    "why": "The text says Buddha's face looked sad as Kandata sank like a stone back to the bottom of the pool of blood."
+   },
+   {
+    "ch": 2,
+    "q": "Tap the sentence that shows this: Kandata's heart cared only about saving himself, with no thought for the other sinners",
+    "a": 57,
+    "alt": [],
+    "why": "The text attributes Kandata's fall directly to his merciless heart, which thought only of escaping hell himself, and says this looked shallow and pitiful in Buddha's eyes."
+   },
+   {
+    "ch": 2,
+    "q": "Tap the sentence that shows this: It takes no notice at all and goes on giving off its fragrance as before",
+    "a": 58,
+    "alt": [],
+    "why": "The text states plainly that the lotus in the paradise pond pays not the slightest attention to what has just happened."
+   }
+  ],
+  "cloze": [
+   {
+    "ch": 0,
+    "s": 1,
+    "text": "御釈迦様は＿＿＿の蓮池のふちを、独りでぶらぶら御歩きになっていらっしゃいました。",
+    "a": "極楽",
+    "opts": [
+     "極楽",
+     "※陀多",
+     "蜘蛛",
+     "蓮"
+    ],
+    "read": "ごくらく"
+   },
+   {
+    "ch": 0,
+    "s": 6,
+    "text": "するとその＿＿＿の底に、※陀多と云う男が一人、ほかの罪人と一しょに蠢いている姿が、御眼に止まりました。",
+    "a": "地獄",
+    "opts": [
+     "地獄",
+     "蜘蛛",
+     "蓮",
+     "御覧になる"
+    ],
+    "read": "じごく"
+   },
+   {
+    "ch": 0,
+    "s": 7,
+    "text": "この＿＿＿と云う男は、人を殺したり家に火をつけたり、いろいろ悪事を働いた大泥坊でございますが、それでもたった一つ、善い事を致した覚えがございます。",
+    "a": "※陀多",
+    "opts": [
+     "※陀多",
+     "極楽",
+     "地獄",
+     "蜘蛛"
+    ],
+    "read": "かんだた"
+   },
+   {
+    "ch": 0,
+    "s": 8,
+    "text": "と申しますのは、ある時この男が深い林の中を通りますと、小さな＿＿＿が一匹、路ばたを這って行くのが見えました。",
+    "a": "蜘蛛",
+    "opts": [
+     "蜘蛛",
+     "地獄",
+     "※陀多",
+     "蓮"
+    ],
+    "read": "くも"
+   },
+   {
+    "ch": 1,
+    "s": 16,
+    "text": "こちらは地獄の底の＿＿＿で、ほかの罪人と一しょに、浮いたり沈んだりしていた※陀多でございます。",
+    "a": "血の池",
+    "opts": [
+     "血の池",
+     "己",
+     "断れる",
+     "針の山"
+    ],
+    "read": "ちのいけ"
+   },
+   {
+    "ch": 1,
+    "s": 17,
+    "text": "何しろどちらを見ても、まっ暗で、たまにそのくら暗からぼんやり浮き上っているものがあると思いますと、それは恐しい＿＿＿の針が光るのでございますから、その心細さと云ったらございません。",
+    "a": "針の山",
+    "opts": [
+     "針の山",
+     "罪人",
+     "蟻",
+     "己"
+    ],
+    "read": "はりのやま"
+   },
+   {
+    "ch": 1,
+    "s": 24,
+    "text": "この糸に＿＿＿いて、どこまでものぼって行けば、きっと地獄からぬけ出せるのに相違ございません。",
+    "a": "縋りつく",
+    "opts": [
+     "縋りつく",
+     "罪人",
+     "蟻",
+     "己"
+    ],
+    "read": "すがりつく"
+   },
+   {
+    "ch": 1,
+    "s": 27,
+    "text": "こう思いましたから※陀多は、早速その蜘蛛の糸を両手でしっかりとつかみながら、一生懸命に上へ上へと＿＿＿り始めました。",
+    "a": "たぐりのぼる",
+    "opts": [
+     "たぐりのぼる",
+     "断れる",
+     "血の池",
+     "針の山"
+    ],
+    "read": "たぐりのぼる"
+   },
+   {
+    "ch": 2,
+    "s": 57,
+    "text": "自分ばかり地獄からぬけ出そうとする、※陀多の＿＿＿な心が、そうしてその心相当な罰をうけて、元の地獄へ落ちてしまったのが、御釈迦様の御目から見ると、浅間しく思召されたのでございましょう。",
+    "a": "無慈悲",
+    "opts": [
+     "無慈悲",
+     "蓮",
+     "御足",
+     "溢れる"
+    ],
+    "read": "むじひ"
+   },
+   {
+    "ch": 2,
+    "s": 58,
+    "text": "しかし極楽の蓮池の＿＿＿は、少しもそんな事には頓着致しません。",
+    "a": "蓮",
+    "opts": [
+     "蓮",
+     "罰",
+     "頓着",
+     "始終"
+    ],
+    "read": "はす"
+   },
+   {
+    "ch": 2,
+    "s": 59,
+    "text": "その玉のような白い花は、御釈迦様の＿＿＿のまわりに、ゆらゆら萼を動かして、そのまん中にある金色の蕊からは、何とも云えない好い匂が、絶間なくあたりへ溢れて居ります。",
+    "a": "御足",
+    "opts": [
+     "御足",
+     "蓮",
+     "悲しそう",
+     "無慈悲"
+    ],
+    "read": "おみあし"
+   }
+  ],
+  "title": "蜘蛛の糸",
+  "titleRuby": "<ruby>蜘蛛<rt>くも</rt></ruby>の<ruby>糸<rt>いと</rt></ruby>",
+  "culture": "Kandata's single good deed earns him a real chance at rescue, but the story treats his failure with total finality: the instant he acts selfishly, the thread snaps and he falls with no appeal, no second chance and no explanation given to him directly. Compassion here is not a feeling to be admired but a mechanism switched on or off entirely by one's actions in the moment. The sacred is shown as indifferent to human suffering: the lotus in paradise keeps its beauty and fragrance exactly as before, undisturbed by Kandata's fall, with no sense that the cosmos owes him sympathy. This differs from the redemption logic common in Western fairy tales, where a flawed character often survives to change or be forgiven; here, one selfish instant permanently reverses the mercy already granted.",
+  "en": "The Spider's Thread",
+  "author": "芥川龍之介 (d. 1927-07-24)",
+  "translator": "",
+  "died": "1927-07-24",
+  "card": "https://www.aozora.gr.jp/cards/000879/card92.html",
+  "orthography": "新字新仮名",
+  "beyond": [
+   "Formal narrative copula でございます used throughout the narration, not the casual です students expect",
+   "Sonkeigo for Buddha built with the 御 prefix rather than the more familiar お: 御覧になる, 御考えになる, 御歩きになる",
+   "Literary/classical vocabulary: 無暗に (むやみに), 相違ございません, 頓着致しません, 浅間しい (a rare literary word for \"wretched, contemptible\")"
+  ],
+  "attribution": [
+   "底本：「芥川龍之介全集2」ちくま文庫、筑摩書房",
+   "1986（昭和61）年10月28日第1刷発行",
+   "1996（平成8）年7月15日第11刷発行",
+   "親本：筑摩全集類聚版芥川龍之介全集",
+   "1971（昭和46）年3月〜11月",
+   "入力：平山誠、野口英司",
+   "校正：もりみつじゅんじ",
+   "1997年11月10日公開",
+   "2011年1月28日修正",
+   "青空文庫作成ファイル：",
+   "このファイルは、インターネットの図書館、青空文庫（http://www.aozora.gr.jp/）で作られました。入力、校正、制作にあたったのは、ボランティアの皆さんです。"
+  ],
+  "chapters": [
+   {
+    "t": "第一章",
+    "en": "Buddha's Thread",
+    "from": 0,
+    "to": 15
+   },
+   {
+    "t": "第二章",
+    "en": "Kandata Climbs",
+    "from": 16,
+    "to": 55
+   },
+   {
+    "t": "第三章",
+    "en": "The Fall",
+    "from": 56,
+    "to": 60
+   }
+  ],
+  "sentences": [
+   "ある日の事でございます。",
+   "<ruby>御釈迦様<rt>おしゃかさま</rt></ruby>は極楽の<ruby>蓮池<rt>はすいけ</rt></ruby>のふちを、独りでぶらぶら御歩きになっていらっしゃいました。",
+   "池の中に咲いている<ruby>蓮<rt>はす</rt></ruby>の花は、みんな玉のようにまっ白で、そのまん中にある<ruby>金色<rt>きんいろ</rt></ruby>の<ruby>蕊<rt>ずい</rt></ruby>からは、何とも云えない<ruby>好<rt>よ</rt></ruby>い<ruby>匂<rt>におい</rt></ruby>が、<ruby>絶間<rt>たえま</rt></ruby>なくあたりへ<ruby>溢<rt>あふ</rt></ruby>れて居ります。",
+   "極楽は丁度朝なのでございましょう。",
+   "やがて御釈迦様はその池のふちに<ruby>御佇<rt>おたたず</rt></ruby>みになって、水の<ruby>面<rt>おもて</rt></ruby>を<ruby>蔽<rt>おお</rt></ruby>っている蓮の葉の間から、ふと下の<ruby>容子<rt>ようす</rt></ruby>を御覧になりました。",
+   "この極楽の蓮池の下は、丁度<ruby>地獄<rt>じごく</rt></ruby>の底に当って居りますから、<ruby>水晶<rt>すいしよう</rt></ruby>のような水を透き徹して、<ruby>三途<rt>さんず</rt></ruby>の河や針の山の景色が、丁度<ruby>覗<rt>のぞ</rt></ruby>き<ruby>眼鏡<rt>めがね</rt></ruby>を見るように、はっきりと見えるのでございます。",
+   "するとその地獄の底に、※<ruby>陀多<rt>かんだた</rt></ruby>と云う男が一人、ほかの罪人と一しょに<ruby>蠢<rt>うごめ</rt></ruby>いている姿が、御眼に止まりました。",
+   "この※陀多と云う男は、人を殺したり家に火をつけたり、いろいろ悪事を働いた大泥坊でございますが、それでもたった一つ、善い事を致した覚えがございます。",
+   "と申しますのは、ある時この男が深い林の中を通りますと、小さな<ruby>蜘蛛<rt>くも</rt></ruby>が一匹、路ばたを<ruby>這<rt>は</rt></ruby>って行くのが見えました。",
+   "そこで※陀多は早速足を挙げて、踏み殺そうと致しましたが、「いや、いや、これも小さいながら、命のあるものに違いない。",
+   "その命を<ruby>無暗<rt>むやみ</rt></ruby>にとると云う事は、いくら何でも可哀そうだ。」",
+   "と、こう急に思い返して、とうとうその蜘蛛を殺さずに助けてやったからでございます。",
+   "御釈迦様は地獄の容子を御覧になりながら、この※陀多には蜘蛛を助けた事があるのを御思い出しになりました。",
+   "そうしてそれだけの善い事をした<ruby>報<rt>むくい</rt></ruby>には、出来るなら、この男を地獄から救い出してやろうと御考えになりました。",
+   "幸い、側を見ますと、<ruby>翡翠<rt>ひすい</rt></ruby>のような色をした蓮の葉の上に、極楽の蜘蛛が一匹、美しい銀色の糸をかけて居ります。",
+   "御釈迦様はその蜘蛛の糸をそっと御手に御取りになって、玉のような<ruby>白蓮<rt>しらはす</rt></ruby>の間から、遥か下にある地獄の底へ、まっすぐにそれを御<ruby>下<rt>おろ</rt></ruby>しなさいました。",
+   "こちらは地獄の底の血の池で、ほかの罪人と一しょに、浮いたり沈んだりしていた※<ruby>陀多<rt>かんだた</rt></ruby>でございます。",
+   "何しろどちらを見ても、まっ暗で、たまにそのくら暗からぼんやり浮き上っているものがあると思いますと、それは恐しい針の山の針が光るのでございますから、その心細さと云ったらございません。",
+   "その上あたりは墓の中のようにしんと静まり返って、たまに聞えるものと云っては、ただ罪人がつく<ruby>微<rt>かすか</rt></ruby>な<ruby>嘆息<rt>たんそく</rt></ruby>ばかりでございます。",
+   "これはここへ落ちて来るほどの人間は、もうさまざまな地獄の<ruby>責苦<rt>せめく</rt></ruby>に疲れはてて、泣声を出す力さえなくなっているのでございましょう。",
+   "ですからさすが大泥坊の※陀多も、やはり血の池の血に<ruby>咽<rt>むせ</rt></ruby>びながら、まるで死にかかった<ruby>蛙<rt>かわず</rt></ruby>のように、ただもがいてばかり居りました。",
+   "ところがある時の事でございます。",
+   "<ruby>何気<rt>なにげ</rt></ruby>なく※陀多が頭を挙げて、血の池の空を眺めますと、そのひっそりとした暗の中を、遠い遠い天上から、銀色の<ruby>蜘蛛<rt>くも</rt></ruby>の糸が、まるで人目にかかるのを恐れるように、一すじ細く光りながら、するすると自分の上へ垂れて参るのではございませんか。",
+   "※陀多はこれを見ると、思わず手を<ruby>拍<rt>う</rt></ruby>って喜びました。",
+   "この糸に<ruby>縋<rt>すが</rt></ruby>りついて、どこまでものぼって行けば、きっと地獄からぬけ出せるのに相違ございません。",
+   "いや、うまく行くと、極楽へはいる事さえも出来ましょう。",
+   "そうすれば、もう針の山へ追い上げられる事もなくなれば、血の池に沈められる事もある筈はございません。",
+   "こう思いましたから※<ruby>陀多<rt>かんだた</rt></ruby>は、早速その蜘蛛の糸を両手でしっかりとつかみながら、一生懸命に上へ上へとたぐりのぼり始めました。",
+   "元より大泥坊の事でございますから、こう云う事には昔から、慣れ切っているのでございます。",
+   "しかし地獄と極楽との間は、何万里となくございますから、いくら<ruby>焦<rt>あせ</rt></ruby>って見た所で、容易に上へは出られません。",
+   "ややしばらくのぼる<ruby>中<rt>うち</rt></ruby>に、とうとう※陀多もくたびれて、もう一たぐりも上の方へはのぼれなくなってしまいました。",
+   "そこで仕方がございませんから、まず一休み休むつもりで、糸の中途にぶら下りながら、遥かに目の下を見下しました。",
+   "すると、一生懸命にのぼった甲斐があって、さっきまで自分がいた血の池は、今ではもう暗の底にいつの間にかかくれて居ります。",
+   "それからあのぼんやり光っている恐しい針の山も、足の下になってしまいました。",
+   "この分でのぼって行けば、地獄からぬけ出すのも、存外わけがないかも知れません。",
+   "※陀多は両手を蜘蛛の糸にからみながら、ここへ来てから何年にも出した事のない声で、「しめた。",
+   "しめた。」",
+   "と笑いました。",
+   "ところがふと気がつきますと、蜘蛛の糸の下の方には、<ruby>数限<rt>かずかぎり</rt></ruby>もない罪人たちが、自分ののぼった後をつけて、まるで<ruby>蟻<rt>あり</rt></ruby>の行列のように、やはり上へ上へ一心によじのぼって来るではございませんか。",
+   "※陀多はこれを見ると、驚いたのと恐しいのとで、しばらくはただ、<ruby>莫迦<rt>ばか</rt></ruby>のように大きな口を<ruby>開<rt>あ</rt></ruby>いたまま、眼ばかり動かして居りました。",
+   "自分一人でさえ<ruby>断<rt>き</rt></ruby>れそうな、この細い蜘蛛の糸が、どうしてあれだけの<ruby>人数<rt>にんず</rt></ruby>の重みに堪える事が出来ましょう。",
+   "もし万一途中で<ruby>断<rt>き</rt></ruby>れたと致しましたら、折角ここへまでのぼって来たこの<ruby>肝腎<rt>かんじん</rt></ruby>な自分までも、元の地獄へ<ruby>逆落<rt>さかおと</rt></ruby>しに落ちてしまわなければなりません。",
+   "そんな事があったら、大変でございます。",
+   "が、そう云う中にも、罪人たちは何百となく何千となく、まっ暗な血の池の底から、うようよと<ruby>這<rt>は</rt></ruby>い上って、細く光っている蜘蛛の糸を、一列になりながら、せっせとのぼって参ります。",
+   "今の中にどうかしなければ、糸はまん中から二つに断れて、落ちてしまうのに違いありません。",
+   "そこで※陀多は大きな声を出して、「こら、罪人ども。",
+   "この蜘蛛の糸は<ruby>己<rt>おれ</rt></ruby>のものだぞ。",
+   "お前たちは一体誰に<ruby>尋<rt>き</rt></ruby>いて、のぼって来た。",
+   "下りろ。",
+   "下りろ。」",
+   "と<ruby>喚<rt>わめ</rt></ruby>きました。",
+   "その途端でございます。",
+   "今まで何ともなかった蜘蛛の糸が、急に※陀多のぶら下っている所から、ぷつりと音を立てて<ruby>断<rt>き</rt></ruby>れました。",
+   "ですから※陀多もたまりません。",
+   "あっと云う<ruby>間<rt>ま</rt></ruby>もなく風を切って、<ruby>独楽<rt>こま</rt></ruby>のようにくるくるまわりながら、見る見る中に暗の底へ、まっさかさまに落ちてしまいました。",
+   "後にはただ極楽の蜘蛛の糸が、きらきらと細く光りながら、月も星もない空の中途に、短く垂れているばかりでございます。",
+   "<ruby>御釈迦様<rt>おしゃかさま</rt></ruby>は極楽の<ruby>蓮池<rt>はすいけ</rt></ruby>のふちに立って、この一部<ruby>始終<rt>しじゅう</rt></ruby>をじっと見ていらっしゃいましたが、やがて※<ruby>陀多<rt>かんだた</rt></ruby>が血の池の底へ石のように沈んでしまいますと、悲しそうな御顔をなさりながら、またぶらぶら御歩きになり始めました。",
+   "自分ばかり地獄からぬけ出そうとする、※陀多の無慈悲な心が、そうしてその心相当な罰をうけて、元の地獄へ落ちてしまったのが、御釈迦様の御目から見ると、浅間しく思召されたのでございましょう。",
+   "しかし極楽の蓮池の蓮は、少しもそんな事には<ruby>頓着<rt>とんじゃく</rt></ruby>致しません。",
+   "その玉のような白い花は、御釈迦様の<ruby>御足<rt>おみあし</rt></ruby>のまわりに、ゆらゆら<ruby>萼<rt>うてな</rt></ruby>を動かして、そのまん中にある金色の<ruby>蕊<rt>ずい</rt></ruby>からは、何とも云えない<ruby>好<rt>よ</rt></ruby>い匂が、<ruby>絶間<rt>たえま</rt></ruby>なくあたりへ<ruby>溢<rt>あふ</rt></ruby>れて居ります。",
+   "極楽ももう<ruby>午<rt>ひる</rt></ruby>に近くなったのでございましょう。"
+  ],
+  "notebook": [
+   {
+    "w": "極楽",
+    "read": "ごくらく",
+    "def": "paradise",
+    "ch": 0
+   },
+   {
+    "w": "地獄",
+    "read": "じごく",
+    "def": "hell",
+    "ch": 0
+   },
+   {
+    "w": "※陀多",
+    "read": "かんだた",
+    "def": "Kandata, the story's protagonist, a thief",
+    "ch": 0
+   },
+   {
+    "w": "蜘蛛",
+    "read": "くも",
+    "def": "spider",
+    "ch": 0
+   },
+   {
+    "w": "蓮",
+    "read": "はす",
+    "def": "lotus",
+    "ch": 0
+   },
+   {
+    "w": "罪人",
+    "read": "ざいにん",
+    "def": "sinner, criminal",
+    "ch": 0
+   },
+   {
+    "w": "御覧になる",
+    "read": "ごらんになる",
+    "def": "to look at (honorific)",
+    "ch": 0
+   },
+   {
+    "w": "助ける",
+    "read": "たすける",
+    "def": "to save, to spare",
+    "ch": 0
+   },
+   {
+    "w": "血の池",
+    "read": "ちのいけ",
+    "def": "the pool of blood (in hell)",
+    "ch": 1
+   },
+   {
+    "w": "針の山",
+    "read": "はりのやま",
+    "def": "the mountain of needles (in hell)",
+    "ch": 1
+   },
+   {
+    "w": "縋りつく",
+    "read": "すがりつく",
+    "def": "to cling to, to grasp at",
+    "ch": 1
+   },
+   {
+    "w": "たぐりのぼる",
+    "read": "たぐりのぼる",
+    "def": "to climb hand over hand, pulling oneself up",
+    "ch": 1
+   },
+   {
+    "w": "罪人",
+    "read": "ざいにん",
+    "def": "sinner, criminal",
+    "ch": 1
+   },
+   {
+    "w": "蟻",
+    "read": "あり",
+    "def": "ant",
+    "ch": 1
+   },
+   {
+    "w": "己",
+    "read": "おれ",
+    "def": "I, me (rough/masculine)",
+    "ch": 1
+   },
+   {
+    "w": "断れる",
+    "read": "きれる",
+    "def": "to break, to snap (of a thread)",
+    "ch": 1
+   },
+   {
+    "w": "悲しそう",
+    "read": "かなしそう",
+    "def": "looking sad",
+    "ch": 2
+   },
+   {
+    "w": "無慈悲",
+    "read": "むじひ",
+    "def": "merciless, without compassion",
+    "ch": 2
+   },
+   {
+    "w": "罰",
+    "read": "ばつ",
+    "def": "punishment",
+    "ch": 2
+   },
+   {
+    "w": "頓着",
+    "read": "とんじゃく",
+    "def": "concern, heed",
+    "ch": 2
+   },
+   {
+    "w": "始終",
+    "read": "しじゅう",
+    "def": "the whole thing, from start to end",
+    "ch": 2
+   },
+   {
+    "w": "蓮",
+    "read": "はす",
+    "def": "lotus",
+    "ch": 2
+   },
+   {
+    "w": "御足",
+    "read": "おみあし",
+    "def": "feet (honorific)",
+    "ch": 2
+   },
+   {
+    "w": "溢れる",
+    "read": "あふれる",
+    "def": "to overflow, to spill out",
+    "ch": 2
+   }
+  ],
+  "ideas": [],
+  "openQuestions": []
+ },
+ {
   "id": "momotaro-peach-boy",
   "authentic": true,
   "band": "authentic",
@@ -470,6 +2068,8 @@ window.YOMIMONO_LIBRARY = [
    }
   ],
   "title": "桃太郎",
+  "titleRuby": "桃太郎",
+  "culture": "",
   "en": "Momotarō (Peach Boy)",
   "author": "楠山正雄 (d. 1950-11-26)",
   "translator": "",
@@ -1430,6 +3030,8 @@ window.YOMIMONO_LIBRARY = [
    }
   ],
   "title": "浦島太郎",
+  "titleRuby": "浦島太郎",
+  "culture": "",
   "en": "Urashima Tarō",
   "author": "楠山正雄 (d. 1950-11-26)",
   "translator": "",
@@ -2600,6 +4202,8 @@ window.YOMIMONO_LIBRARY = [
    }
   ],
   "title": "灰だらけ姫（ガラスの上ぐつ）",
+  "titleRuby": "灰だらけ姫（ガラスの上ぐつ）",
+  "culture": "",
   "en": "Cinderella (The Glass Slipper)",
   "author": "ペロー（Charles Perrault, 1628–1703） (d. 1703)",
   "translator": "楠山正雄 (d. 1950-11-26)",
@@ -3659,6 +5263,8 @@ window.YOMIMONO_LIBRARY = [
    }
   ],
   "title": "眠る森のお姫さま",
+  "titleRuby": "眠る森のお姫さま",
+  "culture": "",
   "en": "Sleeping Beauty",
   "author": "ペロー（Charles Perrault, 1628–1703） (d. 1703)",
   "translator": "楠山正雄 (d. 1950-11-26)",

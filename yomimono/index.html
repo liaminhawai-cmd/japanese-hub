@@ -162,7 +162,7 @@
 <div class="container">
   <h1 class="jt-tap" data-jt="title">よみもの</h1>
   <p class="subtitle jt-tap" data-jt="subtitle">Read a story, open the notebook when you need it, then show what you understood</p>
-  <span class="poc"><b>Proof of concept</b> for review. Six original retellings levelled on the same ladder as the Grammar Hub, plus an authentic shelf: four real storybooks by 楠山正雄 from Aozora Bunko, verbatim, with a word list per chapter and three graded checks at the end of each: quick read, fill the gap, tap the sentence that shows it. Anything marked ★ is beyond the Victorian Curriculum for that level: great to know, never required. The Japanese is a draft for a teacher to check before any class reads it.</span>
+  <span class="poc"><b>Proof of concept</b> for review. Six original retellings levelled on the same ladder as the Grammar Hub, plus an authentic shelf: eight real texts from Aozora Bunko, verbatim (楠山正雄's storybooks, 鈴木三重吉's Kojiki tales, Akutagawa's 蜘蛛の糸), with a word list per chapter and three graded checks at the end of each: quick read, fill the gap, tap the sentence that shows it. Anything marked ★ is beyond the Victorian Curriculum for that level: great to know, never required. The Japanese is a draft for a teacher to check before any class reads it.</span>
 
   <!-- PICK -->
   <div class="screen active" id="pick">
@@ -185,6 +185,7 @@
     </div>
     <div class="chapnav" id="chapnav" style="display:none"></div>
     <div class="notebook" id="notebook"></div>
+    <div class="attrib" id="culture" style="display:none"></div>
     <div class="story" id="story"></div>
     <div class="gnote" id="gnote"></div>
     <div class="attrib" id="attrib" style="display:none"></div>
@@ -220,7 +221,7 @@
   </div>
 </div>
 
-<div class="build-tag">Yomimono PoC 2026-09-06b</div>
+<div class="build-tag">Yomimono PoC 2026-09-06c</div>
 
 <script src="lever.js"></script>
 <script src="library.js"></script>
@@ -721,7 +722,7 @@ const UI_RUBY = {
     const c=document.createElement("button");c.className="card";c.type="button";
     const stars=starCount(st);
     if(st.authentic){
-      c.innerHTML=`${bandChip(st)}<span class="long">long read · ${st.chapters.length} chapters</span><h3>${esc(st.title)}</h3><div class="en">${esc(st.en)}</div>
+      c.innerHTML=`${bandChip(st)}<span class="long">long read · ${st.chapters.length} chapters</span><h3>${st.titleRuby||esc(st.title)}</h3><div class="en">${esc(st.en)}</div>
         <div class="needs"><b>${esc(st.author)}${st.translator?`, translated by ${esc(st.translator)}`:""}.</b> ${st.beyond.map(esc).join(" ")}</div>
         <div class="beyond">A real book: everything here is above the VIC levels. The chapter word list is your way in, and every chapter is checked.</div>
         <div class="meta">${st.sentences.length} sentences · ${st.notebook.length} words in the lists · ${st.quick.length} questions, ${(st.cloze||[]).length} gap-fills, ${st.evidence.length} evidence taps</div>`;
@@ -771,9 +772,11 @@ const UI_RUBY = {
       const last=chap===story.chapters.length-1;
       $("attrib").style.display=last?"":"none";
       if(last)$("attrib").innerHTML=`<b>青空文庫 · Aozora Bunko attribution</b><br>${story.attribution.map(esc).join("<br>")}`;
+      $("culture").style.display=(chap===0&&story.culture)?"":"none";
+      if(chap===0&&story.culture)$("culture").innerHTML=`<b>The world of this story.</b> ${esc(story.culture)}`;
       if(typeof renderNotebook==="function"&&story.notebook.some(n=>n.ch!==undefined))renderNotebook();
     }else{
-      $("attrib").style.display="none";
+      $("attrib").style.display="none";$("culture").style.display="none";
       $("toTasks").textContent=(story.chapters&&chap<story.chapters.length-1)?"Skip to the tasks":"I have read it";
     }
     window.scrollTo(0,0);
