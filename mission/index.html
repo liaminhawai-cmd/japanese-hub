@@ -372,7 +372,7 @@
   <p class="en" id="menuTeacher"></p>
 </div></div>
 <span class="hubchip"><a href="../">⌂ にほんごハブ · Hub</a></span>
-<span class="buildtag">MISSION 2026-09-06h</span>
+<span class="buildtag">MISSION 2026-09-06i</span>
 </div>
 <script src="words.js"></script>
 <script>
@@ -1850,7 +1850,11 @@ function nudge(box,t,s){
   const who=cur.npc?NPCS[cur.npc].name:"the page"; const pool=NUDGES[cur.npc]||[`${who} tilts their head. 「もう一度おねがいします。」`];
   let text=pool[(cur.tries-1)%pool.length];
   if(t.kind==="gap") text+=` The gap again, slowly: 「${plainJp(fill(t.jp,s)).replace("＿＿＿","＿＿＿")}」`;
-  if(t.kind==="type"&&cur.npc&&cur.topic.lines&&cur.topic.lines.length>1){ const other=cur.topic.lines.find(l=>l.jp!==cur.line.jp); if(other){ say(cur.npc,other); text+=" They put it another way."; } }
+  if(cur.tries===1&&t.kind==="type"&&cur.npc&&cur.topic.lines&&cur.topic.lines.length>1){ const other=cur.topic.lines.find(l=>l.jp!==cur.line.jp); if(other){ say(cur.npc,other); text+=" They put it another way."; } }
+  if(cur.tries>=2){ /* the second time, they actually give you the first sound */
+    const answer=t.kind==="type"?plainJp(fill(t.model,s)):t.kind==="gap"?String(t.accept[0]):plainJp(fill((t.options.find(o=>o.ok===true)||{}).jp||"",s));
+    const m=answer.match(/[ぁ-んァ-ヶ一-鿿ー]/); if(m) text+=` Then, slowly, the first sound: 「${m[0]}…」`;
+  }
   const fb=document.createElement("div"); fb.className="feedback nudge"; fb.innerHTML=`<b>${cur.tries===1?"?":"??"}</b> ${esc(text)}`; box.insertBefore(fb,box.querySelector(".taskbtns"));
 }
 function paintFeedback(box,feedback){const el=document.createElement("div");el.className="feedback "+feedback.cls;el.setAttribute("role","status");el.setAttribute("aria-live","polite");el.innerHTML=feedback.html;box.insertBefore(el,box.querySelector(".taskbtns"));}
