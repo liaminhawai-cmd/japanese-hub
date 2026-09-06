@@ -1,9 +1,13 @@
 <!DOCTYPE html>
+<!-- Standalone source: apps/mission/index.html in the development repo.
+     No generator. Deploy by copying this whole file to mission/index.html. -->
 <html lang="en-AU" translate="no" class="notranslate">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
 <meta name="google" content="notranslate">
+<meta name="description" content="An Australian agent, a Tokyo ramen shop, and a recipe to bring home. A Japanese-language spy adventure.">
+<meta name="theme-color" content="#242724">
 <title>ミッション：日本 · Mission: Japan</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%95%B6%EF%B8%8F%3C/text%3E%3C/svg%3E">
 <style>
@@ -124,7 +128,116 @@
   .buildtag{position:absolute;right:20px;bottom:1px;font-size:9px;color:#8a8a8a;letter-spacing:.1em}
   .hubchip{position:absolute;left:22px;bottom:1px;font-size:9px;letter-spacing:.1em}
   .hubchip a{color:#8a8a8a;text-decoration:none}
-  @media (max-width:820px){.view{width:200px}.log .say .jp{font-size:19px}.opt{font-size:16px}}
+  /* Handheld shell. The scene and sprites stay on their original pixel grid. */
+  :root{--ink:#171c18;--lcd:#e6eadb;--lcd2:#cdd5bf;--frame:#242724;--frame2:#404640;--dim:#4e5849;--shell-ink:#b4bcaf;--bezel:#101410}
+  body{height:100dvh;padding:16px;background:var(--bezel);overflow:hidden;line-height:1.5}
+  .device{width:min(1220px,100%);height:min(850px,100%);padding:24px 16px 26px;background:var(--frame);border-radius:14px;box-shadow:0 0 0 2px var(--frame2),0 18px 60px rgba(0,0,0,.4)}
+  .device:before{top:5px;left:24px;color:var(--shell-ink);font-size:10px;letter-spacing:.16em}
+  .lcd{border-radius:2px;border-color:var(--bezel);background-image:none}
+  .buildtag,.hubchip{bottom:5px;font-size:10px;color:var(--shell-ink)}
+  .hubchip a{color:var(--shell-ink)}
+  button:focus-visible,a:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:3px double var(--ink);outline-offset:4px}
+  button{touch-action:manipulation}
+  button:disabled{cursor:default}
+  .k,.k.sm{min-height:40px;font-size:14px;letter-spacing:.02em;padding:6px 10px;box-shadow:2px 2px 0 var(--ink)}
+  .k:not(:disabled):hover,.item:hover,.person:hover{background:var(--lcd2)}
+  .k.inv:hover,.k.on,.item.worn{background:var(--ink);color:var(--lcd)}
+  .k:disabled{box-shadow:none}
+  .en,.fine{font-size:13px;color:var(--dim)}
+  .title{padding:clamp(18px,3vw,34px);gap:20px}
+  .title-head{display:flex;align-items:center;justify-content:space-between;gap:20px;border-bottom:3px solid var(--ink);padding-bottom:18px}
+  .eyebrow{font-size:12px;letter-spacing:.16em;font-weight:700;margin-bottom:10px}
+  .title h1{font-size:clamp(30px,4.3vw,54px);letter-spacing:-.045em;line-height:1}
+  .title h1 small{font-size:20px;letter-spacing:.1em;margin-top:12px;color:var(--ink)}
+  #titleScene{width:224px;height:112px;flex:none}
+  .briefing{display:grid;grid-template-columns:140px 1fr;gap:18px;max-width:920px}
+  .briefing h2{font-size:14px;letter-spacing:.08em;padding-top:2px}
+  .blurb{font-size:16px;line-height:1.6;max-width:760px}
+  .load-label{font-size:14px;letter-spacing:.1em;margin-bottom:10px}
+  .load{max-width:none;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+  .load button{padding:16px;display:flex;flex-direction:column;color:var(--ink);min-height:200px;position:relative}
+  .load button[data-k="agent"]{border-width:4px;padding:14px}
+  .load b{font-size:22px;letter-spacing:.04em}
+  .load .kit{margin:12px 0;flex-wrap:wrap;gap:5px}
+  .load small{font-size:14px;color:var(--dim);line-height:1.5}
+  .load .deploy{font-size:13px;letter-spacing:.08em;border-top:1px solid var(--ink);margin-top:auto;padding-top:10px;width:100%;font-weight:700}
+  .load .desc{margin-bottom:16px}
+  .resume{max-width:none;background:var(--lcd2);border:2px solid var(--ink);font-size:14px}
+  .fine{margin-top:auto;max-width:none}
+  .view{width:280px;min-height:0}
+  .view canvas#scene{aspect-ratio:2/1;flex:none}
+  .view .locname{display:block;padding:9px 12px;font-size:14px;letter-spacing:.02em;background:var(--ink);color:var(--lcd)}
+  #locJp{display:block;font-size:13px;letter-spacing:.05em}#locJp rt{color:var(--lcd2)}
+  .present{padding:10px;font-size:14px;min-height:60px}
+  .present b,.goals b{font-size:12px;letter-spacing:.1em;margin-bottom:6px}
+  .person{display:flex;align-items:center;gap:10px;width:100%;border:0;border-bottom:1px dotted var(--dim);background:transparent;color:var(--ink);text-align:left;font:inherit;padding:8px 4px;min-height:44px}
+  .person .person-name{flex:1}.person .seen{font-size:12px;color:var(--dim)}
+  .person:disabled{opacity:.5}
+  .goals{padding:12px;font-size:13px;max-height:42%;flex:none;line-height:1.7}
+  .goals .g{padding:2px 0}
+  .channel{display:flex;align-items:center;gap:10px;border-bottom:2px solid var(--ink);padding:7px 14px;flex:none}
+  .channel strong{font-size:12px;letter-spacing:.12em}.channel .en{font-size:12px;margin-left:auto}
+  .channel .k.sm{min-height:32px;font-size:12px}
+  .main{min-height:0}
+  .log{padding:16px 20px;overscroll-behavior:contain;font-size:16px;scrollbar-color:var(--ink) var(--lcd2)}
+  .log .sys{font-size:13px;border-top:1px dotted var(--dim);padding-top:8px;margin-top:12px}
+  .log .narr{padding:7px 0 7px 12px;margin:10px 0;border-left:3px solid var(--ink)}
+  .log .say{margin:14px 0}
+  .log .say .who{font-size:12px;font-weight:700;letter-spacing:.06em;margin-bottom:4px}
+  .log .say .jp{font-size:23px;line-height:1.85;overflow-wrap:anywhere}
+  .log .say .tr{font-size:14px}
+  .log .topics{padding:12px;border:1px dashed var(--dim);margin:12px 0}
+  .log .topics .who{font-weight:700;font-size:14px;margin-bottom:4px}
+  .task{padding:14px;margin:14px 0;box-shadow:3px 3px 0 var(--ink)}
+  .task .kind{font-size:12px}.task .prompt{font-size:16px;line-height:1.5;margin:4px 0 12px}
+  .opts{grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:10px}
+  .opt{font-size:19px;padding:10px 12px;min-height:44px;position:relative;overflow-wrap:anywhere}
+  .opt .en{font-size:13px}.opt:not(:disabled):hover{box-shadow:inset 0 0 0 1px var(--ink)}
+  .opt .option-key{display:inline-block;min-width:1.4em;font-size:12px;color:var(--dim);margin-right:5px}
+  .opt[data-sel="1"] .option-key{color:var(--lcd)}
+  .opt.correct{outline:2px solid var(--ink);outline-offset:2px}.opt.correct:after{content:" ✓";font-weight:700}
+  .opt.incorrect{opacity:.65}
+  input.jp{font-size:20px;max-width:none;background:var(--lcd);color:var(--ink)}
+  .hint{font-size:14px}.taskbtns{gap:10px}.taskbtns .leave{margin-left:auto;background:transparent;box-shadow:none;border:0;font-size:13px;text-transform:none;text-decoration:underline}
+  .feedback{padding:10px 12px;margin-top:12px;font-size:15px;border:2px solid var(--ink)}
+  .feedback.bad{border-style:double;border-width:4px}.feedback .rule{font-size:14px;line-height:1.6}
+  .hud{padding:8px 12px;gap:8px 18px;min-height:48px;font-size:14px;flex:none}
+  .hud .lab{font-size:12px;letter-spacing:0}.hud .clock{font-size:13px}
+  .hud .susp{width:48px}.hud .hearts canvas{width:16px!important;height:16px!important}
+  .hud .time{margin-left:auto}.susp-value{font-size:12px;margin-left:4px}
+  .inv{flex:none;flex-wrap:nowrap;overflow-x:auto;min-height:58px;padding:7px 12px;gap:9px;scrollbar-width:thin}
+  .inv .lab{font-size:12px;letter-spacing:0}.item{min-height:40px;padding:4px 7px;flex:none;white-space:nowrap}.item .n{font-size:12px}
+  .acts{flex:none;gap:8px;padding:10px 12px;max-height:40%;overflow:auto}
+  .acts>.k{flex:1}.acts .sub{width:100%;margin:0;gap:8px}.acts .sub:empty{display:none}
+  .acts .sub .k{flex:1 1 44%;display:flex;justify-content:space-between;align-items:center;gap:8px;text-align:left}
+  .route-note{font-size:12px;color:var(--dim);display:block}.route-text{flex:1}
+  .menu .box{font-size:15px;padding:22px;width:min(620px,94%);overscroll-behavior:contain}
+  .menu h3{font-size:16px}.menu .goals{border:0;padding:0;max-height:none;margin:12px 0;font-size:14px}
+  .menu .row{gap:10px;margin:14px 0}.cover{border:2px solid var(--ink);padding:10px 12px;margin:12px 0;font-size:14px}
+  .save-status{font-size:12px;color:var(--dim)}
+  .deb{font-size:16px}.deb .en,.memo{font-size:14px}th{font-size:12px}td{font-size:14px}input.name{min-height:40px}
+  [hidden]{display:none!important}
+  @media (min-width:681px) and (max-height:700px){body{padding:6px}.device{padding:19px 10px 21px}.title{padding:18px;gap:12px}.title-head{padding-bottom:12px}#titleScene{width:176px;height:88px}.load button{min-height:170px}.view{width:240px}.view canvas#scene{max-height:105px;object-fit:contain}.channel{padding:4px 12px}.log{padding:10px 16px}.hud{padding:5px 10px}.inv{min-height:50px}.acts{padding:7px 10px}}
+  @media (max-width:900px){.view{width:230px}.load{gap:10px}.load button{padding:12px}.load button[data-k="agent"]{padding:10px}.load .kit canvas{width:24px!important;height:24px!important}.hud{gap:6px 10px}.hud .time{margin-left:0}}
+  @media (max-width:680px){
+    body{padding:0}.device{height:100%;width:100%;border-radius:0;padding:19px 5px 21px;box-shadow:none}
+    .device:before{left:12px;font-size:9px;letter-spacing:.1em}.buildtag,.hubchip{font-size:9px}.buildtag{right:12px}.hubchip{left:12px}
+    .title{padding:18px;gap:18px}.title-head{gap:8px}.title h1{font-size:32px}.title h1 small{font-size:16px}.eyebrow{font-size:11px}#titleScene{width:96px;height:48px}
+    .briefing{display:block}.briefing h2{margin-bottom:5px}.blurb{font-size:15px}.load{grid-template-columns:1fr}
+    .load button,.load button[data-k="agent"]{min-height:0;padding:14px}.load .kit{margin:8px 0}.load .desc{margin-bottom:10px}.load b{font-size:20px}
+    .top{flex-direction:column}.view{width:100%;display:grid;grid-template-columns:96px minmax(0,1fr);grid-template-rows:auto auto;border-right:0;border-bottom:3px solid var(--ink);max-height:138px;flex:none}
+    .view canvas#scene{grid-column:1;grid-row:1 / 3;width:96px;height:64px;align-self:center;object-fit:contain}
+    .view .locname{grid-column:2;grid-row:1;border:0;padding:5px 10px;background:var(--lcd);color:var(--ink);font-size:14px}
+    #locJp{display:none}.present{grid-column:2;grid-row:2;display:flex;overflow-x:auto;min-height:0;padding:2px 6px 8px;gap:8px;scrollbar-width:thin;align-items:center}.present>b{display:none}
+    .person{border:1px solid var(--ink);min-height:40px;padding:4px 8px;width:auto;flex:none;gap:6px;font-size:12px}.person canvas{width:20px!important;height:20px!important}.person .seen{display:none}
+    .view>.goals{display:none}.channel{padding:5px 10px;gap:6px}.channel .en{font-size:11px}.channel .k.sm{min-height:36px}
+    .log{padding:8px 12px;font-size:15px}.log .say .jp{font-size:21px}.task{padding:10px}.task .prompt{font-size:15px}.opt{font-size:18px;padding:8px 10px}.opts{grid-template-columns:1fr;gap:8px}
+    .hud{padding:6px 9px;gap:3px 12px;display:grid;grid-template-columns:1fr 1fr;min-height:62px}.hud .lab{font-size:12px}.hud .clock{font-size:12px}
+    .inv{min-height:52px;padding:5px 9px}.inv>.lab{display:none}.item canvas{width:22px!important;height:22px!important}.item .n{font-size:11px}
+    .acts{padding:7px 9px;gap:6px;max-height:34%}.acts>.k{padding:6px 3px;font-size:13px;min-width:0}.acts .sub .k{font-size:13px}.route-note{font-size:11px}
+    .menu .box{padding:16px}.menu .row .k{flex:1}.deb{padding:14px}.foot{padding:8px}table{display:block;overflow-x:auto}
+  }
+  @media (prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
@@ -133,30 +246,30 @@
 
   <div class="screen on" id="titleS">
     <div class="title">
-      <h1>ミッション：日本<small>MISSION: JAPAN · MISSION 1: THE RAMEN RECIPE</small></h1>
-      <p class="blurb">An Aussie ramen chain wants the recipe from a one-star shop in Tokyo. You are the agent. There is no set order: land, wander, eat, get papers, make friends, make enemies, find out when the place opens, get inside, get the recipe out, call it in. Everyone you meet has their own problems and most of them are more interesting than yours.</p>
+      <div class="title-head"><div><p class="eyebrow">01 / THE RAMEN RECIPE</p><h1>MISSION: JAPAN<small lang="ja">ミッション：日本</small></h1></div><canvas id="titleScene" class="px" width="112" height="56" aria-hidden="true"></canvas></div>
+      <div class="briefing"><h2>YOUR ASSIGNMENT</h2><p class="blurb">An Aussie ramen chain wants a Tokyo chef's secret recipe. Get into his kitchen, get the recipe out, and report to Melbourne. Everyone you meet has their own problems. Most of them are more interesting than yours.</p></div>
       <div id="resume"></div>
-      <div class="load" id="load"></div>
-      <p class="fine">Proof of concept. One mission, seven places, eleven people, one crow. Every Japanese line is a draft for a teacher to check. Nothing is locked and nothing is on rails. Leaving through the menu saves; leaving any other way is you zoning out in public.</p>
+      <div><h2 class="load-label">CHOOSE YOUR KIT</h2><div class="load" id="load"></div></div>
+      <p class="fine">Field trial · Japanese dialogue awaiting teacher review.<br>Progress saves on this device. Use the menu to leave safely; switching away during play means zoning out in public.</p>
     </div>
   </div>
 
   <div class="screen" id="playS">
     <div class="top">
       <div class="view">
-        <canvas id="scene" class="px" width="112" height="56"></canvas>
+        <canvas id="scene" class="px" width="112" height="56" aria-hidden="true"></canvas>
         <div class="locname"><span id="locName"></span><span id="locJp"></span></div>
         <div class="present" id="present"></div>
         <div class="goals" id="goals"></div>
       </div>
       <div class="main">
-        <div class="log" id="log"></div>
+        <div class="channel"><strong id="channelName">FIELD LOG</strong><span class="en" id="translationState"></span><button class="k sm" id="menuBtn" aria-haspopup="dialog">Menu / Brief</button></div>
+        <div class="log" id="log" role="region" aria-label="Field log and conversation" tabindex="0"></div>
         <div class="hud">
           <span><span class="lab">Energy</span><span class="hearts" id="hearts"></span></span>
           <span><span class="lab">Cash</span><b id="yen"></b></span>
-          <span class="eye"><span class="lab">Suspicion</span><span class="susp"><i id="suspBar"></i></span></span>
-          <span><span class="lab">Time</span><span class="clock" id="clock"></span></span>
-          <span style="margin-left:auto"><button class="k sm" id="menuBtn">Menu</button></span>
+          <span class="eye"><span class="lab">Suspicion</span><span class="susp" aria-hidden="true"><i id="suspBar"></i></span><span class="susp-value" id="suspValue"></span></span>
+          <span class="time"><span class="clock" id="clock"></span></span>
         </div>
         <div class="inv" id="inv"></div>
         <div class="acts" id="acts"></div>
@@ -173,17 +286,19 @@
   </div>
 
 </div>
-<div class="toast" id="toast"></div>
-<div class="menu" id="menu"><div class="box">
-  <h3>Menu</h3>
-  <p>Save and leave is clean. Any other way out, or switching tabs, is zoning out in public: something happens, the game goes on.</p>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="menu" id="menu" role="dialog" aria-modal="true" aria-labelledby="menuTitle"><div class="box">
+  <h3 id="menuTitle">Field menu</h3>
+  <p class="save-status" id="saveStatus" role="status"></p>
   <div class="row"><button class="k sm inv" id="saveLeave">Save and leave</button><button class="k sm" id="fsBtn">Full screen</button><button class="k sm" id="closeMenu">Back</button></div>
+  <div id="menuCover" class="cover"></div><div id="menuGoals" class="goals"></div>
   <h3 style="margin-top:12px">Field manual</h3>
   <p><b>Talk</b> to anyone about anything they have going on. <b>Look</b> reads the place, and signs are in Japanese. <b>Use</b> an item on the place or on a person; some combinations are wise, some are very funny, one gets you deported. <b>Go</b> moves you and takes an hour. Energy drops as you move; food fixes it, sleep at the hotel fixes everything and starts a new day. Suspicion only matters where people are watching you.</p>
+  <p class="en" style="margin-top:10px">Keyboard: T talk · L look · U use · G go · W wait · S sleep at the hotel. Number keys select a reply; Enter checks it. Esc opens this menu.</p>
   <p class="en" id="menuTeacher"></p>
 </div></div>
 <span class="hubchip"><a href="../">⌂ にほんごハブ · Hub</a></span>
-<span class="buildtag">MISSION POC 2026-09-06c</span>
+<span class="buildtag">MISSION 2026-09-06d</span>
 </div>
 <script>
 (function(){
@@ -1178,7 +1293,8 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 const SAVE_KEY="mission-japan-save-v2";
-const INK="#141414";
+const INK=getComputedStyle(document.documentElement).getPropertyValue("--ink").trim();
+const PAPER=getComputedStyle(document.documentElement).getPropertyValue("--lcd").trim();
 
 /* HQ: a person on the phone, present at the hotel once you have the goods */
 NPCS.hq={name:"HQ, Melbourne",jp:R("本部","ほんぶ"),spr:"hq",loc:"hotel",req:G=>G.is("recipe"),
@@ -1195,23 +1311,25 @@ NPCS.hq={name:"HQ, Melbourne",jp:R("本部","ほんぶ"),spr:"hq",loc:"hotel",re
   ]};
 
 /* ---- sprites ---- */
-function drawSprite(ctx,name,x,y,scale){ const s=SPR[name]; if(!s) return; ctx.fillStyle=INK; for(let r=0;r<16;r++) for(let c=0;c<16;c++) if(s[r][c]==="#") ctx.fillRect(x+c*scale,y+r*scale,scale,scale); }
-function spriteCanvas(name,size){ const c=document.createElement("canvas"); c.width=16;c.height=16;c.className="px"; drawSprite(c.getContext("2d"),name,0,0,1); c.style.width=c.style.height=size+"px"; return c; }
+function drawSprite(ctx,name,x,y,scale,ink=INK){ const s=SPR[name]; if(!s) return; ctx.fillStyle=ink; for(let r=0;r<16;r++) for(let c=0;c<16;c++) if(s[r][c]==="#") ctx.fillRect(x+c*scale,y+r*scale,scale,scale); }
+function spriteCanvas(name,size,inverse=false){ const c=document.createElement("canvas"); c.width=16;c.height=16;c.className="px";c.setAttribute("aria-hidden","true"); drawSprite(c.getContext("2d"),name,0,0,1,inverse?PAPER:INK); c.style.width=c.style.height=size+"px"; return c; }
 
 /* ---- game state ---- */
-let G=null, cur=null, graded=false, pickedOpt=null, lastDistract=0, leavingCleanly=false;
+let G=null, cur=null, graded=false, pickedOpt=null, taskBox=null, lastDistract=0, leavingCleanly=false, replaying=false, saveOK=true, menuFocus=null;
 const LOADOUTS={
-  tourist:{n:"Tourist",items:["passport","glasses","dictionary","phone","shoes"],worn:["glasses","shoes"],yen:30000,desc:"Translator glasses (English under everything), a dictionary, a phone, and too much cash. Nobody suspects a tourist. You will learn less."},
-  agent:{n:"Agent",items:["passport","dictionary","phone","shoes"],worn:["shoes"],yen:20000,desc:"A dictionary you can get out (careful where), a phone to HQ (¥500 a call), a fair budget. No English unless you go and get it."},
-  ghost:{n:"Ghost",items:["passport","shoes"],worn:["shoes"],yen:15000,desc:"Passport, shoes, ¥15,000. Nothing translates. You can buy a dictionary in Ueno if you are honest with yourself."}
+  tourist:{n:"Tourist",items:["passport","glasses","dictionary","phone","shoes"],worn:["glasses","shoes"],yen:30000,desc:"English through your glasses. Dictionary and phone in your bag. Take the glasses off whenever you like."},
+  agent:{n:"Agent",items:["passport","dictionary","phone","shoes"],worn:["shoes"],yen:20000,desc:"Japanese first. Reach for your dictionary or call HQ when you need a hand. Watch who is watching."},
+  ghost:{n:"Ghost",items:["passport","shoes"],worn:["shoes"],yen:15000,desc:"Your passport, your shoes, your Japanese. Buy a dictionary in Ueno if the cover starts to slip."}
 };
 function fill(t,s){ return String(t).replace(/\{\{(\w+)\}\}/g,(m,k)=>s[k]??m); }
 function slots(){ const s={...G.s}; s.shoesState=G.worn.includes("shoes")?"on":"off"; s.trainedNote=G.is("trained")?" (You have heard this sentence before, from Taisho.)":""; s.fearNote=G.is("intelFear")?" (Grandpa said he melts for an opinion.)":""; s.nbNote=G.is("notebookOpen")&&!G.is("recipe")?" The notebook is OPEN on the counter. LOOK again to read it.":""; return s; }
 function newGame(kit){
+  if(!Object.hasOwn(LOADOUTS,kit)) return;
+  cur=null;taskBox=null;graded=false;sub=null;
   const L=LOADOUTS[kit]; const bag={}; L.items.forEach(i=>bag[i]=1);
   G={kit,loc:"airport",day:1,hour:14,energy:5,yen:L.yen,susp:0,moves:0,s:newSlots(pick),bag,worn:L.worn.slice(),flags:{},did:{},first:{},memos:[],log:[]};
   attach(G); save(); startPlay();
-  narr("Narita. 2pm. You have a real passport, a mission, and a strong smell of aeroplane. Nothing here is in any order. TALK to people. LOOK around. GO somewhere.");
+  narr("Narita. 2pm. A real passport, a mission, and a strong smell of aeroplane. Officer Tanaka is jogging behind the immigration desk. He holds out his hand.");save();
 }
 function attach(G){
   G.has=i=>(G.bag[i]||0)>0; G.count=i=>G.bag[i]||0;
@@ -1225,24 +1343,59 @@ function attach(G){
   G.dictionary=()=>{ if(!G.has("dictionary")) return "You have no dictionary. There is a konbini in Ueno that sells them."; if(!cur||!cur.line) return "You leaf through it. Words. Many of them. Talk to someone first, then look one up."; showEn(); if(G.loc==="michelin"&&!cur.dictUsed){ cur.dictUsed=true; if(Math.random()<0.5){ G.susp=Math.min(100,G.susp+15); return "「……何を見ているんだ。」 He saw the dictionary. Suspicion +15. The alley is where looking things up is free."; } return "Under the counter. Nobody saw. This time."; } return "Dictionary: "+esc(cur.en)+(cur.task?" · Pattern: "+esc(fill(cur.task.hint||cur.task.rule.split(":")[0],slots())):""); };
   G.startDebrief=()=>{ narr("You call HQ from the hotel phone. TALK to HQ."); };
 }
-function save(){ try{ if(G){ const {has,count,give,take,flag,is,done,toggleWear,eat,hintText,dictionary,startDebrief,...plain}=G; localStorage.setItem(SAVE_KEY,JSON.stringify(plain)); } }catch(e){} }
-function load(){ try{ const s=localStorage.getItem(SAVE_KEY); if(!s) return null; const g=JSON.parse(s); attach(g); return g; }catch(e){ return null; } }
+function save(){
+  if(!G||replaying) return;
+  G.pending=cur&&taskBox?{npc:cur.npc,topic:cur.topic.id,loc:G.loc,line:cur.line,options:cur.task.kind==="choice"?cur.task.options:null,typed:taskBox.querySelector("#typed")?.value||"",choice:pickedOpt?.dataset.i??null,gap:pickedOpt?.dataset.v??null,graded,ok:cur.ok===true,dictUsed:!!cur.dictUsed,translated:!!cur.translated,feedback:cur.feedback||null}:null;
+  try{localStorage.setItem(SAVE_KEY,JSON.stringify(G));saveOK=true;}catch(e){saveOK=false;}
+  if($("saveStatus")) $("saveStatus").textContent=saveOK?"Saved on this device. The menu is a safe pause.":"This browser could not save. Keep this tab open to keep your progress.";
+}
+function load(){
+  try{
+    const raw=localStorage.getItem(SAVE_KEY);if(!raw)return null;
+    const g=JSON.parse(raw),obj=v=>v&&typeof v==="object"&&!Array.isArray(v);
+    if(!obj(g)||!Object.hasOwn(LOADOUTS,g.kit)||!Object.hasOwn(LOCS,g.loc)||!obj(g.s)||!obj(g.bag)||!Array.isArray(g.worn)||!obj(g.flags)||!obj(g.did)||!obj(g.first)||!Array.isArray(g.memos))return null;
+    if(!["day","hour","energy","yen","susp","moves"].every(k=>Number.isFinite(g[k])&&g[k]>=0))return null;
+    if(!Object.keys(newSlots(a=>a[0])).every(k=>typeof g.s[k]==="string"||typeof g.s[k]==="number"))return null;
+    g.energy=Math.min(5,g.energy);g.susp=Math.min(100,g.susp);g.day+=Math.floor(g.hour/24);g.hour%=24;
+    g.bag=Object.fromEntries(Object.entries(g.bag).filter(([k,n])=>Object.hasOwn(ITEMS,k)&&Number.isInteger(n)&&n>0));
+    g.worn=g.worn.filter(k=>g.bag[k]&&ITEMS[k].wear);g.log=Array.isArray(g.log)?g.log.slice(-60):[];
+    g.first=Object.fromEntries(Object.entries(g.first).filter(([k,v])=>obj(v)&&typeof v.ok==="boolean"&&(v.skill==null||typeof v.skill==="string")));
+    g.did=Object.fromEntries(Object.entries(g.did).filter(([k,v])=>Object.hasOwn(NPCS,k)&&obj(v)));
+    g.memos=g.memos.filter(m=>obj(m)&&typeof m.what==="string"&&typeof m.rule==="string");
+    const p=g.pending;
+    if(p&&(!obj(p)||typeof p.topic!=="string"||p.loc!==g.loc||!obj(p.line)||typeof p.line.jp!=="string"||typeof p.line.en!=="string"||p.options!=null&&(!Array.isArray(p.options)||!p.options.length||!p.options.every(o=>obj(o)&&typeof o.jp==="string"&&typeof o.en==="string"&&typeof o.why==="string"&&(typeof o.ok==="boolean"||o.ok==="faux")))||p.feedback!=null&&(!obj(p.feedback)||typeof p.feedback.html!=="string")))g.pending=null;
+    if(g.pending)g.pending.typed=typeof g.pending.typed==="string"?g.pending.typed:"";
+    attach(g);return g;
+  }catch(e){return null;}
+}
 function show(id){ document.querySelectorAll(".screen").forEach(s=>s.classList.remove("on")); $(id).classList.add("on"); }
 function toast(msg){ const t=$("toast"); t.innerHTML=msg; t.classList.add("show"); clearTimeout(toast.h); toast.h=setTimeout(()=>t.classList.remove("show"),4500); }
 
 /* ---- title ---- */
 function renderTitle(){
+  const tc=$("titleScene").getContext("2d");tc.clearRect(0,0,112,56);drawSprite(tc,"airport",0,4,3);drawSprite(tc,"michelin",64,4,3);drawSprite(tc,"agent",47,31,1);tc.fillStyle=INK;tc.fillRect(0,52,112,1);
   const saved=load();
   $("resume").innerHTML=saved?`<div class="resume"><span>Saved: day ${saved.day}, ${LOCS[saved.loc].name}, ${LOADOUTS[saved.kit].n} kit, ¥${saved.yen.toLocaleString()}.</span><span><button class="k sm inv" id="resumeBtn">Continue</button> <button class="k sm" id="wipeBtn">Start over</button></span></div>`:"";
   if(saved){ $("resumeBtn").onclick=()=>{G=saved;startPlay();narr("You pick up where you left off. "+LOCS[G.loc].name+".");}; $("wipeBtn").onclick=()=>{try{localStorage.removeItem(SAVE_KEY);}catch(e){} renderTitle();}; }
-  $("load").innerHTML=Object.entries(LOADOUTS).map(([k,L])=>`<button data-k="${k}"><b>${L.n}</b><span class="kit" id="kit-${k}"></span><small>${esc(L.desc)}</small></button>`).join("");
+  $("load").innerHTML=Object.entries(LOADOUTS).map(([k,L])=>`<button data-k="${k}"><b>${L.n}</b><span class="kit" id="kit-${k}"></span><small class="desc">${esc(L.desc)}</small><span class="deploy">TAKE THIS KIT →</span></button>`).join("");
   Object.entries(LOADOUTS).forEach(([k,L])=>{ const box=$("kit-"+k); L.items.forEach(i=>box.appendChild(spriteCanvas(i,32))); const y=document.createElement("small"); y.style.display="inline"; y.textContent="¥"+L.yen.toLocaleString(); box.appendChild(y); });
-  $("load").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>newGame(b.dataset.k)));
+  $("load").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
+    if(saved){toast("A mission is saved. Continue it, or choose Start over first.");$("resumeBtn").focus();return;}newGame(b.dataset.k);
+  }));
 }
 
 /* ---- play rendering ---- */
-function startPlay(){ show("playS"); $("log").innerHTML=""; cur=null; graded=false; renderAll(); }
-function renderAll(){ renderScene(); renderPresent(); renderGoals(); renderHud(); renderInv(); renderActs(); save(); }
+function startPlay(){
+  const pending=G.pending;show("playS");$("log").innerHTML="";cur=null;taskBox=null;graded=false;sub=null;replaying=true;
+  G.log.forEach(r=>{if(r&&["narr","say","sys","hq","good","bad"].includes(r.cls)&&typeof r.html==="string")logEl(cleanLog(r.html),r.cls);});
+  if(pending&&pending.loc===G.loc){
+    const topic=pending.npc&&NPCS[pending.npc]?.topics.find(t=>t.id===pending.topic);
+    if(topic&&presentNpcs().includes(pending.npc))startTopic(pending.npc,topic,pending);
+    else if(pending.topic==="read"&&G.loc==="michelin"&&G.is("notebookOpen")&&!G.is("recipe"))readNotebook(pending);
+  }
+  replaying=false;renderAll();if(!cur)$("log").focus({preventScroll:true});
+}
+function renderAll(){ renderScene(); renderPresent(); renderGoals(); renderHud(); renderInv(); renderActs();renderTranslations(); save(); }
 function presentNpcs(){ return Object.entries(NPCS).filter(([id,n])=>{ if(n.loc!==G.loc) return false; if(n.req&&n.req(G)!==true) return false; if(G.loc==="michelin"&&!G.is("shownId")) return false; if(id==="traveller"&&G.is("bagQuest")) return false; return true; }).map(([id])=>id); }
 function renderScene(){
   const c=$("scene"), ctx=c.getContext("2d"); ctx.clearRect(0,0,c.width,c.height);
@@ -1250,33 +1403,37 @@ function renderScene(){
   drawSprite(ctx,LOCS[G.loc].spr,4,4,3); /* place, big */
   const people=presentNpcs(); people.slice(0,3).forEach((id,i)=>drawSprite(ctx,NPCS[id].spr,60+i*17,36,1));
   drawSprite(ctx,"agent",52,20,1);
-  if(!G.worn.includes("shoes")){ ctx.fillStyle="#e6e8dc"; ctx.fillRect(56,34,8,2); }
+  if(!G.worn.includes("shoes")){ ctx.fillStyle=PAPER; ctx.fillRect(56,34,8,2); }
   $("locName").textContent=LOCS[G.loc].name; $("locJp").innerHTML=LOCS[G.loc].jp;
 }
 function renderPresent(){
   const ids=presentNpcs();
-  $("present").innerHTML=`<b>Here</b>`+(ids.length?ids.map(id=>`<div class="row" data-n="${id}"><span class="s" data-spr="${NPCS[id].spr}"></span><span>${esc(NPCS[id].name)}${G.did[id]&&Object.keys(G.did[id]).length?" ·":""}</span></div>`).join(""):(G.loc==="michelin"&&!G.is("shownId")?`<div class="en">A door, open a crack. A voice: 「身分証は？」 USE an ID.</div>`:`<div class="en">Nobody.</div>`));
+  $("present").innerHTML=`<b>CONTACTS</b>`+(ids.length?ids.map(id=>`<button class="person" data-n="${id}" ${cur?"disabled":""}><span class="s" data-spr="${NPCS[id].spr}"></span><span class="person-name">${esc(NPCS[id].name)}</span><span class="seen">${Object.keys(G.did[id]||{}).length}/${NPCS[id].topics.length}</span></button>`).join(""):(G.loc==="michelin"&&!G.is("shownId")?`<div class="en">A door, open a crack. A voice: 「身分証は？」 USE an ID.</div>`:`<div class="en">Nobody.</div>`));
   $("present").querySelectorAll(".s").forEach(s=>s.replaceWith(spriteCanvas(s.dataset.spr,24)));
-  $("present").querySelectorAll(".row").forEach(r=>r.addEventListener("click",()=>talkMenu(r.dataset.n)));
+  $("present").querySelectorAll(".person").forEach(r=>r.addEventListener("click",()=>talkMenu(r.dataset.n)));
 }
 function renderGoals(){
   const g=[["immigration","Get through immigration"],["idcard","Get papers from the fixer",()=>G.has("idcard")],["knowOpen","Find out when Hoshino opens"],["shownId","Get inside Hoshino"],["recipe","Get the recipe out"],["reported","Report to HQ"]];
   const side=[["bagDone","Return the backpacker's bag"],["trained","Work a shift for Taisho"]];
   const row=([f,t,fn])=>`<div class="g${(fn?fn():G.is(f))?" done":""}">${t}</div>`;
-  $("goals").innerHTML=`<b>Mission</b>${g.map(row).join("")}<b style="margin-top:4px">Side</b>${side.map(row).join("")}`;
+  const complete=g.filter(([f,t,fn])=>fn?fn():G.is(f)).length;
+  $("goals").innerHTML=`<b>THE RAMEN RECIPE · ${complete}/${g.length}</b>${g.map(row).join("")}<b style="margin-top:10px">SIDE JOBS</b>${side.map(row).join("")}`;
 }
 function renderHud(){
   const h=$("hearts"); h.innerHTML=""; for(let i=0;i<5;i++) h.appendChild(spriteCanvas(i<G.energy?"heart":"heart0",20));
   $("yen").textContent="¥"+G.yen.toLocaleString(); $("suspBar").style.width=G.susp+"%";
   $("clock").textContent=`DAY ${G.day} · ${String(G.hour).padStart(2,"0")}:00`;
+  $("suspValue").textContent=G.susp+"/100";h.setAttribute("aria-label",G.energy+" of 5 energy");
+  $("translationState").textContent=G.worn.includes("glasses")?"TRANSLATOR ON":"JAPANESE";
+  $("channelName").textContent=cur?"IN CONVERSATION":"FIELD LOG";
 }
 function renderInv(){
   const box=$("inv"); box.innerHTML=`<span class="lab">Inventory</span>`;
-  Object.keys(G.bag).forEach(i=>{ const it=ITEMS[i]; const d=document.createElement("button"); d.className="item"+(G.worn.includes(i)?" worn":""); d.title=fill(it.desc,slots()); d.appendChild(spriteCanvas(i,28)); const n=document.createElement("span"); n.className="n"; n.textContent=it.n+(G.count(i)>1?" ×"+G.count(i):"")+(G.worn.includes(i)?" · on":""); d.appendChild(n); d.addEventListener("click",()=>useItem(i)); box.appendChild(d); });
+  Object.keys(G.bag).forEach(i=>{ const it=ITEMS[i]; const d=document.createElement("button"); d.className="item"+(G.worn.includes(i)?" worn":""); d.title=fill(it.desc,slots());if(it.wear)d.setAttribute("aria-pressed",String(G.worn.includes(i))); d.appendChild(spriteCanvas(i,28,G.worn.includes(i))); const n=document.createElement("span"); n.className="n"; n.textContent=it.n+(G.count(i)>1?" ×"+G.count(i):"")+(G.worn.includes(i)?" · on":""); d.appendChild(n); d.addEventListener("click",()=>useItem(i)); box.appendChild(d); });
 }
 let sub=null;
 function renderActs(){
-  const busy=!!(cur&&cur.task&&!graded);
+  const busy=!!cur;
   const a=$("acts"); a.innerHTML="";
   const mk=(t,fn,on)=>{ const b=document.createElement("button"); b.className="k"+(on?" on":""); b.textContent=t; b.disabled=busy; b.addEventListener("click",fn); a.appendChild(b); return b; };
   mk("Talk",()=>{sub=sub==="talk"?null:"talk";renderActs();},sub==="talk");
@@ -1288,39 +1445,61 @@ function renderActs(){
   const s=document.createElement("span"); s.className="sub"; a.appendChild(s);
   const smk=(html,fn)=>{ const b=document.createElement("button"); b.className="k sm"; b.innerHTML=html; b.disabled=busy; b.addEventListener("click",fn); s.appendChild(b); };
   if(sub==="talk"){ const ids=presentNpcs(); if(!ids.length) s.innerHTML='<span class="en">nobody to talk to</span>'; ids.forEach(id=>smk(esc(NPCS[id].name),()=>talkMenu(id))); }
-  if(sub==="go"){ LOCS[G.loc].exits.forEach(x=>smk(`${LOCS[x].name} <span class="en">${LOCS[x].jp}</span>`,()=>go(x))); }
+  if(sub==="go"){ LOCS[G.loc].exits.forEach(x=>{const arrival=(G.hour+1)%24;const open=x==="michelin"&&G.is("knowOpen")?(arrival>=G.s.openH&&arrival<G.s.openH+4?" · open on arrival":" · shut on arrival"):"";smk(`<span class="route-text">${LOCS[x].name}<span class="route-note">${String(arrival).padStart(2,"0")}:00 arrival${open}</span></span><span class="en">+1h</span>`,()=>go(x));}); }
   if(sub==="use"){ Object.keys(G.bag).forEach(i=>smk(ITEMS[i].n,()=>useItem(i))); }
 }
 
 /* ---- log ---- */
-function logEl(html,cls){ const d=document.createElement("div"); d.className=cls; d.innerHTML=html; $("log").appendChild(d); $("log").scrollTop=$("log").scrollHeight; return d; }
+function cleanLog(html){
+  const t=document.createElement("template");t.innerHTML=html;
+  const tags=new Set(["DIV","SPAN","B","STRONG","I","EM","BR","RUBY","RT","P"]);
+  t.content.querySelectorAll("*").forEach(el=>{if(!tags.has(el.tagName)){el.replaceWith(document.createTextNode(el.textContent));return;}[...el.attributes].forEach(a=>{if(a.name!=="class")el.removeAttribute(a.name);});});
+  return t.innerHTML;
+}
+function remember(html,cls){if(!G||replaying)return;G.log.push({html,cls});G.log=G.log.slice(-60);}
+function logEl(html,cls){ const d=document.createElement("div"); d.className=cls; d.innerHTML=html; $("log").appendChild(d);if(["narr","say","sys","hq","good","bad"].includes(cls))remember(html,cls); $("log").scrollTop=$("log").scrollHeight; return d; }
 function narr(t){ if(t) logEl(fill(t,slots()),"narr"); }
 function sys(t){ logEl(fill(t,slots()),"sys"); }
 function say(npc,line){ const en=G.worn.includes("glasses"); return logEl(`<div class="who">${esc(NPCS[npc].name)} · ${NPCS[npc].jp}</div><div class="jp">${fill(line.jp,slots())}</div><div class="tr" ${en?"":'style="display:none"'}>${esc(fill(line.en,slots()))}</div>`,"say"); }
-function showEn(){ const tr=$("log").querySelector(".say:last-of-type .tr"); if(tr) tr.style.display=""; const h=$("log").querySelector(".task .hint"); if(h) h.classList.add("show"); }
+function renderTranslations(){
+  const glasses=G.worn.includes("glasses");
+  $("log").querySelectorAll(".say .tr").forEach(t=>{t.hidden=!(glasses||t.parentElement===cur?.speech&&cur.translated);t.style.display="";});
+  $("log").querySelectorAll("[data-translation]").forEach(t=>t.hidden=!glasses);
+  if(taskBox)taskBox.querySelectorAll(".hint").forEach(h=>h.classList.toggle("show",glasses||!!cur?.translated));
+}
+function showEn(){if(cur)cur.translated=true;renderTranslations();}
+function retireMenus(){ $("log").querySelectorAll(".topics button").forEach(b=>b.disabled=true); }
+function retireTask(){if(taskBox){taskBox.querySelectorAll("button,input").forEach(b=>{b.disabled=true;if(b.closest(".taskbtns"))b.hidden=true;});taskBox.querySelectorAll("[id]").forEach(el=>el.removeAttribute("id"));}}
+function leaveConversation(){
+  if(!cur)return;if(graded){finishTopic();return;}
+  retireTask();cur=null;taskBox=null;pickedOpt=null;graded=false;retireMenus();narr("You leave the conversation there.");renderAll();
+}
 
 /* ---- actions ---- */
 function look(){
+  if(cur)return;retireMenus();
   const L=LOCS[G.loc]; narr(L.look);
   L.lookJp.forEach(l=>logEl(`<div class="jp" style="font-size:19px">${fill(l.jp,slots())}</div>`,"say"));
   if(G.loc==="michelin"&&G.is("notebookOpen")&&!G.is("recipe")){ readNotebook(); return; }
   if(G.loc==="michelin"&&G.is("shownId")) ringPhone(0.35);
   renderAll();
 }
-function readNotebook(){
+function readNotebook(pending=null){
   const line={jp:"スープは{{hours}}にること。{{secret}}を"+R("少","すこ")+"し"+R("入","い")+"れると、"+R("味","あじ")+"が"+R("深","ふか")+"くなる。",en:"Simmer the soup {{hoursEn}}. Add a little {{secretEn}} and the flavour deepens."};
-  const d=logEl(`<div class="who">the notebook, his handwriting</div><div class="jp">${fill(line.jp,slots())}</div><div class="tr" ${G.worn.includes("glasses")?"":'style="display:none"'}>${esc(fill(line.en,slots()))}</div>`,"say");
+  const d=pending?[...$("log").querySelectorAll(".say")].at(-1):logEl(`<div class="who">the notebook, his handwriting</div><div class="jp">${fill(line.jp,slots())}</div><div class="tr" ${G.worn.includes("glasses")?"":'style="display:none"'}>${esc(fill(line.en,slots()))}</div>`,"say");
   const task={kind:"choice",prompt:"The secret. What goes in?",...DYN.secret(G.s,shuffle)};
-  cur={npc:null,topic:{id:"read",skill:"misc-b4",after:(G,ok)=>{G.flag("recipe");G.give("notes");return "You close it before he turns round. You have the recipe in your head and in your notes. Get to a phone. Not his.";}},line,en:fill(line.en,slots()),task,key:"chef|read",undercover:true};
-  renderTask(); renderActs();
+  if(pending?.options)task.options=pending.options;
+  cur={npc:null,topic:{id:"read",skill:"misc-b4",after:(G,ok)=>{G.flag("recipe");G.give("notes");return "You close it before he turns round. You have the recipe in your head and in your notes. Get to a phone. Not his.";}},line,en:fill(line.en,slots()),task,key:"chef|read",undercover:true,speech:d};
+  renderTask(pending); renderAll();
 }
 function ringPhone(p){ if(G.loc==="michelin"&&!G.is("phoneRang")&&Math.random()<(G.is("intelPhone")?p+0.3:p)){ G.flag("phoneRang"); narr("The phone rings. Hoshino wipes his hands, puts the notebook on the counter and answers it. He will not be long. TALK to him about the notebook."); } }
-function wait(){ tick(1); narr(pick(["An hour passes. You watch people be Japanese at each other.","You wait. A pigeon waits with you. Neither of you is sure why.","An hour. The clock does the thing clocks do."])); if(G.loc==="michelin"&&G.is("shownId")) ringPhone(0.6); renderAll(); }
-function sleep(){ if(!G.is("checkedIn")){ narr("You sleep in the lobby armchair like a person who does not have a room. Suzuki drapes a blanket over you and says 「ストゥルース」 softly. New day, energy 3."); G.energy=3; } else { narr("Room 404. The pillow is a brick and it is perfect. New day, full energy."); G.energy=5; } G.day++; G.hour=7; delete G.flags.phoneRang; renderAll(); }
+function wait(){ if(cur)return;retireMenus();tick(1); narr(pick(["An hour passes. The arrivals board changes. The queue does not.","You wait. A pigeon waits with you. Neither of you is sure why.","An hour. The clock does the thing clocks do."])); if(G.loc==="michelin"&&G.is("shownId")) ringPhone(0.6); renderAll(); }
+function sleep(){ if(cur||G.loc!=="hotel")return;retireMenus();if(!G.is("checkedIn")){ narr("You sleep in the lobby armchair like a person who does not have a room. Suzuki drapes a blanket over you and says 「ストゥルース」 softly. New day, energy 3."); G.energy=3; } else { narr("Room 404. The pillow is a brick and it is perfect. New day, full energy."); G.energy=5; } G.day++; G.hour=7; delete G.flags.phoneRang; renderAll(); }
 function tick(h){ G.hour+=h; while(G.hour>=24){G.hour-=24;G.day++;} }
 function go(x){
+  if(cur||!LOCS[G.loc].exits.includes(x))return;retireMenus();
   sub=null;
-  const gate=LOCS[x].gate?LOCS[x].gate(G):true;
+  const gate=G.loc==="airport"&&!G.is("immigration")?LOCS.airport.gate(G):(x!=="airport"&&LOCS[x].gate?LOCS[x].gate({...G,hour:(G.hour+1)%24}):true);
   if(gate!==true){ narr(gate); renderAll(); return; }
   if(G.loc==="airport"&&!G.has("ticket")&&x==="station"){ /* the bus */ }
   if(G.loc!=="airport"&&x!=="airport"&&!G.has("ticket")&&(G.loc==="station"||x==="station")&&G.loc!==x){ if(Math.random()<0.5){ G.susp=Math.min(100,G.susp+5); narr("You walk through the gate without a pass. Sato appears from nowhere: 「切符を買ってください。」 You buy nothing and are allowed through, watched. Suspicion +5."); } }
@@ -1333,44 +1512,59 @@ function go(x){
   checkDeported(); renderAll();
 }
 function useItem(i){
+  if(!G.has(i)||!Object.hasOwn(ITEMS,i))return;
   sub=null; const it=ITEMS[i];
   if(it.wear){ narr(G.toggleWear(i)); renderAll(); return; }
   const fn=USE[i+"@"+G.loc]||USE[i+"@*"]||USE["*@*"];
   const t=fn(G); if(t) narr(t); checkDeported(); renderAll();
 }
 function checkDeported(){
-  if(G.susp>=100){ narr("Two very polite men in grey. A van. A form. 「お疲れさまでした。」 You are back at Narita, deported with great courtesy, holding your bag. They did not find the fake ID. Day +1. Suspicion resets to 40. The mission, oddly, continues."); G.loc="airport"; delete G.flags.immigration; delete G.flags.shownId; G.susp=40; G.day++; G.hour=9; G.memos.push({what:"Deported.",rule:"Suspicion hit 100. Every slip undercover added to it; praise, a well-encouraged soup and asking permission bring it down."}); }
+  if(G.susp>=100){retireTask();retireMenus();cur=null;taskBox=null;graded=false;sub=null; narr("Two very polite men in grey. A van. A form. 「お疲れさまでした。」 You are back at Narita, deported with great courtesy, holding your bag. They did not find the fake ID. Day +1. Suspicion resets to 40. The mission, oddly, continues."); G.loc="airport"; delete G.flags.immigration; delete G.flags.shownId; G.susp=40; G.day++; G.hour=9; G.memos.push({what:"Deported.",rule:"Suspicion hit 100. Every slip undercover added to it; praise, a well-encouraged soup and asking permission bring it down."}); }
 }
 
 /* ---- talking ---- */
 function talkMenu(id){
+  if(cur||!presentNpcs().includes(id))return;retireMenus();
   sub=null; const n=NPCS[id];
   const topics=n.topics.map(t=>{ const done=G.done(id,t.id); const r=t.req?t.req(G):true; return {t,done,ok:r===true,why:r}; });
-  const d=logEl(`<div class="who">${esc(n.name)} · ${n.jp}</div><div class="en">${esc(n.bio)}</div><div class="taskbtns" id="topics"></div>`,"say");
-  const box=d.querySelector("#topics");
+  const d=logEl(`<div class="who">${esc(n.name)} · ${n.jp}</div><div class="en">${esc(n.bio)}</div><div class="taskbtns"></div>`,"topics");
+  const box=d.querySelector(".taskbtns");
   const smallBtn=document.createElement("button"); smallBtn.className="k sm"; smallBtn.textContent="Small talk"; smallBtn.addEventListener("click",()=>{ say(id,pick(n.small)); renderAll(); }); box.appendChild(smallBtn);
   topics.forEach(({t,done,ok,why})=>{ const b=document.createElement("button"); b.className="k sm"+(done?"":" inv"); b.textContent=(done?"✓ ":"")+t.title; b.addEventListener("click",()=>{ if(!ok){ narr(why); renderAll(); return; } startTopic(id,t); }); box.appendChild(b); });
   renderActs(); $("log").scrollTop=$("log").scrollHeight;
 }
-function startTopic(id,t){
-  const line=pick(t.lines); say(id,line);
+function startTopic(id,t,pending=null){
+  if(cur||!presentNpcs().includes(id))return;
+  const requirement=t.req?t.req(G):true;if(!pending&&requirement!==true){narr(requirement);renderAll();return;}
+  retireMenus();
+  const line=pending?.line||pick(t.lines);const speech=pending?[...$("log").querySelectorAll(".say")].at(-1):say(id,line);
   let task={...t.task}; if(task.dynamic) task={...task,...DYN[task.dynamic](G.s,shuffle)};
-  cur={npc:id,topic:t,line,en:fill(line.en,slots()),task,key:id+"|"+t.id,undercover:!!t.undercover||G.loc==="michelin"};
-  renderTask(); renderActs();
+  if(pending?.options&&task.kind==="choice")task.options=pending.options;
+  cur={npc:id,topic:t,line,en:fill(line.en,slots()),task,key:id+"|"+t.id,undercover:!!t.undercover||G.loc==="michelin",speech};
+  renderTask(pending); renderAll();
 }
-function renderTask(){
+function renderTask(pending=null){
   graded=false; pickedOpt=null; const task=cur.task, s=slots(), en=G.worn.includes("glasses");
-  let html=`<span class="kind">${task.kind==="choice"?"Choose":task.kind==="gap"?"Fill the gap":"Say it"}</span><div class="prompt">${esc(fill(task.prompt,s))}</div>`;
-  if(task.kind==="choice"){ const opts=shuffle(task.options.map((o,i)=>({...o,i}))); html+=`<div class="opts">${opts.map(o=>`<button type="button" class="opt" data-i="${o.i}">${fill(o.jp,s)}${en?`<span class="en">${esc(fill(o.en,s))}</span>`:""}</button>`).join("")}</div>`; }
-  else if(task.kind==="gap"){ const typed=!task.opts||G.loc==="michelin"||G.loc==="alley"; cur.typed=typed; html+=`<div class="gapline">${fill(task.jp,s).replace("＿＿＿",`<span class="blank" id="blank">　</span>`)}${en?`<div class="en">${esc(fill(task.en,s))}</div>`:""}</div>`+(typed?`<input class="jp" id="typed" autocomplete="off" placeholder="type the missing part">`:`<div class="opts">${shuffle(task.opts).map(o=>`<button type="button" class="opt" data-v="${esc(o)}">${esc(o)}</button>`).join("")}</div>`)+`<div class="hint">Pattern: ${esc(task.rule.split(":")[0])}</div>`; }
-  else { cur.typed=true; html+=`<input class="jp" id="typed" autocomplete="off" placeholder="type your line in Japanese"><div class="hint">Pattern: ${esc(fill(task.hint,s))}</div>`; }
-  html+=`<div class="taskbtns"><button class="k inv" id="checkBtn" disabled>Check</button><button class="k" id="nextBtn" style="display:none">Continue</button></div>`;
-  const box=logEl(html,"task"); if(en) box.querySelector(".hint").classList.add("show");
+  let html=`<span class="kind">${task.kind==="choice"?"Choose a reply":task.kind==="gap"?"Fill the gap":"Your reply"}</span><div class="prompt">${esc(fill(task.prompt,s))}</div>`;
+  if(task.kind==="choice"){ const opts=shuffle(task.options.map((o,i)=>({...o,i}))); html+=`<div class="opts">${opts.map((o,j)=>`<button type="button" class="opt" data-i="${o.i}" data-key="${j+1}"><span class="option-key" aria-hidden="true">${j+1}</span>${fill(o.jp,s)}<span class="en" data-translation ${en?"":"hidden"}>${esc(fill(o.en,s))}</span></button>`).join("")}</div>`; }
+  else if(task.kind==="gap"){ const typed=!task.opts||G.loc==="michelin"||G.loc==="alley"; cur.typed=typed; html+=`<div class="gapline">${fill(task.jp,s).replace("＿＿＿",`<span class="blank" id="blank">　</span>`)}<div class="en" data-translation ${en?"":"hidden"}>${esc(fill(task.en,s))}</div></div>`+(typed?`<input class="jp" id="typed" lang="ja" aria-label="Missing Japanese words" autocomplete="off" placeholder="type the missing part">`:`<div class="opts">${shuffle(task.opts).map((o,j)=>`<button type="button" class="opt" data-v="${esc(o)}" data-key="${j+1}"><span class="option-key" aria-hidden="true">${j+1}</span>${esc(o)}</button>`).join("")}</div>`)+`<div class="hint">Pattern: ${esc(task.rule.split(":")[0])}</div>`; }
+  else { cur.typed=true; html+=`<input class="jp" id="typed" lang="ja" aria-label="Your reply in Japanese" autocomplete="off" placeholder="type your line in Japanese"><div class="hint">Pattern: ${esc(fill(task.hint,s))}</div>`; }
+  html+=`<div class="taskbtns"><button class="k inv" id="checkBtn" disabled>Check reply</button><button class="k" id="nextBtn" style="display:none">Continue</button><button class="k leave" id="leaveBtn">Leave conversation</button></div>`;
+  const box=logEl(html,"task"), active=cur;taskBox=box;
+  if(en)box.querySelector(".hint")?.classList.add("show");
   const cb=box.querySelector("#checkBtn"), nb=box.querySelector("#nextBtn");
-  box.querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{ if(graded)return; box.querySelectorAll(".opt").forEach(x=>x.dataset.sel=""); b.dataset.sel="1"; pickedOpt=b; cb.disabled=false; }));
-  const inp=box.querySelector("#typed"); if(inp){ inp.addEventListener("input",()=>{ cb.disabled=inp.value.trim().length<1; const bl=box.querySelector("#blank"); if(bl) bl.textContent=inp.value||"　"; }); inp.addEventListener("keydown",e=>{ if(e.key==="Enter"&&!graded&&!cb.disabled) cb.click(); else if(e.key==="Enter"&&graded) nb.click(); }); inp.focus(); }
-  cb.addEventListener("click",()=>check(box));
-  nb.addEventListener("click",()=>{ finishTopic(); });
+  box.querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{ if(cur!==active||graded)return;box.querySelectorAll(".opt").forEach(x=>{x.dataset.sel="";x.setAttribute("aria-pressed","false");}); b.dataset.sel="1";b.setAttribute("aria-pressed","true"); pickedOpt=b; cb.disabled=false;save(); }));
+  const inp=box.querySelector("#typed"); if(inp){let composing=false;inp.addEventListener("compositionstart",()=>composing=true);inp.addEventListener("compositionend",()=>{composing=false;save();});inp.addEventListener("input",()=>{if(cur!==active)return;cb.disabled=inp.value.trim().length<1; const bl=box.querySelector("#blank"); if(bl) bl.textContent=inp.value||"　";save(); }); inp.addEventListener("keydown",e=>{ if(e.key!=="Enter"||e.isComposing||composing||e.keyCode===229||cur!==active)return;e.preventDefault();e.stopPropagation();if(!graded&&!cb.disabled)cb.click();else if(graded)nb.click();});if(!pending)inp.focus(); }
+  cb.addEventListener("click",()=>{if(cur===active)check(box);});
+  nb.addEventListener("click",()=>{if(cur===active)finishTopic();});
+  box.querySelector("#leaveBtn").addEventListener("click",()=>{if(cur===active)leaveConversation();});
+  if(pending){
+    cur.dictUsed=!!pending.dictUsed;cur.translated=!!pending.translated;
+    if(inp){inp.value=pending.typed||"";cb.disabled=!inp.value.trim();const blank=box.querySelector("#blank");if(blank)blank.textContent=inp.value||"　";}
+    pickedOpt=[...box.querySelectorAll(".opt")].find(b=>pending.choice!==null?b.dataset.i===String(pending.choice):pending.gap!==null&&b.dataset.v===pending.gap)||null;
+    if(pickedOpt){pickedOpt.dataset.sel="1";pickedOpt.setAttribute("aria-pressed","true");cb.disabled=false;}
+    if(pending.graded&&pending.feedback){graded=true;cur.ok=!!pending.ok;cur.feedback={html:cleanLog(pending.feedback.html),cls:pending.feedback.cls==="good"?"good":"bad"};box.querySelectorAll(".opt,input").forEach(el=>el.disabled=true);if(task.kind==="choice")box.querySelectorAll(".opt").forEach(b=>{if(task.options[+b.dataset.i].ok===true)b.classList.add("correct");else if(b===pickedOpt)b.classList.add("incorrect");});paintFeedback(box,cur.feedback);cb.style.display="none";nb.style.display="";box.querySelector("#leaveBtn").hidden=true;}
+  }
   $("log").scrollTop=$("log").scrollHeight;
 }
 function fold(str){ return String(str).normalize("NFKC").replace(/[\s　]/g,"").replace(/[。．\.、，,！!？?「」]/g,"").replace(/[ァ-ヶ]/g,ch=>String.fromCharCode(ch.charCodeAt(0)-0x60)).toLowerCase(); }
@@ -1379,10 +1573,10 @@ function matches(val,accept){
   return accept.some(a=>a instanceof RegExp?new RegExp(fill(a.source,sl),"i").test(v):fold(fill(a,s))===v);
 }
 function check(box){
-  if(graded) return; graded=true;
+  if(!cur||box!==taskBox||graded||box.querySelector("#checkBtn").disabled)return;graded=true;
   const t=cur.task, s=slots(); let ok, kind="bad", why="", rule="";
   if(t.kind==="choice"){ const o=t.options[+pickedOpt.dataset.i]; ok=o.ok===true; why=fill(o.why,s); if(o.ok==="faux") kind="faux"; box.querySelectorAll(".opt").forEach(b=>{ b.disabled=true; if(t.options[+b.dataset.i].ok===true) b.classList.add("correct"); else if(b===pickedOpt) b.classList.add("incorrect"); }); }
-  else if(t.kind==="gap"){ const val=cur.typed?box.querySelector("#typed").value:pickedOpt.dataset.v; ok=matches(val,t.accept); rule=fill(t.rule,s); if(cur.typed) box.querySelector("#typed").disabled=true; else box.querySelectorAll(".opt").forEach(b=>{ b.disabled=true; if(t.accept.includes(b.dataset.v)) b.classList.add("correct"); else if(b===pickedOpt) b.classList.add("incorrect"); }); const bl=box.querySelector("#blank"); if(bl) bl.textContent=ok?val:val+" → "+t.accept[0]; why=ok?"":`You put 「${esc(val)}」. It takes 「${esc(t.accept[0])}」.`; }
+  else if(t.kind==="gap"){ const val=cur.typed?box.querySelector("#typed").value:pickedOpt.dataset.v; ok=matches(val,t.accept); rule=fill(t.rule,s); if(cur.typed) box.querySelector("#typed").disabled=true; else box.querySelectorAll(".opt").forEach(b=>{ b.disabled=true; if(t.accept.includes(b.dataset.v)) b.classList.add("correct"); else if(b===pickedOpt) b.classList.add("incorrect"); }); const bl=box.querySelector("#blank"); if(bl) bl.textContent=ok?val:val+" → "+t.accept[0]; why=ok?"":`You put 「${val}」. It takes 「${t.accept[0]}」.`; }
   else { const val=box.querySelector("#typed").value; ok=matches(val,t.accept); box.querySelector("#typed").disabled=true; rule=fill(t.rule,s); if(t.slotCheck==="name"&&!ok&&!fold(val).includes(fold(G.s.name))) why=`You did not use your cover name, ${G.s.name}. `; why+=ok?"":`A line that works: 「${fill(t.model,s)}」`; }
   if(!(cur.key in G.first)) G.first[cur.key]={ok,skill:cur.topic.skill};
   let zone="";
@@ -1392,16 +1586,19 @@ function check(box){
     else zone=" Nobody here minds. You just learned something for free.";
     G.memos.push({what:(kind==="faux"?"A cultural slip: ":"A language slip: ")+fill(t.prompt,s),rule:why+(rule?" "+rule:""),skill:cur.topic.skill});
   }
-  const fb=logEl(`${ok?"✓":kind==="faux"?"!":"✗"} ${esc(why)}${zone}${rule?`<span class="rule">${esc(rule)}</span>`:""}${cur.topic.skill&&SKILLS[cur.topic.skill]?`<span class="rule">Grammar Hub: ${esc(SKILLS[cur.topic.skill][0])}</span>`:""}`,ok?"good":"bad");
-  if(!ok&&cur.undercover) logEl(esc(rule||why),"hq");
+  cur.feedback={html:`<b>${ok?"✓ Reply accepted":kind==="faux"?"! Cultural slip":"✗ Check this reply"}</b><div>${esc(why)}${esc(zone)}</div>${rule?`<span class="rule">${esc(rule)}</span>`:""}${cur.topic.skill&&SKILLS[cur.topic.skill]?`<span class="rule">Grammar Hub: ${esc(SKILLS[cur.topic.skill][0])}</span>`:""}`,cls:ok?"good":"bad"};
+  paintFeedback(box,cur.feedback);
   box.querySelector("#checkBtn").style.display="none"; const nb=box.querySelector("#nextBtn"); nb.style.display=""; nb.focus();
-  cur.ok=ok; renderHud(); save();
+  box.querySelector("#leaveBtn").hidden=true;cur.ok=ok; renderHud(); save();
 }
+function paintFeedback(box,feedback){const el=document.createElement("div");el.className="feedback "+feedback.cls;el.setAttribute("role","status");el.setAttribute("aria-live","polite");el.innerHTML=feedback.html;box.insertBefore(el,box.querySelector(".taskbtns"));}
 function finishTopic(){
-  if(cur.npc){ G.did[cur.npc]=G.did[cur.npc]||{}; G.did[cur.npc][cur.topic.id]=true; }
-  const after=cur.topic.after?cur.topic.after(G,cur.ok):null; if(after) narr(after);
+  if(!cur||!graded)return;
+  const finished=cur;if(finished.feedback)remember(finished.feedback.html,finished.feedback.cls);retireTask();cur=null;taskBox=null;pickedOpt=null;graded=false;
+  if(finished.npc){ G.did[finished.npc]=G.did[finished.npc]||{}; G.did[finished.npc][finished.topic.id]=true; }
+  const after=finished.topic.after?finished.topic.after(G,finished.ok):null; if(after) narr(after);tick(0);
   if(G.loc==="michelin"&&G.is("shownId")) ringPhone(0.35);
-  cur=null; checkDeported(); renderAll();
+  checkDeported(); renderAll();
 }
 
 /* ---- zoning out ---- */
@@ -1411,18 +1608,42 @@ const DISTRACT=[
   G=>{ if(G.has("onigiri")){G.take("onigiri");return "The crow. Of course the crow. One onigiri, gone, while you were looking at something else.";} return "A pigeon lands on your head while you are elsewhere. It stays. People photograph it.";},
   G=>{tick(1);return "You missed your stop and had to come back. An hour, gone, and your dignity with it.";}
 ];
-function distracted(){ if(!G||!$("playS").classList.contains("on")||leavingCleanly) return; const now=Date.now(); if(now-lastDistract<60000) return; lastDistract=now; const msg=pick(DISTRACT)(G); narr(msg+" The game goes on."); toast(msg); renderAll(); }
+function distracted(){ if(!G||!$("playS").classList.contains("on")||$("menu").classList.contains("show")||leavingCleanly) return; const now=Date.now(); if(now-lastDistract<60000) return; lastDistract=now; const msg=pick(DISTRACT)(G); narr(msg+" The game goes on."); toast(msg); renderAll(); }
 document.addEventListener("visibilitychange",()=>{ if(document.hidden) distracted(); });
 document.addEventListener("fullscreenchange",()=>{ if(!document.fullscreenElement) distracted(); });
 
 /* ---- menu ---- */
-$("menuBtn").addEventListener("click",()=>{ $("fsBtn").textContent=document.fullscreenElement?"Leave full screen (safely)":"Full screen"; $("menuTeacher").innerHTML=(G&&G.is("reported"))?`<button class="k sm inv" id="debBtn">Debrief</button>`:"Teachers: a debrief with first-try results per Grammar Hub skill and VIC level appears here once the mission is reported, and can be copied as one row."; if($("debBtn")) $("debBtn").addEventListener("click",()=>{$("menu").classList.remove("show");debrief();}); $("menu").classList.add("show"); });
-$("closeMenu").addEventListener("click",()=>$("menu").classList.remove("show"));
-$("fsBtn").addEventListener("click",()=>{ if(document.fullscreenElement){ leavingCleanly=true; document.exitFullscreen().finally(()=>setTimeout(()=>leavingCleanly=false,500)); } else if(document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(()=>toast("This browser will not go full screen. Same game without it.")); $("menu").classList.remove("show"); });
-$("saveLeave").addEventListener("click",()=>{ leavingCleanly=true; save(); const done=()=>{ $("menu").classList.remove("show"); show("titleS"); renderTitle(); setTimeout(()=>leavingCleanly=false,500); }; if(document.fullscreenElement) document.exitFullscreen().finally(done); else done(); });
+function openMenu(){
+  if(!G)return;menuFocus=document.activeElement;save();$("fsBtn").textContent=document.fullscreenElement?"Leave full screen":"Full screen";
+  $("menuGoals").innerHTML=$("goals").innerHTML;
+  $("menuCover").hidden=!G.has("idcard");$("menuCover").innerHTML=G.has("idcard")?`<b>YOUR COVER</b><br>${esc(G.s.name)} · ${esc(G.s.jobEn)} · ${esc(G.s.townEn)}<br>Stay: ${esc(G.s.stayEn)} · Hoshino opens ${esc(G.s.openEn)}`:"";
+  $("menuTeacher").innerHTML=`<button class="k sm" id="debBtn">${G.is("reported")?"Mission debrief":"Progress report"}</button><p class="en">First-try results and the rules from your missed replies. Copy a row for your teacher at any time.</p>`;
+  $("debBtn").addEventListener("click",()=>{closeMenu(false);debrief();});$("lcd").inert=true;$("menu").classList.add("show");$("closeMenu").focus();
+}
+function closeMenu(restoreFocus=true){$("menu").classList.remove("show");$("lcd").inert=false;if(restoreFocus&&menuFocus?.isConnected)menuFocus.focus();}
+$("menuBtn").addEventListener("click",openMenu);
+$("closeMenu").addEventListener("click",()=>closeMenu());
+$("fsBtn").addEventListener("click",()=>{ if(document.fullscreenElement){ leavingCleanly=true; document.exitFullscreen().finally(()=>setTimeout(()=>leavingCleanly=false,500)); } else if(document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(()=>toast("This browser will not go full screen. Same game without it.")); closeMenu(); });
+$("saveLeave").addEventListener("click",()=>{ leavingCleanly=true; save();if(!saveOK){leavingCleanly=false;toast("This browser could not save. Your mission is still open here.");return;} const done=()=>{closeMenu(false); show("titleS"); renderTitle(); setTimeout(()=>leavingCleanly=false,500); }; if(document.fullscreenElement) document.exitFullscreen().finally(done); else done(); });
+window.addEventListener("pagehide",save);
+document.addEventListener("keydown",e=>{
+  if(e.isComposing||e.keyCode===229||e.ctrlKey||e.altKey||e.metaKey||e.repeat)return;
+  const menuOpen=$("menu").classList.contains("show");
+  if(e.key==="Escape"&&$("playS").classList.contains("on")){e.preventDefault();menuOpen?closeMenu():openMenu();return;}
+  if(menuOpen){if(e.key==="Tab"){const buttons=[...$("menu").querySelectorAll("button:not(:disabled)")];const first=buttons[0],last=buttons.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}return;}
+  if(!G||!$("playS").classList.contains("on")||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)||e.target.isContentEditable)return;
+  if(cur&&taskBox){
+    if(!graded&&/^[1-9]$/.test(e.key)){const option=taskBox.querySelector(`[data-key="${e.key}"]`);if(option){e.preventDefault();option.click();}}
+    else if(e.key==="Enter"&&(e.target.tagName!=="BUTTON"||e.target.classList.contains("opt"))){const button=taskBox.querySelector(graded?"#nextBtn":"#checkBtn");if(button&&!button.disabled){e.preventDefault();button.click();}}
+    return;
+  }
+  const action={t:"Talk",l:"Look",u:"Use",g:"Go",w:"Wait",s:"Sleep"}[e.key.toLowerCase()];
+  if(action){const button=[...$("acts").children].find(b=>b.tagName==="BUTTON"&&b.textContent===action);if(button&&!button.disabled){e.preventDefault();button.click();}}
+});
 
 /* ---- debrief ---- */
 function debrief(){
+  save();
   const by={}; Object.values(G.first).forEach(f=>{ if(!f.skill) return; by[f.skill]=by[f.skill]||{n:0,ok:0}; by[f.skill].n++; if(f.ok) by[f.skill].ok++; });
   const total=Object.keys(G.first).length, right=Object.values(G.first).filter(f=>f.ok).length;
   const outcome=!G.is("recipe")?"NO RECIPE YET":G.susp<35?"RECIPE OUT · COVER INTACT":G.susp<100?"RECIPE OUT · COVER SHAKY":"RECIPE OUT · DEPORTED, POLITELY";
@@ -1433,13 +1654,14 @@ function debrief(){
     <table><tr><th>Skill (Grammar Hub)</th><th>VIC level</th><th>First try</th><th>Practise</th></tr>${rows||`<tr><td colspan="4" class="en">Nothing graded yet.</td></tr>`}</table>
     <h2 style="margin-top:14px">HQ's notes</h2>${G.memos.length?G.memos.map(m=>`<div class="memo"><b>${esc(m.what)}</b><br>${esc(m.rule)}</div>`).join(""):`<p class="en">Nothing. HQ is suspicious of agents with nothing to learn.</p>`}
     <p class="en" style="margin-top:10px">Teachers: the copied row is name · kit · first-try · suspicion · missed skills. It is not a mark; it is what the student got wrong first time and the rule they were shown.</p>`;
-  $("copied").textContent=""; show("debS");
+  $("copied").textContent=""; show("debS");$("debBody").tabIndex=-1;$("debBody").focus();
 }
 $("copyBtn").addEventListener("click",()=>{ const total=Object.keys(G.first).length, right=Object.values(G.first).filter(f=>f.ok).length; const missed=[...new Set(Object.values(G.first).filter(f=>!f.ok).map(f=>(SKILLS[f.skill]||[f.skill])[0]))].join("; "); const row=[$("nameIn").value.trim(),G.kit,`${right}/${total}`,G.susp,missed].join("\t"); const done=()=>{$("copied").textContent="copied";}; const fb=()=>{$("copied").textContent=row;}; if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(row).then(done,fb); else fb(); });
-$("againBtn").addEventListener("click",()=>{ show("titleS"); renderTitle(); });
+$("againBtn").textContent="Back to mission";
+$("againBtn").addEventListener("click",()=>{show("playS");renderAll();if(cur&&taskBox)(taskBox.querySelector(graded?"#nextBtn":"#typed")||$("log")).focus();});
 
 renderTitle();
-window.__mission={get cur(){return cur;},get G(){return G;},NPCS,LOCS,go,useItem,talkMenu,startTopic,look,wait,sleep,debrief}; /* read-only hooks for the smoke test */
+window.__mission={get cur(){return cur;},get G(){return G;},NPCS,LOCS,go,useItem,talkMenu,startTopic,look,wait,sleep,debrief}; /* Game handles for local regression checks. */
 })();
 </script>
 </body>
