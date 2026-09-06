@@ -312,7 +312,7 @@
   input.jp{font-size:20px;max-width:none;background:var(--lcd);color:var(--ink)}
   .hint{font-size:14px}.taskbtns{gap:10px}.taskbtns .leave{margin-left:auto;background:transparent;box-shadow:none;border:0;font-size:13px;text-transform:none;text-decoration:underline}
   .feedback{padding:10px 12px;margin-top:12px;font-size:15px;border:2px solid var(--ink)}
-  .feedback.bad{border-style:double;border-width:4px}.feedback.nudge{border-style:dashed;font-style:italic}.feedback .rule{font-size:14px;line-height:1.6}
+  .feedback.bad{border-style:double;border-width:4px}.feedback a.rule{color:var(--ink);text-decoration:underline}.feedback.nudge{border-style:dashed;font-style:italic}.feedback .rule{font-size:14px;line-height:1.6}
   .hud{padding:8px 12px;gap:8px 18px;min-height:48px;font-size:14px;flex:none}
   .hud .lab{font-size:12px;letter-spacing:0}.hud .clock{font-size:13px}
   .hud .susp{width:48px}.hud .hearts canvas{width:16px!important;height:16px!important}
@@ -1231,7 +1231,7 @@ clerk:{name:"Nakamura, konbini clerk",jp:R("店員","てんいん")+"・"+R("中
       {jp:"「"+R("違","ちが")+"います」と"+R("思","おも")+"います。",en:"I think 'you're mistaken'.",ok:false,why:"と思います is what someone thinks. Nakamura asked what the spy SAYS: と言います."}]},
     after:(G,ok)=>"「山田さんに会いましたか。」 Nakamura mentions Yamada in the back room sells home-made pickles. And 'other things'. Nakamura does not know what other things. Nakamura is a novelist, not a detective."}
   ]},
-fixer:{name:"Yamada, the fixer",jp:R("山田","やまだ"),spr:"fixer",loc:"konbini",
+fixer:{name:"Yamada, the fixer",jp:R("山田","やまだ"),spr:"fixer",loc:"konbini",req:G=>!G.is("fixerBurned")||"The STAFF ONLY door is shut and means it now.",
   bio:"Former idol (one single, 2009, peaked at 38). Now: pickles, forged documents, night shift. Still does the hand gestures.",
   small:[{jp:"つけもの、いる？",en:"Want pickles?"},{jp:"むかしはアイドルでした。",en:"I used to be an idol."}],
   topics:[
@@ -1247,7 +1247,7 @@ fixer:{name:"Yamada, the fixer",jp:R("山田","やまだ"),spr:"fixer",loc:"konb
    {id:"stay",title:"Test: how long",skill:"num-y56",
     lines:[{jp:"どのくらい"+R("日本","にほん")+"にいますか。",en:"How long are you in Japan?"}],
     task:{kind:"choice",prompt:"Your cover says {{stayEn}}.",dynamic:"stay"}},
-   {id:"idcard",title:"Get the ID",skill:"num-y56",req:G=>(["newname","town","job","stay"].every(t=>G.done("fixer",t)))||"「まだまだ。」 Not yet. Yamada wants all four tests done first, in any order.",
+   {id:"idcard",title:"Get the ID",skill:"num-y56",req:G=>(["newname","town","job","stay"].every(t=>G.done("fixer",t)||G.done("fixer2",t)))||"「まだまだ。」 Not yet. All four tests first, in any order.",
     lines:[{jp:"はい、"+R("身分証","みぶんしょう")+"。それと、あの"+R("店","みせ")+"は{{open}}にあきます。",en:"Here, your ID. And that shop opens at {{openEn}}."}],
     task:{kind:"choice",prompt:"When does the Michelin shop open?",dynamic:"open"},
     after:(G,ok)=>{G.give("idcard");G.flag("knowOpen");return "The ID is warm from the laminator. The photo is of someone else. 「だいじょうぶ、だいじょうぶ。」";}},
@@ -1462,7 +1462,7 @@ const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(M
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 const SAVE_KEY="mission-japan-save-v2";
 /* One number, counted up on every deploy, so a stale tab is obvious. Bump it with each live copy. */
-const BUILD={n:12,date:"2026-09-06"};
+const BUILD={n:13,date:"2026-09-06"};
 ["buildTag","buildEyebrow","buildMenu"].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=(id==="buildTag"?"MISSION · ":"")+`BUILD ${BUILD.n} · ${BUILD.date}`; });
 const INK=getComputedStyle(document.documentElement).getPropertyValue("--ink").trim();
 const PAPER=getComputedStyle(document.documentElement).getPropertyValue("--lcd").trim();
@@ -1529,6 +1529,12 @@ const plainJp=h=>String(h).replace(/<rt>[^<]*<\/rt>/g,"").replace(/<[^>]+>/g,"")
 
 
 /* HQ: a person on the phone, present at the hotel once you have the goods */
+/* the second forger: Suzuki's cousin, who appears at the hotel once Yamada has given up on you */
+NPCS.fixer2={name:"Ken, Suzuki's cousin",jp:"ケン",spr:"fixer",loc:"hotel",req:G=>G.is("fixerBurned")&&!G.over,
+  bio:"Refills the lobby vending machine with hot corn soup, and, for a fee, with other things. Yamada's rival, though neither will say so. Less patient than Yamada, which is saying something.",
+  small:[{jp:"コーンスープ、"+R("飲","の")+"む？",en:"Corn soup?"},{jp:"はやく。",en:"Quick."}],
+  topics:NPCS.fixer.topics.filter(t=>t.id!=="idol").map(t=>({...t,req:t.req,lines:t.lines.map(l=>({jp:l.jp,en:l.en})),after:t.id==="idcard"?(G,ok)=>{G.give("idcard");G.flag("knowOpen");return "The ID comes out of the vending machine slot, warm, next to a can of soup. The photo is of Suzuki. 「だいじょうぶ。」";}:t.after}))};
+NPCS.fixer2.topics.forEach(t=>{ if(t.id==="newname") t.lines=[{jp:"じゃ、"+R("名前","なまえ")+"。だれ？",en:"Right. Name. Who are you?"}]; if(t.id==="town") t.lines=[{jp:"どこに"+R("住","す")+"んでる？",en:"Where do you live?"}]; if(t.id==="job") t.lines=[{jp:R("仕事","しごと")+"は？はやく。",en:"Job? Quick."}]; if(t.id==="stay") t.lines=[{jp:"いつまで"+R("日本","にほん")+"にいる？",en:"Until when are you in Japan?"}]; if(t.id==="idcard") t.lines=[{jp:"ほら。あの"+R("店","みせ")+"は{{open}}にあく。",en:"Here. That shop opens at {{openEn}}."}]; });
 NPCS.hq={name:"HQ, Melbourne",jp:R("本部","ほんぶ"),spr:"hq",loc:"hotel",req:G=>G.is("recipe"),
   bio:"Your handler. Works from a co-working space in Cremorne. Has asked about Kit Kats four times. Signs off your expenses, so: formal-ish.",
   small:[{jp:"キットカット、"+R("買","か")+"った？",en:"Did you buy the Kit Kats?"}],
@@ -1705,7 +1711,7 @@ function renderInv(){
 }
 let sub=null;
 function renderActs(){
-  const busy=!!cur;
+  const busy=!!cur||!!(G&&G.over);
   const a=$("acts"); a.innerHTML="";
   const JPACT={Talk:"話す",Look:"見る",Use:"使う",Go:"行く",Wait:"待つ",Sleep:"寝る"};
   const mk=(t,fn,on)=>{ const b=document.createElement("button"); b.className="k"+(on?" on":""); b.dataset.act=t; b.innerHTML=`<span lang="ja">${JPACT[t]||""}</span> ${t}`; b.disabled=busy; b.addEventListener("click",fn); a.appendChild(b); return b; };
@@ -1941,9 +1947,10 @@ function check(box){
     else if(G.loc==="airport"&&cur.npc==="officer"){ G.susp=Math.min(100,G.susp+5); zone=" Officer Tanaka jogs a little faster. Suspicion +5."; }
     else zone=" Nobody here minds. You just learned something for free.";
     if(!cur.tries) G.memos.push({what:(kind==="faux"?"A cultural slip: ":"A language slip: ")+fill(t.prompt,s),rule:why+(rule?" "+rule:""),skill:cur.topic.skill});
+    if(cur.npc==="fixer"||cur.npc==="fixer2"){ G.fails=G.fails||{}; G.fails[cur.npc]=(G.fails[cur.npc]||0)+1; if(G.fails[cur.npc]>=2) cur.burn=cur.npc; }
     if(cur.tries) zone+=" Third time; here is the whole of it.";
   }
-  cur.feedback={html:`<b>${ok?"✓ Reply accepted":kind==="faux"?"! Cultural slip":"✗ Check this reply"}</b><div>${esc(why)}${esc(zone)}</div>${rule?`<span class="rule">${esc(rule)}</span>`:""}${cur.topic.skill&&SKILLS[cur.topic.skill]?`<span class="rule">Grammar Hub: ${esc(SKILLS[cur.topic.skill][0])}</span>`:""}`,cls:ok?"good":"bad"};
+  cur.feedback={html:`<b>${ok?"✓ Reply accepted":kind==="faux"?"! Cultural slip":"✗ Check this reply"}</b><div>${esc(why)}${esc(zone)}</div>${rule?`<span class="rule">${esc(rule)}</span>`:""}${cur.topic.skill&&SKILLS[cur.topic.skill]?`<a class="rule" href="../grammar/#${encodeURIComponent(cur.topic.skill)}" target="_blank" rel="noopener">Grammar Hub: ${esc(SKILLS[cur.topic.skill][0])} →</a>`:""}`,cls:ok?"good":"bad"};
   paintFeedback(box,cur.feedback);
   box.querySelector("#checkBtn").style.display="none"; const nb=box.querySelector("#nextBtn"); nb.style.display=""; nb.focus();
   box.querySelector("#leaveBtn").hidden=true;cur.ok=ok; renderHud(); save();
@@ -1982,6 +1989,8 @@ function finishTopic(){
   const finished=cur;if(finished.feedback)remember(finished.feedback.html,finished.feedback.cls);retireTask();cur=null;taskBox=null;pickedOpt=null;graded=false;
   if(finished.npc){ G.did[finished.npc]=G.did[finished.npc]||{}; G.did[finished.npc][finished.topic.id]=true; }
   const after=finished.topic.after?finished.topic.after(G,finished.ok):null; if(after) narr(after);tick(0);
+  if(finished.burn==="fixer"&&!G.is("fixerBurned")){ G.flag("fixerBurned"); SND.down(); narr("Yamada stops. 「もう無理。」 Two tests gone wrong is two too many for someone whose other business is pickles. The pickles slide across the counter as an apology and the STAFF ONLY door shuts. You will need another forger. Suzuki at the hotel has a cousin. Everyone has a cousin."); }
+  if(finished.burn==="fixer2"&&!G.over){ gameOver("Ken looks at the vending machine, then at you, then at the vending machine. 「…ごめん。」 The second forger in Ueno has decided you are a risk to the hot corn soup. There is no third. The mission is over; the passport, the dictionary and everything you built stay with you for the next one."); return; }
   if(G.loc==="michelin"&&G.is("shownId")) ringPhone(0.35);
   checkDeported(); renderAll();
 }
@@ -2036,12 +2045,14 @@ document.addEventListener("keydown",e=>{
   if(action){const button=$("acts").querySelector(`button[data-act="${action}"]`);if(button&&!button.disabled){e.preventDefault();button.click();}}
 });
 
+/* ---- mission over: the world keeps your passport, your dictionary and your lesson ---- */
+function gameOver(text){ G.over=true; SND.down(); retireTask(); retireMenus(); cur=null; taskBox=null; graded=false; narr(text); G.memos.push({what:"Mission over.",rule:"Two forgers, two too many mistakes each. The tests are the same next time; the words you built are still yours."}); save(); renderAll(); setTimeout(debrief,900); }
 /* ---- debrief ---- */
 function debrief(){
   save();
   const by={}; Object.values(G.first).forEach(f=>{ if(!f.skill) return; by[f.skill]=by[f.skill]||{n:0,ok:0}; by[f.skill].n++; if(f.ok) by[f.skill].ok++; });
   const total=Object.keys(G.first).length, right=Object.values(G.first).filter(f=>f.ok).length;
-  const outcome=!G.is("recipe")?"NO RECIPE YET":G.susp<35?"RECIPE OUT · COVER INTACT":G.susp<100?"RECIPE OUT · COVER SHAKY":"RECIPE OUT · DEPORTED, POLITELY";
+  const outcome=G.over?"MISSION OVER · START AGAIN":!G.is("recipe")?"NO RECIPE YET":G.susp<35?"RECIPE OUT · COVER INTACT":G.susp<100?"RECIPE OUT · COVER SHAKY":"RECIPE OUT · DEPORTED, POLITELY";
   const rows=Object.entries(by).sort((a,b)=>(SKILLS[a[0]]||["","9"])[1].localeCompare((SKILLS[b[0]]||["","9"])[1])).map(([k,v])=>`<tr><td><b>${esc((SKILLS[k]||[k])[0])}</b></td><td>${esc((SKILLS[k]||["","?"])[1])}</td><td>${v.ok}/${v.n}</td><td><a href="../grammar/#${encodeURIComponent(k)}" target="_blank" rel="noopener">Grammar Hub: ${esc((SKILLS[k]||[k])[0])} →</a></td></tr>`).join("");
   const byLoc={}; Object.values(G.first).forEach(f=>{ if(!f.loc) return; byLoc[f.loc]=byLoc[f.loc]||{n:0,ok:0}; byLoc[f.loc].n++; if(f.ok) byLoc[f.loc].ok++; });
   const placeRows=Object.keys(LOCS).filter(l=>(G.visited||{})[l]||byLoc[l]).map(l=>`<tr><td><b>${esc(LOCS[l].name)}</b> ${LOCS[l].jp}</td><td>${byLoc[l]?`${byLoc[l].ok}/${byLoc[l].n}`:"visited"}</td><td><a href="../vocab/#unit:${VOCAB_KEY[l]}" target="_blank" rel="noopener">Vocab Hub: words for ${esc(LOCS[l].name)} →</a></td></tr>`).join("");
@@ -2053,11 +2064,12 @@ function debrief(){
     <table><tr><th>Place</th><th>First try there</th><th>The words you met there</th></tr>${placeRows}</table>
     <h2 style="margin-top:14px">HQ's notes</h2>${G.memos.length?G.memos.map(m=>`<div class="memo"><b>${esc(m.what)}</b><br>${esc(m.rule)}</div>`).join(""):`<p class="en">Nothing. HQ is suspicious of agents with nothing to learn.</p>`}
     <p class="en" style="margin-top:10px">Teachers: the copied row is name · kit · first-try · suspicion · missed skills. It is not a mark; it is what the student got wrong first time and the rule they were shown.</p>`;
-  $("copied").textContent=""; show("debS");$("debBody").tabIndex=-1;$("debBody").focus();
+  againLabel(); $("copied").textContent=""; show("debS");$("debBody").tabIndex=-1;$("debBody").focus();
 }
 $("copyBtn").addEventListener("click",()=>{ const total=Object.keys(G.first).length, right=Object.values(G.first).filter(f=>f.ok).length; const missed=[...new Set(Object.values(G.first).filter(f=>!f.ok).map(f=>(SKILLS[f.skill]||[f.skill])[0]))].join("; "); const row=[$("nameIn").value.trim(),G.kit,`${right}/${total}`,G.susp,missed].join("\t"); const done=()=>{$("copied").textContent="copied";}; const fb=()=>{$("copied").textContent=row;}; if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(row).then(done,fb); else fb(); });
 $("againBtn").textContent="任務にもどる · Back to mission";
-$("againBtn").addEventListener("click",()=>{show("playS");renderAll();if(cur&&taskBox)(taskBox.querySelector(graded?"#nextBtn":"#typed")||$("log")).focus();});
+const againLabel=()=>{ $("againBtn").textContent=G&&G.over?"始めから · Start again":"任務にもどる · Back to mission"; };
+$("againBtn").addEventListener("click",()=>{ if(G&&G.over){ try{localStorage.removeItem(SAVE_KEY);}catch(e){} G=null; show("titleS"); renderTitle(); return; } show("playS");renderAll();if(cur&&taskBox)(taskBox.querySelector(graded?"#nextBtn":"#typed")||$("log")).focus();});
 
 renderTitle();
 window.__mission={get cur(){return cur;},get G(){return G;},NPCS,LOCS,go,useItem,talkMenu,startTopic,look,wait,sleep,debrief}; /* Game handles for local regression checks. */
