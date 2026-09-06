@@ -8,6 +8,10 @@
 <meta name="google" content="notranslate">
 <meta name="description" content="An Australian agent, a Tokyo ramen shop, and a recipe to bring home. A Japanese-language spy adventure.">
 <meta name="theme-color" content="#242724">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <title>ミッション：日本 · Mission: Japan</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%95%B6%EF%B8%8F%3C/text%3E%3C/svg%3E">
 <style>
@@ -138,8 +142,8 @@
   .obj h4{letter-spacing:.14em;text-transform:uppercase;font-size:12px;margin-bottom:6px}
   .obj .jp{font-size:21px;line-height:1.8}
   .obj-phone{width:300px;border-radius:26px;padding:26px 18px 30px}
-  .obj-phone .screen{border:3px solid var(--ink);min-height:300px;padding:10px 12px;background:#fff;font-size:13.5px}
-  .obj-phone .screen .bubble{border:2px solid var(--ink);padding:6px 10px;margin:6px 0;border-radius:10px 10px 10px 2px}
+  .obj-phone .pscreen{border:3px solid var(--ink);min-height:300px;padding:10px 12px;background:#fff;font-size:13.5px}
+  .obj-phone .pscreen .bubble{border:2px solid var(--ink);padding:6px 10px;margin:6px 0;border-radius:10px 10px 10px 2px}
   .obj-phone .btn{width:44px;height:44px;border:3px solid var(--ink);border-radius:50%;margin:12px auto 0}
   .obj-book{width:min(720px,92%);display:grid;grid-template-columns:1fr 1fr;padding:18px}
   .obj-book .page{padding:10px 14px;background:#fff;border:2px solid var(--ink);min-height:240px}
@@ -235,7 +239,7 @@
   .goals .g{padding:2px 0}
   .channel{display:flex;align-items:center;gap:10px;border-bottom:2px solid var(--ink);padding:7px 14px;flex:none}
   .channel strong{font-size:12px;letter-spacing:.12em}.channel .en{font-size:12px;margin-left:auto}
-  .channel .k.sm{min-height:32px;font-size:12px}
+  .channel .k.sm{min-height:32px;font-size:12px}#fsHint{margin-left:auto}#fsHint+.k{margin-left:0}
   .main{min-height:0}
   .log{padding:16px 20px;overscroll-behavior:contain;font-size:16px;scrollbar-color:var(--ink) var(--lcd2)}
   .log .sys{font-size:13px;border-top:1px dotted var(--dim);padding-top:8px;margin-top:12px}
@@ -333,7 +337,7 @@
         <div class="goals" id="goals"></div>
       </div>
       <div class="main">
-        <div class="channel"><strong id="channelName">記録 · FIELD LOG</strong><span class="en" id="translationState"></span><button class="k sm" id="menuBtn" aria-haspopup="dialog">メニュー · Menu</button></div>
+        <div class="channel"><strong id="channelName">記録 · FIELD LOG</strong><span class="en" id="translationState"></span><button class="k sm" id="fsHint" title="Go full screen">⛶ 全画面</button><button class="k sm" id="menuBtn" aria-haspopup="dialog">メニュー · Menu</button></div>
         <div class="log" id="log" role="region" aria-label="Field log and conversation" tabindex="0"></div>
         <div class="dock" id="dock" role="region" aria-label="Your reply"></div>
         <div class="hud">
@@ -372,7 +376,7 @@
   <p class="en" id="menuTeacher"></p>
 </div></div>
 <span class="hubchip"><a href="../">⌂ にほんごハブ · Hub</a></span>
-<span class="buildtag">MISSION 2026-09-06i</span>
+<span class="buildtag">MISSION 2026-09-06j</span>
 </div>
 <script src="words.js"></script>
 <script>
@@ -1529,11 +1533,11 @@ function renderTitle(){
   const tc=$("titleScene").getContext("2d");tc.clearRect(0,0,112,56);drawSprite(tc,"airport",0,4,3);drawSprite(tc,"michelin",64,4,3);drawSprite(tc,"agent",47,31,1);tc.fillStyle=INK;tc.fillRect(0,52,112,1);
   const saved=load();
   $("resume").innerHTML=saved?`<div class="resume"><span>Saved: day ${saved.day}, ${LOCS[saved.loc].name}, ${LOADOUTS[saved.kit].n} kit, ¥${saved.yen.toLocaleString()}.</span><span><button class="k sm inv" id="resumeBtn">Continue</button> <button class="k sm" id="wipeBtn">Start over</button></span></div>`:"";
-  if(saved){ $("resumeBtn").onclick=()=>{G=saved;startPlay();narr("You pick up where you left off. "+LOCS[G.loc].name+".");}; $("wipeBtn").onclick=()=>{try{localStorage.removeItem(SAVE_KEY);}catch(e){} renderTitle();}; }
+  if(saved){ $("resumeBtn").onclick=()=>{goFull();G=saved;startPlay();narr("You pick up where you left off. "+LOCS[G.loc].name+".");}; $("wipeBtn").onclick=()=>{try{localStorage.removeItem(SAVE_KEY);}catch(e){} renderTitle();}; }
   $("load").innerHTML=Object.entries(LOADOUTS).map(([k,L])=>`<button data-k="${k}"><b>${L.n}</b><span class="kit" id="kit-${k}"></span><small class="desc">${esc(L.desc)}</small><span class="deploy">TAKE THIS KIT →</span></button>`).join("");
   Object.entries(LOADOUTS).forEach(([k,L])=>{ const box=$("kit-"+k); L.items.forEach(i=>box.appendChild(spriteCanvas(i,32))); const y=document.createElement("small"); y.style.display="inline"; y.textContent="¥"+L.yen.toLocaleString(); box.appendChild(y); });
   $("load").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
-    if(saved){toast("A mission is saved. Continue it, or choose Start over first.");$("resumeBtn").focus();return;}newGame(b.dataset.k);
+    if(saved){toast("A mission is saved. Continue it, or choose Start over first.");$("resumeBtn").focus();return;}goFull();newGame(b.dataset.k);
   }));
 }
 
@@ -1709,7 +1713,7 @@ function showObject(i,text){
   const box=document.createElement("div"); const close='<button class="k sm close" data-close>×</button>';
   if(i==="phone"){
     box.className="obj obj-phone";
-    box.innerHTML=`${close}<div class="screen"><h4>HQ · Melbourne · roaming</h4>${text?`<div class="bubble">${esc(text)}</div>`:""}<div class="bubble" style="border-radius:10px 10px 2px 10px;text-align:right">キットカット、${R("買","か")}った？</div><div class="en" style="margin-top:8px">¥500 a call. Under cover, a phone out is a phone noticed.</div>${text?`<button class="k sm" data-hq>▶ hear HQ</button>`:""}</div><div class="btn"></div>`;
+    box.innerHTML=`${close}<div class="pscreen"><h4>HQ · Melbourne · roaming</h4>${text?`<div class="bubble">${esc(text)}</div>`:""}<div class="bubble" style="border-radius:10px 10px 2px 10px;text-align:right">キットカット、${R("買","か")}った？</div><div class="en" style="margin-top:8px">¥500 a call. Under cover, a phone out is a phone noticed.</div>${text?`<button class="k sm" data-hq>▶ hear HQ</button>`:""}</div><div class="btn"></div>`;
     setTimeout(()=>{ const b=box.querySelector("[data-hq]"); if(b) b.addEventListener("click",()=>{ const r=SPEAK.sayEn(text); if(r) toast(r); }); },0);
   }else if(i==="dictionary"){
     box.className="obj obj-book";
@@ -1890,6 +1894,12 @@ function openMenu(){
   $("debBtn").addEventListener("click",()=>{closeMenu(false);debrief();});$("lcd").inert=true;$("menu").classList.add("show");$("closeMenu").focus();
 }
 function closeMenu(restoreFocus=true){$("menu").classList.remove("show");$("lcd").inert=false;if(restoreFocus&&menuFocus?.isConnected)menuFocus.focus();}
+/* the game wants the whole screen: asked for on the way in (a click, so browsers allow it), offered
+   again in the top bar whenever it is not, and the installed app opens full screen by itself. */
+function goFull(){ const el=document.documentElement; if(document.fullscreenElement||!el.requestFullscreen) return; el.requestFullscreen({navigationUI:"hide"}).catch(()=>{}); }
+function paintFs(){ const b=$("fsHint"); if(b) b.hidden=!!document.fullscreenElement||!document.documentElement.requestFullscreen||window.matchMedia("(display-mode: fullscreen)").matches; }
+$("fsHint").addEventListener("click",goFull); document.addEventListener("fullscreenchange",paintFs); paintFs();
+if("serviceWorker" in navigator&&location.protocol.startsWith("http")){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 $("menuBtn").addEventListener("click",openMenu);
 $("closeMenu").addEventListener("click",()=>closeMenu());
 $("subsBtn").addEventListener("click",()=>{ const on=SUBS.toggle(); $("subsBtn").textContent="字幕 · Subtitles: "+(on?"on":"off"); $("log").querySelectorAll(".ann .jp").forEach(j=>{ j.hidden=!on; j.parentElement.querySelector(".tr").hidden=!on||!G.worn.includes("glasses"); }); });
