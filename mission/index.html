@@ -144,6 +144,10 @@
   .obj-phone{width:300px;border-radius:26px;padding:26px 18px 30px}
   .obj-phone .pscreen{border:3px solid var(--ink);min-height:300px;padding:10px 12px;background:#fff;font-size:13.5px}
   .obj-phone .pscreen .bubble{border:2px solid var(--ink);padding:6px 10px;margin:6px 0;border-radius:10px 10px 10px 2px}
+  .obj-phone{width:340px}.obj-phone .pscreen{max-height:60vh;overflow:auto}
+  .apps{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}.apps .k{padding:10px 6px;font-size:14px;line-height:1.3}.apps small{font-size:10px;letter-spacing:.06em;color:var(--dim)}
+  .contacts{display:flex;flex-direction:column;gap:6px;margin:8px 0}.contacts .k{text-align:left;text-transform:none}
+  .post{border-bottom:1px dotted var(--ink);padding:6px 0}.thread{border:2px solid var(--ink);padding:6px 8px;margin:8px 0}
   .obj-phone .btn{width:44px;height:44px;border:3px solid var(--ink);border-radius:50%;margin:12px auto 0}
   .obj-book{width:min(720px,92%);display:grid;grid-template-columns:1fr 1fr;padding:18px}
   .obj-book .page{padding:10px 14px;background:#fff;border:2px solid var(--ink);min-height:240px}
@@ -340,6 +344,10 @@
   .ann .jp{font-size:19px;line-height:1.7}
   .ann .tr{font-size:13px;color:var(--dim)}
   .ann .note{font-size:12px;color:var(--dim)}
+  .turn{position:fixed;inset:0;background:var(--frame);color:var(--lcd);display:none;align-items:center;justify-content:center;text-align:center;padding:24px;z-index:50;font-family:"Courier New",Courier,monospace}
+  .turn.show{display:flex}.turn b{display:block;font-size:18px;margin:8px 0}.turn .en{color:#b4bcaf;max-width:320px;margin:0 auto 14px}
+  /* the dictionary stacks on a narrow screen */
+  @media (max-width:760px){.obj-book{grid-template-columns:1fr;width:96%;padding:12px;gap:10px}.obj-book .page{min-height:0}.obj-book .page+.page{border-left:1px solid #d8cfbb}.obj-book .wl{max-height:34vh}.obj-book .wrow{grid-template-columns:5.5em minmax(0,1fr) auto;gap:8px}.obj-book .wrow .w{font-size:18px}.obj-book .card .cw{font-size:26px}}
   [hidden]{display:none!important}
   @media (min-width:681px) and (max-height:700px){body{padding:6px}.device{padding:19px 10px 21px}.title{padding:18px;gap:12px}.title-head{padding-bottom:12px}#titleScene{width:176px;height:88px}.load button{min-height:170px}.view{width:240px}.view canvas#scene{max-height:105px;object-fit:contain}.channel{padding:4px 12px}.log{padding:10px 16px}.hud{padding:5px 10px}.inv{min-height:50px}.acts{padding:7px 10px}}
   @media (max-width:900px){.view{width:230px}.load{gap:10px}.load button{padding:12px}.load button[data-k="agent"]{padding:10px}.load .kit canvas{width:24px!important;height:24px!important}.hud{gap:6px 10px}.hud .time{margin-left:0}}
@@ -434,6 +442,7 @@
 
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="turn" id="turn"><div><div style="font-size:48px">⟳</div><b>よこにして · Turn your phone sideways</b><p class="en">The field unit is a landscape device. Full screen will hold it there on most Android phones; on iPhone, rotate and it stays.</p><button class="k sm" id="turnFs">全画面 · Full screen</button> <button class="k sm" id="turnOk">つづける · Carry on anyway</button></div></div>
 <div class="item-ov" id="itemOv"></div>
 <div class="menu" id="menu" role="dialog" aria-modal="true" aria-labelledby="menuTitle"><div class="box">
   <h3 id="menuTitle">メニュー · Field menu <span class="en" id="buildMenu" style="font-weight:400;text-transform:none;letter-spacing:0"></span></h3>
@@ -1106,6 +1115,8 @@ const ITEMS={
   bag:{n:"red bag?",jp:"かばん",desc:"A {{bagEn}} backpacker's bag from lost property. Not yours. Give it back."},
   notes:{n:"notes",jp:"メモ",desc:"What you memorised from the chef's notebook: {{hours}} of simmering, and {{secret}}."},
   photo:{n:"photo",jp:R("写真","しゃしん"),desc:"A photo of a notebook page. Grainy. Good enough for HQ."},
+  umbrella:{n:"umbrella",jp:"かさ",desc:"A konbini umbrella, ¥600 of clear plastic. Use to carry it or put it away. Rain cares.",wear:true},
+  coat:{n:"coat",jp:"コート",desc:"A coat. Use to put on or take off. Cold cares, and so does heat.",wear:true},
   shoes:{n:"shoes",jp:"くつ",desc:"On your feet, mostly. Use to take off or put on. Tatami cares. Kitchens care the other way.",wear:true,worn:true}
 };
 
@@ -1223,6 +1234,14 @@ clerk:{name:"Nakamura, konbini clerk",jp:R("店員","てんいん")+"・"+R("中
     lines:[{jp:R("辞書","じしょ")+"ですか。あちらの"+R("棚","たな")+"です。"+R("三千円","さんぜんえん")+"です。",en:"A dictionary? That shelf over there. Three thousand yen."}],
     task:{kind:"gap",prompt:"Which word did they use for a shelf far from both of you?",jp:"＿＿＿の"+R("棚","たな")+"です。",en:"It's that shelf over there.",accept:["あちら","あれ","あの"],opts:["あちら","こちら","そちら","どちら"],rule:"あちら: over there, away from both speakers (polite form of あれ／あの). こちら here, そちら there by you."},
     after:(G,ok)=>{ if(G.yen<3000) return "¥3,000 you do not have. The dictionary stays on the shelf, far from both of you."; G.yen-=3000; G.give("dictionary"); return "Bought. A pocket dictionary. Nakamura asks if you are a spy. You say no. It goes in the novel anyway.";}},
+   {id:"umbrella",title:"Buy an umbrella (¥600)",skill:"num-y56",req:G=>!G.has("umbrella")||"You have an umbrella. Nakamura points at it.",
+    lines:[{jp:"かさですか。"+R("六百円","ろっぴゃくえん")+"です。",en:"An umbrella? Six hundred yen."},{jp:R("雨","あめ")+"ですね。かさは"+R("六百円","ろっぴゃくえん")+"になります。",en:"Rain, eh. An umbrella comes to six hundred yen."}],
+    task:{kind:"choice",prompt:"How much is the umbrella?",options:[{jp:"600円",en:"600 yen",ok:true,why:"ろっぴゃくえん: six hundred. Six-hundred is the one that goes ぴゃく."},{jp:"800円",en:"800 yen",ok:false,why:"はっぴゃく is eight hundred. They said ろっぴゃく."},{jp:"160円",en:"160 yen",ok:false,why:"ひゃくろくじゅう would be 160. They said ろっぴゃく: six hundred."}]},
+    after:(G,ok)=>{ if(G.yen<600) return "You cannot pay. It rains anyway."; G.yen-=600; G.give("umbrella"); return "¥600. A clear plastic umbrella, like everyone's. USE it to put it up."; }},
+   {id:"coat",title:"Buy a coat (¥4,000)",skill:"identity-y34",req:G=>!G.has("coat")||"You have a coat. Nakamura admires it.",
+    lines:[{jp:"コートは、あの"+R("棚","たな")+"です。"+R("四千円","よんせんえん")+"。",en:"Coats are on that shelf over there. Four thousand yen."}],
+    task:{kind:"gap",prompt:"Ask for that one over there, the one on the far shelf.",jp:"＿＿＿コートをください。",en:"That coat over there, please.",accept:["あの"],opts:["あの","この","その","どの"],rule:"あの + noun: that one over there, away from both of you. この near you, その near them, どの which."},
+    after:(G,ok)=>{ if(G.yen<4000) return "¥4,000 you do not have. The coat stays on the far shelf."; G.yen-=4000; G.give("coat"); return "¥4,000. A coat. Konbini fashion. USE it to put it on."; }},
    {id:"novel",title:"The novel",skill:"pf-expr-1-links",
     lines:[{jp:"スパイが"+R("見","み")+"つかったとき、"+R("何","なん")+"と"+R("言","い")+"いますか。",en:"When the spy is discovered, what does he say?"}],
     task:{kind:"choice",prompt:"Nakamura needs a line for the novel. Pick the one that reports speech properly.",options:[
@@ -1430,8 +1449,8 @@ const USE={
   "camera@alley":G=>"You raise the camera. The poet waiter appears from nowhere: 「ごえんりょください。」 You lower it. He writes a haiku about it.",
   "camera@airport":G=>"A photo of a plane. It is a good photo of a plane.",
   "camera@station":G=>"A photo of Sato bowing to a train. Sato asks for a copy for the cat.",
-  "phone@michelin":G=>{ const t=G.hintText(); if(Math.random()<0.4){G.susp=Math.min(100,G.susp+20);return "You take out a phone in his kitchen. 「電話は外で！」 Suspicion +20. HQ, before you hang up: "+t;} G.yen=Math.max(0,G.yen-500);return "Under the counter, ¥500 of roaming. HQ: "+t+" Also, Kit Kats. The matcha ones.";},
-  "phone@*":G=>{ if(G.loc==="hotel"&&G.is("recipe")) { G.startDebrief(); return null; } G.yen=Math.max(0,G.yen-500); return "¥500 of roaming. HQ: "+G.hintText()+" Melbourne asks, again, about Kit Kats."; },
+  "phone@michelin":G=>{ if(Math.random()<0.4){G.susp=Math.min(100,G.susp+20);return "You take out a phone in his kitchen. 「電話は外で！」 Suspicion +20.";} return "Under the counter, screen dimmed. Nobody saw. This time.";},
+  "phone@*":G=>{ if(G.loc==="hotel"&&G.is("recipe")) { G.startDebrief(); } return ""; },
   "dictionary@*":G=>G.dictionary(),
   "glasses@*":G=>G.toggleWear("glasses"),
   "shoes@*":G=>G.toggleWear("shoes"),
@@ -1462,7 +1481,7 @@ const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(M
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 const SAVE_KEY="mission-japan-save-v2";
 /* One number, counted up on every deploy, so a stale tab is obvious. Bump it with each live copy. */
-const BUILD={n:14,date:"2026-09-06"};
+const BUILD={n:16,date:"2026-09-06"};
 ["buildTag","buildEyebrow","buildMenu"].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=(id==="buildTag"?"MISSION · ":"")+`BUILD ${BUILD.n} · ${BUILD.date}`; });
 const INK=getComputedStyle(document.documentElement).getPropertyValue("--ink").trim();
 const PAPER=getComputedStyle(document.documentElement).getPropertyValue("--lcd").trim();
@@ -1535,6 +1554,72 @@ NPCS.fixer2={name:"Ken, Suzuki's cousin",jp:"ケン",spr:"fixer",loc:"hotel",req
   small:[{jp:"コーンスープ、"+R("飲","の")+"む？",en:"Corn soup?"},{jp:"はやく。",en:"Quick."}],
   topics:NPCS.fixer.topics.filter(t=>t.id!=="idol").map(t=>({...t,req:t.req,lines:t.lines.map(l=>({jp:l.jp,en:l.en})),after:t.id==="idcard"?(G,ok)=>{G.give("idcard");G.flag("knowOpen");return "The ID comes out of the vending machine slot, warm, next to a can of soup. The photo is of Suzuki. 「だいじょうぶ。」";}:t.after}))};
 NPCS.fixer2.topics.forEach(t=>{ if(t.id==="newname") t.lines=[{jp:"じゃ、"+R("名前","なまえ")+"。だれ？",en:"Right. Name. Who are you?"}]; if(t.id==="town") t.lines=[{jp:"どこに"+R("住","す")+"んでる？",en:"Where do you live?"}]; if(t.id==="job") t.lines=[{jp:R("仕事","しごと")+"は？はやく。",en:"Job? Quick."}]; if(t.id==="stay") t.lines=[{jp:"いつまで"+R("日本","にほん")+"にいる？",en:"Until when are you in Japan?"}]; if(t.id==="idcard") t.lines=[{jp:"ほら。あの"+R("店","みせ")+"は{{open}}にあく。",en:"Here. That shop opens at {{openEn}}."}]; });
+/* weather: rolled each day, read off the phone in Japanese, felt on the way between places */
+const WEATHER=[
+  {k:"sun",jp:R("晴","は")+"れ",kana:"はれ",en:"fine",temps:[18,24]},
+  {k:"rain",jp:R("雨","あめ"),kana:"あめ",en:"rain",temps:[12,18]},
+  {k:"cold",jp:R("曇","くも")+"り、"+R("寒","さむ")+"い",kana:"くもり、さむい",en:"cloudy and cold",temps:[3,7]},
+  {k:"hot",jp:R("晴","は")+"れ、"+R("暑","あつ")+"い",kana:"はれ、あつい",en:"fine and hot",temps:[31,35]},
+  {k:"snow",jp:R("雪","ゆき"),kana:"ゆき",en:"snow",temps:[-1,2]}
+];
+function rollWeather(){ const w=pick(WEATHER); return {k:w.k,temp:w.temps[0]+Math.floor(Math.random()*(w.temps[1]-w.temps[0]+1))}; }
+const wx=k=>WEATHER.find(w=>w.k===k)||WEATHER[0];
+function ensureWeather(){ if(!G.wx) G.wx={today:rollWeather(),tomorrow:rollWeather()}; }
+function weatherToll(x){ /* what the walk costs in the wrong clothes */
+  ensureWeather(); const w=G.wx.today; const has=i=>G.worn.includes(i); const out=[];
+  if((w.k==="rain"||w.k==="snow")&&!has("umbrella")){ G.energy=Math.max(0,G.energy-1); out.push(w.k==="rain"?"Rain, no umbrella. You arrive soaked. -1 energy.":"Snow, no umbrella. You arrive wet and surprised. -1 energy."); if(x==="michelin") { G.susp=Math.min(100,G.susp+5); out.push("You drip on his floor. Suspicion +5."); } }
+  if((w.k==="cold"||w.k==="snow")&&!has("coat")){ G.energy=Math.max(0,G.energy-1); out.push(`${w.temp}°C and no coat. -1 energy, and the shivering is noticeable.`); }
+  if(w.k==="hot"&&has("coat")){ G.energy=Math.max(0,G.energy-1); out.push(`${w.temp}°C in a coat. -1 energy, and people move away from you on the train.`); }
+  return out.join(" ");
+}
+/* the phone: people you have met will pick up (¥100), the chef who hired you picks up from Melbourne
+   (¥1,500 roaming, worth it), and two feeds in Japanese that follow where you are (free wifi). */
+NPCS.dana={name:"Chef Dana, Melbourne",jp:"ダナ",spr:"chef",loc:"nowhere",bio:"Runs the ramen chain that sent you. Worked in Osaka for three years in her twenties. Knows the rules and which ones you can break.",small:[{jp:"もしもし？",en:"Hello?"}],topics:[]};
+const CALLS={
+  officer:[{jp:"はい、田中です。マラソン、あと"+R("三週間","さんしゅうかん")+"！",en:"Tanaka here. Marathon in three weeks!"},{jp:"バスは{{gate}}のりばですよ。",en:"The bus is at stop {{gateN}}, you know."}],
+  traveller:[{jp:"かばん、まだ"+R("大阪","おおさか")+"にある。たぶん。",en:"The bag's still in Osaka. Probably."}],
+  busstaff:[{jp:R("七時三分","しちじさんぷん")+"のバスは、きょうも"+R("時間","じかん")+"どおりでした。",en:"The 7:03 was on time again today."}],
+  stationstaff:[{jp:"ミケは"+R("今","いま")+"、"+R("券売機","けんばいき")+"の"+R("上","うえ")+"で"+R("寝","ね")+"ています。",en:"Mike is asleep on the ticket machine right now."},{jp:"お"+R("忘","わす")+"れ"+R("物","もの")+"は"+R("駅","えき")+"の"+R("窓口","まどぐち")+"です。",en:"Lost property is at the station counter."}],
+  clerk:[{jp:R("小説","しょうせつ")+"、"+R("四章","よんしょう")+"まで"+R("書","か")+"きました。スパイが"+R("見","み")+"つかります。",en:"I've written up to chapter four. The spy gets discovered."}],
+  fixer:[{jp:"つけもの、まだある？",en:"Still got the pickles?"},{jp:"あの"+R("店","みせ")+"は{{open}}から。"+R("忘","わす")+"れないで。",en:"That shop opens at {{openEn}}. Don't forget."}],
+  hotelclerk:[{jp:"「ストゥルース」…やっぱり"+R("言","い")+"いますよね？",en:"'Strewth'... you do say it, right?"}],
+  owner:[{jp:"あいつは"+R("電話","でんわ")+"が"+R("鳴","な")+"るとノートをおく。ほんとだ。",en:"He puts the notebook down when the phone rings. It's true."},{jp:"ぎょうざ、"+R("残","のこ")+"ってるぞ。",en:"There's gyoza left."}],
+  waiter:[{jp:"くつをぬぎ　"+R("電話","でんわ")+"にこたえ　"+R("秋","あき")+"の"+R("風","かぜ"),en:"Shoes off / answering the phone / autumn wind. (A haiku. He hangs up.)"}],
+  oldman:[{jp:"ひみつは"+R("愛","あい")+"だよ。あと、"+R("塩","しお")+"。",en:"The secret is love. And salt."}],
+  chef:[{jp:"…だれだ。"+R("忙","いそが")+"しい。",en:"...Who is this. I'm busy."}],
+  doctor:[{jp:"オーストラリアの"+R("二","に")+"ドル"+R("玉","だま")+"、"+R("持","も")+"ってきましたか。",en:"Did you bring the Australian two-dollar coin?"}],
+  fixer2:[{jp:"コーンスープ、"+R("補充","ほじゅう")+"した。",en:"Restocked the corn soup."}]
+};
+const DANA={
+  airport:["「どうぞ」 is the word for handing anything over. Passport, money, a seat. 「どうも」 is a thank-you. Mix them up and Tanaka will be gentle about it; the chef will not.","Bow with the passport, don't wave it. And take your hat off at the desk, if you have one. You don't have one. Good."],
+  station:["Stand behind the yellow line and you are already more Japanese than most tourists. And queue on the platform marks, not near them.","Nobody eats on the train in Tokyo. Onigiri on the platform is fine, onigiri in the carriage gets you looked at. Not deported. Looked at."],
+  konbini:["Staff say いらっしゃいませ to the shop, not to you. Don't answer it. And put your money in the tray, not in their hand.","「これ」 is near you, 「それ」 near them, 「あれ」 the shelf across the room. Point with your whole hand, not a finger."],
+  hotel:["Write the name that matches your passport. Hotels copy the passport. Kitchens don't. That's the whole trick of this job.","Slippers at the door, different slippers for the toilet, and never the toilet slippers back into the room. That one gets people."],
+  alley:["Ticket machine first, then sit. Slurp; it's a compliment and it cools the noodles. Don't tip; they'll chase you down the street to give it back.","Tatami: shoes off at the step, line them up facing out. Photos: if you have to ask, the answer is ごえんりょください."],
+  michelin:["Praise the soup with 「〜と思います」, not 「おいしい！」 flat. An opinion with a hedge sounds like someone who has worked in kitchens.","Ask before you touch anything: 「〜てもいいですか」. A kitchen hand who asks is invisible. One who doesn't is a story he tells for years."],
+  hospital:["Body part plus が plus 痛い. おなかが痛い. And eat, for heaven's sake; the energy hearts are not decoration."],
+  any:["Kit Kats: matcha, the big box, and the purple sweet-potato ones if they have them. HQ will ask. I'm asking first.","If someone repeats the question slower, that is the answer. Listen for the sound they lean on."]
+};
+const FEEDS={
+  tsubuyaki:{
+    airport:[{u:"@narita_taro",t:R("成田","なりた")+"から"+R("上野","うえの")+"、バスは{{gate}}のりば。まちがえると"+R("千葉","ちば")+"の"+R("奥","おく")+"に"+R("行","い")+"く。",en:"Narita to Ueno: the bus is at stop {{gateN}}. Get it wrong and you end up deep in Chiba.",likes:412},{u:"@runner_tanaka",t:R("今日","きょう")+"も"+R("仕事","しごと")+"しながら10キロ。パスポート"+R("三百","さんびゃく")+"さつ。",en:"Ten kilometres at work again today. Three hundred passports.",likes:88},{u:"@kiwi_lost",t:"かばんは"+R("大阪","おおさか")+"。ぜったい"+R("大阪","おおさか")+"。",en:"The bag is in Osaka. Definitely Osaka.",likes:3}],
+    station:[{u:"@ueno_mike_fan",t:R("上野駅","うえのえき")+"の"+R("猫","ねこ")+"、"+R("今日","きょう")+"も"+R("六時","ろくじ")+"。"+R("切符","きっぷ")+"なし。",en:"The Ueno station cat, six o'clock again today. No ticket.",likes:2140},{u:"@lost_and_found_jp",t:"お"+R("忘","わす")+"れ"+R("物","もの")+"は"+R("駅","えき")+"の"+R("窓口","まどぐち")+"へ。{{bag}}かばん、"+R("今","いま")+"あずかっています。",en:"Lost property: go to the station counter. Holding a {{bagEn}} bag right now.",likes:41}],
+    konbini:[{u:"@onigiri_ranking",t:R("今週","こんしゅう")+"のおにぎり："+R("一位","いちい")+"、シャケ。"+R("二","ふた")+"つで{{priceKana}}の"+R("店","みせ")+"がある。",en:"This week's onigiri: first, salmon. There's a shop doing two for {{priceN}} yen.",likes:530},{u:"@nakamura_writes",t:R("小説","しょうせつ")+"の"+R("主人公","しゅじんこう")+"はコンビニ"+R("店員","てんいん")+"。ひみつはスパイ。だれも"+R("気","き")+"づかない。",en:"My novel's hero is a konbini clerk. Secretly a spy. Nobody notices.",likes:12}],
+    hotel:[{u:"@suzuki_front",t:"オーストラリアの"+R("人","ひと")+"は「ストゥルース」と"+R("言","い")+"う。たぶん。",en:"Australians say 'strewth'. Probably.",likes:7},{u:"@tokyo_hotel_tips",t:"チェックインは"+R("本名","ほんみょう")+"で。パスポートと"+R("同","おな")+"じ"+R("名前","なまえ")+"。",en:"Check in under your real name. Same as the passport.",likes:96}],
+    alley:[{u:"@ramen_walker",t:"いいラーメン"+R("屋","や")+"の"+R("見","み")+"つけ"+R("方","かた")+"："+R("行列","ぎょうれつ")+"、"+R("券売機","けんばいき")+"、"+R("店主","てんしゅ")+"がこわい。",en:"How to find a good ramen shop: a queue, a ticket machine, a scary owner.",likes:1800},{u:"@taisho_ichiban",t:"あいつの"+R("星","ほし")+"なんて、ふん。うちは"+R("四十年","よんじゅうねん")+"。",en:"His star, pah. We've been here forty years.",likes:15},{u:"@haiku_waiter",t:"くつをぬぎ　たたみにすわる　"+R("春","はる")+"の"+R("客","きゃく"),en:"Shoes off / sitting on the tatami / a spring customer",likes:340}],
+    michelin:[{u:"@tokyo_food_news",t:"「ほしの」、{{open}}から。"+R("新人","しんじん")+"は"+R("三日","みっか")+"もたないらしい。",en:"Hoshino, from {{openEn}}. Apparently new staff don't last three days.",likes:660},{u:"@soup_whisperer",t:R("店主","てんしゅ")+"がスープに"+R("話","はな")+"しかけているのを"+R("見","み")+"た。スープは"+R("何","なに")+"も"+R("言","い")+"わなかった。",en:"Saw the owner talking to the soup. The soup said nothing.",likes:2900}],
+    hospital:[{u:"@dr_mori_coins",t:"61か"+R("国","こく")+"。あとはオーストラリアの"+R("二","に")+"ドル"+R("玉","だま")+"だけ。",en:"61 countries. Only the Australian two-dollar coin to go.",likes:19}]
+  },
+  keijiban:{
+    airport:[{title:R("空港","くうこう")+"から"+R("上野","うえの")+"、いちばん"+R("安","やす")+"いのは？",posts:[{u:"anon1",t:"バス。{{gate}}のりば。",en:"The bus. Stop {{gateN}}."},{u:"anon2",t:R("電車","でんしゃ")+"のほうが"+R("速","はや")+"いけど、"+R("高","たか")+"い。",en:"The train is faster but dearer."}]}],
+    station:[{title:R("駅","えき")+"で"+R("物","もの")+"をなくした。どうすれば？",posts:[{u:"anon1",t:R("駅員","えきいん")+"さんに"+R("言","い")+"う。"+R("色","いろ")+"と"+R("中身","なかみ")+"を"+R("言","い")+"えばOK。",en:"Tell the station staff. Say the colour and what's inside and you're fine."},{u:"sato_fan",t:R("上野","うえの")+"の"+R("佐藤","さとう")+"さんなら"+R("絶対","ぜったい")+"見つけてくれる。"+R("猫","ねこ")+"もいる。",en:"Sato at Ueno will definitely find it. There's a cat too."}]}],
+    konbini:[{title:"コンビニで「いらっしゃいませ」に"+R("返事","へんじ")+"する？",posts:[{u:"anon1",t:"しない。"+R("店員","てんいん")+"だけが"+R("言","い")+"う。",en:"No. Only staff say it."},{u:"tourist_2019",t:R("私","わたし")+"は「いらっしゃいませ！」と"+R("返","かえ")+"した。"+R("店員","てんいん")+"さんが"+R("笑","わら")+"った。",en:"I said 'irasshaimase!' back. The clerk laughed."}]}],
+    hotel:[{title:"ホテルの"+R("名前","なまえ")+"、"+R("本名","ほんみょう")+"じゃないとだめ？",posts:[{u:"anon1",t:"パスポートを"+R("見","み")+"せるから、"+R("同","おな")+"じ"+R("名前","なまえ")+"じゃないと"+R("変","へん")+"。",en:"They see your passport, so a different name looks odd."}]}],
+    alley:[{title:"いいラーメン"+R("屋","や")+"はどう"+R("見","み")+"つける？",posts:[{u:"ramen_ojisan",t:R("行列","ぎょうれつ")+"。あと"+R("券売機","けんばいき")+"。"+R("先","さき")+"に"+R("券","けん")+"を"+R("買","か")+"う。",en:"The queue. And a ticket machine. Buy the ticket first."},{u:"anon3",t:"すすってOK。"+R("音","おと")+"を"+R("出","だ")+"していい。",en:"Slurping is fine. Make noise."},{u:"anon4",t:"おざしきはくつをぬぐ。たたみの"+R("上","うえ")+"にくつはNG。",en:"Tatami rooms: shoes off. No shoes on the tatami."}]}],
+    michelin:[{title:"「ほしの」で"+R("働","はたら")+"いたことある"+R("人","ひと")+"？",posts:[{u:"ex_staff",t:"ある。「ねぎを"+R("切","き")+"って、それからスープを"+R("見","み")+"て」。"+R("毎日","まいにち")+"。",en:"Yes. 'Cut the leeks, then watch the soup.' Every day."},{u:"anon5",t:R("店主","てんしゅ")+"はこわいけど、スープをほめると"+R("優","やさ")+"しくなる。",en:"The owner is scary but softens when you praise the soup."}]}],
+    hospital:[{title:R("日本","にほん")+"で"+R("病院","びょういん")+"に"+R("行","い")+"ったら",posts:[{u:"anon1",t:"「どこが"+R("痛","いた")+"いですか」と"+R("聞","き")+"かれる。おなかが"+R("痛","いた")+"い、で"+R("通","つう")+"じる。",en:"They ask 'where does it hurt?'. 'Onaka ga itai' gets you through."}]}]
+  }
+};
 NPCS.hq={name:"HQ, Melbourne",jp:R("本部","ほんぶ"),spr:"hq",loc:"hotel",req:G=>G.is("recipe"),
   bio:"Your handler. Works from a co-working space in Cremorne. Has asked about Kit Kats four times. Signs off your expenses, so: formal-ish.",
   small:[{jp:"キットカット、"+R("買","か")+"った？",en:"Did you buy the Kit Kats?"}],
@@ -1566,6 +1651,7 @@ function newGame(kit){
   cur=null;taskBox=null;graded=false;sub=null;
   const L=LOADOUTS[kit]; const bag={}; L.items.forEach(i=>bag[i]=1);
   G={kit,loc:"airport",day:1,hour:14,energy:5,yen:L.yen,susp:0,moves:0,s:newSlots(pick),bag,worn:L.worn.slice(),flags:{},did:{},first:{},memos:[],log:[],visited:{airport:true}};
+  G.wx={today:rollWeather(),tomorrow:rollWeather()};
   const pr=PROFILE.get(); if(pr.jp) G.s.name=pr.jp; G.s.realName=pr.real||""; G.s.realKana=pr.kana||"";
   attach(G); save(); startPlay();
   narr("Narita. 2pm. A real passport, a mission, and a strong smell of aeroplane. Officer Tanaka is jogging behind the immigration desk. He holds out his hand.");announce();save();
@@ -1576,7 +1662,7 @@ function attach(G){
   G.take=(i,n=1)=>{G.bag[i]=Math.max(0,(G.bag[i]||0)-n); if(!G.bag[i]) delete G.bag[i]; G.worn=G.worn.filter(w=>w!==i||G.bag[i]);};
   G.flag=f=>{G.flags[f]=true;}; G.is=f=>!!G.flags[f];
   G.done=(n,t)=>!!(G.did[n]&&G.did[n][t]);
-  G.toggleWear=i=>{ if(G.worn.includes(i)){G.worn=G.worn.filter(w=>w!==i); if(i==="shoes"){ return "Shoes off. You are standing in socks in "+LOCS[G.loc].name+". Tatami approves; pavements do not."; } return "Glasses off. The world stops subtitling itself.";} G.worn.push(i); return i==="shoes"?"Shoes on.":"Glasses on. English appears under everything, quietly."; };
+  G.toggleWear=i=>{ if(G.worn.includes(i)){G.worn=G.worn.filter(w=>w!==i); if(i==="shoes") return "Shoes off. You are standing in socks in "+LOCS[G.loc].name+". Tatami approves; pavements do not."; if(i==="umbrella") return "Umbrella folded away."; if(i==="coat") return "Coat off, over your arm."; return "Glasses off. The world stops subtitling itself.";} G.worn.push(i); return i==="shoes"?"Shoes on.":i==="umbrella"?"Umbrella up. You look like everyone else in Tokyo, which is the idea.":i==="coat"?"Coat on.":"Glasses on. English appears under everything, quietly."; };
   G.eat=i=>{ if(!G.has(i)) return "You have none."; G.take(i); G.energy=Math.min(5,G.energy+ITEMS[i].eat); return (i==="onigiri"?"Onigiri. Salmon, probably. +1 energy.":"Pickles. Loud. +1 energy."); };
   G.hintText=()=>cur&&cur.task?("The pattern is: "+esc(fill(cur.task.hint||(cur.task.rule||cur.task.prompt||"").split(":")[0],slots())) + ". Meaning: "+esc(cur.en)):"Nothing to hint at right now. Talk to someone first.";
   G.dictionary=()=>{ if(!G.has("dictionary")) return "You have no dictionary. There is a konbini in Ueno that sells them."; if(!cur||!cur.line) return "You leaf through it. Words. Many of them. Talk to someone first, then look one up."; showEn(); if(G.loc==="michelin"&&!cur.dictUsed){ cur.dictUsed=true; if(Math.random()<0.5){ G.susp=Math.min(100,G.susp+15); return "「……何を見ているんだ。」 He saw the dictionary. Suspicion +15. The alley is where looking things up is free."; } return "Under the counter. Nobody saw. This time."; } return "Dictionary: "+esc(cur.en)+(cur.task?" · Pattern: "+esc(fill(cur.task.hint||(cur.task.rule||cur.task.prompt||"").split(":")[0],slots())):""); };
@@ -1663,7 +1749,7 @@ function renderTitle(){
 }
 
 /* ---- play rendering ---- */
-function startPlay(){
+function startPlay(){ setTimeout(paintTurn,0);
   const pending=G.pending;show("playS");$("log").innerHTML="";cur=null;taskBox=null;graded=false;sub=null;replaying=true;
   G.log.forEach(r=>{if(r&&["narr","say","sys","hq","good","bad","ann"].includes(r.cls)&&typeof r.html==="string")logEl(cleanLog(r.html),r.cls);});
   if(pending&&pending.loc===G.loc){
@@ -1700,7 +1786,7 @@ function renderGoals(){
 function renderHud(){
   const h=$("hearts"); h.innerHTML=""; for(let i=0;i<5;i++) h.appendChild(spriteCanvas(i<G.energy?"heart":"heart0",20));
   $("yen").textContent="¥"+G.yen.toLocaleString(); $("suspBar").style.width=G.susp+"%";
-  $("clock").textContent=`DAY ${G.day} · ${String(G.hour).padStart(2,"0")}:00`;
+  ensureWeather(); $("clock").innerHTML=`DAY ${G.day} · ${String(G.hour).padStart(2,"0")}:00 · <span title="today's weather">${wx(G.wx.today).jp} ${G.wx.today.temp}°</span>`;
   $("suspValue").textContent=G.susp+"/100";h.setAttribute("aria-label",G.energy+" of 5 energy");
   $("translationState").textContent=G.worn.includes("glasses")?"翻訳 ON · TRANSLATOR ON":"日本語 · JAPANESE";
   $("channelName").textContent=cur?"会話中 · IN CONVERSATION":"記録 · FIELD LOG";
@@ -1775,7 +1861,7 @@ function readNotebook(pending=null){
 }
 function ringPhone(p){ if(G.loc==="michelin"&&!G.is("phoneRang")&&Math.random()<(G.is("intelPhone")?p+0.3:p)){ G.flag("phoneRang"); SND.phone(); narr("The phone rings. Hoshino wipes his hands, puts the notebook on the counter and answers it. He will not be long. TALK to him about the notebook."); } }
 function wait(){ if(cur)return;retireMenus();tick(1); narr(pick(["An hour passes. The arrivals board changes. The queue does not.","You wait. A pigeon waits with you. Neither of you is sure why.","An hour. The clock does the thing clocks do."])); if(G.loc==="michelin"&&G.is("shownId")) ringPhone(0.6); renderAll(); }
-function sleep(){ if(cur||G.loc!=="hotel")return;retireMenus();SND.chime();if(!G.is("checkedIn")){ narr("You sleep in the lobby armchair like a person who does not have a room. Suzuki drapes a blanket over you and says 「ストゥルース」 softly. New day, energy 3."); G.energy=3; } else { narr("Room 404. The pillow is a brick and it is perfect. New day, full energy."); G.energy=5; } G.day++; G.hour=7; delete G.flags.phoneRang; renderAll(); }
+function sleep(){ if(cur||G.loc!=="hotel")return;retireMenus();SND.chime();if(!G.is("checkedIn")){ narr("You sleep in the lobby armchair like a person who does not have a room. Suzuki drapes a blanket over you and says 「ストゥルース」 softly. New day, energy 3."); G.energy=3; } else { narr("Room 404. The pillow is a brick and it is perfect. New day, full energy."); G.energy=5; } G.day++; G.hour=7; delete G.flags.phoneRang; ensureWeather(); G.wx={today:G.wx.tomorrow,tomorrow:rollWeather()}; narr(`Morning. ${wx(G.wx.today).en[0].toUpperCase()+wx(G.wx.today).en.slice(1)}, ${G.wx.today.temp}°C. The phone has tomorrow.`); renderAll(); }
 function tick(h){ G.hour+=h; while(G.hour>=24){G.hour-=24;G.day++;} }
 function go(x){
   if(cur||!LOCS[G.loc].exits.includes(x))return;retireMenus();
@@ -1784,6 +1870,7 @@ function go(x){
   if(gate!==true){ narr(gate); renderAll(); return; }
   if(G.loc==="airport"&&!G.has("ticket")&&x==="station"){ /* the bus */ }
   if(G.loc!=="airport"&&x!=="airport"&&!G.has("ticket")&&(G.loc==="station"||x==="station")&&G.loc!==x){ if(Math.random()<0.5){ G.susp=Math.min(100,G.susp+5); narr("You walk through the gate without a pass. Sato appears from nowhere: 「切符を買ってください。」 You buy nothing and are allowed through, watched. Suspicion +5."); } }
+  { const toll=weatherToll(x); if(toll) narr(toll); }
   if(!G.worn.includes("shoes")&&x!=="alley"){ G.energy=Math.max(0,G.energy-1); narr("You walk there in socks. Tokyo pavement. -1 energy and several looks."); }
   G.loc=x; G.visited=G.visited||{}; G.visited[x]=true; tick(1); G.moves++; SND.step(); if(G.moves%2===0) G.energy=Math.max(0,G.energy-1);
   delete G.flags.phoneRang; if(x!=="michelin") delete G.flags.notebookOpen;
@@ -1826,6 +1913,53 @@ function buildWord(w,box,onDone,label){
     else { SND.bad(); out.innerHTML=`<span class="en">Not quite. You built 「${esc(got)}」. It is 「${esc(target.join(""))}」${hasKanji?" (written "+esc(w.w)+")":""}. Again; nothing is lost.</span>`; placed=[]; paint(); }
   });
 }
+/* the phone: a home screen of apps inside the pop-up */
+function renderPhone(box,app,text){
+  const s=slots(), glasses=G.worn.includes("glasses"), close='<button class="k sm close" data-close>×</button>';
+  const back=app==="home"?"":`<button class="k sm" data-app="home">← ホーム</button>`;
+  const line=(jp,en,who)=>`<div class="bubble"><div class="en" style="font-size:11px">${esc(who||"")}</div><div class="jp" style="font-size:18px">${colourBuilt(jp)}</div><div class="tr" ${glasses?"":"hidden"} style="font-size:12px;color:var(--dim)">${esc(en)}</div><div><button class="k sm spk" data-say="${esc(plainJp(jp))}">▶</button> <button class="k sm" data-sub>字幕</button></div></div>`;
+  let body="";
+  if(app==="home"){
+    body=`<h4>スマホ · ${G.loc==="michelin"?"screen dimmed":"free wifi"}</h4><div class="apps">
+      <button class="k" data-app="calls">📞 電話<br><small>Calls</small></button><button class="k" data-app="tsubuyaki">🐦 つぶやき<br><small>posts</small></button><button class="k" data-app="keijiban">📋 けいじばん<br><small>board</small></button><button class="k" data-app="hq">🎧 本部<br><small>HQ · ¥500</small></button><button class="k" data-app="weather">☂ 天気<br><small>weather</small></button></div>
+      <div class="en" style="margin-top:8px">Calls cost. Feeds are free. Everything on here is in Japanese, and most of it is about wherever you are standing.</div>${text?`<div class="en" style="margin-top:6px">${esc(text)}</div>`:""}`;
+  } else if(app==="calls"){
+    const met=Object.keys(G.did||{}).filter(id=>NPCS[id]&&CALLS[id]);
+    body=`<h4>電話 · Calls</h4><div class="en">People who gave you a number. Local calls ¥100. Melbourne is roaming.</div>
+      <div class="contacts"><button class="k sm" data-call="dana">Chef Dana · メルボルン · ¥1,500</button>${met.map(id=>`<button class="k sm" data-call="${id}">${esc(NPCS[id].name)} · ¥100</button>`).join("")}</div>
+      ${met.length?"":'<div class="en" style="margin-top:6px">Nobody local yet. Talk to people and they hand over a number.</div>'}<div id="callOut"></div>`;
+  } else if(app==="tsubuyaki"){
+    const posts=(FEEDS.tsubuyaki[G.loc]||[]).concat(FEEDS.tsubuyaki.airport.slice(2,3));
+    body=`<h4>つぶやき · #${esc(LOCS[G.loc].name)}</h4>`+posts.map(p=>`<div class="post"><div class="en" style="font-size:11px">${esc(p.u)} · ♡ ${p.likes}</div><div class="jp" style="font-size:17px">${colourBuilt(fill(p.t,s))}</div><div class="tr" ${glasses?"":"hidden"} style="font-size:12px;color:var(--dim)">${esc(fill(p.en,s))}</div><div><button class="k sm spk" data-say="${esc(plainJp(fill(p.t,s)))}">▶</button> <button class="k sm" data-sub>字幕</button></div></div>`).join("");
+  } else if(app==="keijiban"){
+    const threads=FEEDS.keijiban[G.loc]||[];
+    body=`<h4>けいじばん · ${esc(LOCS[G.loc].name)}</h4>`+(threads.length?threads.map(th=>`<div class="thread"><div class="jp" style="font-weight:700;font-size:16px">${colourBuilt(fill(th.title,s))}</div>${th.posts.map(p=>`<div class="post"><div class="en" style="font-size:11px">${esc(p.u)}</div><div class="jp" style="font-size:16px">${colourBuilt(fill(p.t,s))}</div><div class="tr" ${glasses?"":"hidden"} style="font-size:12px;color:var(--dim)">${esc(fill(p.en,s))}</div><div><button class="k sm spk" data-say="${esc(plainJp(fill(p.t,s)))}">▶</button> <button class="k sm" data-sub>字幕</button></div></div>`).join("")}</div>`).join(""):'<div class="en">No threads about here. Suspicious.</div>');
+  } else if(app==="weather"){
+    ensureWeather(); const t=G.wx.today, m=G.wx.tomorrow;
+    const row=(label,w,will)=>`<div class="bubble"><div class="en" style="font-size:11px">${label}</div><div class="jp" style="font-size:18px">${wx(w.k).jp}${will?"でしょう":""}、${w.temp}${R("度","ど")}</div><div class="tr" ${glasses?"":"hidden"} style="font-size:12px;color:var(--dim)">${will?"probably ":""}${wx(w.k).en}, ${w.temp}°C</div><div><button class="k sm spk" data-say="${esc(wx(w.k).kana+(will?"でしょう":"")+"、"+w.temp+"ど")}">▶</button> <button class="k sm" data-sub>字幕</button></div></div>`;
+    body=`<h4>天気 · Tokyo</h4>${row(R("今日","きょう")+" · today",t,false)}${row(R("明日","あした")+" · tomorrow",m,true)}<div class="en">でしょう is the forecaster's hedge: probably. Rain wants an umbrella, cold wants a coat, heat wants no coat. The konbini sells both. Wrong clothes cost energy on every walk, and a soaked kitchen hand costs suspicion.</div>`;
+  } else if(app==="hq"){
+    if(G.yen<500){ body=`<h4>本部 · HQ</h4><div class="en">Not enough credit for roaming. HQ would say something about expenses.</div>`; }
+    else { G.yen-=500; renderHud(); const t=G.hintText(); body=`<h4>本部 · HQ · roaming</h4><div class="bubble">${t}</div><div class="bubble" style="border-radius:10px 10px 2px 10px;text-align:right">キットカット、${R("買","か")}った？</div>${G.loc==="hotel"&&G.is("recipe")?'<div class="en">You have the goods. TALK to HQ from this lobby to report properly.</div>':""}<div><button class="k sm" data-sayen="${esc(t.replace(/<[^>]+>/g,""))}">▶ hear HQ</button></div>`; }
+  }
+  box.innerHTML=`${close}<div class="pscreen">${back}${body}</div><div class="btn"></div>`;
+  box.querySelectorAll("[data-app]").forEach(b=>b.addEventListener("click",()=>renderPhone(box,b.dataset.app,"")));
+  box.querySelectorAll("[data-sub]").forEach(b=>b.addEventListener("click",()=>{ const tr=b.closest(".bubble,.post").querySelector(".tr"); tr.hidden=!tr.hidden; }));
+  box.querySelectorAll("[data-say]").forEach(b=>b.addEventListener("click",()=>{ const r=SPEAK.say(b.dataset.say); if(r) toast(r); }));
+  box.querySelectorAll("[data-sayen]").forEach(b=>b.addEventListener("click",()=>{ const r=SPEAK.sayEn(b.dataset.sayen); if(r) toast(r); }));
+  box.querySelectorAll("[data-call]").forEach(b=>b.addEventListener("click",()=>{
+    const id=b.dataset.call, cost=id==="dana"?1500:100, out=box.querySelector("#callOut");
+    if(G.yen<cost){ out.innerHTML=`<div class="en">Not enough credit. ¥${cost.toLocaleString()} for this one.</div>`; return; }
+    G.yen-=cost; renderHud(); SND.phone();
+    let jp,en,who;
+    if(id==="dana"){ const pool=(DANA[G.loc]||[]).concat(DANA.any); const tip=pool[(G.danaCalls=(G.danaCalls||0)+1)%pool.length]; jp="もしもし、ダナです。"; en=tip; who="Chef Dana · Melbourne"; narr("Dana, from Melbourne, ¥1,500 of roaming: "+tip); }
+    else { const l=pick(CALLS[id]); jp=fill(l.jp,s); en=fill(l.en,s); who=NPCS[id].name; say(id,l); }
+    out.innerHTML=line(jp,en,who)+`<div class="en">¥${cost.toLocaleString()}. ${id==="dana"?"She is worth it.":"They sound pleased you called."}</div>`;
+    box.querySelectorAll("#callOut [data-sub]").forEach(x=>x.addEventListener("click",()=>{ const tr=x.closest(".bubble").querySelector(".tr"); tr.hidden=!tr.hidden; }));
+    box.querySelectorAll("#callOut [data-say]").forEach(x=>x.addEventListener("click",()=>{ const r=SPEAK.say(x.dataset.say); if(r) toast(r); }));
+    save();
+  }));
+}
 /* the literal object, held up to the screen */
 function showObject(i,text){
   const ov=$("itemOv"); const s=slots();
@@ -1834,9 +1968,7 @@ function showObject(i,text){
   const sp=(name,px)=>`<div class="sp">${big(name,px)}</div>`;
   const box=document.createElement("div"); const close='<button class="k sm close" data-close>×</button>';
   if(i==="phone"){
-    box.className="obj obj-phone";
-    box.innerHTML=`${close}<div class="pscreen"><h4>HQ · Melbourne · roaming</h4>${text?`<div class="bubble">${esc(text)}</div>`:""}<div class="bubble" style="border-radius:10px 10px 2px 10px;text-align:right">キットカット、${R("買","か")}った？</div><div class="en" style="margin-top:8px">¥500 a call. Under cover, a phone out is a phone noticed.</div>${text?`<button class="k sm" data-hq>▶ hear HQ</button>`:""}</div><div class="btn"></div>`;
-    setTimeout(()=>{ const b=box.querySelector("[data-hq]"); if(b) b.addEventListener("click",()=>{ const r=SPEAK.sayEn(text); if(r) toast(r); }); },0);
+    box.className="obj obj-phone"; renderPhone(box,"home",text);
   }else if(i==="dictionary"){
     box.className="obj obj-book";
     const line=cur&&cur.line?fill(cur.line.jp,s):"", en=cur&&cur.en?cur.en:"";
@@ -1867,9 +1999,9 @@ function showObject(i,text){
   }
   ov.innerHTML=""; ov.appendChild(box); ov.classList.add("show");
   box.querySelectorAll(".spr").forEach(el=>el.replaceWith(spriteCanvas(el.dataset.spr,+el.dataset.px)));
-  ov.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",()=>ov.classList.remove("show")));
 }
-$("itemOv").addEventListener("click",e=>{ if(e.target===$("itemOv")) $("itemOv").classList.remove("show"); });
+/* one listener for every close button and the backdrop, so re-rendered pop-ups (the phone's apps) still close */
+$("itemOv").addEventListener("click",e=>{ if(e.target===$("itemOv")||e.target.closest("[data-close]")) $("itemOv").classList.remove("show"); });
 function checkDeported(){
   if(G.susp>=100){SND.down();retireTask();retireMenus();cur=null;taskBox=null;graded=false;sub=null; narr("Two very polite men in grey. A van. A form. 「お疲れさまでした。」 You are back at Narita, deported with great courtesy, holding your bag. They did not find the fake ID. Day +1. Suspicion resets to 40. The mission, oddly, continues."); G.loc="airport"; delete G.flags.immigration; delete G.flags.shownId; G.susp=40; G.day++; G.hour=9; G.memos.push({what:"Deported.",rule:"Suspicion hit 100. Every slip undercover added to it; praise, a well-encouraged soup and asking permission bring it down."}); }
 }
@@ -2022,10 +2154,16 @@ function openMenu(){
 function closeMenu(restoreFocus=true){$("menu").classList.remove("show");$("lcd").inert=false;if(restoreFocus&&menuFocus?.isConnected)menuFocus.focus();}
 /* the game wants the whole screen: asked for on the way in (a click, so browsers allow it), offered
    again in the top bar whenever it is not, and the installed app opens full screen by itself. */
-function goFull(){ const el=document.documentElement; if(document.fullscreenElement||!el.requestFullscreen) return; el.requestFullscreen({navigationUI:"hide"}).catch(()=>{}); }
+function goFull(){ const el=document.documentElement; if(document.fullscreenElement||!el.requestFullscreen) return; el.requestFullscreen({navigationUI:"hide"}).then(()=>{ try{ if(screen.orientation&&screen.orientation.lock) screen.orientation.lock("landscape").catch(()=>{}); }catch(e){} }).catch(()=>{}); }
 function paintFs(){ const b=$("fsHint"); if(b) b.hidden=!!document.fullscreenElement||!document.documentElement.requestFullscreen||window.matchMedia("(display-mode: fullscreen)").matches; }
 $("fsHint").addEventListener("click",goFull); document.addEventListener("fullscreenchange",paintFs); paintFs();
 if("serviceWorker" in navigator&&location.protocol.startsWith("http")){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
+/* portrait on a phone: ask to turn, once per session */
+let turnDismissed=false;
+function paintTurn(){ const portrait=window.innerHeight>window.innerWidth&&window.innerWidth<700; $("turn").classList.toggle("show",portrait&&!turnDismissed&&$("playS").classList.contains("on")); }
+$("turnOk").addEventListener("click",()=>{ turnDismissed=true; paintTurn(); });
+$("turnFs").addEventListener("click",()=>{ goFull(); turnDismissed=true; paintTurn(); });
+window.addEventListener("resize",paintTurn); window.addEventListener("orientationchange",paintTurn);
 $("menuBtn").addEventListener("click",openMenu);
 $("closeMenu").addEventListener("click",()=>closeMenu());
 $("subsBtn").addEventListener("click",()=>{ const on=SUBS.toggle(); $("subsBtn").textContent="字幕 · Subtitles: "+(on?"on":"off"); $("log").querySelectorAll(".ann .jp").forEach(j=>{ j.hidden=!on; j.parentElement.querySelector(".tr").hidden=!on||!G.worn.includes("glasses"); }); });
