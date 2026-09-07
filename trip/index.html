@@ -145,6 +145,14 @@
            margin-top:14px;overflow:hidden}
   .bigshot{position:relative}
   .bigshot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  /* A painting is not a photo: letterboxing a hanging scroll destroys it.
+     fit:"contain" in the content file shows the work whole on a neutral
+     ground instead of cropping it. */
+  .bigshot.contain{aspect-ratio:4/3;background:var(--bg)}
+  .bigshot.contain img{object-fit:contain}
+  .shot.contain{background:var(--bg)}
+  .shot.contain img{object-fit:contain}
+  .credit{font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.5}
   .bigshot .ph{font-size:11px;color:var(--muted);letter-spacing:.1em;
                text-transform:uppercase;font-weight:700;opacity:.55}
 
@@ -259,7 +267,7 @@
   function head(ja, en){
     return '<h2>' + esc(ja) + '<span class="en">' + esc(en) + '</span></h2>';
   }
-  function shot(photo, cls){
+  function shot(photo, cls, fit){
     if (photo){
       // tiles are ~180px wide, so they take the -t copy and save the bandwidth
       var src = (cls === "shot") ? photo.replace(/\.webp$/, "-t.webp") : photo;
@@ -267,7 +275,8 @@
       // inline in window.PHOTOS. On the real site that map does not exist and
       // the ordinary file path is used.
       if (window.PHOTOS && window.PHOTOS[src]) src = window.PHOTOS[src];
-      return '<div class="' + cls + '"><img src="' + esc(src) + '" alt="" loading="lazy"></div>';
+      return '<div class="' + cls + (fit === "contain" ? " contain" : "") +
+             '"><img src="' + esc(src) + '" alt="" loading="lazy"></div>';
     }
     return '<div class="' + cls + ' empty"><span class="ph">photo to come</span></div>';
   }
@@ -368,7 +377,7 @@
            '<p class="ph-note">' + esc(s.intro) + '</p><div class="tiles">';
       s.spots.forEach(function(sp){
         h += '<button class="tile" data-spot="' + esc(p.id + "/" + s.id + "/" + sp.id) + '">' +
-               shot(sp.photo, "shot") +
+               shot(sp.photo, "shot", sp.fit) +
                '<div class="lab"><div class="ja">' + esc(sp.ja) + '</div>' +
                '<div class="en">' + esc(sp.en) + '</div></div>' +
              '</button>';
@@ -401,7 +410,8 @@
                     : "やってみよう  Go and do this";
     return '<div' + (quiet ? ' class="quiet"' : '') + '>' + head(sp.ja, sp.en) +
             '<p class="ph-note">' + esc(s.ja) + '  ' + esc(s.en) + '</p>' +
-            shot(sp.photo, "bigshot") +
+            shot(sp.photo, "bigshot", sp.fit) +
+            (sp.credit ? '<p class="credit">' + esc(sp.credit) + '</p>' : "") +
             '<p class="hook">' + esc(sp.hook) + '</p>' +
             '<div class="look"><div class="lbl">' + esc(lbl) + '</div>' +
             '<p>' + esc(sp.look) + '</p></div></div>';

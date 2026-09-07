@@ -537,7 +537,9 @@ window.PLACES = [
             id: "sesshu",
             ja: "雪舟",
             en: "The boy who drew with his tears",
-            photo: null,
+            photo: "photos/soja-sesshu-landscape.webp",
+            fit: "contain",
+            credit: "Ink landscape by Sesshu Toyo, 1420 to 1506. Public domain, via Wikimedia Commons.",
             hook:
               "Sesshu was born in 1420 in Akahama, which is now part of Soja, and " +
               "he was sent to this temple as a small boy. The story is that he kept " +
@@ -545,7 +547,8 @@ window.PLACES = [
               "pillar as punishment. He cried, and used his toes to draw a mouse " +
               "on the floor with his own tears. The priest came back, saw the " +
               "mouse, thought it was real, and let him go. He grew up to be the " +
-              "most famous painter in Japanese history.",
+              "most famous painter in Japanese history. The picture here is one " +
+              "of his, painted as a grown man in ink and nothing else.",
             look:
               "Find the statue of the boy and the mouse. Then think about the fact " +
               "that he came from the same town as your host family."
@@ -598,7 +601,9 @@ window.PLACES = [
             id: "shomu",
             ja: "聖武天皇",
             en: "An emperor ordered this",
-            photo: null,
+            photo: "photos/soja-emperor-shomu.webp",
+            fit: "contain",
+            credit: "Portrait of Emperor Shomu, 701 to 756. Public domain, via Wikimedia Commons.",
             hook:
               "In 741 the Emperor Shomu ordered a temple built in every single " +
               "province in Japan. Not a few. Every one. The country had been " +
