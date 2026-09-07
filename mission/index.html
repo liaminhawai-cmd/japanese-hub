@@ -76,6 +76,7 @@
   .view canvas{width:100%;display:block;background:var(--lcd)}
   .view .locname{font-size:12px;letter-spacing:.12em;text-transform:uppercase;padding:6px 10px;border-top:3px solid var(--ink);border-bottom:3px solid var(--ink);display:flex;justify-content:space-between}
   .present{padding:8px 10px;font-size:12px;line-height:1.7;flex:1;overflow:auto}
+  .hudmap{border-bottom:3px solid var(--ink);background:#fff;padding:3px;flex:none}.hudmap canvas{width:100%;display:block;cursor:pointer}.hudmap .cap{font-size:10px;color:var(--dim);padding:0 3px 2px}
   .present b{display:block;font-size:11px;letter-spacing:.1em;color:var(--dim)}
   .present .row{display:flex;gap:8px;align-items:center;cursor:pointer;padding:2px 0}
   .present .row:hover{text-decoration:underline}
@@ -300,12 +301,12 @@
   .view canvas#scene{aspect-ratio:2/1;flex:none}
   .view .locname{display:block;padding:9px 12px;font-size:14px;letter-spacing:.02em;background:var(--ink);color:var(--lcd)}
   #locJp{display:block;font-size:13px;letter-spacing:.05em}#locJp rt{color:var(--lcd2)}
-  .present{padding:10px;font-size:14px;min-height:60px}
+  .present{padding:10px;font-size:14px;min-height:96px}
   .present b,.goals b{font-size:12px;letter-spacing:.1em;margin-bottom:6px}
   .person{display:flex;align-items:center;gap:10px;width:100%;border:0;border-bottom:1px dotted var(--dim);background:transparent;color:var(--ink);text-align:left;font:inherit;padding:8px 4px;min-height:44px}
   .person .person-name{flex:1}.person .seen{font-size:12px;color:var(--dim)}
   .person:disabled{opacity:.5}
-  .goals{padding:12px;font-size:13px;max-height:42%;flex:none;line-height:1.7}
+  .goals{padding:12px;font-size:13px;max-height:32%;flex:none;line-height:1.7}
   .goals .g{padding:2px 0}
   .log,.jp,.bubble,.post,.thread,.wl,.present,.dock{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
   .channel{display:flex;align-items:center;gap:10px;border-bottom:2px solid var(--ink);padding:7px 14px;flex:none}
@@ -371,7 +372,7 @@
   @media (max-height:520px) and (min-width:600px){
     body{padding:0}.device{height:100%;width:100%;border-radius:0;padding:14px 4px 14px;box-shadow:none}
     .device:before{top:1px;left:10px;font-size:8px}.buildtag,.hubchip{bottom:0;font-size:8px}
-    .view{width:190px}.view canvas#scene{height:56px}.view .locname{padding:3px 8px;font-size:11px}#locJp{display:none}
+    .view{width:190px}.hudmap{display:none}.view canvas#scene{height:56px}.view .locname{padding:3px 8px;font-size:11px}#locJp{display:none}
     .present{padding:4px 6px;font-size:12px;min-height:0}.present b{display:none}.person{min-height:30px;padding:2px 4px;gap:6px}.person canvas{width:18px!important;height:18px!important}.person .seen{display:none}
     .view>.goals{display:none}
     .channel{padding:2px 8px;gap:6px}.channel strong{font-size:10px}.channel .en{font-size:10px}.channel .k.sm{min-height:26px;font-size:11px;padding:2px 8px}
@@ -396,7 +397,7 @@
     .view .locname{grid-column:2;grid-row:1;border:0;padding:5px 10px;background:var(--lcd);color:var(--ink);font-size:14px}
     #locJp{display:none}.present{grid-column:2;grid-row:2;display:flex;overflow-x:auto;min-height:0;padding:2px 6px 8px;gap:8px;scrollbar-width:thin;align-items:center}.present>b{display:none}
     .person{border:1px solid var(--ink);min-height:40px;padding:4px 8px;width:auto;flex:none;gap:6px;font-size:12px}.person canvas{width:20px!important;height:20px!important}.person .seen{display:none}
-    .view>.goals{display:none}.channel{padding:5px 10px;gap:6px}.channel .en{font-size:11px}.channel .k.sm{min-height:36px}
+    .view>.goals{display:none}.hudmap{display:none}.channel{padding:5px 10px;gap:6px}.channel .en{font-size:11px}.channel .k.sm{min-height:36px}
     .log{padding:8px 12px;font-size:15px}.log .say .jp{font-size:21px}.task{padding:10px}.task .prompt{font-size:15px}.opt{font-size:18px;padding:8px 10px}.opts{grid-template-columns:1fr;gap:8px}
     .hud{padding:6px 9px;gap:3px 12px;display:grid;grid-template-columns:1fr 1fr;min-height:62px}.hud .lab{font-size:12px}.hud .clock{font-size:12px}
     .inv{min-height:52px;padding:5px 9px}.inv>.lab{display:none}.item canvas{width:22px!important;height:22px!important}.item .n{font-size:11px}
@@ -447,6 +448,7 @@
       <div class="view">
         <canvas id="scene" class="px" width="112" height="56" aria-hidden="true"></canvas>
         <div class="locname"><span id="locName"></span><span id="locJp"></span></div>
+        <div class="hudmap"><canvas id="hudMap" class="px" width="336" height="150" aria-label="Map of Ueno and out. Tap a place you have a way to, to go there." role="img"></canvas><div class="cap en">地図 · tap a place on a road from here to go there</div></div>
         <div class="present" id="present"></div>
         <div class="goals" id="goals"></div>
       </div>
@@ -772,6 +774,23 @@ shoes:[
 "....######.###..",
 "...#..........#.",
 "...############."],
+coin:[
+"................",
+"................",
+".....######.....",
+"....#......#....",
+"...#..####..#...",
+"..#..#....#..#..",
+"..#......#...#..",
+"..#.....#....#..",
+"..#....#.....#..",
+"..#...#......#..",
+"..#..######..#..",
+"...#........#...",
+"....#......#....",
+".....######.....",
+"................",
+"................"],
 onigiri:[
 "................",
 "................",
@@ -1138,6 +1157,7 @@ const SKILLS={
 
 const ITEMS={
   passport:{n:"passport",jp:"パスポート",desc:"Your real one. Your real name is in it. Keep that in mind."},
+  coin:{n:"$2 coin",jp:R("二","に")+"ドル"+R("玉","だま"),desc:"Australian. Gold, heavy, Tullamarine change. Worth about ¥200 and accepted nowhere in this country."},
   idcard:{n:"fake ID",jp:R("身分証","みぶんしょう"),desc:"You are {{name}}, {{jobEn}}, from {{townEn}}. The photo is of someone else. It's fine."},
   glasses:{n:"glasses",jp:"めがね",desc:"Translator glasses. English under everything while worn. Nobody can tell. Use to put on or take off.",wear:true},
   dictionary:{n:"dictionary",jp:R("辞書","じしょ"),desc:"Use it to see the English for whatever was just said, plus a pattern hint. Free where nobody cares. Noticeable where they do."},
@@ -1445,7 +1465,11 @@ doctor:{name:"Dr Mori",jp:R("医者","いしゃ")+"・"+R("森","もり"),spr:"d
    {id:"pain",title:"Where does it hurt",skill:"particles-b1-core",
     lines:[{jp:"どこが"+R("痛","いた")+"いですか。",en:"Where does it hurt?"}],
     task:{kind:"gap",prompt:"You collapsed from hunger. Say your stomach hurts. Fill the particle.",jp:"おなか＿＿＿"+R("痛","いた")+"いです。",en:"My stomach hurts.",accept:["が"],opts:["が","は","を","に"],rule:"BODY PART + が + 痛い: the part that hurts takes が, answering どこが. は would work in a longer contrast; を is wrong, 痛い is not a verb."},
-    after:(G,ok)=>{const fee=Math.min(5000,G.yen);G.yen-=fee;G.energy=5;return `Rice porridge, a lecture about eating, ¥${fee}. Full energy. Dr Mori asks again about the coin on your way out.`;}}
+    after:(G,ok)=>{const fee=G.is("coinGiven")?0:Math.min(5000,G.yen);G.yen-=fee;G.energy=5;return G.is("coinGiven")?"Rice porridge, a lecture about eating, no bill. Full energy. Dr Mori nods at the case on your way out.":`Rice porridge, a lecture about eating, ¥${fee}. Full energy. Dr Mori asks again about the coin on your way out.`;}},
+   {id:"coin",title:"The coin",cue:"The glass case has one empty slot: オーストラリア ２ドル. Your pocket has been carrying one since Tullamarine.",skill:"particles-b1-core",req:G=>G.is("coinGiven")?"It is in the case. He looks at it between patients.":(G.has("coin")||"You pat your pockets. The coin has gone somewhere."),
+    lines:[{jp:"オーストラリアの"+R("二","に")+"ドル"+R("玉","だま")+"…"+R("本当","ほんとう")+"に？",en:"An Australian two-dollar coin... really?"}],
+    task:{kind:"type",prompt:"Give it to him. Say who gets what: PERSON に THING を あげます. Or hold it out and say どうぞ.",hint:"森先生にコインをあげます。／これ、どうぞ。",model:"森先生にコインをあげます。",accept:[/(に|へ).*(あげます|さしあげます)$/,/どうぞ/,/(プレゼントです|おみやげです)$/],rule:"PERSON に THING を あげます: に marks who receives, を what. どうぞ on its own is fine when the thing is already in your hand, held out."},
+    after:(G,ok)=>{G.take("coin");G.flag("coinGiven");G.susp=Math.max(0,G.susp-5);SND.coin();say("doctor",{jp:R("六十二","ろくじゅうに")+"か"+R("国","こく")+"。…"+R("六十二","ろくじゅうに")+"か"+R("国","こく")+"。",en:"Sixty-two countries. ...Sixty-two countries."});return "He holds it to the light for a long time, then to the empty slot, then to the light again. The slot closes with a small click. Treatment here is free from now on, and you have never seen a doctor this happy. Suspicion -5.";}}
   ]}
 };
 
@@ -1488,6 +1512,9 @@ const USE={
   "camera@airport":G=>"A photo of a plane. It is a good photo of a plane.",
   "camera@station":G=>"A photo of Sato bowing to a train. Sato asks for a copy for the cat.",
   "phone@michelin":G=>{ if(Math.random()<0.4){G.susp=Math.min(100,G.susp+20);return "You take out a phone in his kitchen. 「電話は外で！」 Suspicion +20.";} return "Under the counter, screen dimmed. Nobody saw. This time.";},
+  "coin@michelin":G=>{ G.susp=Math.min(100,G.susp+10); return "You leave the coin on the counter. A tip. He slides it back with the handle of a knife without looking up. Suspicion +10. Nobody tips here, and nobody tips in foreign money anywhere."; },
+  "coin@hospital":G=>{ if(G.is("coinGiven")) return "It is in the case now, under glass, with a small label."; if(presentNpcs().includes("doctor")){ startTopic("doctor",NPCS.doctor.topics.find(x=>x.id==="coin")); return ""; } return "Dr Mori is not at the desk."; },
+  "coin@*":G=>"A two-dollar coin. You hold it up. Nobody wants it, and one person in Ueno keeps a glass case with a gap the exact size of it.",
   "phone@*":G=>{ if(G.loc==="hotel"&&G.is("recipe")) { G.startDebrief(); } return ""; },
   "dictionary@*":G=>G.dictionary(),
   "glasses@*":G=>G.toggleWear("glasses"),
@@ -1519,7 +1546,7 @@ const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(M
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 const SAVE_KEY="mission-japan-save-v2";
 /* One number, counted up on every deploy, so a stale tab is obvious. Bump it with each live copy. */
-const BUILD={n:23,date:"2026-09-07"};
+const BUILD={n:24,date:"2026-09-07"};
 ["buildTag","buildEyebrow","buildMenu"].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=(id==="buildTag"?"MISSION · ":"")+`BUILD ${BUILD.n} · ${BUILD.date}`; });
 const INK=getComputedStyle(document.documentElement).getPropertyValue("--ink").trim();
 const PAPER=getComputedStyle(document.documentElement).getPropertyValue("--lcd").trim();
@@ -1714,9 +1741,9 @@ function spriteCanvas(name,size,inverse=false){ const c=document.createElement("
 /* ---- game state ---- */
 let G=null, cur=null, graded=false, pickedOpt=null, taskBox=null, lastDistract=0, leavingCleanly=false, replaying=false, saveOK=true, menuFocus=null;
 const LOADOUTS={
-  tourist:{n:"観光客 · Tourist",items:["passport","glasses","dictionary","phone","shoes"],worn:["glasses","shoes"],yen:30000,desc:"English through your glasses. Dictionary and phone in your bag. Take the glasses off whenever you like."},
-  agent:{n:"エージェント · Agent",items:["passport","dictionary","phone","shoes"],worn:["shoes"],yen:20000,desc:"Japanese first. Reach for your dictionary or call HQ when you need a hand. Watch who is watching."},
-  ghost:{n:"幽霊 · Ghost",items:["passport","phone","shoes"],worn:["shoes"],yen:15000,desc:"Your passport, your shoes, your phone, your Japanese. Dana only speaks Japanese to you now. Buy a dictionary in Ueno if the cover starts to slip."}
+  tourist:{n:"観光客 · Tourist",items:["passport","coin","glasses","dictionary","phone","shoes"],worn:["glasses","shoes"],yen:30000,desc:"English through your glasses. Dictionary and phone in your bag. Take the glasses off whenever you like."},
+  agent:{n:"エージェント · Agent",items:["passport","coin","dictionary","phone","shoes"],worn:["shoes"],yen:20000,desc:"Japanese first. Reach for your dictionary or call HQ when you need a hand. Watch who is watching."},
+  ghost:{n:"幽霊 · Ghost",items:["passport","coin","phone","shoes"],worn:["shoes"],yen:15000,desc:"Your passport, your shoes, your phone, your Japanese. Dana only speaks Japanese to you now. Buy a dictionary in Ueno if the cover starts to slip."}
 };
 function fill(t,s){ return String(t).replace(/\{\{(\w+)\}\}/g,(m,k)=>s[k]??m); }
 function slots(){ const s={...G.s}; const pr=PROFILE.get(); s.realName=s.realName||pr.real||""; s.realKana=s.realKana||pr.kana||""; s.realKana=s.realKana||""; s.realShown=s.realKana||s.realName||"サム"; s.realNote=s.realKana?", in katakana":""; s.realLabel=s.realName?`${s.realName}${s.realKana?" · "+s.realKana:""}`:"(your real name)"; s.shoesState=G.worn.includes("shoes")?"on":"off"; s.trainedNote=G.is("trained")?" (You have heard this sentence before, from Taisho.)":""; s.fearNote=G.is("intelFear")?" (Grandpa said he melts for an opinion.)":""; s.nbNote=G.is("notebookOpen")&&!G.is("recipe")?" The notebook is on the counter, open, and his back is to it.":""; return s; }
@@ -1837,6 +1864,7 @@ function startPlay(){ setTimeout(paintTurn,0);
 function renderAll(){ renderScene(); renderPresent(); renderGoals(); renderHud(); renderInv(); renderActs();renderTranslations(); save(); }
 function presentNpcs(){ return Object.entries(NPCS).filter(([id,n])=>{ if(n.loc!==G.loc) return false; if(n.req&&n.req(G)!==true) return false; if(G.loc==="michelin"&&!G.is("shownId")) return false; if(id==="traveller"&&G.is("bagQuest")) return false; return true; }).map(([id])=>id); }
 function renderScene(){
+  if($("hudMap")) drawMap($("hudMap"));
   const c=$("scene"), ctx=c.getContext("2d"); ctx.clearRect(0,0,c.width,c.height);
   ctx.fillStyle=INK; ctx.fillRect(0,52,c.width,1); /* ground */
   drawSprite(ctx,LOCS[G.loc].spr,4,4,3); /* place, big */
@@ -1852,7 +1880,7 @@ function renderPresent(){
   $("present").querySelectorAll(".person").forEach(r=>r.addEventListener("click",()=>talkMenu(r.dataset.n)));
 }
 function renderGoals(){
-  const side=[["bagDone","かばん · Return the backpacker's bag"],["trained","バイト · Work a shift for Taisho"]];
+  const side=[["bagDone","かばん · Return the backpacker's bag"],["trained","バイト · Work a shift for Taisho"],["coinGiven","コイン · Fill the 62nd slot"]];
   const row=([f,t,fn])=>`<div class="g${(fn?fn():G.is(f))?" done":""}">${t}</div>`;
   const first=ORDERS.findIndex(o=>!orderDone(o)), complete=ORDERS.filter(orderDone).length;
   const orders=ORDERS.map((o,i)=>orderDone(o)?`<div class="g done">${o.t}</div>`:i===first?`<div class="g"><span class="en" style="font-size:11px">Dana said:</span> ${orderText(o)}</div>`:`<div class="g" style="opacity:.45">…</div>`).join("");
@@ -1886,7 +1914,7 @@ function renderActs(){
   const s=document.createElement("span"); s.className="sub"; a.appendChild(s);
   const smk=(html,fn)=>{ const b=document.createElement("button"); b.className="k sm"; b.innerHTML=html; b.disabled=busy; b.addEventListener("click",fn); s.appendChild(b); };
   if(sub==="talk"){ const ids=presentNpcs(); if(!ids.length) s.innerHTML='<span class="en">nobody to talk to</span>'; ids.forEach(id=>smk(esc(NPCS[id].name),()=>talkMenu(id))); }
-  if(sub==="go"){ const mc=document.createElement("canvas"); mc.width=240; mc.height=144; mc.className="px minimap"; s.appendChild(mc); setTimeout(()=>drawMap(mc),0); LOCS[G.loc].exits.forEach(x=>{const arrival=(G.hour+1)%24;const open=x==="michelin"&&G.is("knowOpen")?(arrival>=G.s.openH&&arrival<G.s.openH+4?" · open on arrival":" · shut on arrival"):"";smk(`<span class="route-text">${LOCS[x].name}<span class="route-note">${String(arrival).padStart(2,"0")}:00 arrival${open}</span></span><span class="en">+1h</span>`,()=>go(x));}); }
+  if(sub==="go"){ const mc=document.createElement("canvas"); mc.width=336; mc.height=150; mc.className="px minimap"; s.appendChild(mc); setTimeout(()=>drawMap(mc),0); LOCS[G.loc].exits.forEach(x=>{const arrival=(G.hour+1)%24;const open=x==="michelin"&&G.is("knowOpen")?(arrival>=G.s.openH&&arrival<G.s.openH+4?" · open on arrival":" · shut on arrival"):"";smk(`<span class="route-text">${LOCS[x].name}<span class="route-note">${String(arrival).padStart(2,"0")}:00 arrival${open}</span></span><span class="en">+1h</span>`,()=>go(x));}); }
   if(sub==="use"){ Object.keys(G.bag).forEach(i=>smk(ITEMS[i].n,()=>useItem(i))); }
 }
 
@@ -1992,19 +2020,26 @@ function buildWord(w,box,onDone,label){
   });
 }
 /* the map: a sketch of Ueno and the airport, your trail on it, places you have not found unlabelled */
-const MAP_POS={airport:[96,14],station:[54,30],konbini:[22,16],hotel:[16,44],alley:[70,46],michelin:[94,50],hospital:[46,56]};
+const MAP_POS={airport:[290,30],station:[168,44],konbini:[46,30],hotel:[46,104],alley:[222,92],michelin:[290,108],hospital:[134,112]};
+const MAP_LABEL={airport:"AIRPORT",station:"UENO STN",konbini:"KONBINI",hotel:"HOTEL",alley:"RAMEN ALLEY",michelin:"HOSHINO",hospital:"CLINIC"};
+const mapKnown=k=>k===G.loc||(G.visited||{})[k]||["airport","station","konbini","hotel","alley"].includes(k)||(k==="michelin"&&G.is("knowOpen"));
+/* one map, three sizes: the HUD panel, the GO menu, the phone. Places are their own sprites; roads you have walked are solid, roads you only know of are dotted; you are the agent. */
 function drawMap(c){
-  const ctx=c.getContext("2d"), W=c.width, H=c.height; ctx.clearRect(0,0,W,H); ctx.fillStyle=INK;
-  const px=(k)=>[Math.round(MAP_POS[k][0]/100*W),Math.round(MAP_POS[k][1]/60*H)];
-  const known=k=>k===G.loc||(G.visited||{})[k]||["airport","station","konbini","hotel","alley"].includes(k)||(k==="michelin"&&G.is("knowOpen"));
-  ctx.strokeStyle=INK; ctx.lineWidth=1; ctx.setLineDash([2,2]);
-  Object.keys(LOCS).forEach(a=>LOCS[a].exits.forEach(b=>{ if(a<b&&known(a)&&known(b)){ const [x1,y1]=px(a),[x2,y2]=px(b); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); } }));
-  ctx.setLineDash([]);
-  Object.keys(LOCS).forEach(k=>{ if(!known(k)) return; const [x,y]=px(k); const v=(G.visited||{})[k];
-    if(v) ctx.fillRect(x-3,y-3,6,6); else { ctx.strokeRect(x-3,y-3,6,6); }
-    if(k===G.loc){ ctx.strokeRect(x-6,y-6,12,12); }
-    ctx.font="7px 'Courier New',monospace"; const label=LOCS[k].name.replace(/,.*$/,"").toUpperCase(); const tw=ctx.measureText(label).width; ctx.fillText(label,x+5+tw>W-2?x-5-tw:x+5,y+3); });
+  const ctx=c.getContext("2d"), W=c.width, H=c.height, sx=W/336, sy=H/150; ctx.clearRect(0,0,W,H); ctx.fillStyle="#fff"; ctx.fillRect(0,0,W,H); ctx.fillStyle=INK;
+  const px=k=>[Math.round(MAP_POS[k][0]*sx),Math.round(MAP_POS[k][1]*sy)];
+  const walked=(a,b)=>(G.visited||{})[a]&&(G.visited||{})[b];
+  ctx.strokeStyle=INK;
+  Object.keys(LOCS).forEach(a=>LOCS[a].exits.forEach(b=>{ if(a<b&&mapKnown(a)&&mapKnown(b)){ const [x1,y1]=px(a),[x2,y2]=px(b); ctx.lineWidth=walked(a,b)?2:1; ctx.setLineDash(walked(a,b)?[]:[3,3]); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); } }));
+  ctx.setLineDash([]); ctx.lineWidth=1;
+  const s=Math.max(1,Math.round(sx));
+  Object.keys(LOCS).forEach(k=>{ if(!mapKnown(k)) return; const [x,y]=px(k); const v=(G.visited||{})[k];
+    ctx.fillStyle="#fff"; ctx.fillRect(x-8*s-1,y-8*s-1,16*s+2,16*s+2);
+    if(v){ drawSprite(ctx,LOCS[k].spr,x-8*s,y-8*s,s); } else { ctx.strokeStyle=INK; ctx.setLineDash([2,2]); ctx.strokeRect(x-8*s,y-8*s,16*s,16*s); ctx.setLineDash([]); ctx.fillStyle=INK; ctx.font=`${9*s}px 'Courier New',monospace`; ctx.fillText("?",x-3*s,y+3*s); }
+    ctx.fillStyle=INK; ctx.font=`bold ${11*s}px 'Courier New',monospace`; const label=MAP_LABEL[k]||LOCS[k].name.toUpperCase(); const tw=ctx.measureText(label).width; let lx=x-tw/2; lx=Math.max(1,Math.min(W-tw-1,lx)); ctx.fillText(label,lx,y+8*s+11*s);
+    if(k===G.loc){ drawSprite(ctx,"agent",x+6*s,y-12*s,s); } });
 }
+function mapHit(c,ev){ const r=c.getBoundingClientRect(); const x=(ev.clientX-r.left)/r.width*336, y=(ev.clientY-r.top)/r.height*150; let best=null,bd=22; Object.keys(LOCS).forEach(k=>{ if(!mapKnown(k)) return; const d=Math.hypot(MAP_POS[k][0]-x,MAP_POS[k][1]-y); if(d<bd){bd=d;best=k;} }); return best; }
+$("hudMap").addEventListener("click",ev=>{ if(!G) return; const k=mapHit($("hudMap"),ev); if(!k) return; if(k===G.loc){ toast("You are here."); return; } if(cur){ toast("Finish the conversation first."); return; } if(LOCS[G.loc].exits.includes(k)) go(k); else toast(`No road from here to ${LOCS[k].name}. Go via ${LOCS[LOCS[G.loc].exits[0]].name}.`); });
 /* the phone: a home screen of apps inside the pop-up */
 function renderPhone(box,app,text){
   const s=slots(), glasses=G.worn.includes("glasses"), close='<button class="k sm close" data-close>×</button>';
@@ -2031,7 +2066,7 @@ function renderPhone(box,app,text){
     const row=(label,w,will)=>`<div class="bubble"><div class="en" style="font-size:11px">${label}</div><div class="jp" style="font-size:18px">${wx(w.k).jp}${will?"でしょう":""}、${w.temp}${R("度","ど")}</div><div class="tr" ${glasses?"":"hidden"} style="font-size:12px;color:var(--dim)">${will?"probably ":""}${wx(w.k).en}, ${w.temp}°C</div><div><button class="k sm spk" data-say="${esc(wx(w.k).kana+(will?"でしょう":"")+"、"+w.temp+"ど")}">▶</button> <button class="k sm" data-sub>字幕</button></div></div>`;
     body=`<h4>天気 · Tokyo</h4>${row(R("今日","きょう")+" · today",t,false)}${row(R("明日","あした")+" · tomorrow",m,true)}<div class="en">でしょう is the forecaster's hedge: probably. Rain wants an umbrella, cold wants a coat, heat wants no coat. The konbini sells both. Wrong clothes cost energy on every walk, and a soaked kitchen hand costs suspicion.</div>`;
   } else if(app==="map"){
-    body=`<h4>地図 · Ueno and out</h4><canvas id="mapCv" class="px" width="240" height="144" style="width:100%;border:2px solid var(--ink);background:#fff"></canvas><div class="en">Filled squares are places you have been. Outlined ones you know about. Anything not on here, you have not found yet. Dotted lines are the ways between.</div>`;
+    body=`<h4>地図 · Ueno and out</h4><canvas id="mapCv" class="px" width="336" height="150" style="width:100%;border:2px solid var(--ink);background:#fff"></canvas><div class="en">Places you have been are drawn. A dotted box is somewhere you know of. Anything not on here, you have not found yet. Solid roads you have walked; dotted ones you only know about. The small figure is you.</div>`;
     setTimeout(()=>{ const cv=box.querySelector("#mapCv"); if(cv) drawMap(cv); },0);
   } else if(app==="music"){
     body=`<h4>音楽 · chiptunes</h4><div class="en">Five tracks the phone came with. Made of square waves, owned by nobody. Track three is Yamada's single.</div><div class="contacts">${MUSIC.tracks.map((t,k)=>`<button class="k sm${MUSIC.playing===k?" on":""}" data-track="${k}">${MUSIC.playing===k?"■":"▶"} ${t.jp} <span class="en">· ${esc(t.en)}</span></button>`).join("")}</div>`;
@@ -2311,7 +2346,7 @@ function debrief(){
   const byLoc={}; Object.values(G.first).forEach(f=>{ if(!f.loc) return; byLoc[f.loc]=byLoc[f.loc]||{n:0,ok:0}; byLoc[f.loc].n++; if(f.ok) byLoc[f.loc].ok++; });
   const placeRows=Object.keys(LOCS).filter(l=>(G.visited||{})[l]||byLoc[l]).map(l=>`<tr><td><b>${esc(LOCS[l].name)}</b> ${LOCS[l].jp}</td><td>${byLoc[l]?`${byLoc[l].ok}/${byLoc[l].n}`:"visited"}</td><td><a href="../vocab/#unit:${VOCAB_KEY[l]}" target="_blank" rel="noopener">Vocab Hub: words for ${esc(LOCS[l].name)} →</a></td></tr>`).join("");
   $("debBody").innerHTML=`<h2>${R("報告書","ほうこくしょ")} · Debrief</h2><div class="stamp">${esc(outcome)}</div>
-    <p class="en">${G.s.realName?esc(G.s.realName)+", travelling as ":"Agent "}${esc(G.s.name)} (${esc(G.s.jobEn)}, ${esc(G.s.townEn)}). Kit: ${esc(LOADOUTS[G.kit].n)}. Days in country: ${G.day}. Suspicion at the end: ${G.susp}/100. Cash left: ¥${G.yen.toLocaleString()}. Side quests: ${["bagDone","trained"].filter(f=>G.is(f)).length}/2. Words built in the dictionary (all games on this device): ${DICT.count()}.${G.english?` Answered in English at the airport: ${G.english}.`:""}</p>
+    <p class="en">${G.s.realName?esc(G.s.realName)+", travelling as ":"Agent "}${esc(G.s.name)} (${esc(G.s.jobEn)}, ${esc(G.s.townEn)}). Kit: ${esc(LOADOUTS[G.kit].n)}. Days in country: ${G.day}. Suspicion at the end: ${G.susp}/100. Cash left: ¥${G.yen.toLocaleString()}. Side quests: ${["bagDone","trained","coinGiven"].filter(f=>G.is(f)).length}/3. Words built in the dictionary (all games on this device): ${DICT.count()}.${G.english?` Answered in English at the airport: ${G.english}.`:""}</p>
     <p style="margin-top:6px"><b>${right}/${total}</b> <span class="en">right first time across everything you tried. Every miss is below with the rule, which is the part worth keeping.</span></p>
     <table><tr><th>Skill (Grammar Hub)</th><th>VIC level</th><th>First try</th><th>Practise exactly this</th></tr>${rows||`<tr><td colspan="4" class="en">Nothing graded yet.</td></tr>`}</table>
     <h2 style="margin-top:14px">Places</h2>
