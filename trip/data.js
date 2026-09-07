@@ -413,8 +413,9 @@ window.PLACES = [
               "showing you one person at a time, which is why it affects people " +
               "so strongly. Take your time and read the small labels.",
             look:
-              "If it gets to be too much, step outside and sit down. That is a " +
-              "completely normal reaction and staff and teachers expect it."
+              "If it gets to be too much, step outside and sit down. It is normal " +
+              "to feel this way. If you need support, please speak with one of " +
+              "your teachers."
           },
           {
             id: "after",
@@ -700,17 +701,15 @@ window.PLACES = [
             photo: null,
             hook:
               "None of this week is a package you bought. Soja City runs the " +
-              "exchange itself, and your host family volunteered to take in a " +
-              "teenager from the other side of the world, feed them, drive them " +
-              "around and put up with the language gap for a week. They are not " +
-              "paid for it. Kew is the only school in Australia taking part, " +
-              "which means the fourteen of us are it. Whatever the people of " +
-              "Soja think of Australians after this week, they will think it " +
-              "because of you.",
+              "exchange itself, and your host family volunteered. They are not " +
+              "paid to have you. Kew is also the only Australian school taking " +
+              "part, so for a lot of people in Soja the students who turn up " +
+              "each year are the Australians they know. That is a good thing to " +
+              "be, and enthusiasm covers most of it.",
             look:
-              "At some point this week, thank your host family properly, in " +
-              "Japanese, for something specific they did. Not just at the end. " +
-              "That is the whole thing working."
+              "Some time this week, thank your host family in Japanese for one " +
+              "specific thing they did, rather than saving it all for the last " +
+              "day. It lands better than you would expect."
           },
           {
             id: "souji",
@@ -756,6 +755,73 @@ window.PLACES = [
             look:
               "Ask your buddy which club they are in and how many days a week they " +
               "train. Watch their face when you tell them what we do at Kew."
+          }
+        ]
+      },
+      {
+        id: "culture",
+        ja: "文化体験",
+        en: "Cultural activities at the school",
+        photo: null,
+        intro:
+          "The sister school puts on hands-on sessions for us. This year you " +
+          "will be trying on yukata, so it is worth knowing what you are " +
+          "putting on before somebody wraps you in it.",
+        spots: [
+          {
+            id: "yukata-what",
+            ja: "浴衣",
+            en: "What a yukata is",
+            photo: null,
+            hook:
+              "A yukata is a light cotton robe with no lining, worn in summer. " +
+              "The name literally means bath clothing: 浴 is bath and 衣 is " +
+              "clothing, because it began as what you put on after bathing. It " +
+              "is still what hangs in your room at a hot spring inn. These days " +
+              "it is mainly summer festival wear, for fireworks and Bon " +
+              "dancing. It is not a kimono. A formal kimono is silk, lined, worn " +
+              "over an under-robe, needs another person to put it on you and " +
+              "costs more than a car. A yukata is the easy cousin.",
+            look:
+              "Feel the fabric. Plain cotton, and that is the point: this is " +
+              "clothing for a hot night, not a costume."
+          },
+          {
+            id: "yukata-left",
+            ja: "左が上",
+            en: "Left over right, always",
+            photo: null,
+            hook:
+              "There is one rule that really matters and this is it. Wrap the " +
+              "right side against your body first, then bring the left side " +
+              "across on top. Left over right. People are strict about it " +
+              "because the other way round, right over left, is how a body is " +
+              "dressed for a funeral. Getting it backwards is not exactly rude, " +
+              "but everyone in the room will notice straight away, the way you " +
+              "would notice a jumper on inside out.",
+            look:
+              "Check yourself before anyone else does. Looking down at your own " +
+              "chest, the left panel should be on top and the opening should " +
+              "point to your right."
+          },
+          {
+            id: "yukata-wear",
+            ja: "着かた",
+            en: "The obi, and how to move in it",
+            photo: null,
+            hook:
+              "The belt is an obi. Women wear a wide one tied at the back, often " +
+              "in a bow. Men wear a narrow one tied low on the hips, below the " +
+              "stomach rather than at the waist. Pull the collar so it sits " +
+              "neatly at the throat, and if the whole thing starts riding up, " +
+              "adjust it from the back rather than pulling the front open. " +
+              "Traditionally you wear geta, wooden sandals, with bare feet. A " +
+              "yukata is cut narrow at the bottom, so you cannot take a normal " +
+              "Australian stride in one.",
+            look:
+              "Once you are in it, walk the length of the room and work out how " +
+              "short your steps have to be. Then try sitting down neatly. That " +
+              "is the actual skill."
           }
         ]
       }
