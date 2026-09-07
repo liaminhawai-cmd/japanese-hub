@@ -28,7 +28,7 @@ window.TRIP = {
     { n: 3,  date: "2026-09-22", ja: "きょうと",          en: "Kyoto",                   note: "Full day in Kyoto." },
     { n: 4,  date: "2026-09-23", ja: "ひめじ・ひろしま",  en: "Kyoto, Himeji, Hiroshima", note: "Bullet train. Himeji Castle on the way. Peace Park and museum in the afternoon. Night in Hiroshima." },
     { n: 5,  date: "2026-09-24", ja: "みやじま・そうじゃ", en: "Miyajima, then Soja",     note: "Miyajima in the morning. Reach Soja late afternoon for the welcome, then home with your host family." },
-    { n: 6,  date: "2026-09-25", ja: "そうじゃ",          en: "Soja: sister school",     note: "First day at the sister school. Welcome assembly, classes with your buddy, and kimono dressing in the afternoon." },
+    { n: 6,  date: "2026-09-25", ja: "そうじゃ",          en: "Soja: sister school",     note: "First day at the sister school. Welcome assembly, classes with your buddy, and getting dressed in yukata in the afternoon." },
     { n: 7,  date: "2026-09-26", ja: "そうじゃ",          en: "Soja",                    note: "Out around Soja with your buddies: a grape farm, lunch, and making wagashi." },
     { n: 8,  date: "2026-09-27", ja: "そうじゃ",          en: "Soja",                    note: "The whole day with your host family." },
     { n: 9,  date: "2026-09-28", ja: "そうじゃ",          en: "Soja",                    note: "Out to Soja Itsutsuboshi Gakuen for the day, and back to school mid afternoon." },
@@ -678,10 +678,13 @@ window.PLACES = [
               "rather than everyday fruit, and a good bunch in a department " +
               "store can cost more than a nice dinner. The reason they grow here " +
               "is the weather: Okayama calls itself Hare no Kuni, the land of " +
-              "sunshine, because it gets so little rain.",
+              "sunshine, because it gets so little rain. At the farm you pick " +
+              "one bunch. Only one, and that is not stinginess: these are top " +
+              "grade grapes and a single good bunch is genuinely expensive.",
             look:
-              "If you are offered fruit, take it and say oishii desu. Notice how " +
-              "it is presented, because presentation is half the point."
+              "Take your time choosing your one bunch, then say oishii desu to " +
+              "whoever hands it to you. Notice how carefully the fruit is " +
+              "presented, because presentation is half of it here."
           }
         ]
       },
@@ -765,9 +768,10 @@ window.PLACES = [
         photo: null,
         intro:
           "The sister school and the city put on a run of hands-on sessions: " +
-          "school lunch, tea ceremony, calligraphy, making Japanese sweets, and " +
-          "getting dressed in a yukata. Specialist teachers come in for several " +
-          "of them, so it is worth knowing what you are walking into.",
+          "school lunch, a day at another school, tea ceremony, character " +
+          "practice, making Japanese sweets, and getting dressed in a yukata. " +
+          "Specialist teachers come in for several of them, so it is worth " +
+          "knowing what you are walking into.",
         spots: [
           {
             id: "kyushoku",
@@ -786,6 +790,25 @@ window.PLACES = [
               "Find out whose turn it is to serve today, and ask your buddy how " +
               "often their turn comes around. Then eat what you are given, " +
               "including the bit you are unsure about."
+          },
+          {
+            id: "itsutsuboshi",
+            ja: "五つ星学園",
+            en: "A day at Itsutsuboshi Gakuen",
+            photo: null,
+            hook:
+              "A whole day out at another school in Soja, across two campuses, " +
+              "with their lunch in the middle. The word for what happens there " +
+              "is koryu, which means exchange, and it is the one activity on " +
+              "this trip with no script. Expect activities together and " +
+              "probably games that need you to move and communicate at the same " +
+              "time. Nobody will hand you a list of phrases beforehand, which is " +
+              "exactly why it works: you will find out how much you can actually " +
+              "do with what you know.",
+            look:
+              "Learn one question you can ask anybody today and use it on at " +
+              "least three different people. Nanika supootsu o shimasu ka, do " +
+              "you play any sport, will get you a long way."
           },
           {
             id: "sado",
@@ -811,8 +834,8 @@ window.PLACES = [
           },
           {
             id: "shodo",
-            ja: "書道",
-            en: "Calligraphy",
+            ja: "習字",
+            en: "Character practice",
             photo: null,
             hook:
               "Hold the brush upright, not slanted like a pen, and move from your " +
@@ -824,9 +847,10 @@ window.PLACES = [
               "your teacher will spot it instantly. There is also no rubbing out. " +
               "You commit to the stroke and live with it.",
             look:
-              "Your teacher will write a model character for you to copy. Put " +
-              "yours next to it and find the single stroke that differs most. " +
-              "That one stroke is the lesson."
+              "You will practise, then write one good copy at the end, and you " +
+              "may get to put your character onto something to bring home. Put " +
+              "your good copy beside the model and find the single stroke that " +
+              "differs most. That one stroke is the lesson."
           },
           {
             id: "wagashi",
@@ -852,16 +876,18 @@ window.PLACES = [
             id: "yukata-what",
             ja: "浴衣",
             en: "What a yukata is",
-            photo: null,
+            photo: "photos/soja-yukata-group.webp",
             hook:
-              "A yukata is a light cotton robe with no lining, worn in summer. " +
-              "The name literally means bath clothing: 浴 is bath and 衣 is " +
-              "clothing, because it began as what you put on after bathing. It " +
-              "is still what hangs in your room at a hot spring inn. These days " +
-              "it is mainly summer festival wear, for fireworks and Bon " +
-              "dancing. It is not a kimono. A formal kimono is silk, lined, worn " +
-              "over an under-robe, needs another person to put it on you and " +
-              "costs more than a car. A yukata is the easy cousin.",
+              "A yukata is a kimono. Kimono just means a thing you wear, so it " +
+              "covers the whole family of them, and the yukata is the light " +
+              "cotton one for summer with no lining. Its name is literally bath " +
+              "clothing: 浴 is bath and 衣 is clothing, because it began as what " +
+              "you put on after bathing, and it is still what hangs in your room " +
+              "at a hot spring inn. Now it is mostly summer festival wear, for " +
+              "fireworks and Bon dancing. What people usually picture when they " +
+              "say kimono is the formal end of the family: silk, lined, worn " +
+              "over an under-robe, needing someone else to put it on you and " +
+              "costing more than a car. Yours is the easy end.",
             look:
               "Feel the fabric. Plain cotton, and that is the point: this is " +
               "clothing for a hot night, not a costume."
@@ -870,7 +896,7 @@ window.PLACES = [
             id: "yukata-left",
             ja: "左が上",
             en: "Left over right, always",
-            photo: null,
+            photo: "photos/soja-yukata-collar.webp",
             hook:
               "There is one rule that really matters and this is it. Wrap the " +
               "right side against your body first, then bring the left side " +
@@ -888,7 +914,7 @@ window.PLACES = [
             id: "yukata-wear",
             ja: "着かた",
             en: "The obi, and how to move in it",
-            photo: null,
+            photo: "photos/soja-yukata-obi.webp",
             hook:
               "The belt is an obi. Women wear a wide one tied at the back, often " +
               "in a bow. Men wear a narrow one tied low on the hips, below the " +
