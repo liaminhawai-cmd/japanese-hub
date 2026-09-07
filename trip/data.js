@@ -27,12 +27,12 @@ window.TRIP = {
     { n: 2,  date: "2026-09-21", ja: "きょうと",          en: "Arrive Kansai, on to Kyoto", note: "08:50 land at Kansai. Train to Kyoto, then sightseeing." },
     { n: 3,  date: "2026-09-22", ja: "きょうと",          en: "Kyoto",                   note: "Full day in Kyoto." },
     { n: 4,  date: "2026-09-23", ja: "ひめじ・ひろしま",  en: "Kyoto, Himeji, Hiroshima", note: "Bullet train. Himeji Castle on the way. Peace Park and museum in the afternoon. Night in Hiroshima." },
-    { n: 5,  date: "2026-09-24", ja: "みやじま・そうじゃ", en: "Miyajima, then Soja",     note: "Miyajima in the morning. Homestay starts tonight." },
-    { n: 6,  date: "2026-09-25", ja: "そうじゃ",          en: "Soja: sister school",     note: "Soja Nishi Junior High School." },
-    { n: 7,  date: "2026-09-26", ja: "そうじゃ",          en: "Soja",                    note: "Sister school and host family." },
-    { n: 8,  date: "2026-09-27", ja: "そうじゃ",          en: "Soja",                    note: "Time with your host family." },
-    { n: 9,  date: "2026-09-28", ja: "そうじゃ",          en: "Soja",                    note: "Sister school and host family." },
-    { n: 10, date: "2026-09-29", ja: "そうじゃ",          en: "Soja: farewell party",    note: "Farewell party in the evening. Your dashimono is tonight." },
+    { n: 5,  date: "2026-09-24", ja: "みやじま・そうじゃ", en: "Miyajima, then Soja",     note: "Miyajima in the morning. Reach Soja late afternoon for the welcome, then home with your host family." },
+    { n: 6,  date: "2026-09-25", ja: "そうじゃ",          en: "Soja: sister school",     note: "First day at the sister school. Welcome assembly, classes with your buddy, and kimono dressing in the afternoon." },
+    { n: 7,  date: "2026-09-26", ja: "そうじゃ",          en: "Soja",                    note: "Out around Soja with your buddies: a grape farm, lunch, and making wagashi." },
+    { n: 8,  date: "2026-09-27", ja: "そうじゃ",          en: "Soja",                    note: "The whole day with your host family." },
+    { n: 9,  date: "2026-09-28", ja: "そうじゃ",          en: "Soja",                    note: "Out to Soja Itsutsuboshi Gakuen for the day, and back to school mid afternoon." },
+    { n: 10, date: "2026-09-29", ja: "そうじゃ",          en: "Soja: farewell party",    note: "Tea ceremony and calligraphy, the farewell assembly, then the farewell party in the evening. Your dashimono is tonight." },
     { n: 11, date: "2026-09-30", ja: "こうべ",            en: "Soja, Kobe, fly out",     note: "08:30 leave Soja. Motomachi in Kobe, then Kansai Airport." },
     { n: 12, date: "2026-10-01", ja: "メルボルン",        en: "Home",                    note: "11:00 arrive Melbourne." }
   ]
@@ -764,10 +764,90 @@ window.PLACES = [
         en: "Cultural activities at the school",
         photo: null,
         intro:
-          "The sister school puts on hands-on sessions for us. This year you " +
-          "will be trying on yukata, so it is worth knowing what you are " +
-          "putting on before somebody wraps you in it.",
+          "The sister school and the city put on a run of hands-on sessions: " +
+          "school lunch, tea ceremony, calligraphy, making Japanese sweets, and " +
+          "getting dressed in a yukata. Specialist teachers come in for several " +
+          "of them, so it is worth knowing what you are walking into.",
         spots: [
+          {
+            id: "kyushoku",
+            ja: "給食",
+            en: "School lunch",
+            photo: null,
+            hook:
+              "There is no canteen and no choice. Everyone in the class eats the " +
+              "same meal, in the classroom, at the same time. It is brought up " +
+              "from the kitchen and served by students on the duty roster, in " +
+              "white coats and caps, and the turn comes around to everybody. " +
+              "Nobody starts until the whole room has said itadakimasu. The menu " +
+              "is planned by a nutritionist, there is milk every day, and in " +
+              "Okayama a fair bit of it will have been grown nearby.",
+            look:
+              "Find out whose turn it is to serve today, and ask your buddy how " +
+              "often their turn comes around. Then eat what you are given, " +
+              "including the bit you are unsure about."
+          },
+          {
+            id: "sado",
+            ja: "茶道",
+            en: "Tea ceremony",
+            photo: null,
+            hook:
+              "Sado is not really about drinking tea. It is about somebody making " +
+              "it for you with their whole attention, and you receiving it the " +
+              "same way. The tea is matcha: powdered green tea whisked with a " +
+              "bamboo whisk until it froths, and it is properly bitter. That is " +
+              "why the sweet comes first. Eat it, then drink. The bowl has a " +
+              "front, the best looking face, and you are not supposed to drink " +
+              "from it, so you turn the bowl a couple of times before you sip and " +
+              "turn it back before you hand it over. Finish with a slurp. It " +
+              "sounds rude and it is the opposite: it tells your host you are done " +
+              "and it was good.",
+            look:
+              "The phrase behind the whole thing is ichigo ichie, one time, one " +
+              "meeting. This exact group of people will never be in this room " +
+              "together again. See if you can hold that thought for the length of " +
+              "one bowl of tea."
+          },
+          {
+            id: "shodo",
+            ja: "書道",
+            en: "Calligraphy",
+            photo: null,
+            hook:
+              "Hold the brush upright, not slanted like a pen, and move from your " +
+              "elbow and shoulder rather than your fingers. Press down and the " +
+              "line goes thick, lift and it goes thin, so the brush is doing two " +
+              "jobs at once. The part that catches everyone out is that a brush " +
+              "makes stroke order visible. On a keyboard nobody can tell what " +
+              "order you built a character in. With ink on paper it shows, and " +
+              "your teacher will spot it instantly. There is also no rubbing out. " +
+              "You commit to the stroke and live with it.",
+            look:
+              "Your teacher will write a model character for you to copy. Put " +
+              "yours next to it and find the single stroke that differs most. " +
+              "That one stroke is the lesson."
+          },
+          {
+            id: "wagashi",
+            ja: "和菓子",
+            en: "Making wagashi",
+            photo: null,
+            hook:
+              "Wagashi are the sweets that go with tea, and they are built to be " +
+              "looked at before they are eaten. The ones you shape by hand are " +
+              "usually nerikiri: sweet white bean paste, coloured and worked with " +
+              "a bamboo tool and the palm of your hand. The shape tells you the " +
+              "season, so in late September expect autumn, which means " +
+              "chrysanthemums, maple leaves, persimmons and chestnuts. They taste " +
+              "far less sweet than an Australian sweet, on purpose, because they " +
+              "are made to sit against bitter matcha rather than compete with it. " +
+              "Each design has its own name, often a poetic one.",
+            look:
+              "Before you eat yours, work out what it is supposed to be and which " +
+              "season it belongs to. Then ask what its name is."
+          }
+,
           {
             id: "yukata-what",
             ja: "浴衣",
