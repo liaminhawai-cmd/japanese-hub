@@ -343,6 +343,7 @@
   .acts{flex:none;gap:8px;padding:10px 12px;max-height:40%;overflow:auto}
   .acts>.k{flex:1}.acts .sub{width:100%;margin:0;gap:8px}.acts .sub:empty{display:none}
   .acts .sub .k{flex:1 1 44%;display:flex;justify-content:space-between;align-items:center;gap:8px;text-align:left}
+  .minimap{width:100%;max-width:300px;border:2px solid var(--ink);background:#fff;flex:1 1 100%}
   .route-note{font-size:12px;color:var(--dim);display:block}.route-text{flex:1}
   .menu .box{font-size:15px;padding:22px;width:min(620px,94%);overscroll-behavior:contain}
   .menu h3{font-size:16px}.menu .goals{border:0;padding:0;max-height:none;margin:12px 0;font-size:14px}
@@ -1198,7 +1199,7 @@ officer:{name:"Officer Tanaka",jp:R("入国審査官","にゅうこくしんさ�
     after:(G,ok)=>{G.flag("immigration");return "STAMP. You are in Japan. The doors to the buses are that way.";}},
    {id:"marathon",title:"The marathon",cue:"He is jogging on the spot behind the desk. Ask about it.",skill:"num-y78",
     lines:[{jp:"わたしは"+R("毎朝","まいあさ")+R("十","じゅっ")+"キロ"+R("走","はし")+"っています。あなたは？",en:"I run ten kilometres every morning. You?"}],
-    task:{kind:"gap",prompt:"Match his pattern. Say you run once a week (be honest, or don't).",jp:"わたしは＿＿＿"+R("走","はし")+"っています。",en:"I run once a week.",accept:["しゅうにいっかい","週に一回","しゅうに１かい","しゅうに1かい"],opts:["しゅうにいっかい","いっかいにしゅう","しゅうかんいち","まいにちいっかい"],rule:"PERIOD に NUMBER 回: 週に一回, once a week. 毎朝 (every morning) and 毎日 (every day) do not need に."},
+    task:{kind:"gap",prompt:"Match his pattern. Say you run once a week (be honest, or don't).",jp:"わたしは＿＿＿"+R("走","はし")+"っています。",en:"I run once a week.",accept:["しゅうにいっかい","週に一回","しゅうに１かい","しゅうに1かい"],enAccept:["once a week","one time a week","weekly","1 time a week"],opts:["しゅうにいっかい","いっかいにしゅう","しゅうかんいち","まいにちいっかい"],rule:"PERIOD に NUMBER 回: 週に一回, once a week. 毎朝 (every morning) and 毎日 (every day) do not need に."},
     after:(G,ok)=>{return `He nods, impressed or appalled, and tells you the Ueno bus is at stop ${G.s.gateN}: 「${G.s.gateKana}のりばです。」 He also says your shoes are wrong for running. They are not running shoes.`;}}
   ]},
 traveller:{name:"Kiwi backpacker",jp:"バックパッカー",spr:"clerk",loc:"airport",
@@ -1213,7 +1214,7 @@ traveller:{name:"Kiwi backpacker",jp:"バックパッカー",spr:"clerk",loc:"ai
       {jp:"はい、すみません。",en:"Yes, sorry.",ok:false,why:"Apologising back is very Australian and very New Zealand. The person at fault has apologised; you release them."}]}},
    {id:"bag",title:"The lost bag",cue:"They keep saying かばん and looking at the departures board. Ask.",skill:"identity-y56",
     lines:[{jp:"かばんをなくしました。{{bag}}かばんです。"+R("中","なか")+"にカメラが"+R("入","はい")+"っています。",en:"I lost my bag. A {{bagEn}} bag. There's a camera in it."},{jp:"{{bag}}かばん、"+R("見","み")+"ませんでしたか。カメラが"+R("入","はい")+"っているんです。",en:"Haven't seen a {{bagEn}} bag? It's got my camera in it."}],
-    task:{kind:"gap",prompt:"Ask where they lost it. Fill the question word.",jp:"＿＿＿でなくしましたか。",en:"Where did you lose it?",accept:["どこ"],opts:["どこ","どれ","だれ","いつ"],rule:"どこ (where) + で (place of the action) + past verb + か. どれ is 'which one', だれ 'who', いつ 'when'."},
+    task:{kind:"gap",prompt:"Ask where they lost it. Fill the question word.",jp:"＿＿＿でなくしましたか。",en:"Where did you lose it?",accept:["どこ"],enAccept:["where"],opts:["どこ","どれ","だれ","いつ"],rule:"どこ (where) + で (place of the action) + past verb + か. どれ is 'which one', だれ 'who', いつ 'when'."},
     after:(G,ok)=>{G.flag("bagQuest");return "「大阪です！たぶん！」 They have never been to Osaka. They came through this station an hour ago. You file that away.";}}
   ]},
 busstaff:{name:"Ground staff",jp:R("係員","かかりいん"),spr:"waiter",loc:"airport",
@@ -1266,6 +1267,10 @@ clerk:{name:"Nakamura, konbini clerk",jp:R("店員","てんいん")+"・"+R("中
     lines:[{jp:R("辞書","じしょ")+"ですか。あちらの"+R("棚","たな")+"です。"+R("三千円","さんぜんえん")+"です。",en:"A dictionary? That shelf over there. Three thousand yen."}],
     task:{kind:"gap",prompt:"Which word did they use for a shelf far from both of you?",jp:"＿＿＿の"+R("棚","たな")+"です。",en:"It's that shelf over there.",accept:["あちら","あれ","あの"],opts:["あちら","こちら","そちら","どちら"],rule:"あちら: over there, away from both speakers (polite form of あれ／あの). こちら here, そちら there by you."},
     after:(G,ok)=>{ if(G.yen<3000) return "¥3,000 you do not have. The dictionary stays on the shelf, far from both of you."; G.yen-=3000; G.give("dictionary"); return "Bought. A pocket dictionary. Nakamura asks if you are a spy. You say no. It goes in the novel anyway.";}},
+   {id:"pickles",title:"Ask for the pickles",cue:"HQ said: a konbini in Ueno, night shift, ask for the pickles. There is a door marked STAFF ONLY and a smell of pickles.",skill:"sfp-sentences",req:G=>!G.is("foundFixer")||"Nakamura nods at the back door. You know the way now.",
+    lines:[{jp:"はい、"+R("何","なに")+"かお"+R("探","さが")+"しですか。",en:"Yes, looking for something?"},{jp:"はい？",en:"Yes?"}],
+    task:{kind:"type",prompt:"Ask whether they have pickles. The word is つけもの. A question, politely.",hint:"つけもの、ありますか。／つけものをください。",model:"つけもの、ありますか。",accept:[/つけもの.*(ありますか|ありませんか|ください|おねがいします|お願いします|ほしいです|欲しいです)$/,/つけものは$/],rule:"NOUN、ありますか: do you have NOUN? か on the end makes it a question. つけものをください also works, and so does saying つけもの with a rising eyebrow, apparently."},
+    after:(G,ok)=>{G.flag("foundFixer");return "Nakamura looks at you for one long second, puts down the novel, and nods at the STAFF ONLY door. It opens a crack. Pickles, and a 2009 pop single. 「…どうぞ。」 Yamada.";}},
    {id:"umbrella",title:"Buy an umbrella (¥600)",skill:"num-y56",req:G=>!G.has("umbrella")||"You have an umbrella. Nakamura points at it.",
     lines:[{jp:"かさですか。"+R("六百円","ろっぴゃくえん")+"です。",en:"An umbrella? Six hundred yen."},{jp:R("雨","あめ")+"ですね。かさは"+R("六百円","ろっぴゃくえん")+"になります。",en:"Rain, eh. An umbrella comes to six hundred yen."}],
     task:{kind:"choice",prompt:"How much is the umbrella?",options:[{jp:"600円",en:"600 yen",ok:true,why:"ろっぴゃくえん: six hundred. Six-hundred is the one that goes ぴゃく."},{jp:"800円",en:"800 yen",ok:false,why:"はっぴゃく is eight hundred. They said ろっぴゃく."},{jp:"160円",en:"160 yen",ok:false,why:"ひゃくろくじゅう would be 160. They said ろっぴゃく: six hundred."}]},
@@ -1282,7 +1287,7 @@ clerk:{name:"Nakamura, konbini clerk",jp:R("店員","てんいん")+"・"+R("中
       {jp:"「"+R("違","ちが")+"います」と"+R("思","おも")+"います。",en:"I think 'you're mistaken'.",ok:false,why:"と思います is what someone thinks. Nakamura asked what the spy SAYS: と言います."}]},
     after:(G,ok)=>"「山田さんに会いましたか。」 Nakamura mentions Yamada in the back room sells home-made pickles. And 'other things'. Nakamura does not know what other things. Nakamura is a novelist, not a detective."}
   ]},
-fixer:{name:"Yamada, the fixer",jp:R("山田","やまだ"),spr:"fixer",loc:"konbini",req:G=>!G.is("fixerBurned")||"The STAFF ONLY door is shut and means it now.",
+fixer:{name:"Yamada, the fixer",jp:R("山田","やまだ"),spr:"fixer",loc:"konbini",req:G=>G.is("fixerBurned")?"The STAFF ONLY door is shut and means it now.":(G.is("foundFixer")||"A door marked STAFF ONLY. Somebody behind it is singing. HQ said: ask for the pickles."),
   bio:"Former idol (one single, 2009, peaked at 38). Now: pickles, forged documents, night shift. Still does the hand gestures.",
   small:[{jp:"つけもの、いる？",en:"Want pickles?"},{jp:"むかしはアイドルでした。",en:"I used to be an idol."}],
   topics:[
@@ -1453,7 +1458,7 @@ const LOCS={
     look:"Trains arrive to the second. Sato stands under a clock and nods at each one. A cat is asleep on the ticket machine. Behind the counter, lost property: umbrellas, a trombone, and a bag.",
     lookJp:[{jp:"お"+R("忘","わす")+"れ"+R("物","もの")+"",en:""},{jp:R("切符","きっぷ")+"うりば",en:""}]},
   konbini:{name:"Konbini, Ueno",jp:"コンビニ",spr:"konbini",exits:["station","hotel"],
-    look:"Fluorescent. A wall of onigiri arranged by someone who loves them. A door marked STAFF ONLY, behind which somebody is singing a 2009 pop single and the air smells of pickles.",
+    look:"Fluorescent. A wall of onigiri arranged by someone who loves them. A door marked STAFF ONLY, behind which somebody is singing a 2009 pop single, and a smell of pickles that is not coming from the shelves.",
     lookJp:[{jp:"おにぎり　{{priceKana}}／"+R("二","ふた")+"つ",en:""},{jp:R("辞書","じしょ")+"　"+R("三千円","さんぜんえん"),en:""},{jp:"スタッフ"+R("以外","いがい")+R("立入禁止","たちいりきんし"),en:""}]},
   hotel:{name:"Hotel, Ueno",jp:"ホテル",spr:"hotel",exits:["station","konbini"],
     look:"A lobby with one plant and one Suzuki. A TV plays an Australian soap opera with Japanese subtitles. Someone is asleep in an armchair with the confidence of a person who does not have a room.",
@@ -1513,7 +1518,7 @@ const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(M
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 const SAVE_KEY="mission-japan-save-v2";
 /* One number, counted up on every deploy, so a stale tab is obvious. Bump it with each live copy. */
-const BUILD={n:21,date:"2026-09-07"};
+const BUILD={n:22,date:"2026-09-07"};
 ["buildTag","buildEyebrow","buildMenu"].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=(id==="buildTag"?"MISSION · ":"")+`BUILD ${BUILD.n} · ${BUILD.date}`; });
 const INK=getComputedStyle(document.documentElement).getPropertyValue("--ink").trim();
 const PAPER=getComputedStyle(document.documentElement).getPropertyValue("--lcd").trim();
@@ -1618,10 +1623,11 @@ function rollWeather(){ const w=pick(WEATHER); return {k:w.k,temp:w.temps[0]+Mat
 const wx=k=>WEATHER.find(w=>w.k===k)||WEATHER[0];
 function ensureWeather(){ if(!G.wx) G.wx={today:rollWeather(),tomorrow:rollWeather()}; }
 function weatherToll(x){ /* what the walk costs in the wrong clothes */
-  ensureWeather(); const w=G.wx.today; const has=i=>G.worn.includes(i); const out=[];
-  if((w.k==="rain"||w.k==="snow")&&!has("umbrella")){ G.energy=Math.max(0,G.energy-1); out.push(w.k==="rain"?"Rain, no umbrella. You arrive soaked. -1 energy.":"Snow, no umbrella. You arrive wet and surprised. -1 energy."); if(x==="michelin") { G.susp=Math.min(100,G.susp+5); out.push("You drip on his floor. Suspicion +5."); } }
-  if((w.k==="cold"||w.k==="snow")&&!has("coat")){ G.energy=Math.max(0,G.energy-1); out.push(`${w.temp}°C and no coat. -1 energy, and the shivering is noticeable.`); }
-  if(w.k==="hot"&&has("coat")){ G.energy=Math.max(0,G.energy-1); out.push(`${w.temp}°C in a coat. -1 energy, and people move away from you on the train.`); }
+  ensureWeather(); const w=G.wx.today; const has=i=>G.worn.includes(i); const out=[]; G.wxHit=G.wxHit||{};
+  const once=k=>{ if(G.wxHit[k]===G.day) return false; G.wxHit[k]=G.day; return true; }; /* you get soaked once a day; after that you are already wet */
+  if((w.k==="rain"||w.k==="snow")&&!has("umbrella")){ if(once("wet")){ G.energy=Math.max(0,G.energy-1); out.push(w.k==="rain"?"Rain, no umbrella. You arrive soaked. -1 energy, and you stay damp all day.":"Snow, no umbrella. You arrive wet and surprised. -1 energy."); } if(x==="michelin"){ G.susp=Math.min(100,G.susp+5); out.push("You drip on his floor. Suspicion +5."); } }
+  if((w.k==="cold"||w.k==="snow")&&!has("coat")&&once("cold")){ G.energy=Math.max(0,G.energy-1); out.push(`${w.temp}°C and no coat. -1 energy, and the shivering is noticeable.`); }
+  if(w.k==="hot"&&has("coat")&&once("hot")){ G.energy=Math.max(0,G.energy-1); out.push(`${w.temp}°C in a coat. -1 energy, and people move away from you on the train.`); }
   return out.join(" ");
 }
 /* the phone: people you have met will pick up (¥100), the chef who hired you picks up from Melbourne
@@ -1706,7 +1712,7 @@ function newGame(kit){
   G.wx={today:rollWeather(),tomorrow:rollWeather()};
   const pr=PROFILE.get(); if(pr.jp) G.s.name=pr.jp; G.s.realName=pr.real||""; G.s.realKana=pr.kana||"";
   attach(G); save(); startPlay();
-  narr("Narita. 2pm. A real passport, a mission, and a strong smell of aeroplane. Officer Tanaka is jogging behind the immigration desk. He holds out his hand.");announce();save();
+  narr("Narita. 2pm. A real passport, a mission, and a strong smell of aeroplane. Officer Tanaka is jogging behind the immigration desk. He holds out his hand. Everyone here will take English. Nobody past the buses will."); narr("HQ's brief, from memory: your contact works nights at a konbini in Ueno. Ask for the pickles. Do not ask for anything else.");announce();save();
 }
 function attach(G){
   G.has=i=>(G.bag[i]||0)>0; G.count=i=>G.bag[i]||0;
@@ -1830,7 +1836,7 @@ function renderPresent(){
   $("present").querySelectorAll(".person").forEach(r=>r.addEventListener("click",()=>talkMenu(r.dataset.n)));
 }
 function renderGoals(){
-  const g=[["immigration","入国 · Get through immigration"],["idcard","身分証 · Get papers from the fixer",()=>G.has("idcard")],["knowOpen","開店時間 · Find out when Hoshino opens"],["shownId","潜入 · Get inside Hoshino"],["recipe","レシピ · Get the recipe out"],["reported","報告 · Report to HQ"]];
+  const g=[["immigration","入国 · Get through immigration"],["foundFixer","接触 · Find the contact (a konbini in Ueno, ask for pickles)"],["idcard","身分証 · Get papers from the fixer",()=>G.has("idcard")],["knowOpen","開店時間 · Find out when Hoshino opens"],["shownId","潜入 · Get inside Hoshino"],["recipe","レシピ · Get the recipe out"],["reported","報告 · Report to HQ"]];
   const side=[["bagDone","かばん · Return the backpacker's bag"],["trained","バイト · Work a shift for Taisho"]];
   const row=([f,t,fn])=>`<div class="g${(fn?fn():G.is(f))?" done":""}">${t}</div>`;
   const complete=g.filter(([f,t,fn])=>fn?fn():G.is(f)).length;
@@ -1864,7 +1870,7 @@ function renderActs(){
   const s=document.createElement("span"); s.className="sub"; a.appendChild(s);
   const smk=(html,fn)=>{ const b=document.createElement("button"); b.className="k sm"; b.innerHTML=html; b.disabled=busy; b.addEventListener("click",fn); s.appendChild(b); };
   if(sub==="talk"){ const ids=presentNpcs(); if(!ids.length) s.innerHTML='<span class="en">nobody to talk to</span>'; ids.forEach(id=>smk(esc(NPCS[id].name),()=>talkMenu(id))); }
-  if(sub==="go"){ LOCS[G.loc].exits.forEach(x=>{const arrival=(G.hour+1)%24;const open=x==="michelin"&&G.is("knowOpen")?(arrival>=G.s.openH&&arrival<G.s.openH+4?" · open on arrival":" · shut on arrival"):"";smk(`<span class="route-text">${LOCS[x].name}<span class="route-note">${String(arrival).padStart(2,"0")}:00 arrival${open}</span></span><span class="en">+1h</span>`,()=>go(x));}); }
+  if(sub==="go"){ const mc=document.createElement("canvas"); mc.width=240; mc.height=144; mc.className="px minimap"; s.appendChild(mc); setTimeout(()=>drawMap(mc),0); LOCS[G.loc].exits.forEach(x=>{const arrival=(G.hour+1)%24;const open=x==="michelin"&&G.is("knowOpen")?(arrival>=G.s.openH&&arrival<G.s.openH+4?" · open on arrival":" · shut on arrival"):"";smk(`<span class="route-text">${LOCS[x].name}<span class="route-note">${String(arrival).padStart(2,"0")}:00 arrival${open}</span></span><span class="en">+1h</span>`,()=>go(x));}); }
   if(sub==="use"){ Object.keys(G.bag).forEach(i=>smk(ITEMS[i].n,()=>useItem(i))); }
 }
 
@@ -1967,6 +1973,20 @@ function buildWord(w,box,onDone,label){
     else { SND.bad(); out.innerHTML=`<span class="en">Not quite. You built 「${esc(got)}」. It is 「${esc(target.join(""))}」${hasKanji?" (written "+esc(w.w)+")":""}. Again; nothing is lost.</span>`; placed=[]; paint(); }
   });
 }
+/* the map: a sketch of Ueno and the airport, your trail on it, places you have not found unlabelled */
+const MAP_POS={airport:[96,14],station:[54,30],konbini:[22,16],hotel:[16,44],alley:[70,46],michelin:[94,50],hospital:[46,56]};
+function drawMap(c){
+  const ctx=c.getContext("2d"), W=c.width, H=c.height; ctx.clearRect(0,0,W,H); ctx.fillStyle=INK;
+  const px=(k)=>[Math.round(MAP_POS[k][0]/100*W),Math.round(MAP_POS[k][1]/60*H)];
+  const known=k=>k===G.loc||(G.visited||{})[k]||["airport","station","konbini","hotel","alley"].includes(k)||(k==="michelin"&&G.is("knowOpen"));
+  ctx.strokeStyle=INK; ctx.lineWidth=1; ctx.setLineDash([2,2]);
+  Object.keys(LOCS).forEach(a=>LOCS[a].exits.forEach(b=>{ if(a<b&&known(a)&&known(b)){ const [x1,y1]=px(a),[x2,y2]=px(b); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); } }));
+  ctx.setLineDash([]);
+  Object.keys(LOCS).forEach(k=>{ if(!known(k)) return; const [x,y]=px(k); const v=(G.visited||{})[k];
+    if(v) ctx.fillRect(x-3,y-3,6,6); else { ctx.strokeRect(x-3,y-3,6,6); }
+    if(k===G.loc){ ctx.strokeRect(x-6,y-6,12,12); }
+    ctx.font="7px 'Courier New',monospace"; const label=LOCS[k].name.replace(/,.*$/,"").toUpperCase(); const tw=ctx.measureText(label).width; ctx.fillText(label,x+5+tw>W-2?x-5-tw:x+5,y+3); });
+}
 /* the phone: a home screen of apps inside the pop-up */
 function renderPhone(box,app,text){
   const s=slots(), glasses=G.worn.includes("glasses"), close='<button class="k sm close" data-close>×</button>';
@@ -1975,7 +1995,7 @@ function renderPhone(box,app,text){
   let body="";
   if(app==="home"){
     body=`<h4>スマホ · ${G.loc==="michelin"?"screen dimmed":"free wifi"}</h4><div class="apps">
-      <button class="k" data-app="calls">📞 電話<br><small>Calls</small></button><button class="k" data-app="tsubuyaki">🐦 つぶやき<br><small>posts</small></button><button class="k" data-app="keijiban">📋 けいじばん<br><small>board</small></button><button class="k" data-app="hq">🎧 本部<br><small>HQ · ¥500</small></button><button class="k" data-app="weather">☂ 天気<br><small>weather</small></button><button class="k" data-app="music">♪ 音楽<br><small>music</small></button></div>
+      <button class="k" data-app="calls">📞 電話<br><small>Calls</small></button><button class="k" data-app="tsubuyaki">🐦 つぶやき<br><small>posts</small></button><button class="k" data-app="keijiban">📋 けいじばん<br><small>board</small></button><button class="k" data-app="hq">🎧 本部<br><small>HQ · ¥500</small></button><button class="k" data-app="weather">☂ 天気<br><small>weather</small></button><button class="k" data-app="music">♪ 音楽<br><small>music</small></button><button class="k" data-app="map">🗺 地図<br><small>map</small></button></div>
       <div class="en" style="margin-top:8px">Calls cost. Feeds are free. Everything on here is in Japanese, and most of it is about wherever you are standing.</div>${text?`<div class="en" style="margin-top:6px">${esc(text)}</div>`:""}`;
   } else if(app==="calls"){
     const met=Object.keys(G.did||{}).filter(id=>NPCS[id]&&CALLS[id]);
@@ -1992,6 +2012,9 @@ function renderPhone(box,app,text){
     ensureWeather(); const t=G.wx.today, m=G.wx.tomorrow;
     const row=(label,w,will)=>`<div class="bubble"><div class="en" style="font-size:11px">${label}</div><div class="jp" style="font-size:18px">${wx(w.k).jp}${will?"でしょう":""}、${w.temp}${R("度","ど")}</div><div class="tr" ${glasses?"":"hidden"} style="font-size:12px;color:var(--dim)">${will?"probably ":""}${wx(w.k).en}, ${w.temp}°C</div><div><button class="k sm spk" data-say="${esc(wx(w.k).kana+(will?"でしょう":"")+"、"+w.temp+"ど")}">▶</button> <button class="k sm" data-sub>字幕</button></div></div>`;
     body=`<h4>天気 · Tokyo</h4>${row(R("今日","きょう")+" · today",t,false)}${row(R("明日","あした")+" · tomorrow",m,true)}<div class="en">でしょう is the forecaster's hedge: probably. Rain wants an umbrella, cold wants a coat, heat wants no coat. The konbini sells both. Wrong clothes cost energy on every walk, and a soaked kitchen hand costs suspicion.</div>`;
+  } else if(app==="map"){
+    body=`<h4>地図 · Ueno and out</h4><canvas id="mapCv" class="px" width="240" height="144" style="width:100%;border:2px solid var(--ink);background:#fff"></canvas><div class="en">Filled squares are places you have been. Outlined ones you know about. Anything not on here, you have not found yet. Dotted lines are the ways between.</div>`;
+    setTimeout(()=>{ const cv=box.querySelector("#mapCv"); if(cv) drawMap(cv); },0);
   } else if(app==="music"){
     body=`<h4>音楽 · chiptunes</h4><div class="en">Five tracks the phone came with. Made of square waves, owned by nobody. Track three is Yamada's single.</div><div class="contacts">${MUSIC.tracks.map((t,k)=>`<button class="k sm${MUSIC.playing===k?" on":""}" data-track="${k}">${MUSIC.playing===k?"■":"▶"} ${t.jp} <span class="en">· ${esc(t.en)}</span></button>`).join("")}</div>`;
   } else if(app==="hq"){
@@ -2119,7 +2142,15 @@ function check(box){
   if(t.kind==="choice"){ const o=t.options[+pickedOpt.dataset.i]; ok=o.ok===true; why=fill(o.why,s); if(o.ok==="faux") kind="faux"; box.querySelectorAll(".opt").forEach(b=>{ b.disabled=true; if(t.options[+b.dataset.i].ok===true) b.classList.add("correct"); else if(b===pickedOpt) b.classList.add("incorrect"); }); }
   else if(t.kind==="gap"){ const val=cur.typed?box.querySelector("#typed").value:pickedOpt.dataset.v; ok=matches(val,t.accept); rule=fill(t.rule,s); if(cur.typed) box.querySelector("#typed").disabled=true; else box.querySelectorAll(".opt").forEach(b=>{ b.disabled=true; if(t.accept.includes(b.dataset.v)) b.classList.add("correct"); else if(b===pickedOpt) b.classList.add("incorrect"); }); const bl=box.querySelector("#blank"); if(bl) bl.textContent=ok?val:val+" → "+t.accept[0]; why=ok?"":`You put 「${val}」. It takes 「${t.accept[0]}」.`; }
   else { const val=box.querySelector("#typed").value; ok=matches(val,t.accept); box.querySelector("#typed").disabled=true; rule=fill(t.rule,s); if(t.slotCheck==="name"&&!ok&&!fold(val).includes(fold(G.s.name))) why=`You did not use your cover name, ${G.s.name}. `; if(t.slotCheck==="real"&&!ok&&G.s.realKana) why=`Your passport says ${G.s.realName}, ${G.s.realKana} on a Japanese form. `; why+=ok?"":`A line that works: 「${fill(t.model,s)}」`; }
-  if(!(cur.key in G.first)) G.first[cur.key]={ok,skill:cur.topic.skill,loc:G.loc};
+  let english=false;
+  if(G.loc==="airport"&&(t.kind==="gap"||t.kind==="type")){ /* the airport forgives English; nowhere else does */
+    const val=(t.kind==="gap"&&!cur.typed)?"":(box.querySelector("#typed")||{}).value||"";
+    const norm=x=>String(x).normalize("NFKC").toLowerCase().replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim();
+    const v=norm(val), rn=norm(G.s.realName||"");
+    const enList=(t.enAccept||[]).map(norm).concat(t.kind==="type"&&rn?[rn,"my name is "+rn,"im "+rn,"i am "+rn,"its "+rn,"it is "+rn]:[]);
+    if(v&&/[a-z]/.test(v)&&enList.some(e=>e&&(v===e||v.endsWith(" "+e)))){ ok=true; english=true; G.english=(G.english||0)+1; }
+  }
+  if(!(cur.key in G.first)) G.first[cur.key]={ok,skill:cur.topic.skill,loc:G.loc,english};
   if(!ok&&kind!=="faux"&&G.kit!=="tourist"&&(cur.tries||0)<2){
     cur.tries=(cur.tries||0)+1; SND.bad();
     if(cur.undercover){ const hit=cur.tries===1?15:5; G.susp=Math.min(100,G.susp+hit); }
@@ -2141,7 +2172,8 @@ function check(box){
     if(cur.npc==="fixer"||cur.npc==="fixer2"){ G.fails=G.fails||{}; G.fails[cur.npc]=(G.fails[cur.npc]||0)+1; if(G.fails[cur.npc]>=2) cur.burn=cur.npc; }
     if(cur.tries) zone+=" Third time; here is the whole of it.";
   }
-  cur.feedback={html:`<b>${ok?"✓ Reply accepted":kind==="faux"?"! Cultural slip":"✗ Check this reply"}</b><div>${esc(why)}${esc(zone)}</div>${rule?`<span class="rule">${esc(rule)}</span>`:""}${cur.topic.skill&&SKILLS[cur.topic.skill]?`<a class="rule" href="../grammar/#${encodeURIComponent(cur.topic.skill)}" target="_blank" rel="noopener">Grammar Hub: ${esc(SKILLS[cur.topic.skill][0])} →</a>`:""}`,cls:ok?"good":"bad"};
+  if(english){ why=`English. Tanaka takes it; he hears it four hundred times a day. Nobody past the airport will, so here is the Japanese: 「${fill(t.model||("…"+(t.accept||[""])[0]),s)}」. `; }
+  cur.feedback={html:`<b>${ok?(english?"✓ Taken, in English":"✓ Reply accepted"):kind==="faux"?"! Cultural slip":"✗ Check this reply"}</b><div>${esc(why)}${esc(zone)}</div>${rule?`<span class="rule">${esc(rule)}</span>`:""}${cur.topic.skill&&SKILLS[cur.topic.skill]?`<a class="rule" href="../grammar/#${encodeURIComponent(cur.topic.skill)}" target="_blank" rel="noopener">Grammar Hub: ${esc(SKILLS[cur.topic.skill][0])} →</a>`:""}`,cls:ok?"good":"bad"};
   paintFeedback(box,cur.feedback);
   box.querySelector("#checkBtn").style.display="none"; const nb=box.querySelector("#nextBtn"); nb.style.display=""; nb.focus();
   box.querySelector("#leaveBtn").hidden=true;cur.ok=ok; renderHud(); save();
@@ -2254,7 +2286,7 @@ function debrief(){
   const byLoc={}; Object.values(G.first).forEach(f=>{ if(!f.loc) return; byLoc[f.loc]=byLoc[f.loc]||{n:0,ok:0}; byLoc[f.loc].n++; if(f.ok) byLoc[f.loc].ok++; });
   const placeRows=Object.keys(LOCS).filter(l=>(G.visited||{})[l]||byLoc[l]).map(l=>`<tr><td><b>${esc(LOCS[l].name)}</b> ${LOCS[l].jp}</td><td>${byLoc[l]?`${byLoc[l].ok}/${byLoc[l].n}`:"visited"}</td><td><a href="../vocab/#unit:${VOCAB_KEY[l]}" target="_blank" rel="noopener">Vocab Hub: words for ${esc(LOCS[l].name)} →</a></td></tr>`).join("");
   $("debBody").innerHTML=`<h2>${R("報告書","ほうこくしょ")} · Debrief</h2><div class="stamp">${esc(outcome)}</div>
-    <p class="en">${G.s.realName?esc(G.s.realName)+", travelling as ":"Agent "}${esc(G.s.name)} (${esc(G.s.jobEn)}, ${esc(G.s.townEn)}). Kit: ${esc(LOADOUTS[G.kit].n)}. Days in country: ${G.day}. Suspicion at the end: ${G.susp}/100. Cash left: ¥${G.yen.toLocaleString()}. Side quests: ${["bagDone","trained"].filter(f=>G.is(f)).length}/2. Words built in the dictionary (all games on this device): ${DICT.count()}.</p>
+    <p class="en">${G.s.realName?esc(G.s.realName)+", travelling as ":"Agent "}${esc(G.s.name)} (${esc(G.s.jobEn)}, ${esc(G.s.townEn)}). Kit: ${esc(LOADOUTS[G.kit].n)}. Days in country: ${G.day}. Suspicion at the end: ${G.susp}/100. Cash left: ¥${G.yen.toLocaleString()}. Side quests: ${["bagDone","trained"].filter(f=>G.is(f)).length}/2. Words built in the dictionary (all games on this device): ${DICT.count()}.${G.english?` Answered in English at the airport: ${G.english}.`:""}</p>
     <p style="margin-top:6px"><b>${right}/${total}</b> <span class="en">right first time across everything you tried. Every miss is below with the rule, which is the part worth keeping.</span></p>
     <table><tr><th>Skill (Grammar Hub)</th><th>VIC level</th><th>First try</th><th>Practise exactly this</th></tr>${rows||`<tr><td colspan="4" class="en">Nothing graded yet.</td></tr>`}</table>
     <h2 style="margin-top:14px">Places</h2>
