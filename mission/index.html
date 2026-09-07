@@ -308,6 +308,7 @@
   .person:disabled{opacity:.5}
   .goals{padding:12px;font-size:13px;max-height:32%;flex:none;line-height:1.7}
   .goals .g{padding:2px 0}
+  .topics button:disabled{opacity:.35}
   .log,.jp,.bubble,.post,.thread,.wl,.present,.dock{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
   .channel{display:flex;align-items:center;gap:10px;border-bottom:2px solid var(--ink);padding:7px 14px;flex:none}
   .channel strong{font-size:12px;letter-spacing:.12em}.channel .en{font-size:12px;margin-left:auto}
@@ -437,6 +438,7 @@
         <label>Your Japanese cover name, for the fake ID</label>
         <div class="chips" id="jpChips"></div>
         <input class="jp" id="jpName" lang="ja" autocomplete="off" placeholder="or write your own, in katakana or hiragana">
+        <input class="jp" id="jpKana" lang="ja" autocomplete="off" placeholder="if you used kanji, its reading in kana" hidden>
         <p class="en" style="margin-top:8px">Names stay on this device only. Nothing here is sent anywhere.</p>
         <div class="go"><button class="k inv" id="passGo">スタンプ · Stamp it and go</button><button class="k sm" id="passBack">もどる · Back</button></div>
       </div>
@@ -1162,7 +1164,7 @@ const POOLS={
   town:[["メルボルン","Melbourne"],["パース","Perth"],["ブリスベン","Brisbane"],["アデレード","Adelaide"],["ダーウィン","Darwin"],["ホバート","Hobart"]],
   job:[[R("学生","がくせい"),"がくせい","student"],[R("会社員","かいしゃいん"),"かいしゃいん","office worker"],[R("料理人","りょうりにん"),"りょうりにん","cook"],[R("先生","せんせい"),"せんせい","teacher"]],
   stay:[[3,R("三日","みっか"),"みっか","three days"],[7,R("一週間","いっしゅうかん"),"いっしゅうかん","one week"],[14,R("二週間","にしゅうかん"),"にしゅうかん","two weeks"],[30,R("一か月","いっかげつ"),"いっかげつ","one month"]],
-  gate:[["4",R("四","よん")+"ばん","よんばん"],["7",R("七","なな")+"ばん","ななばん"],["9",R("九","きゅう")+"ばん","きゅうばん"],["12",R("十二","じゅうに")+"ばん","じゅうにばん"],["23",R("二十三","にじゅうさん")+"ばん","にじゅうさんばん"]],
+  gate:[["4",R("四番","よんばん"),"よんばん"],["7",R("七番","ななばん"),"ななばん"],["9",R("九番","きゅうばん"),"きゅうばん"],["12",R("十二番","じゅうにばん"),"じゅうにばん"],["23",R("二十三番","にじゅうさんばん"),"にじゅうさんばん"]],
   price:[[380,"さんびゃくはちじゅうえん"],[450,"よんひゃくごじゅうえん"],[520,"ごひゃくにじゅうえん"],[680,"ろっぴゃくはちじゅうえん"]],
   fare:[[1000,"せんえん"],[1200,"せんにひゃくえん"],[1500,"せんごひゃくえん"],[800,"はっぴゃくえん"]],
   ramen:[["しょうゆラーメン","soy sauce ramen"],["みそラーメン","miso ramen"],["しおラーメン","salt ramen"],["とんこつラーメン","pork bone ramen"]],
@@ -1201,7 +1203,7 @@ const ITEMS={
   onigiri:{n:"onigiri",jp:"おにぎり",desc:"Eat for +1 energy. Crows know you have it.",eat:1},
   pickles:{n:"pickles",jp:"つけもの",desc:"Home-made, from a former idol. +1 energy and a strong smell.",eat:1},
   ticket:{n:"day pass",jp:R("一日券","いちにちけん"),desc:"Trains all day. The station staff will check it and be pleased."},
-  bag:{n:"red bag?",jp:"かばん",desc:"A {{bagEn}} backpacker's bag from lost property. Not yours. Give it back."},
+  bag:{n:"{{bagEn}} bag",jp:"かばん",desc:"A {{bagEn}} backpacker's bag from lost property. Not yours. Give it back."},
   notes:{n:"notes",jp:"メモ",desc:"What you memorised from the chef's notebook: {{hours}} of simmering, and {{secret}}."},
   photo:{n:"photo",jp:R("写真","しゃしん"),desc:"A photo of a notebook page. Grainy. Good enough for HQ."},
   umbrella:{n:"umbrella",jp:"かさ",desc:"A konbini umbrella, ¥600 of clear plastic. Use to carry it or put it away. Rain cares.",wear:true},
@@ -1240,7 +1242,7 @@ officer:{name:"Officer Tanaka",jp:R("入国審査官","にゅうこくしんさ�
    {id:"name",title:"Your name",skill:"greet-y34",
     lines:[{jp:"お"+R("名前","なまえ")+"は？",en:"Your name?"},{jp:"お"+R("名前","なまえ")+"は"+R("何","なん")+"ですか。",en:"What is your name?"}],
     task:{kind:"type",prompt:"Give your real name, the one in your passport{{realNote}}. The pattern is on the sign behind him.",hint:"{{realShown}}です",model:"{{realShown}}です。",accept:[/(?:{{realAccept}})(?:です|ともうします|と申します)?$/],rule:"Your name on its own works at a desk. X です, 私はXです, 私の名前はXです, or X と申します are the fuller shapes. What he does not need is a country.",slotCheck:"real"}},
-   {id:"from",title:"Where from",skill:"greet-y34",
+   {id:"from",title:"Where from",skill:"particles-sentences",
     lines:[{jp:"どこから"+R("来","き")+"ましたか。",en:"Where did you come from?"},{jp:"ご"+R("出身","しゅっしん")+"は？",en:"Where are you from?"}],
     task:{kind:"choice",prompt:"You are Australian. Say so.",options:[
       {jp:"オーストラリアから"+R("来","き")+"ました。",en:"I came from Australia.",ok:true,why:"から marks where you came from."},
@@ -1271,7 +1273,7 @@ traveller:{name:"Kiwi backpacker",jp:"バックパッカー",spr:"clerk",loc:"ai
    {id:"bag",title:"The lost bag",cue:"They keep saying かばん and looking at the departures board. Ask.",skill:"identity-y56",
     lines:[{jp:"かばんをなくしました。{{bag}}かばんです。"+R("中","なか")+"にカメラが"+R("入","はい")+"っています。",en:"I lost my bag. A {{bagEn}} bag. There's a camera in it."},{jp:"{{bag}}かばん、"+R("見","み")+"ませんでしたか。カメラが"+R("入","はい")+"っているんです。",en:"Haven't seen a {{bagEn}} bag? It's got my camera in it."}],
     task:{kind:"gap",prompt:"Ask where they lost it. Fill the question word.",jp:"＿＿＿でなくしましたか。",en:"Where did you lose it?",accept:["どこ"],enAccept:["where"],opts:["どこ","どれ","だれ","いつ"],rule:"どこ (where) + で (place of the action) + past verb + か. どれ is 'which one', だれ 'who', いつ 'when'."},
-    after:(G,ok)=>{G.flag("bagQuest");say("traveller",{jp:R("大阪","おおさか")+"です！たぶん！…あ、でも"+R("一時間前","いちじかんまえ")+"はこの"+R("駅","えき")+"にいました。",en:"Osaka! Probably! ...Oh, but an hour ago I was at this station."});return "You file that away.";}}
+    after:(G,ok)=>{G.flag("bagQuest");say("traveller",{jp:R("大阪","おおさか")+"です！たぶん！…あ、でも"+R("一時間前","いちじかんまえ")+"はこの"+R("空港","くうこう")+"にいました。"+R("上野","うえの")+"…？",en:"Osaka! Probably! ...Oh, but an hour ago I was at this airport. Ueno...?"});return "You file that away.";}}
   ]},
 teller:{name:"Ono, exchange counter",jp:R("両替","りょうがえ")+"・"+R("小野","おの"),spr:"teller",loc:"airport",
   bio:"Counts things. Steps, tiles, passengers, the seconds a stamp takes. Loves notes because they stack. Hates coins because they do not.",
@@ -1295,20 +1297,20 @@ stationstaff:{name:"Sato, station staff",jp:R("駅員","えきいん")+"・"+R("
   bio:"Every train on time, every day, or the cat gets nothing. The cat, Mike, comes to the station every morning and has never bought a ticket.",
   small:[{jp:"うちの"+R("猫","ねこ")+"はまいにち"+R("駅","えき")+"に"+R("来","き")+"ます。",en:"My cat comes to the station every day."},{jp:R("電車","でんしゃ")+"は"+R("時間","じかん")+"どおりです。",en:"The trains are on time."}],
   topics:[
-   {id:"ticket",title:"Buy a day pass",skill:"num-y56",req:G=>!G.has("ticket")||"You already have a day pass. Sato points at it approvingly.",
-    lines:[{jp:R("一日券","いちにちけん")+"ですね。{{fareKana}}です。",en:"A day pass. That's {{fareN}} yen."},{jp:R("一日券","いちにちけん")+"は{{fareKana}}になります。",en:"A day pass comes to {{fareN}} yen."}],
+   {id:"ticket",title:"Buy a day pass",skill:"num-y34",req:G=>!G.has("ticket")||"You already have a day pass. Sato points at it approvingly.",
+    lines:[{jp:R("一日券","いちにちけん")+"ですね。{{fareKana}}です。",en:"A day pass. That's {{fareN}} yen."},{jp:R("一日券","いちにちけん")+"は{{fareKana}}です。",en:"A day pass comes to {{fareN}} yen."}],
     task:{kind:"choice",prompt:"How much did they say?",dynamic:"fare"},
     after:(G,ok)=>{ if(G.yen<G.s.fareN) return "You do not have the fare. Sato's face does something complicated. No pass."; G.yen-=G.s.fareN; G.give("ticket"); return `You pay ¥${G.s.fareN}. A day pass. Sato bows to it.`;}},
    {id:"where",title:"Where to",skill:"verb-stem-choices",
     lines:[{jp:"どこまで"+R("行","い")+"きますか。",en:"Where are you going to?"},{jp:"どちらまでですか。",en:"Where to?"}],
-    task:{kind:"type",prompt:"Say you want to go to Ueno (上野 / うえの). Pattern: PLACE に行きたいです or PLACE までおねがいします.",hint:"上野に行きたいです／上野までおねがいします",model:"上野に行きたいです。",accept:[/(うえの|上野)(に|へ)(いきたい|行きたい)です$/,/(うえの|上野)まで(おねがいします|お願いします)$/],rule:"PLACE に行きたいです: I want to go to. たい goes on the verb stem (行き). PLACE までおねがいします works at any counter in Japan."}},
-   {id:"lost",title:"Lost property",skill:"identity-y56",req:G=>G.is("bagQuest")||"「お忘れ物ですか。」 Lost property? You have not lost anything. Yet.",
+    task:{kind:"type",prompt:"Say you want to go to Ueno (上野 / うえの). Pattern: PLACE に行きたいです or PLACE までおねがいします.",hint:"上野に行きたいです／上野までおねがいします",model:"上野に行きたいです。",accept:[/(うえの|上野)(に|へ)(いきたい|行きたい)(です|んですが|のですが|んですけど)$/,/(うえの|上野)まで(です|おねがいします|お願いします)?$/,/(うえの|上野)(です|に行きます|にいきます|へ行きます|へいきます)$/],rule:"PLACE に行きたいです: I want to go to. たい goes on the verb stem (行き). PLACE までおねがいします works at any counter in Japan."}},
+   {id:"lost",title:"Lost property",skill:"sfp-sentences",req:G=>G.is("bagQuest")||"「お忘れ物ですか。」 Lost property? You have not lost anything. Yet.",
     lines:[{jp:"お"+R("忘","わす")+"れ"+R("物","もの")+"ですか。どんなかばんですか。",en:"Lost property? What kind of bag?"}],
     task:{kind:"choice",prompt:"Describe the backpacker's bag.",dynamic:"bag"},
     after:(G,ok)=>{ if(ok){G.give("bag");return "Sato produces the bag from under the counter. There is a camera in it. Sato does not ask why you are carrying a stranger's bag. The cat watches.";} return "Sato produces an umbrella. Wrong colour, wrong object. You leave it.";}},
    {id:"cat",title:"The cat",cue:"There is a cat asleep on the ticket machine and Sato is not stopping it. Ask.",skill:"num-y78",
     lines:[{jp:"ミケは"+R("毎朝","まいあさ")+R("六時","ろくじ")+"に"+R("来","き")+"ます。"+R("切符","きっぷ")+"は"+R("買","か")+"いません。",en:"Mike comes every morning at six. Never buys a ticket."}],
-    task:{kind:"gap",prompt:"Ask how often the cat comes. Fill the question phrase.",jp:"ミケは＿＿＿"+R("来","き")+"ますか。",en:"How often does Mike come?",accept:["どのくらい","どれくらい","なんかい","何回"],opts:["どのくらい","どこに","いつから","どうして"],rule:"どのくらい (how much / how often) before the verb. 週に何回 (how many times a week) is the precise version."},
+    task:{kind:"gap",prompt:"Ask how many times a week the cat comes. Fill the question phrase.",jp:"ミケは"+R("週","しゅう")+"に＿＿＿"+R("来","き")+"ますか。",en:"How many times a week does Mike come?",accept:["なんかい","何回","なんど","何度"],opts:["なんかい","どこに","いつから","どうして"],rule:"週に何回 (how many times a week): PERIOD に + 何回. なんかい is the question form of the 回 counter you used at the airport."},
     after:(G,ok)=>"Sato shows you forty photos of Mike. Mike is a normal cat. You feel you know Mike."}
   ]},
 clerk:{name:"Nakamura, konbini clerk",jp:R("店員","てんいん")+"・"+R("中村","なかむら"),spr:"clerk",loc:"konbini",
@@ -1324,7 +1326,7 @@ clerk:{name:"Nakamura, konbini clerk",jp:R("店員","てんいん")+"・"+R("中
    {id:"which",title:"That one, this one",skill:"identity-y34",
     lines:[{jp:"こちらでよろしいですか。",en:"Is this one all right?"},{jp:"こちらですか。",en:"This one?"}],
     task:{kind:"gap",prompt:"They hold up the wrong onigiri. Point at the one in front of you.",jp:"いいえ、＿＿＿です。",en:"No, this one.",accept:["これ","こちら"],opts:["これ","それ","あれ","どれ"],rule:"これ near you, それ near them, あれ away from both. It's by your hand: これ (or the politer こちら)."}},
-   {id:"pay",title:"Buy two onigiri",skill:"num-y56",
+   {id:"pay",title:"Buy two onigiri",skill:"num-y34",
     lines:[{jp:"おにぎり"+R("二","ふた")+"つで、{{priceKana}}です。",en:"Two onigiri, that's {{priceN}} yen."},{jp:"おかいけい、{{priceKana}}になります。",en:"Your total comes to {{priceN}} yen."}],
     task:{kind:"choice",prompt:"How much? Nothing on the screen faces you.",dynamic:"price"},
     after:(G,ok)=>{ if(G.yen<G.s.priceN) return "You can't pay. Nakamura puts the onigiri back with great gentleness."; G.yen-=G.s.priceN; G.give("onigiri",2); return `¥${G.s.priceN}. Two onigiri in the bag. Nakamura says 「ありがとうございました」 to the onigiri, then to you.`;}},
@@ -1336,7 +1338,7 @@ clerk:{name:"Nakamura, konbini clerk",jp:R("店員","てんいん")+"・"+R("中
     lines:[{jp:"はい、"+R("何","なに")+"かお"+R("探","さが")+"しですか。",en:"Yes, looking for something?"},{jp:"はい？",en:"Yes?"}],
     task:{kind:"type",prompt:"Ask whether they have pickles. The word is つけもの. A question, politely.",hint:"つけもの、ありますか。／つけものをください。",model:"つけもの、ありますか。",accept:[/つけもの.*(ありますか|ありませんか|ください|おねがいします|お願いします|ほしいです|欲しいです)$/,/つけものは$/],rule:"NOUN、ありますか: do you have NOUN? か on the end makes it a question. つけものをください also works, and so does saying つけもの with a rising eyebrow, apparently."},
     after:(G,ok)=>{G.flag("foundFixer");return "Nakamura looks at you for one long second, puts down the novel, and nods at the STAFF ONLY door. It opens a crack. Pickles, and a 2009 pop single. 「…どうぞ。」 Yamada.";}},
-   {id:"umbrella",title:"Buy an umbrella (¥600)",skill:"num-y56",req:G=>!G.has("umbrella")||"You have an umbrella. Nakamura points at it.",
+   {id:"umbrella",title:"Buy an umbrella (¥600)",skill:"num-y34",req:G=>!G.has("umbrella")||"You have an umbrella. Nakamura points at it.",
     lines:[{jp:"かさですか。"+R("六百円","ろっぴゃくえん")+"です。",en:"An umbrella? Six hundred yen."},{jp:R("雨","あめ")+"ですね。かさは"+R("六百円","ろっぴゃくえん")+"になります。",en:"Rain, eh. An umbrella comes to six hundred yen."}],
     task:{kind:"choice",prompt:"How much is the umbrella?",options:[{jp:"600円",en:"600 yen",ok:true,why:"ろっぴゃくえん: six hundred. Six-hundred is the one that goes ぴゃく."},{jp:"800円",en:"800 yen",ok:false,why:"はっぴゃく is eight hundred. They said ろっぴゃく."},{jp:"160円",en:"160 yen",ok:false,why:"ひゃくろくじゅう would be 160. They said ろっぴゃく: six hundred."}]},
     after:(G,ok)=>{ if(G.yen<600) return "You cannot pay. It rains anyway."; G.yen-=600; G.give("umbrella"); return "¥600. A clear plastic umbrella, like everyone's. USE it to put it up."; }},
@@ -1364,24 +1366,33 @@ fixer:{name:"Yamada, the fixer",jp:R("山田","やまだ"),spr:"fixer",loc:"konb
     task:{kind:"gap",prompt:"Your cover says {{townEn}}. Fill the particle.",jp:"{{town}}＿＿＿"+R("住","す")+"んでいます。",en:"I live in {{townEn}}.",accept:["に"],opts:["に","で","を","へ"],rule:"住む takes に for the place you live. で is where an action happens; living is treated as existing somewhere."}},
    {id:"job",title:"Test: your job",skill:"greet-y56",
     lines:[{jp:"お"+R("仕事","しごと")+"は？",en:"Your job?"}],
-    task:{kind:"type",prompt:"Cover job: {{jobEn}}. Say it, polite form.",hint:"{{jobKana}}です",model:"{{jobKana}}です。",accept:[/(?:{{jobKana}}|{{jobPlain}})(?:です)?$/],rule:"JOB, JOB です, or 私はJOBです. Forgetting the word here, in a back room that smells of pickles, is the cheap place to forget it.",slotCheck:"job"}},
-   {id:"stay",title:"Test: how long",skill:"num-y56",
+    task:{kind:"type",prompt:"Cover job: {{jobEn}}. Say it, polite form.",hint:"{{jobKana}}です",model:"{{jobKana}}です。",accept:[/(?:{{jobKana}}|{{jobPlain}})(?:です|をしています|をやっています|でございます)?$/],rule:"JOB, JOB です, or 私はJOBです. Forgetting the word here, in a back room that smells of pickles, is the cheap place to forget it.",slotCheck:"job"}},
+   {id:"stay",title:"Test: how long",skill:"num-y78",
     lines:[{jp:"どのくらい"+R("日本","にほん")+"にいますか。",en:"How long are you in Japan?"}],
     task:{kind:"choice",prompt:"Your cover says {{stayEn}}.",dynamic:"stay"}},
    {id:"idcard",title:"Get the ID",skill:"num-y56",req:G=>(["newname","town","job","stay"].every(t=>G.done("fixer",t)||G.done("fixer2",t)))||"「まだまだ。」 Not yet. All four tests first, in any order.",
-    lines:[{jp:"はい、"+R("身分証","みぶんしょう")+"。それと、あの"+R("店","みせ")+"は{{open}}にあきます。",en:"Here, your ID. And that shop opens at {{openEn}}."}],
+    lines:[{jp:"はい、"+R("身分証","みぶんしょう")+"。それと、あの"+R("店","みせ")+"は{{open}}からです。",en:"Here, your ID. And that shop is open from {{openEn}}."}],
     task:{kind:"choice",prompt:"When does the Michelin shop open?",dynamic:"open"},
     after:(G,ok)=>{G.give("idcard");G.flag("knowOpen");return "The ID is warm from the laminator. The photo is of someone else. 「だいじょうぶ、だいじょうぶ。」";}},
    {id:"idol",title:"The idol years",cue:"Yamada hums a 2009 pop single and does the hand gestures. Ask.",skill:"identity-y78",
-    lines:[{jp:"むかし、アイドルでした。"+R("今","いま")+"はアイドルではありません。つけもの"+R("屋","や")+"です。",en:"I used to be an idol. Now I'm not an idol. I'm a pickle seller."}],
+    lines:[{jp:"むかし、アイドルでした。"+R("今","いま")+"はアイドルじゃありません。つけもの"+R("屋","や")+"です。",en:"I used to be an idol. Now I'm not an idol. I'm a pickle seller."}],
     task:{kind:"gap",prompt:"Ask if they were famous. Past tense of です.",jp:R("有名","ゆうめい")+"＿＿＿か。",en:"Were you famous?",accept:["でした"],opts:["でした","です","ではありません","だった"],rule:"NOUN／な-adj + でした: polite past. だった is the plain past; fine with friends, and Yamada wants to be asked politely about 2009."},
     after:(G,ok)=>{G.give("pickles",2);return "「38位でした。」 Number 38. They do the hand gesture. You get two jars of pickles for free. The smell will follow you.";}}
+  ]},
+sleeper:{name:"Kiwi backpacker, asleep",jp:"バックパッカー",spr:"clerk",loc:"hotel",req:G=>(G.is("bagQuest")&&!G.is("bagDone"))||"An empty armchair. Somebody was asleep in it earlier.",
+  bio:"Asleep in the armchair with the confidence of a person who does not have a room. Still, in dreams, in Osaka.",
+  small:[{jp:"…おおさか…",en:"...Osaka..."}],
+  topics:[
+   {id:"return",title:"Return the bag",cue:"The armchair. The face from the arrivals hall. Your bag has their bag in it.",skill:"identity-y56",req:G=>G.has("bag")||"You have nothing of theirs. The station holds lost property.",
+    lines:[{jp:"…ん？"+R("何","なん")+"ですか。",en:"...Hm? What is it?"}],
+    task:{kind:"type",prompt:"Wake them and hand it over. Say it is their bag, or just hand it: これ、あなたのかばんですか／かばん、どうぞ.",hint:"これ、あなたのかばんですか。／かばん、どうぞ。",model:"かばん、どうぞ。",accept:[/(かばん|バッグ).*(ですか|でしょう|ですね|どうぞ|ありました|みつかりました|見つかりました|みつけました|見つけました)$/,/^これ、?どうぞ[。]?$/,/(かばん|バッグ)[、。]?$/],rule:"あなたのNOUNですか asks if it is theirs; NOUN、どうぞ hands it over. Either wakes a Kiwi."},
+    after:(G,ok)=>{G.take("bag");G.give("camera");G.flag("bagDone");return "They wake, see the bag, and cry a little. They give you the camera out of it as thanks; the rest is socks. 「オークランドに"+"帰ります。」 They are, at last, not going to Osaka.";}}
   ]},
 hotelclerk:{name:"Suzuki, front desk",jp:"フロント・"+R("鈴木","すずき"),spr:"waiter",loc:"hotel",
   bio:"Learning English from an Australian soap opera. Asleep standing up between 2 and 4. Believes all Australians say 'strewth'.",
   small:[{jp:"「ストゥルース」…"+R("本当","ほんとう")+"に"+R("言","い")+"いますか。",en:"'Strewth'... do you really say that?"},{jp:"いらっしゃいませ。…すみません、"+R("寝","ね")+"ていました。",en:"Welcome... sorry, I was asleep."}],
   topics:[
-   {id:"checkin",title:"Check in",skill:"te-form-b2-core",
+   {id:"checkin",title:"Check in",skill:"greet-y56",
     lines:[{jp:"チェックインですか。こちらに"+R("名前","なまえ")+"を"+R("書","か")+"いてください。",en:"Checking in? Please write your name here."}],
     task:{kind:"choice",prompt:"Which name goes on the hotel form? Think about who might read it.",options:[
       {jp:"（"+R("本当","ほんとう")+"の"+R("名前","なまえ")+"を"+R("書","か")+"く）",en:"(write your real name)",ok:true,why:"The hotel has your passport details anyway; a fake name here and a real passport is how you get caught. 書いてください: て-form + ください, a request."},
@@ -1408,7 +1419,7 @@ owner:{name:"Taisho, ramen owner",jp:R("大将","たいしょう"),spr:"chef",lo
     lines:[{jp:"ぎょうざは？いくつ？",en:"Gyoza? How many?"}],
     task:{kind:"gap",prompt:"You want two plates.",jp:"＿＿＿おねがいします。",en:"Two, please.",accept:["ふたつ","二つ","2つ","にんまえ","二人前","ににんまえ"],opts:["ふたつ","にほん","にまい","ふたり"],rule:"ふたつ is the general counter. 二本 for long thin things, 二枚 for flat things, 二人 for people. Gyoza on a plate: ふたつ."},
     after:(G,ok)=>{ if(G.yen<400) return "You cannot pay for the gyoza. He gives you one anyway, glaring."; G.yen-=400; G.energy=Math.min(5,G.energy+1); return "¥400. Gyoza. +1 energy. He watches you eat like it is an exam.";}},
-   {id:"shift",title:"Work a shift (earn ¥3,000)",skill:"te-form-b2-core",req:G=>G.hour>=10&&G.hour<=20||"The shop is shut. He is inside, arguing with the ticket machine.",
+   {id:"shift",title:"Work a shift (earn ¥3,000)",skill:"te-form-b2-core",req:G=>G.hour>=10&&G.hour<=20||"The shop is shut (Taisho works ten to eight). He is inside anyway, arguing with the ticket machine.",
     lines:[{jp:"バイト？いいよ。まず、ねぎを"+R("切","き")+"って、それからスープを"+R("見","み")+"て。",en:"A shift? Sure. First cut the leeks, then watch the soup."},{jp:"ねぎを"+R("切","き")+"ってから、スープを"+R("見","み")+"ておいて。",en:"After cutting the leeks, keep an eye on the soup."}],
     task:{kind:"choice",prompt:"What comes first?",options:[
       {jp:"ねぎを"+R("切","き")+"る",en:"cut the leeks",ok:true,why:"切って、それから / 切ってから: て-form joins actions in sequence, first verb first."},
@@ -1464,13 +1475,13 @@ oldman:{name:"The yatai grandpa",jp:R("屋台","やたい")+"のおじいさん"
     task:{kind:"gap",prompt:"Ask if grandpa has eaten there. Experience form.",jp:"あの"+R("店","みせ")+"で"+R("食","た")+"べた＿＿＿がありますか。",en:"Have you ever eaten at his place?",accept:["こと"],opts:["こと","もの","とき","ところ"],rule:"た-form + ことがある: have had the experience of. 食べたことがありますか, have you ever eaten."},
     after:(G,ok)=>{G.flag("intelFear");say("oldman",{jp:"ない。"+R("招待","しょうたい")+"されてない。でも、あいつはスープをほめられると"+R("弱","よわ")+"い。「〜と"+R("思","おも")+"います」でね。だれも"+R("言","い")+"わないから。",en:"Never. Never invited. But he goes soft when someone praises the soup. With a 'to omoimasu'. Nobody ever does."});return "He says it to the pot, not to you.";}}
   ]},
-chef:{name:"Hoshino, the chef",jp:R("店主","てんしゅ")+"・"+R("星野","ほしの"),spr:"chef",loc:"michelin",
+chef:{name:"Hoshino, the chef",jp:R("店主","てんしゅ")+"・"+R("星野","ほしの"),spr:"chef",loc:"michelin",req:G=>G.is("shownId")||(G.has("idcard")?"He looks at your hands, not your face. 「身分証は？」 USE the ID card.":"He looks at your hands, not your face. 「身分証は？」 You have no papers. The fixer in Ueno makes them."),
   bio:"One star. Talks to the soup. Terrified. Puts the notebook down when the phone rings. Cried at fireworks in 1989.",
   small:[{jp:"（スープに）がんばれ…がんばれ…",en:"(to the soup) come on... come on..."},{jp:R("何","なに")+"をしている。"+R("手","て")+"を"+R("動","うご")+"かせ。",en:"What are you doing. Move your hands."}],
   topics:[
    {id:"identity",title:"Who are you",skill:"greet-y56",undercover:true,
     lines:[{jp:"きみが"+R("新人","しんじん")+"か。"+R("名前","なまえ")+"と"+R("出身","しゅっしん")+"を"+R("言","い")+"って。",en:"You're the new one? Name and where you're from."},{jp:"おはよう。だれだ？どこから"+R("来","き")+"た？",en:"Morning. Who are you? Where from?"}],
-    task:{kind:"type",prompt:"Cover identity, polite: NAME です。TOWN から来ました。 Both parts.",hint:"{{name}}です。{{town}}から来ました。",model:"{{name}}です。{{town}}から来ました。",accept:[/{{name}}です。?{{town}}から(きました|来ました)$/,/{{town}}から(きました|来ました)。?{{name}}です$/],rule:"NAME です。PLACE から来ました。 Two short polite sentences beat one clever one under pressure. Your real name here ends the mission.",slotCheck:"name"}},
+    task:{kind:"type",prompt:"Cover identity, polite: NAME です。TOWN から来ました。 Both parts.",hint:"{{name}}です。{{town}}から来ました。",model:"{{name}}です。{{town}}から来ました。",accept:[/{{name}}です.*{{town}}から(きました|来ました|まいりました|参りました)$/,/{{town}}から(きました|来ました|まいりました|参りました).*{{name}}です$/],rule:"NAME です。PLACE から来ました。 Two short polite sentences beat one clever one under pressure. Your real name here ends the mission.",slotCheck:"name"}},
    {id:"experience",title:"Experience",skill:"ta-choices",undercover:true,
     lines:[{jp:"ラーメン"+R("屋","や")+"で"+R("働","はたら")+"いたことがあるか。",en:"Have you ever worked in a ramen shop?"}],
     task:{kind:"choice",prompt:"Your cover job is {{jobEn}}. Answer honestly for that job, in his grammar.",dynamic:"experience"}},
@@ -1489,8 +1500,8 @@ chef:{name:"Hoshino, the chef",jp:R("店主","てんしゅ")+"・"+R("星野","�
       {jp:"「"+R("店長","てんちょう")+"、ノートを"+R("見","み")+"てもいいですか。」",en:"'Chef, may I look at the notebook?'",ok:true,why:"てもいいですか asks permission, in his hearing. He grunts yes into the phone. Nobody suspects the one who asks."},
       {jp:"（だまってノートを"+R("開","ひら")+"く）",en:"(open it without a word)",ok:"faux",why:"He saw you in the mirror. A trial-shift hand does not touch the owner's notebook. Ask: 見てもいいですか."},
       {jp:"「ノートを"+R("見","み")+"なければなりません。」",en:"'I must look at the notebook.'",ok:false,why:"Grammatical and deeply strange. なければなりません is what YOU must do, and you have just told the chef your mission. Permission is てもいいですか."}]},
-    after:(G,ok)=>{G.flag("notebookOpen");return "The phone rings. He puts the notebook down on the counter, open, and turns his back to answer it.";}},
-   {id:"tomorrow",title:"Tomorrow's shift",skill:"misc-b4",undercover:true,req:G=>G.is("recipe")||"He hasn't offered you anything yet. You have not earned tomorrow.",
+    after:(G,ok)=>{G.flag("notebookOpen");return "He is still on the phone, back turned. The notebook lies open on the counter. LOOK, or use the camera, before he hangs up.";}},
+   {id:"tomorrow",title:"Tomorrow's shift",skill:"conjunctions-b4",undercover:true,req:G=>G.is("recipe")||"He hasn't offered you anything yet. Get the recipe first; then there is a tomorrow to talk about.",
     lines:[{jp:"{{name}}、"+R("明日","あした")+"も"+R("来","こ")+"られるか。{{open}}からだ。",en:"{{name}}, can you come tomorrow too? From {{openEn}}."}],
     task:{kind:"type",prompt:"You have what you came for. Decline politely with a reason. Pattern: すみません、明日は〜ので、来られません。",hint:"すみません、明日は用事があるので、来られません。",model:"すみません、明日は用事があるので、来られません。",accept:[/(ので|から).*(こられません|来られません|くることができません|来ることができません|いけません|行けません)/,/(こられません|来られません|くることができません|来ることができません).*(ので|から)/],rule:"REASON + ので／から, then negative potential: 来られません (cannot come). ので is softer than から and suits a refusal."},
     after:(G,ok)=>"He nods at the soup, not at you. 「まあ、がんばれ。」 To you or the soup; unclear."},
@@ -1508,11 +1519,11 @@ doctor:{name:"Dr Mori",jp:R("医者","いしゃ")+"・"+R("森","もり"),spr:"d
   topics:[
    {id:"pain",title:"Where does it hurt",skill:"particles-b1-core",
     lines:[{jp:"どこが"+R("痛","いた")+"いですか。",en:"Where does it hurt?"}],
-    task:{kind:"gap",prompt:"You collapsed from hunger. Say your stomach hurts. Fill the particle.",jp:"おなか＿＿＿"+R("痛","いた")+"いです。",en:"My stomach hurts.",accept:["が"],opts:["が","は","を","に"],rule:"BODY PART + が + 痛い: the part that hurts takes が, answering どこが. は would work in a longer contrast; を is wrong, 痛い is not a verb."},
+    task:{kind:"gap",prompt:"He asks where it hurts. Say your stomach does (it does, a little; it is Tokyo). Fill the particle.",jp:"おなか＿＿＿"+R("痛","いた")+"いです。",en:"My stomach hurts.",accept:["が"],opts:["が","は","を","に"],rule:"BODY PART + が + 痛い: the part that hurts takes が, answering どこが. は would work in a longer contrast; を is wrong, 痛い is not a verb."},
     after:(G,ok)=>{const fee=G.is("coinGiven")?0:Math.min(5000,G.yen);G.yen-=fee;G.energy=5;return G.is("coinGiven")?"Rice porridge, a lecture about eating, no bill. Full energy. Dr Mori nods at the case on your way out.":`Rice porridge, a lecture about eating, ¥${fee}. Full energy. Dr Mori asks again about the coin on your way out.`;}},
    {id:"coin",title:"The coin",cue:"The glass case has one empty slot: オーストラリア ２ドル. Your pocket has been carrying one since Tullamarine.",skill:"particles-b1-core",req:G=>G.is("coinGiven")?"It is in the case. He looks at it between patients.":(G.has("coin")||"You pat your pockets. The coin has gone somewhere."),
     lines:[{jp:"オーストラリアの"+R("二","に")+"ドル"+R("玉","だま")+"…"+R("本当","ほんとう")+"に？",en:"An Australian two-dollar coin... really?"}],
-    task:{kind:"type",prompt:"Give it to him. Say who gets what: PERSON に THING を あげます. Or hold it out and say どうぞ.",hint:"森先生にコインをあげます。／これ、どうぞ。",model:"森先生にコインをあげます。",accept:[/(に|へ).*(あげます|さしあげます)$/,/どうぞ/,/(プレゼントです|おみやげです)$/],rule:"PERSON に THING を あげます: に marks who receives, を what. どうぞ on its own is fine when the thing is already in your hand, held out."},
+    task:{kind:"type",prompt:"Give it to him. Say who gets what: PERSON に THING を あげます. Or hold it out and say どうぞ.",hint:"森先生にコインをあげます。／これ、どうぞ。",model:"森先生にコインをあげます。",accept:[/(に|へ).*(あげます|さしあげます|差し上げます|差しあげます)$/,/どうぞ/,/(プレゼントです|おみやげです|お土産です)$/],rule:"PERSON に THING を あげます: に marks who receives, を what. どうぞ on its own is fine when the thing is already in your hand, held out."},
     after:(G,ok)=>{G.take("coin");G.flag("coinGiven");G.susp=Math.max(0,G.susp-5);SND.coin();say("doctor",{jp:R("六十二","ろくじゅうに")+"か"+R("国","こく")+"。…"+R("六十二","ろくじゅうに")+"か"+R("国","こく")+"。",en:"Sixty-two countries. ...Sixty-two countries."});return "He holds it to the light for a long time, then to the empty slot, then to the light again. The slot closes with a small click. Treatment here is free from now on, and you have never seen a doctor this happy. Suspicion -5.";}}
   ]}
 };
@@ -1521,14 +1532,14 @@ doctor:{name:"Dr Mori",jp:R("医者","いしゃ")+"・"+R("森","もり"),spr:"d
 const LOCS={
   airport:{name:"Narita Airport",jp:R("成田空港","なりたくうこう"),spr:"airport",exits:["station"],
     look:"Two languages on every sign, four hundred Australians in the arrivals hall, one officer jogging on the spot behind a desk. A backpacker is arguing with a departures board. Ground staff stand very straight beside a bus timetable. Behind a window marked 両替, someone is counting.",
-    lookJp:[{jp:R("到着","とうちゃく")+" ARRIVALS",en:""},{jp:"バスのりば → {{gate}}",en:""}],
+    lookJp:[{jp:R("到着","とうちゃく")+" ARRIVALS",en:""},{jp:"お"+R("名前","なまえ")+"は？ → ＿＿です",en:""},{jp:"バスのりば → {{gate}}",en:""}],
     gate:G=>G.is("immigration")||"The exit is past Officer Tanaka. He is jogging and holding out his hand. TALK to him about immigration."},
   station:{name:"Ueno Station",jp:R("上野駅","うえのえき"),spr:"station",exits:["airport","konbini","hotel","alley","michelin","hospital"],
     look:"Trains arrive to the second. Sato stands under a clock and nods at each one. A cat is asleep on the ticket machine. Behind the counter, lost property: umbrellas, a trombone, and a bag.",
     lookJp:[{jp:"お"+R("忘","わす")+"れ"+R("物","もの")+"",en:""},{jp:R("切符","きっぷ")+"うりば",en:""}]},
   konbini:{name:"Konbini, Ueno",jp:"コンビニ",spr:"konbini",exits:["station","hotel"],
     look:"Fluorescent. A wall of onigiri arranged by someone who loves them. A door marked STAFF ONLY, behind which somebody is singing a 2009 pop single, and a smell of pickles that is not coming from the shelves.",
-    lookJp:[{jp:"おにぎり　{{priceKana}}／"+R("二","ふた")+"つ",en:""},{jp:R("辞書","じしょ")+"　"+R("三千円","さんぜんえん"),en:""},{jp:"スタッフ"+R("以外","いがい")+R("立入禁止","たちいりきんし"),en:""}]},
+    lookJp:[{jp:"おにぎり　"+R("二個","にこ")+"　"+R("本日","ほんじつ")+"セール",en:""},{jp:R("辞書","じしょ")+"　"+R("三千円","さんぜんえん"),en:""},{jp:"スタッフ"+R("以外","いがい")+R("立入禁止","たちいりきんし"),en:""}]},
   hotel:{name:"Hotel, Ueno",jp:"ホテル",spr:"hotel",exits:["station","konbini"],
     look:"A lobby with one plant and one Suzuki. A TV plays an Australian soap opera with Japanese subtitles. Someone is asleep in an armchair with the confidence of a person who does not have a room.",
     lookJp:[{jp:"フロント",en:""},{jp:"チェックイン　"+R("三時","さんじ")+"から",en:""}]},
@@ -1536,7 +1547,7 @@ const LOCS={
     look:"Three shops, one lane, steam. Taisho's counter with a ticket machine he glares at. A tatami room at the back of the second shop with a waiter counting on his fingers. A yatai at the end: four stools, one old man, one pot that has never been empty.",
     lookJp:[{jp:R("食券","しょっけん")+"をお"+R("買","か")+"い"+R("求","もと")+"めください",en:""},{jp:"おざしき　くつをおぬぎください",en:""}]},
   michelin:{name:"Hoshino",jp:"ほしの",spr:"michelin",exits:["alley","station"],
-    look:"A door with no sign and one star painted very small. A card in the window: 「{{open}}から　"+R("四時間","よじかん")+"」. Inside, if it is open, a man talking to a pot.{{nbNote}}",
+    look:"A door with no sign and one star painted very small. A card in the window: 「{{open}}から　"+R("四時間","よじかん")+"」. Inside, if it is open, a man talking to a pot, and a mirror over the pass angled at the counter, so he sees the counter without turning round.{{nbNote}}",
     lookJp:[{jp:"{{open}}から",en:""},{jp:R("本日","ほんじつ")+"　"+R("新人","しんじん")+"　"+R("面接","めんせつ"),en:""}],
     gate:G=>{ const open=G.hour>=G.s.openH&&G.hour<G.s.openH+4; if(!open) return `Shut. The card in the window says 「${G.s.open}から」. The lights are off. A man inside is talking to something in a pot anyway.`; return true; }},
   hospital:{name:"Ueno Clinic",jp:"クリニック",spr:"hospital",exits:["station"],
@@ -1546,7 +1557,7 @@ const LOCS={
 
 /* ---- using things on places and people ---- */
 const USE={
-  "passport@airport":G=>"You wave it at the room in general. Officer Tanaka jogs over. TALK to him.",
+  "passport@airport":G=>{ if(G.is("reported")){ if(!G.is("home")){ G.flag("home"); SND.chime(); setTimeout(()=>{ debrief(); },900); } return "Departures. Tanaka stamps you out without breaking stride. 「マラソン、"+"見に来てね。」 The plane smells of aeroplane. Melbourne, Dana, and a bowl of soup that is about to change. Your debrief follows; the map stays open if you want to go back."; } return "You wave it at the room in general. Officer Tanaka jogs over. TALK to him."; },
   "passport@michelin":G=>{G.susp=Math.min(100,G.susp+40);G.flag("shownId");return "You showed the man your REAL passport. He reads your real name aloud, slowly. He lets you in, because he needs the hands, but he is watching you now. Suspicion +40.";},
   "idcard@michelin":G=>{G.flag("shownId");return "He squints at the photo, at you, at the photo. 「…{{name}}か。入れ。」 In. The photo is of someone else. It's fine.";},
   "idcard@airport":G=>{G.susp=Math.min(100,G.susp+10);return "You show a forged ID to an immigration officer. Tanaka stops jogging. He decides it is a gym card. Suspicion +10 and a strong sense of luck.";},
@@ -1567,7 +1578,8 @@ const USE={
   "onigiri@*":G=>G.eat("onigiri"),
   "pickles@*":G=>G.eat("pickles"),
   "pickles@michelin":G=>{G.susp=Math.min(100,G.susp+10);G.eat("pickles");return "You eat a former idol's pickles in a Michelin kitchen. The smell reaches the soup. The chef reaches for words and finds none. Suspicion +10.";},
-  "bag@hotel":G=>{ if(!G.is("bagQuest")) return "Nobody here has lost a bag."; G.take("bag");G.give("camera");G.flag("bagDone");return "The backpacker wakes in the armchair, sees the bag, and cries. They give you the camera as thanks and tell you Osaka was a nightmare. They have still not been to Osaka.";},
+  "bag@hotel":G=>{ if(!G.is("bagQuest")) return "Nobody here has lost a bag."; return "The backpacker is asleep in the armchair. TALK to them, or wake them with it."; },
+  "bagX@hotel":G=>{ G.take("bag");G.give("camera");G.flag("bagDone");return "The backpacker wakes in the armchair, sees the bag, and cries. They give you the camera as thanks and tell you Osaka was a nightmare. They have still not been to Osaka.";},
   "bag@airport":G=>"The backpacker is gone. Somebody says they went to a hotel in Ueno to have a lie down.",
   "ticket@station":G=>"Sato checks it, nods, and tells the cat about it.",
   "notes@*":G=>"Your notes: simmer {{hours}}, add a little {{secret}}. You could read this to HQ from the hotel phone.",
@@ -1579,9 +1591,9 @@ const USE={
 /* ---- random road events (on GO) ---- */
 const EVENTS=[
   {when:G=>G.count("onigiri")>0&&Math.random()<0.35,text:G=>{G.take("onigiri");return "A crow the size of a small dog takes an onigiri out of your bag with the calm of a professional. It does not fly away. It walks.";},spr:"crow"},
-  {when:G=>Math.random()<0.15,text:G=>"A salaryman is asleep standing up on the platform, perfectly balanced. The train arrives; he wakes, boards, and is asleep again before the doors close."},
-  {when:G=>Math.random()<0.15,text:G=>"A vending machine sells hot corn soup in a can. You consider your life. You do not buy the soup."},
-  {when:G=>G.is("bagQuest")&&!G.is("bagDone")&&Math.random()<0.3,text:G=>"A poster at the station: LOST PROPERTY. Below it, in your head, a small Kiwi voice says 大阪."},
+  {when:G=>G.loc==="station"&&Math.random()<0.15,text:G=>"A salaryman is asleep standing up on the platform, perfectly balanced. The train arrives; he wakes, boards, and is asleep again before the doors close."},
+  {when:G=>G.loc!=="michelin"&&G.loc!=="hospital"&&Math.random()<0.15,text:G=>"A vending machine sells hot corn soup in a can. You consider your life. You do not buy the soup."},
+  {when:G=>G.loc==="station"&&G.is("bagQuest")&&!G.is("bagDone")&&Math.random()<0.3,text:G=>"A poster at the station: LOST PROPERTY. Below it, in your head, a small Kiwi voice says 大阪."},
   {when:G=>Math.random()<0.12,text:G=>"Two schoolgirls practise English on you: 「Where are you from?」 「Australia.」 They scream with joy and run away. You feel briefly famous."}
 ];
 /* ================= ENGINE ================= */
@@ -1591,7 +1603,7 @@ const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(M
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 const SAVE_KEY="mission-japan-save-v2";
 /* One number, counted up on every deploy, so a stale tab is obvious. Bump it with each live copy. */
-const BUILD={n:25,date:"2026-09-07"};
+const BUILD={n:26,date:"2026-09-07"};
 ["buildTag","buildEyebrow","buildMenu"].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=(id==="buildTag"?"MISSION · ":"")+`BUILD ${BUILD.n} · ${BUILD.date}`; });
 const INK=getComputedStyle(document.documentElement).getPropertyValue("--ink").trim();
 const PAPER=getComputedStyle(document.documentElement).getPropertyValue("--lcd").trim();
@@ -1731,7 +1743,7 @@ const ORDERS=[
   {f:"idcard",fn:G=>G.has("idcard"),t:"身分証 · Get papers from the contact",en:"Get papers from the contact. A cover name and a cover job. Learn both before you say them out loud.",jp:"その"+R("人","ひと")+"から"+R("身分証","みぶんしょう")+"をもらって。"+R("名前","なまえ")+"と"+R("仕事","しごと")+"、"+R("先","さき")+"に"+R("覚","おぼ")+"えて。",mix:"Get the "+R("身分証","みぶんしょう")+" (ID card) from the contact. A cover "+R("名前","なまえ")+" and a cover "+R("仕事","しごと")+". Learn them first."},
   {f:"knowOpen",t:"開店時間 · Find out when Hoshino opens",en:"Find out when Hoshino opens. Ask around; the alley knows.",jp:"「ほしの」は"+R("何時","なんじ")+"から？だれかに"+R("聞","き")+"いて。",mix:"「ほしの」は"+R("何時","なんじ")+"から (what time does it open)? Ask around."},
   {f:"shownId",t:"潜入 · Get inside Hoshino",en:"Get inside Hoshino. Show the card, say the name, say the job.",jp:"「ほしの」に"+R("入","はい")+"って。カードを"+R("見","み")+"せて、"+R("名前","なまえ")+"と"+R("仕事","しごと")+"を"+R("言","い")+"って。",mix:"Get inside 「ほしの」. Show the card, say the "+R("名前","なまえ")+", say the "+R("仕事","しごと")+"."},
-  {f:"recipe",t:"レシピ · Get the recipe out",en:"The recipe. It is in the notebook on the counter. Read it when the chef is not looking. Do not take it.",jp:"レシピはカウンターのノートにある。"+R("店主","てんしゅ")+"が"+R("見","み")+"ていないときに"+R("読","よ")+"んで。"+R("取","と")+"らないで。",mix:"The レシピ is in the ノート on the counter. "+R("読","よ")+"んで (read it) when the chef is not looking. Do not take it."},
+  {f:"recipe",t:"レシピ · Get the recipe out",en:"The recipe. It is in the notebook on the counter. Do not touch it. Ask, and wait for the phone; a hand who asks is invisible.",jp:"レシピはカウンターのノートにある。さわらないで。「"+R("見","み")+"てもいいですか」と"+R("聞","き")+"いて、"+R("電話","でんわ")+"を"+R("待","ま")+"って。",mix:"The レシピ is in the ノート on the counter. Do not touch it. Ask 「"+R("見","み")+"てもいいですか」 and wait for the "+R("電話","でんわ")+"."},
   {f:"reported",t:"報告 · Report to HQ",en:"Report it. HQ pays the per diem and they want it in Japanese, from the hotel lobby.",jp:R("報告","ほうこく")+"して。ホテルのロビーから、"+R("日本語","にほんご")+"で。HQは"+R("日本語","にほんご")+"じゃないとお"+R("金","かね")+"を"+R("出","だ")+"さない。",mix:R("報告","ほうこく")+" (report) from the hotel lobby. HQ wants it "+R("日本語","にほんご")+"で, or no per diem."}
 ];
 const orderDone=o=>o.fn?o.fn(G):G.is(o.f);
@@ -1777,7 +1789,7 @@ NPCS.hq={name:"HQ, Melbourne",jp:R("本部","ほんぶ"),spr:"hq",loc:"hotel",re
    {id:"decide",title:"Tomorrow",skill:"nominalisers-paragraphs",req:G=>G.done("hq","report")||"HQ wants the ingredient first. Then travel plans.",
     lines:[{jp:"それで、"+R("明日","あした")+"はどうする？",en:"So, what about tomorrow?"}],
     task:{kind:"type",prompt:"Tell HQ you have decided to leave Japan tomorrow: 〜ことにしました.",hint:"明日、日本を出ることにしました。",model:"明日、日本を出ることにしました。",accept:[/(ことにしました|ことにします)$/],rule:"VERB (plain) + ことにしました: I decided to. ことになりました would mean it was decided for you; HQ wants to hear it was your call."},
-    after:(G,ok)=>{G.flag("reported");return "「了解。キットカットも。」 Mission complete, pending Kit Kats. Your debrief is ready in the menu, or just keep wandering.";}}
+    after:(G,ok)=>{G.flag("reported");return "「了解。キットカットも。」 Mission complete, pending Kit Kats. Your debrief is in the menu. To fly home, USE your passport at Narita; or keep wandering, there are people you have not finished with.";}}
   ]};
 
 /* ---- sprites ---- */
@@ -1792,7 +1804,11 @@ const LOADOUTS={
   ghost:{n:"幽霊 · Ghost",items:["passport","aud","phone","shoes"],worn:["shoes"],yen:15000,desc:"Your passport, your shoes, your phone, your Japanese. Dana only speaks Japanese to you now. Buy a dictionary in Ueno if the cover starts to slip."}
 };
 function fill(t,s){ return String(t).replace(/\{\{(\w+)\}\}/g,(m,k)=>s[k]??m); }
-function slots(){ const s={...G.s}; const pr=PROFILE.get(); s.realName=s.realName||pr.real||""; s.realKana=s.realKana||pr.kana||""; s.realKana=s.realKana||""; s.realShown=s.realKana||s.realName||"サム"; s.realNote=s.realKana?", in katakana":""; s.realLabel=s.realName?`${s.realName}${s.realKana?" · "+s.realKana:""}`:"(your real name)"; s.shoesState=G.worn.includes("shoes")?"on":"off"; s.trainedNote=G.is("trained")?" (You have heard this sentence before, from Taisho.)":""; s.fearNote=G.is("intelFear")?" (Grandpa said he melts for an opinion.)":""; s.nbNote=G.is("notebookOpen")&&!G.is("recipe")?" The notebook is on the counter, open, and his back is to it.":""; return s; }
+/* for listening-comprehension tasks the dictionary gives the sentence, not the answer: numbers and slot facts are blanked */
+/* the pattern with its slots as labels: 「[JOB]です」 not the answer */
+function shapeHint(task){ const h=task.hint||(task.rule||task.prompt||"").split(":")[0]; return String(h).replace(/\{\{(\w+)\}\}/g,(m,k)=>"["+k.replace(/(Kana|Plain|En|N|Accept|Shown|Label)$/,"").toUpperCase()+"]"); }
+function maskFacts(en){ const s=slots(); let out=String(en); Object.keys(s).filter(k=>/(En|N)$/.test(k)&&s[k]).sort((a,b)=>String(s[b]).length-String(s[a]).length).forEach(k=>{ const v=String(s[k]); if(v.length<2&&!/^\d$/.test(v)) return; out=out.split(v).join("…"); }); return out.replace(/\d[\d,:.]*/g,"…"); }
+function slots(){ const s={...G.s}; const pr=PROFILE.get(); s.nameKana=pr.jp===s.name?(pr.jpKana||""):""; s.realName=s.realName||pr.real||""; s.realKana=s.realKana||pr.kana||""; s.realKana=s.realKana||""; s.realShown=s.realKana||s.realName||"サム"; s.realNote=s.realKana?", in katakana":""; s.realLabel=s.realName?`${s.realName}${s.realKana?" · "+s.realKana:""}`:"(your real name)"; s.shoesState=G.worn.includes("shoes")?"on":"off"; s.trainedNote=G.is("trained")?" (You have heard this sentence before, from Taisho.)":""; s.fearNote=G.is("intelFear")?" (Grandpa said he melts for an opinion.)":""; s.nbNote=G.is("notebookOpen")&&!G.is("recipe")?" The notebook is on the counter, open, and his back is to it.":""; return s; }
 function newGame(kit){
   if(!Object.hasOwn(LOADOUTS,kit)) return;
   cur=null;taskBox=null;graded=false;sub=null;
@@ -1811,8 +1827,8 @@ function attach(G){
   G.done=(n,t)=>!!(G.did[n]&&G.did[n][t]);
   G.toggleWear=i=>{ if(G.worn.includes(i)){G.worn=G.worn.filter(w=>w!==i); if(i==="shoes") return "Shoes off. You are standing in socks in "+LOCS[G.loc].name+". Tatami approves; pavements do not."; if(i==="umbrella") return "Umbrella folded away."; if(i==="coat") return "Coat off, over your arm."; return "Glasses off. The world stops subtitling itself.";} G.worn.push(i); return i==="shoes"?"Shoes on.":i==="umbrella"?"Umbrella up. You look like everyone else in Tokyo, which is the idea.":i==="coat"?"Coat on.":"Glasses on. English appears under everything, quietly."; };
   G.eat=i=>{ if(!G.has(i)) return "You have none."; G.take(i); G.energy=Math.min(5,G.energy+ITEMS[i].eat); return (i==="onigiri"?"Onigiri. Salmon, probably. +1 energy.":"Pickles. Loud. +1 energy."); };
-  G.hintText=()=>cur&&cur.task?("The pattern is: "+esc(fill(cur.task.hint||(cur.task.rule||cur.task.prompt||"").split(":")[0],slots())) + ". Meaning: "+esc(cur.en)):"Nothing to hint at right now. Talk to someone first.";
-  G.dictionary=()=>{ if(!G.has("dictionary")) return "You have no dictionary. There is a konbini in Ueno that sells them."; if(!cur||!cur.line) return "You leaf through it. Words. Many of them. Talk to someone first, then look one up."; showEn(); if(G.loc==="michelin"&&!cur.dictUsed){ cur.dictUsed=true; if(Math.random()<0.5){ G.susp=Math.min(100,G.susp+15); return "「……何を見ているんだ。」 He saw the dictionary. Suspicion +15. The alley is where looking things up is free."; } return "Under the counter. Nobody saw. This time."; } return "Dictionary: "+esc(cur.en)+(cur.task?" · Pattern: "+esc(fill(cur.task.hint||(cur.task.rule||cur.task.prompt||"").split(":")[0],slots())):""); };
+  G.hintText=()=>cur&&cur.task?("The pattern is: "+esc(shapeHint(cur.task)) + ". Meaning: "+esc(cur.task&&cur.task.dynamic?maskFacts(cur.en):cur.en)):"Nothing to hint at right now. Talk to someone first.";
+  G.dictionary=()=>{ if(!G.has("dictionary")) return "You have no dictionary. There is a konbini in Ueno that sells them."; if(!cur||!cur.line) return "You leaf through it. Words. Many of them. Talk to someone first, then look one up."; showEn(); if(G.loc==="michelin"&&!cur.dictUsed){ cur.dictUsed=true; if(Math.random()<0.5){ G.susp=Math.min(100,G.susp+15); return "「……何を見ているんだ。」 He saw the dictionary. Suspicion +15. The alley is where looking things up is free."; } return "Under the counter. Nobody saw. This time."; } return "Dictionary: "+esc(cur.task&&cur.task.dynamic?maskFacts(cur.en):cur.en)+(cur.task?" · Pattern: "+esc(shapeHint(cur.task)):""); };
   G.startDebrief=()=>{ narr("You call HQ from the hotel phone. TALK to HQ."); };
 }
 function save(){
@@ -1856,7 +1872,8 @@ function openPassport(kit){
   $("realName").value=p.real||""; $("realKana").value=p.kana||""; $("jpName").value=p.jp&&!POOLS.name.includes(p.jp)?p.jp:"";
   $("jpChips").innerHTML=POOLS.name.map(n=>`<button class="k sm${p.jp===n?" on":""}" data-n="${n}">${n}</button>`).join("");
   $("jpChips").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{ $("jpChips").querySelectorAll("button").forEach(x=>x.classList.remove("on")); b.classList.add("on"); $("jpName").value=""; }));
-  $("jpName").addEventListener("input",()=>{ if($("jpName").value.trim()) $("jpChips").querySelectorAll("button").forEach(x=>x.classList.remove("on")); });
+  $("jpName").addEventListener("input",()=>{ if($("jpName").value.trim()) $("jpChips").querySelectorAll("button").forEach(x=>x.classList.remove("on")); $("jpKana").hidden=!/[一-鿿]/.test($("jpName").value); });
+  $("jpKana").value=p.jpKana||""; $("jpKana").hidden=!/[一-鿿]/.test($("jpName").value);
   paintGrid(); show("passS"); $("realName").focus();
 }
 function paintGrid(){
@@ -1875,12 +1892,12 @@ function paintPreview(){ SPR._preview=pxState; ["pxPrev","pxPrev2"].forEach(id=>
 $("passBack").addEventListener("click",()=>{ show("titleS"); });
 $("passGo").addEventListener("click",()=>{
   const real=$("realName").value.trim().slice(0,30), kana=$("realKana").value.trim().slice(0,30);
-  const chip=$("jpChips").querySelector("button.on"); const jp=($("jpName").value.trim()||(chip?chip.dataset.n:"")).slice(0,12);
+  const chip=$("jpChips").querySelector("button.on"); const jp=($("jpName").value.trim()||(chip?chip.dataset.n:"")).slice(0,12); const jpKana=$("jpKana").hidden?"":$("jpKana").value.trim().slice(0,16);
   if(!jp){ toast("Pick or write a Japanese cover name first."); $("jpName").focus(); return; }
   if(!real){ toast("Your passport needs your Australian name."); $("realName").focus(); return; }
   if(kana&&!/^[ぁ-んァ-ヶー・\s]+$/.test(kana)){ toast("The katakana line should be kana only, e.g. リアム."); $("realKana").focus(); return; }
   if(!/^[ぁ-んァ-ヶー・\s]+$/.test(jp)){ toast("A cover name in kana, please. 山田 will laminate anything, but the game reads kana."); $("jpName").focus(); return; }
-  PROFILE.set({px:pxState.slice(),real,kana,jp});
+  PROFILE.set({px:pxState.slice(),real,kana,jp,jpKana});
   if(pendingKit){ goFull(); newGame(pendingKit); pendingKit=null; } else { show("titleS"); renderTitle(); }
 });
 $("passEdit").addEventListener("click",()=>openPassport(null));
@@ -1908,7 +1925,7 @@ function startPlay(){ setTimeout(paintTurn,0);
   replaying=false;renderAll();if(!cur)$("log").focus({preventScroll:true});
 }
 function renderAll(){ renderScene(); renderPresent(); renderGoals(); renderHud(); renderInv(); renderActs();renderTranslations(); save(); }
-function presentNpcs(){ return Object.entries(NPCS).filter(([id,n])=>{ if(n.loc!==G.loc) return false; if(n.req&&n.req(G)!==true) return false; if(G.loc==="michelin"&&!G.is("shownId")) return false; if(id==="traveller"&&G.is("bagQuest")) return false; return true; }).map(([id])=>id); }
+function presentNpcs(){ return Object.entries(NPCS).filter(([id,n])=>{ if(n.loc!==G.loc) return false; if(n.req&&n.req(G)!==true) return false; if(G.loc==="michelin"&&!G.is("shownId")&&id!=="chef") return false; if(id==="traveller"&&G.is("bagQuest")) return false; return true; }).map(([id])=>id); }
 function renderScene(){
   if($("hudMap")) drawMap($("hudMap"));
   const c=$("scene"), ctx=c.getContext("2d"); ctx.clearRect(0,0,c.width,c.height);
@@ -2004,16 +2021,16 @@ function look(){
   renderAll();
 }
 function readNotebook(pending=null){
-  const line={jp:"スープは{{hours}}にること。{{secret}}を"+R("少","すこ")+"し"+R("入","い")+"れると、"+R("味","あじ")+"が"+R("深","ふか")+"くなる。",en:"Simmer the soup {{hoursEn}}. Add a little {{secretEn}} and the flavour deepens."};
+  const line={jp:"スープは{{hours}}"+R("煮","に")+"ること。{{secret}}を"+R("少","すこ")+"し"+R("入","い")+"れると、"+R("味","あじ")+"が"+R("深","ふか")+"くなる。",en:"Simmer the soup {{hoursEn}}. Add a little {{secretEn}} and the flavour deepens."};
   const d=pending?[...$("log").querySelectorAll(".say")].at(-1):logEl(`<div class="who">the notebook, his handwriting</div><div class="jp">${fill(line.jp,slots())}</div><div class="tr" ${G.worn.includes("glasses")?"":'style="display:none"'}>${esc(fill(line.en,slots()))}</div>`,"say");
   const task={kind:"choice",prompt:"The secret. What goes in?",...DYN.secret(G.s,shuffle)};
   if(pending?.options)task.options=pending.options;
-  cur={npc:null,topic:{id:"read",skill:"misc-b4",after:(G,ok)=>{G.flag("recipe");G.give("notes");return "You close it before he turns round. You have the recipe in your head and in your notes. Get to a phone. Not his.";}},line,en:fill(line.en,slots()),task,key:"chef|read",undercover:true,speech:d};
+  cur={npc:null,topic:{id:"read",skill:"conjunctions-b4",after:(G,ok)=>{G.flag("recipe");G.give("notes");return "You close it before he turns round. You have the recipe in your head and in your notes. Get to a phone. Not his.";}},line,en:fill(line.en,slots()),task,key:"chef|read",undercover:true,speech:d};
   renderTask(pending); renderAll();
 }
-function ringPhone(p){ if(G.loc==="michelin"&&!G.is("phoneRang")&&Math.random()<(G.is("intelPhone")?p+0.3:p)){ G.flag("phoneRang"); SND.phone(); narr("The phone rings. Hoshino wipes his hands, puts the notebook on the counter and answers it. He will not be long. TALK to him about the notebook."); } }
+function ringPhone(p){ if(G.loc==="michelin"&&!G.is("phoneRang")&&(p>=1||Math.random()<(G.is("intelPhone")?p+0.3:p))){ G.flag("phoneRang"); SND.phone(); narr("The phone rings. Hoshino wipes his hands, puts the notebook on the counter and answers it. He will not be long. TALK to him about the notebook."); } }
 function wait(){ if(cur)return;retireMenus();tick(1); narr(pick(["An hour passes. The arrivals board changes. The queue does not.","You wait. A pigeon waits with you. Neither of you is sure why.","An hour. The clock does the thing clocks do."])); if(G.loc==="michelin"&&G.is("shownId")) ringPhone(0.6); renderAll(); }
-function sleep(){ if(cur||G.loc!=="hotel")return;retireMenus();SND.chime();if(!G.is("checkedIn")){ narr("You sleep in the lobby armchair like a person who does not have a room. Suzuki drapes a blanket over you and says 「ストゥルース」 softly. New day, energy 3."); G.energy=3; } else { narr("Room 404. The pillow is a brick and it is perfect. New day, full energy."); G.energy=5; } G.day++; G.hour=7; delete G.flags.phoneRang; ensureWeather(); G.wx={today:G.wx.tomorrow,tomorrow:rollWeather()}; narr(`Morning. ${wx(G.wx.today).en[0].toUpperCase()+wx(G.wx.today).en.slice(1)}, ${G.wx.today.temp}°C. The phone has tomorrow.`); renderAll(); }
+function sleep(){ if(cur||G.loc!=="hotel")return;retireMenus();SND.chime();if(!G.is("checkedIn")){ narr("You sleep in the lobby armchair like a person who does not have a room. Suzuki drapes a blanket over you and says 「ストゥルース」 softly. New day, energy 3."); G.energy=3; } else { narr("Room 404. The pillow is a brick and it is perfect. New day, full energy."); G.energy=5; } if(G.hour>=5) G.day++; G.hour=7; delete G.flags.phoneRang; ensureWeather(); G.wx={today:G.wx.tomorrow,tomorrow:rollWeather()}; narr(`Morning. ${wx(G.wx.today).en[0].toUpperCase()+wx(G.wx.today).en.slice(1)}, ${G.wx.today.temp}°C. The phone has tomorrow.`); renderAll(); }
 function tick(h){ G.hour+=h; while(G.hour>=24){G.hour-=24;G.day++;} }
 function go(x){
   if(cur||!LOCS[G.loc].exits.includes(x))return;retireMenus();
@@ -2062,7 +2079,7 @@ function buildWord(w,box,onDone,label){
   check.addEventListener("click",()=>{
     const got=placed.map(k=>tiles[k]).join("");
     if(got===target.join("")){ DICT.add(w.w); SND.coin(); out.innerHTML=`<span class="built" style="font-size:22px">${esc(w.w)}</span> <span class="en">${esc(w.r!==w.w?w.r:"")} · built.</span>`; right.querySelectorAll(".tile,#bCheck,#bUndo").forEach(b=>b.disabled=true); setTimeout(()=>onDone?onDone():showObject("dictionary",""),900); }
-    else { SND.bad(); out.innerHTML=`<span class="en">Not quite. You built 「${esc(got)}」. It is 「${esc(target.join(""))}」${hasKanji?" (written "+esc(w.w)+")":""}. Again; nothing is lost.</span>`; placed=[]; paint(); }
+    else { SND.bad(); w._miss=(w._miss||0)+1; out.innerHTML=w._miss<2?`<span class="en">Not quite. You built 「${esc(got)}」. Look at the card again; the reading is on it. Again; nothing is lost.</span>`:`<span class="en">Not quite. You built 「${esc(got)}」. It is 「${esc(target.join(""))}」${hasKanji?" (written "+esc(w.w)+")":""}. Again; nothing is lost.</span>`; placed=[]; paint(); }
   });
 }
 /* the map: a sketch of Ueno and the airport, your trail on it, places you have not found unlabelled */
@@ -2117,7 +2134,8 @@ function renderPhone(box,app,text){
   } else if(app==="music"){
     body=`<h4>音楽 · chiptunes</h4><div class="en">Five tracks the phone came with. Made of square waves, owned by nobody. Track three is Yamada's single.</div><div class="contacts">${MUSIC.tracks.map((t,k)=>`<button class="k sm${MUSIC.playing===k?" on":""}" data-track="${k}">${MUSIC.playing===k?"■":"▶"} ${t.jp} <span class="en">· ${esc(t.en)}</span></button>`).join("")}</div>`;
   } else if(app==="hq"){
-    if(G.yen<500){ body=`<h4>本部 · HQ</h4><div class="en">Not enough credit for roaming. HQ would say something about expenses.</div>`; }
+    if(!cur||!cur.task){ body=`<h4>本部 · HQ</h4><div class="bubble">Nothing to hint at right now. Talk to someone first, then call. No charge.</div><div class="bubble" style="border-radius:10px 10px 2px 10px;text-align:right">キットカット、${R("買","か")}った？</div>`; }
+    else if(G.yen<500){ body=`<h4>本部 · HQ</h4><div class="en">Not enough credit for roaming. HQ would say something about expenses.</div>`; }
     else { G.yen-=500; renderHud(); const t=G.hintText(); body=`<h4>本部 · HQ · roaming</h4><div class="bubble">${t}</div><div class="bubble" style="border-radius:10px 10px 2px 10px;text-align:right">キットカット、${R("買","か")}った？</div>${G.loc==="hotel"&&G.is("recipe")?'<div class="en">You have the goods. TALK to HQ from this lobby to report properly.</div>':""}<div><button class="k sm" data-sayen="${esc(t.replace(/<[^>]+>/g,""))}">▶ hear HQ</button></div>`; }
   }
   box.innerHTML=`${close}<div class="pscreen">${back}${body}</div><div class="btn"></div>`;
@@ -2140,7 +2158,9 @@ function renderPhone(box,app,text){
       out.innerHTML=`<div class="bubble"><div class="en" style="font-size:11px">${who}${G.kit==="ghost"?" · 日本語で":G.kit==="agent"?" · half and half":""}</div><div class="jp" style="font-size:${G.kit==="tourist"?14:18}px">${G.kit==="tourist"?esc(order):colourBuilt(order)}</div><div class="tr" ${glasses||G.kit==="tourist"?"":"hidden"} style="font-size:12px;color:var(--dim)">${G.kit==="tourist"?"":esc(plainEn)}</div><div>${spk}</div></div><div class="en" style="margin-top:4px">Then, faster, in English: ${esc(tip)}</div><div class="en">¥1,500. Worth it.</div>`;
       box.querySelectorAll("#callOut [data-sayen]").forEach(x=>x.addEventListener("click",()=>{ const r=SPEAK.sayEn(x.dataset.sayen); if(r) toast(r); }));
     }
-    else { const l=pick(CALLS[id]); jp=fill(l.jp,s); en=fill(l.en,s); who=NPCS[id].name; say(id,l); out.innerHTML=line(jp,en,who)+`<div class="en">¥${cost.toLocaleString()}. They sound pleased you called.</div>`; }
+    else { const l=pick(CALLS[id]); jp=fill(l.jp,s); en=fill(l.en,s); who=NPCS[id].name; say(id,l); let note="They sound pleased you called.";
+      if(id==="chef"){ note="He is not pleased."; if(G.loc==="michelin"&&G.is("shownId")&&!G.is("phoneRang")){ ringPhone(1); note="He is not pleased. But to answer it he had to put the notebook down. It is on the counter. Close this and TALK to him about the notebook."; } }
+      out.innerHTML=line(jp,en,who)+`<div class="en">¥${cost.toLocaleString()}. ${note}</div>`; }
     box.querySelectorAll("#callOut [data-sub]").forEach(x=>x.addEventListener("click",()=>{ const tr=x.closest(".bubble").querySelector(".tr"); tr.hidden=!tr.hidden; }));
     box.querySelectorAll("#callOut [data-say]").forEach(x=>x.addEventListener("click",()=>{ const r=SPEAK.say(x.dataset.say); if(r) toast(r); }));
     save();
@@ -2189,7 +2209,7 @@ function showObject(i,text){
 /* one listener for every close button and the backdrop, so re-rendered pop-ups (the phone's apps) still close */
 $("itemOv").addEventListener("click",e=>{ if(e.target===$("itemOv")||e.target.closest("[data-close]")) $("itemOv").classList.remove("show"); });
 function checkDeported(){
-  if(G.susp>=100){SND.down();retireTask();retireMenus();cur=null;taskBox=null;graded=false;sub=null; narr("Two very polite men in grey. A van. A form. 「お疲れさまでした。」 You are back at Narita, deported with great courtesy, holding your bag. They did not find the fake ID. Day +1. Suspicion resets to 40. The mission, oddly, continues."); G.loc="airport"; delete G.flags.immigration; delete G.flags.shownId; G.susp=40; G.day++; G.hour=9; G.memos.push({what:"Deported.",rule:"Suspicion hit 100. Every slip undercover added to it; praise, a well-encouraged soup and asking permission bring it down."}); }
+  if(G.susp>=100){SND.down();retireTask();retireMenus();cur=null;taskBox=null;graded=false;sub=null; narr("Two very polite men in grey. A van. A form. 「お疲れさまでした。」 You are back at Narita, deported with great courtesy, holding your bag. They did not find the fake ID. Tanaka, jogging, waves you back through without a word. Day +1. Suspicion resets to 40. The mission, oddly, continues."); G.loc="airport"; delete G.flags.shownId; G.susp=40; G.day++; G.hour=9; G.memos.push({what:"Deported.",rule:"Suspicion hit 100. Every slip undercover added to it; praise, a well-encouraged soup and asking permission bring it down."}); }
 }
 
 /* ---- talking ---- */
@@ -2211,14 +2231,15 @@ function startTopic(id,t,pending=null){
   let task={...t.task}; if(task.dynamic) task={...task,...DYN[task.dynamic](G.s,shuffle)};
   if(pending?.options&&task.kind==="choice")task.options=pending.options;
   cur={npc:id,topic:t,line,en:fill(line.en,slots()),task,key:id+"|"+t.id,undercover:!!t.undercover||G.loc==="michelin",speech};
+  if(task.dynamic&&speech){ const tr=speech.querySelector(".tr"); if(tr) tr.textContent=maskFacts(tr.textContent); }
   renderTask(pending); renderAll();
 }
 function renderTask(pending=null){
-  graded=false; pickedOpt=null; const task=cur.task, s=slots(), en=G.worn.includes("glasses");
+  graded=false; pickedOpt=null; const task=cur.task, s=slots(), en=G.worn.includes("glasses")&&!task.dynamic;
   let html=`<span class="kind">${task.kind==="choice"?"えらぶ · Choose a reply":task.kind==="gap"?"空欄 · Fill the gap":"返事 · Your reply"}</span><div class="prompt">${esc(fill(task.prompt,s))}</div>`;
   if(task.kind==="choice"){ const opts=shuffle(task.options.map((o,i)=>({...o,i}))); html+=`<div class="opts">${opts.map((o,j)=>`<button type="button" class="opt" data-i="${o.i}" data-key="${j+1}"><span class="option-key" aria-hidden="true">${j+1}</span>${fill(o.jp,s)}<span class="en" data-translation ${en?"":"hidden"}>${esc(fill(o.en,s))}</span></button>`).join("")}</div>`; }
   else if(task.kind==="gap"){ const typed=!task.opts||G.loc==="michelin"||G.loc==="alley"; cur.typed=typed; html+=`<div class="gapline">${fill(task.jp,s).replace("＿＿＿",`<span class="blank" id="blank">　</span>`)}<div class="en" data-translation ${en?"":"hidden"}>${esc(fill(task.en,s))}</div></div>`+(typed?`<input class="jp" id="typed" lang="ja" aria-label="Missing Japanese words" autocomplete="off" placeholder="type the missing part">`:`<div class="opts">${shuffle(task.opts).map((o,j)=>`<button type="button" class="opt" data-v="${esc(o)}" data-key="${j+1}"><span class="option-key" aria-hidden="true">${j+1}</span>${esc(o)}</button>`).join("")}</div>`)+`<div class="hint">Pattern: ${esc(task.rule.split(":")[0])}</div>`; }
-  else { cur.typed=true; html+=`<input class="jp" id="typed" lang="ja" aria-label="Your reply in Japanese" autocomplete="off" placeholder="type your line in Japanese"><div class="hint">Pattern: ${esc(fill(task.hint,s))}</div>`; }
+  else { cur.typed=true; html+=`<input class="jp" id="typed" lang="ja" aria-label="Your reply in Japanese" autocomplete="off" placeholder="type your line in Japanese"><div class="hint">Pattern: ${esc(shapeHint(task))}</div>`; }
   html+=`<div class="taskbtns"><button class="k inv" id="checkBtn" disabled>答える · Check reply</button><button class="k" id="nextBtn" style="display:none">つづく · Continue</button><button class="k leave" id="leaveBtn">話をやめる · Leave conversation</button></div>`;
   const box=dockEl(html), active=cur;taskBox=box;
   if(en)box.querySelector(".hint")?.classList.add("show");
@@ -2239,15 +2260,17 @@ function renderTask(pending=null){
 }
 function fold(str){ return String(str).normalize("NFKC").replace(/[\s　]/g,"").replace(/[。．\.、，,！!？?「」]/g,"").replace(/[ァ-ヶ]/g,ch=>String.fromCharCode(ch.charCodeAt(0)-0x60)).toLowerCase(); }
 function matches(val,accept){
-  const v=fold(val), s=slots(), sl={...s,name:fold(s.name),town:fold(s.town),ramen:fold(s.ramen),secret:fold(s.secret),jobKana:s.jobKana,jobPlain:fold(s.jobPlain),realAccept:[s.realKana,s.realName].filter(Boolean).length?[s.realKana,s.realName].filter(Boolean).map(x=>fold(x).replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).join("|"):".{1,20}"};
-  return accept.some(a=>a instanceof RegExp?new RegExp(fill(a.source,sl),"i").test(v):fold(fill(a,s))===v);
+  const v=fold(val), s=slots(), rx=x=>fold(x).replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+  const sl={...s,name:s.nameKana?"(?:"+rx(s.name)+"|"+rx(s.nameKana)+")":rx(s.name),town:fold(s.town),ramen:fold(s.ramen),secret:fold(s.secret),jobKana:s.jobKana,jobPlain:fold(s.jobPlain),realAccept:[s.realKana,s.realName].filter(Boolean).length?[s.realKana,s.realName].filter(Boolean).map(rx).join("|"):".{1,20}"};
+  const tail=/(どうぞ)?よろしく(おねがいします|お願いします|おねがいいたします|お願いいたします)?$/; const v2=v.replace(tail,"");
+  return accept.some(a=>a instanceof RegExp?[v,v2].some(x=>new RegExp(fill(a.source,sl),"i").test(x)):[v,v2].includes(fold(fill(a,s))));
 }
 function check(box){
   if(!cur||box!==taskBox||graded||box.querySelector("#checkBtn").disabled)return;graded=true;
   const t=cur.task, s=slots(); let ok, kind="bad", why="", rule="";
   if(t.kind==="choice"){ const o=t.options[+pickedOpt.dataset.i]; ok=o.ok===true; why=fill(o.why,s); if(o.ok==="faux") kind="faux"; box.querySelectorAll(".opt").forEach(b=>{ b.disabled=true; if(t.options[+b.dataset.i].ok===true) b.classList.add("correct"); else if(b===pickedOpt) b.classList.add("incorrect"); }); }
   else if(t.kind==="gap"){ const val=cur.typed?box.querySelector("#typed").value:pickedOpt.dataset.v; ok=matches(val,t.accept); rule=fill(t.rule,s); if(cur.typed) box.querySelector("#typed").disabled=true; else box.querySelectorAll(".opt").forEach(b=>{ b.disabled=true; if(t.accept.includes(b.dataset.v)) b.classList.add("correct"); else if(b===pickedOpt) b.classList.add("incorrect"); }); const bl=box.querySelector("#blank"); if(bl) bl.textContent=ok?val:val+" → "+t.accept[0]; why=ok?"":`You put 「${val}」. It takes 「${t.accept[0]}」.`; }
-  else { const val=box.querySelector("#typed").value; ok=matches(val,t.accept); box.querySelector("#typed").disabled=true; rule=fill(t.rule,s); if(t.slotCheck==="name"&&!ok&&!fold(val).includes(fold(G.s.name))) why=`You did not use your cover name, ${G.s.name}. `; if(t.slotCheck==="real"&&!ok&&G.s.realKana) why=`Your passport says ${G.s.realName}, ${G.s.realKana} on a Japanese form. `; why+=ok?"":`A line that works: 「${fill(t.model,s)}」`; }
+  else { const val=box.querySelector("#typed").value; ok=matches(val,t.accept); box.querySelector("#typed").disabled=true; rule=fill(t.rule,s); if(t.slotCheck==="name"&&!ok&&!fold(val).includes(fold(G.s.name))&&!(s.nameKana&&fold(val).includes(fold(s.nameKana)))) why=`You did not use your cover name, ${G.s.name}. `; if(t.slotCheck==="real"&&!ok&&G.s.realKana) why=`Your passport says ${G.s.realName}, ${G.s.realKana} on a Japanese form. `; why+=ok?"":`A line that works: 「${fill(t.model,s)}」`; }
   let english=false;
   if(G.loc==="airport"&&(t.kind==="gap"||t.kind==="type")){ /* the airport forgives English; nowhere else does */
     const val=(t.kind==="gap"&&!cur.typed)?"":(box.querySelector("#typed")||{}).value||"";
@@ -2257,7 +2280,7 @@ function check(box){
     if(v&&/[a-z]/.test(v)&&enList.some(e=>e&&(v===e||v.endsWith(" "+e)))){ ok=true; english=true; G.english=(G.english||0)+1; }
   }
   if(!(cur.key in G.first)) G.first[cur.key]={ok,skill:cur.topic.skill,loc:G.loc,english};
-  if(!ok&&kind!=="faux"&&G.kit!=="tourist"&&(cur.tries||0)<2){
+  if(!ok&&kind!=="faux"&&(cur.tries||0)<(G.kit==="tourist"?1:2)){
     cur.tries=(cur.tries||0)+1; SND.bad();
     if(cur.undercover){ const hit=cur.tries===1?15:5; G.susp=Math.min(100,G.susp+hit); }
     else if(G.loc==="airport"&&cur.npc==="officer"&&cur.tries===1) G.susp=Math.min(100,G.susp+5);
@@ -2265,8 +2288,9 @@ function check(box){
     graded=false;
     box.querySelectorAll(".opt").forEach(b=>{ b.classList.remove("correct"); b.dataset.sel=""; b.setAttribute("aria-pressed","false"); if(!b.classList.contains("incorrect")) b.disabled=false; });
     const inp=box.querySelector("#typed"); if(inp){ inp.disabled=false; inp.focus(); inp.select(); }
+    const blank=box.querySelector("#blank"); if(blank) blank.textContent=inp?(inp.value||"　"):"　";
     pickedOpt=null; box.querySelector("#checkBtn").disabled=true;
-    nudge(box,t,s); renderHud(); save(); return;
+    nudge(box,t,s,why); renderHud(); save(); return;
   }
   if(ok) SND.ok(); else if(kind==="faux") SND.faux(); else SND.bad();
   let zone="";
@@ -2279,7 +2303,7 @@ function check(box){
     if(cur.tries) zone+=" Third time; here is the whole of it.";
   }
   if(english){ why=`English. Tanaka takes it; he hears it four hundred times a day. Nobody past the airport will, so here is the Japanese: 「${fill(t.model||("…"+(t.accept||[""])[0]),s)}」. `; }
-  cur.feedback={html:`<b>${ok?(english?"✓ Taken, in English":"✓ Reply accepted"):kind==="faux"?"! Cultural slip":"✗ Check this reply"}</b><div>${esc(why)}${esc(zone)}</div>${rule?`<span class="rule">${esc(rule)}</span>`:""}${cur.topic.skill&&SKILLS[cur.topic.skill]?`<a class="rule" href="../grammar/#${encodeURIComponent(cur.topic.skill)}" target="_blank" rel="noopener">Grammar Hub: ${esc(SKILLS[cur.topic.skill][0])} →</a>`:""}`,cls:ok?"good":"bad"};
+  cur.feedback={html:`<b>${ok?(english?"✓ Taken, in English":"✓ Reply accepted"):kind==="faux"?"! Cultural slip":"✗ Check this reply"}</b><div>${esc(why)}${esc(zone)}</div>${rule?`<span class="rule">${esc(rule)}</span>`:""}${cur.topic.skill&&SKILLS[cur.topic.skill]?` <a class="rule" href="../grammar/#${encodeURIComponent(cur.topic.skill)}" target="_blank" rel="noopener">Grammar Hub: ${esc(SKILLS[cur.topic.skill][0])} →</a>`:""}`,cls:ok?"good":"bad"};
   paintFeedback(box,cur.feedback);
   box.querySelector("#checkBtn").style.display="none"; const nb=box.querySelector("#nextBtn"); nb.style.display=""; nb.focus();
   box.querySelector("#leaveBtn").hidden=true;cur.ok=ok; renderHud(); save();
@@ -2287,7 +2311,7 @@ function check(box){
 /* real people do not hand you the answer. Outside the Tourist kit, a wrong reply gets a shake of the
    head, a repeat, a gesture or some broken English, and another go; the explanation comes on the third miss. */
 const NUDGES={
-  officer:["Tanaka shakes his head without breaking stride. 「もう一回、おねがいします。」","「Passport… say again, prease.」 He mimes it, jogging.","He taps the sign behind him and waits, running on the spot."],
+  officer:["Tanaka shakes his head without breaking stride. 「もう一回、おねがいします。」","「Passport… one more time.」 He mimes it, jogging.","He taps the sign behind him and waits, running on the spot."],
   traveller:["「Sorry, what? My Japanese is worse than yours, mate.」 They wait, hopefully."],
   busstaff:["They point at the timetable and say the number again, slower, with a finger for each digit."],
   stationstaff:["Sato bows and repeats it slowly, holding up fingers: 「いち、に、さん…」","「Ticket… sen… one thousand… and more!」 Sato does the sum in the air."],
@@ -2301,11 +2325,13 @@ const NUDGES={
   doctor:["Dr Mori repeats it and, for some reason, shows you a Finnish coin."],
   hq:["「Say again? Line's bad. Kit Kats?」"]
 };
-function nudge(box,t,s){
+function nudge(box,t,s,why){
   const who=cur.npc?NPCS[cur.npc].name:"the page"; const pool=NUDGES[cur.npc]||[`${who} tilts their head. 「もう一度おねがいします。」`];
   let text=pool[(cur.tries-1)%pool.length];
+  if(t.kind==="choice"&&why) text+=" "+why;
   if(t.kind==="gap") text+=` The gap again, slowly: 「${plainJp(fill(t.jp,s)).replace("＿＿＿","＿＿＿")}」`;
   if(cur.tries===1&&t.kind==="type"&&cur.npc&&cur.topic.lines&&cur.topic.lines.length>1){ const other=cur.topic.lines.find(l=>l.jp!==cur.line.jp); if(other){ say(cur.npc,other); text+=" They put it another way."; } }
+  if(G.kit==="tourist"&&(t.kind==="type"||t.kind==="gap")){ text+=t.kind==="type"?` Your glasses flash the whole pattern: 「${plainJp(fill(t.hint||t.model||"",s))}」`:` Your glasses flash it: 「${String(t.accept[0])}」`; }
   if(cur.tries>=2){ /* the second time, they actually give you the first sound */
     const answer=t.kind==="type"?plainJp(fill(t.model,s)):t.kind==="gap"?String(t.accept[0]):plainJp(fill((t.options.find(o=>o.ok===true)||{}).jp||"",s));
     const m=answer.match(/[ぁ-んァ-ヶ一-鿿ー]/); if(m) text+=` Then, slowly, the first sound: 「${m[0]}…」`;
@@ -2316,12 +2342,18 @@ function paintFeedback(box,feedback){const el=document.createElement("div");el.c
 function finishTopic(){
   if(!cur||!graded)return;
   const finished=cur;if(finished.feedback)remember(finished.feedback.html,finished.feedback.cls);retireTask();cur=null;taskBox=null;pickedOpt=null;graded=false;
-  if(finished.npc){ G.did[finished.npc]=G.did[finished.npc]||{}; G.did[finished.npc][finished.topic.id]=true; }
-  const after=finished.topic.after?finished.topic.after(G,finished.ok):null; if(after) narr(after);tick(0);
+  const passed=finished.ok||(finished.task&&finished.task.kind==="faux")||!!finished.topic.always;
+  if(finished.npc&&passed){ G.did[finished.npc]=G.did[finished.npc]||{}; G.did[finished.npc][finished.topic.id]=true; }
+  /* an after that branches on ok runs either way; one that assumes success waits for it */
+  const fn=finished.topic.after, branches=fn&&/\bok\b/.test(String(fn).replace(/^[^=]*=>/,""));
+  const after=fn&&(passed||branches)?fn(G,finished.ok):null; if(after) narr(after);
+  if(!passed&&finished.npc&&!G.over){ narr(`${NPCS[finished.npc].name} lets it go, this time. The words were wrong and the door stays where it is. Ask again when you have them.`); }
+  tick(0);
   if(finished.burn==="fixer"&&!G.is("fixerBurned")){ G.flag("fixerBurned"); SND.down(); narr("Yamada stops. 「もう無理。」 Two tests gone wrong is two too many for someone whose other business is pickles. The pickles slide across the counter as an apology and the STAFF ONLY door shuts. You will need another forger. Suzuki at the hotel has a cousin. Everyone has a cousin."); }
   if(finished.burn==="fixer2"&&!G.over){ gameOver("Ken looks at the vending machine, then at you, then at the vending machine. 「…ごめん。」 The second forger in Ueno has decided you are a risk to the hot corn soup. There is no third. The mission is over; the passport, the dictionary and everything you built stay with you for the next one."); return; }
   if(G.loc==="michelin"&&G.is("shownId")) ringPhone(0.35);
   checkDeported(); renderAll();
+  if(finished.npc&&!G.over&&presentNpcs().includes(finished.npc)) talkMenu(finished.npc);
 }
 
 /* ---- zoning out ---- */
@@ -2403,6 +2435,7 @@ function debrief(){
 }
 $("copyBtn").addEventListener("click",()=>{ const total=Object.keys(G.first).length, right=Object.values(G.first).filter(f=>f.ok).length; const missed=[...new Set(Object.values(G.first).filter(f=>!f.ok).map(f=>(SKILLS[f.skill]||[f.skill])[0]))].join("; "); const row=[$("nameIn").value.trim(),G.kit,`${right}/${total}`,G.susp,missed].join("\t"); const done=()=>{$("copied").textContent="copied";}; const fb=()=>{$("copied").textContent=row;}; if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(row).then(done,fb); else fb(); });
 $("againBtn").textContent="任務にもどる · Back to mission";
+$("againBtn").addEventListener("click",()=>{ if(G&&G.over){ try{localStorage.removeItem(SAVE_KEY);}catch(e){} G=null; show("titleS"); renderTitle(); } else { show("playS"); renderAll(); $("log").scrollTop=$("log").scrollHeight; } });
 const againLabel=()=>{ $("againBtn").textContent=G&&G.over?"始めから · Start again":"任務にもどる · Back to mission"; };
 $("againBtn").addEventListener("click",()=>{ if(G&&G.over){ try{localStorage.removeItem(SAVE_KEY);}catch(e){} G=null; show("titleS"); renderTitle(); return; } show("playS");renderAll();if(cur&&taskBox)(taskBox.querySelector(graded?"#nextBtn":"#typed")||$("log")).focus();});
 
