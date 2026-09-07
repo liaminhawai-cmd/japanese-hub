@@ -698,23 +698,6 @@ window.PLACES = [
           "with a buddy. This is not a tour stop. It is a school day.",
         spots: [
           {
-            id: "koryu",
-            ja: "こうりゅう",
-            en: "What you are walking into",
-            photo: null,
-            hook:
-              "None of this week is a package you bought. Soja City runs the " +
-              "exchange itself, and your host family volunteered. They are not " +
-              "paid to have you. Kew is also the only Australian school taking " +
-              "part, so for a lot of people in Soja the students who turn up " +
-              "each year are the Australians they know. That is a good thing to " +
-              "be, and enthusiasm covers most of it.",
-            look:
-              "Some time this week, thank your host family in Japanese for one " +
-              "specific thing they did, rather than saving it all for the last " +
-              "day. It lands better than you would expect."
-          },
-          {
             id: "souji",
             ja: "そうじ",
             en: "The students clean the school",
@@ -758,6 +741,68 @@ window.PLACES = [
             look:
               "Ask your buddy which club they are in and how many days a week they " +
               "train. Watch their face when you tell them what we do at Kew."
+          }
+        ]
+      },
+      {
+        id: "homestay",
+        ja: "ホームステイ",
+        en: "Living with your host family",
+        photo: null,
+        intro:
+          "The best week of the trip, and the part nobody else gets. You live in " +
+          "a Japanese house with people who chose to have you there.",
+        spots: [
+          {
+            id: "chance",
+            ja: "チャンス",
+            en: "Say yes to things",
+            photo: null,
+            hook:
+              "Your host family is paid to host you and they will do their best " +
+              "to look after you, so relax: you are not a burden and you do not " +
+              "have to earn your place. What you should do is say yes. Try the " +
+              "food, even the bit you cannot identify. Go where they take you on " +
+              "the weekend. Join in at the club. A week of that will teach you " +
+              "more Japanese than a term of lessons, and the families who enjoy " +
+              "hosting most are the ones whose student joined in.",
+            look:
+              "Say yes to one thing this week you would normally say no to. " +
+              "Somebody will offer you something odd to eat. Start there."
+          },
+          {
+            id: "guest",
+            ja: "いいゲスト",
+            en: "Being a good guest",
+            photo: null,
+            hook:
+              "Offer to help. Clear the table, do some washing up, tidy your own " +
+              "things away. Offer to wash your own clothes, and do not be " +
+              "surprised if they say no, because one load for the whole house is " +
+              "easier than a special one for you. Offering is the part that " +
+              "counts. Talk to them whenever you can: show photos of home, your " +
+              "pets, the beach, your family, and ask about theirs. If the house " +
+              "is lovely, say so. If dinner is good, say so. Polite, respectful, " +
+              "grateful. That is the whole job, and it is not a hard one.",
+            look:
+              "Tonight, offer to help with one thing after dinner. Tetsudaimashou " +
+              "ka. Even if they wave you away, ask."
+          },
+          {
+            id: "australians",
+            ja: "オーストラリア人",
+            en: "You are the Australians",
+            photo: null,
+            hook:
+              "One small thing worth keeping in the back of your mind. Kew is the " +
+              "only Australian school in this program, so to a lot of people in " +
+              "Soja you are simply the Australians, and this group is the one " +
+              "they will remember. That is not a weight to carry around. It just " +
+              "means friendliness goes further here than it does at home, and " +
+              "people will be pleased with you for very little.",
+            look:
+              "Greet people you pass at school, even the ones you do not know. " +
+              "Ohayou gozaimasu costs nothing and it is remembered."
           }
         ]
       },
