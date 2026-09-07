@@ -535,6 +535,40 @@ officer:[
 ".....##..##.....",
 ".....##..##.....",
 "....###..###...."],
+teller:[
+"................",
+".....######.....",
+"....##....##....",
+"....#.#..#.#....",
+"....##....##....",
+".....######.....",
+"...###....###...",
+"..##..####..##..",
+"..#..######..#..",
+"..#..######..#..",
+"################",
+"#..............#",
+"#.############.#",
+"#.#..........#.#",
+"#.############.#",
+"################"],
+aud:[
+"................",
+"................",
+"................",
+"################",
+"#..............#",
+"#.####....####.#",
+"#.#..#.##.#..#.#",
+"#.#..#.##.#..#.#",
+"#.####....####.#",
+"#..............#",
+"#.#.##.##.##.#.#",
+"#..............#",
+"################",
+"................",
+"................",
+"................"],
 clerk:[
 "......####......",
 ".....######.....",
@@ -1157,7 +1191,8 @@ const SKILLS={
 
 const ITEMS={
   passport:{n:"passport",jp:"パスポート",desc:"Your real one. Your real name is in it. Keep that in mind."},
-  coin:{n:"$2 coin",jp:R("二","に")+"ドル"+R("玉","だま"),desc:"Australian. Gold, heavy, Tullamarine change. Worth about ¥200 and accepted nowhere in this country."},
+  aud:{n:"A$52",jp:"オーストラリアドル",desc:"A fifty and a two-dollar coin, from home. Nobody in Japan takes them. The 両替 counter at the airport takes some of them."},
+  coin:{n:"$2 coin",jp:R("二","に")+"ドル"+R("玉","だま"),desc:"Australian. Gold, heavy, the bit the exchange counter would not touch. Worth about ¥200 and accepted nowhere in this country."},
   idcard:{n:"fake ID",jp:R("身分証","みぶんしょう"),desc:"You are {{name}}, {{jobEn}}, from {{townEn}}. The photo is of someone else. It's fine."},
   glasses:{n:"glasses",jp:"めがね",desc:"Translator glasses. English under everything while worn. Nobody can tell. Use to put on or take off.",wear:true},
   dictionary:{n:"dictionary",jp:R("辞書","じしょ"),desc:"Use it to see the English for whatever was just said, plus a pattern hint. Free where nobody cares. Noticeable where they do."},
@@ -1237,6 +1272,15 @@ traveller:{name:"Kiwi backpacker",jp:"バックパッカー",spr:"clerk",loc:"ai
     lines:[{jp:"かばんをなくしました。{{bag}}かばんです。"+R("中","なか")+"にカメラが"+R("入","はい")+"っています。",en:"I lost my bag. A {{bagEn}} bag. There's a camera in it."},{jp:"{{bag}}かばん、"+R("見","み")+"ませんでしたか。カメラが"+R("入","はい")+"っているんです。",en:"Haven't seen a {{bagEn}} bag? It's got my camera in it."}],
     task:{kind:"gap",prompt:"Ask where they lost it. Fill the question word.",jp:"＿＿＿でなくしましたか。",en:"Where did you lose it?",accept:["どこ"],enAccept:["where"],opts:["どこ","どれ","だれ","いつ"],rule:"どこ (where) + で (place of the action) + past verb + か. どれ is 'which one', だれ 'who', いつ 'when'."},
     after:(G,ok)=>{G.flag("bagQuest");say("traveller",{jp:R("大阪","おおさか")+"です！たぶん！…あ、でも"+R("一時間前","いちじかんまえ")+"はこの"+R("駅","えき")+"にいました。",en:"Osaka! Probably! ...Oh, but an hour ago I was at this station."});return "You file that away.";}}
+  ]},
+teller:{name:"Ono, exchange counter",jp:R("両替","りょうがえ")+"・"+R("小野","おの"),spr:"teller",loc:"airport",
+  bio:"Counts things. Steps, tiles, passengers, the seconds a stamp takes. Loves notes because they stack. Hates coins because they do not.",
+  small:[{jp:R("今日","きょう")+"は"+R("四百三十二","よんひゃくさんじゅうに")+R("人","にん")+"。",en:"Four hundred and thirty-two people today."},{jp:"コインはちょっと…",en:"Coins are a bit..."}],
+  topics:[
+   {id:"exchange",title:"Change money",cue:"A counter marked 両替 with a very neat stack of notes. Ask to change your Australian money.",skill:"te-form-b2-core",req:G=>G.has("aud")||(G.is("exchanged")?"Ono has your fifty already, squared up in the stack. The coin stays yours.":"You have nothing left to change."),
+    lines:[{jp:"いらっしゃいませ。"+R("両替","りょうがえ")+"ですか。",en:"Welcome. Changing money?"}],
+    task:{kind:"type",prompt:"Ask to change it into yen. 両替をおねがいします, or 円にかえてください.",hint:"両替をおねがいします。／円にかえてください。",model:"両替をおねがいします。",accept:[/(りょうがえ|両替).*(おねがいします|お願いします|ください|したいです|できますか)$/,/(えん|円)に(かえて|換えて|して)(ください|くれませんか|もらえますか|いただけますか)$/,/(えん|円)(にしてください|をください|がほしいです)$/],rule:"両替をおねがいします: NOUN + をおねがいします asks for a service. 円にかえてください: NOUN + にかえてください, change it into. Both are polite enough for a counter."},
+    after:(G,ok)=>{G.take("aud");G.give("coin");G.yen+=5000;G.flag("exchanged");SND.coin();say("teller",{jp:R("五千円","ごせんえん")+"です。"+R("二","に")+"ドルのコインは…すみません、"+R("紙幣","しへい")+"だけです。",en:"Five thousand yen. The two-dollar coin... sorry, notes only."});return "The fifty goes into the stack, squared. The two-dollar coin comes back across the counter, pushed with one finger, like something that might bite. ¥5,000.";}}
   ]},
 busstaff:{name:"Ground staff",jp:R("係員","かかりいん"),spr:"waiter",loc:"airport",
   bio:"Collects bus timetables. Has the complete 1998 set. Wants you to know the 7:03 has never once been late.",
@@ -1476,7 +1520,7 @@ doctor:{name:"Dr Mori",jp:R("医者","いしゃ")+"・"+R("森","もり"),spr:"d
 /* ---- places ---- */
 const LOCS={
   airport:{name:"Narita Airport",jp:R("成田空港","なりたくうこう"),spr:"airport",exits:["station"],
-    look:"Two languages on every sign, four hundred Australians in the arrivals hall, one officer jogging on the spot behind a desk. A backpacker is arguing with a departures board. Ground staff stand very straight beside a bus timetable.",
+    look:"Two languages on every sign, four hundred Australians in the arrivals hall, one officer jogging on the spot behind a desk. A backpacker is arguing with a departures board. Ground staff stand very straight beside a bus timetable. Behind a window marked 両替, someone is counting.",
     lookJp:[{jp:R("到着","とうちゃく")+" ARRIVALS",en:""},{jp:"バスのりば → {{gate}}",en:""}],
     gate:G=>G.is("immigration")||"The exit is past Officer Tanaka. He is jogging and holding out his hand. TALK to him about immigration."},
   station:{name:"Ueno Station",jp:R("上野駅","うえのえき"),spr:"station",exits:["airport","konbini","hotel","alley","michelin","hospital"],
@@ -1514,6 +1558,7 @@ const USE={
   "phone@michelin":G=>{ if(Math.random()<0.4){G.susp=Math.min(100,G.susp+20);return "You take out a phone in his kitchen. 「電話は外で！」 Suspicion +20.";} return "Under the counter, screen dimmed. Nobody saw. This time.";},
   "coin@michelin":G=>{ G.susp=Math.min(100,G.susp+10); return "You leave the coin on the counter. A tip. He slides it back with the handle of a knife without looking up. Suspicion +10. Nobody tips here, and nobody tips in foreign money anywhere."; },
   "coin@hospital":G=>{ if(G.is("coinGiven")) return "It is in the case now, under glass, with a small label."; if(presentNpcs().includes("doctor")){ startTopic("doctor",NPCS.doctor.topics.find(x=>x.id==="coin")); return ""; } return "Dr Mori is not at the desk."; },
+  "aud@*":G=>G.loc==="airport"?"Australian money. The window marked 両替 is right there. TALK to Ono.":"Australian money. Nobody here takes it, and the 両替 counter is back at the airport.",
   "coin@*":G=>"A two-dollar coin. You hold it up. Nobody wants it, and one person in Ueno keeps a glass case with a gap the exact size of it.",
   "phone@*":G=>{ if(G.loc==="hotel"&&G.is("recipe")) { G.startDebrief(); } return ""; },
   "dictionary@*":G=>G.dictionary(),
@@ -1546,7 +1591,7 @@ const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(M
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 const SAVE_KEY="mission-japan-save-v2";
 /* One number, counted up on every deploy, so a stale tab is obvious. Bump it with each live copy. */
-const BUILD={n:24,date:"2026-09-07"};
+const BUILD={n:25,date:"2026-09-07"};
 ["buildTag","buildEyebrow","buildMenu"].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=(id==="buildTag"?"MISSION · ":"")+`BUILD ${BUILD.n} · ${BUILD.date}`; });
 const INK=getComputedStyle(document.documentElement).getPropertyValue("--ink").trim();
 const PAPER=getComputedStyle(document.documentElement).getPropertyValue("--lcd").trim();
@@ -1662,6 +1707,7 @@ function weatherToll(x){ /* what the walk costs in the wrong clothes */
    (¥1,500 roaming, worth it), and two feeds in Japanese that follow where you are (free wifi). */
 NPCS.dana={name:"Chef Dana, Melbourne",jp:"ダナ",spr:"chef",loc:"nowhere",bio:"Runs the ramen chain that sent you. Worked in Osaka for three years in her twenties. Knows the rules and which ones you can break.",small:[{jp:"もしもし？",en:"Hello?"}],topics:[]};
 const CALLS={
+  teller:[{jp:R("今日","きょう")+"は"+R("五百一","ごひゃくいち")+R("人","にん")+"。"+R("一人","ひとり")+"はコインでした。",en:"Five hundred and one people today. One of them was coins."}],
   officer:[{jp:"はい、田中です。マラソン、あと"+R("三週間","さんしゅうかん")+"！",en:"Tanaka here. Marathon in three weeks!"},{jp:"バスは{{gate}}のりばですよ。",en:"The bus is at stop {{gateN}}, you know."}],
   traveller:[{jp:"かばん、まだ"+R("大阪","おおさか")+"にある。たぶん。",en:"The bag's still in Osaka. Probably."}],
   busstaff:[{jp:R("七時三分","しちじさんぷん")+"のバスは、きょうも"+R("時間","じかん")+"どおりでした。",en:"The 7:03 was on time again today."}],
@@ -1741,9 +1787,9 @@ function spriteCanvas(name,size,inverse=false){ const c=document.createElement("
 /* ---- game state ---- */
 let G=null, cur=null, graded=false, pickedOpt=null, taskBox=null, lastDistract=0, leavingCleanly=false, replaying=false, saveOK=true, menuFocus=null;
 const LOADOUTS={
-  tourist:{n:"観光客 · Tourist",items:["passport","coin","glasses","dictionary","phone","shoes"],worn:["glasses","shoes"],yen:30000,desc:"English through your glasses. Dictionary and phone in your bag. Take the glasses off whenever you like."},
-  agent:{n:"エージェント · Agent",items:["passport","coin","dictionary","phone","shoes"],worn:["shoes"],yen:20000,desc:"Japanese first. Reach for your dictionary or call HQ when you need a hand. Watch who is watching."},
-  ghost:{n:"幽霊 · Ghost",items:["passport","coin","phone","shoes"],worn:["shoes"],yen:15000,desc:"Your passport, your shoes, your phone, your Japanese. Dana only speaks Japanese to you now. Buy a dictionary in Ueno if the cover starts to slip."}
+  tourist:{n:"観光客 · Tourist",items:["passport","aud","glasses","dictionary","phone","shoes"],worn:["glasses","shoes"],yen:30000,desc:"English through your glasses. Dictionary and phone in your bag. Take the glasses off whenever you like."},
+  agent:{n:"エージェント · Agent",items:["passport","aud","dictionary","phone","shoes"],worn:["shoes"],yen:20000,desc:"Japanese first. Reach for your dictionary or call HQ when you need a hand. Watch who is watching."},
+  ghost:{n:"幽霊 · Ghost",items:["passport","aud","phone","shoes"],worn:["shoes"],yen:15000,desc:"Your passport, your shoes, your phone, your Japanese. Dana only speaks Japanese to you now. Buy a dictionary in Ueno if the cover starts to slip."}
 };
 function fill(t,s){ return String(t).replace(/\{\{(\w+)\}\}/g,(m,k)=>s[k]??m); }
 function slots(){ const s={...G.s}; const pr=PROFILE.get(); s.realName=s.realName||pr.real||""; s.realKana=s.realKana||pr.kana||""; s.realKana=s.realKana||""; s.realShown=s.realKana||s.realName||"サム"; s.realNote=s.realKana?", in katakana":""; s.realLabel=s.realName?`${s.realName}${s.realKana?" · "+s.realKana:""}`:"(your real name)"; s.shoesState=G.worn.includes("shoes")?"on":"off"; s.trainedNote=G.is("trained")?" (You have heard this sentence before, from Taisho.)":""; s.fearNote=G.is("intelFear")?" (Grandpa said he melts for an opinion.)":""; s.nbNote=G.is("notebookOpen")&&!G.is("recipe")?" The notebook is on the counter, open, and his back is to it.":""; return s; }
