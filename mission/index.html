@@ -1182,7 +1182,7 @@ officer:{name:"Officer Tanaka",jp:R("入国審査官","にゅうこくしんさ�
     after:(G,ok)=>{return "He stamps it without breaking stride.";}},
    {id:"name",title:"Your name",skill:"greet-y34",
     lines:[{jp:"お"+R("名前","なまえ")+"は？",en:"Your name?"},{jp:"お"+R("名前","なまえ")+"は"+R("何","なん")+"ですか。",en:"What is your name?"}],
-    task:{kind:"type",prompt:"Give your real name, the one in your passport{{realNote}}. The pattern is on the sign behind him.",hint:"{{realShown}}です",model:"{{realShown}}です。",accept:[/(?:{{realAccept}})(?:です|ともうします|と申します)$/],rule:"X です, 私はXです, 私の名前はXです, or X と申します all work. What he needs is your name and a polite ending; what he does not need is a country.",slotCheck:"real"}},
+    task:{kind:"type",prompt:"Give your real name, the one in your passport{{realNote}}. The pattern is on the sign behind him.",hint:"{{realShown}}です",model:"{{realShown}}です。",accept:[/(?:{{realAccept}})(?:です|ともうします|と申します)?$/],rule:"Your name on its own works at a desk. X です, 私はXです, 私の名前はXです, or X と申します are the fuller shapes. What he does not need is a country.",slotCheck:"real"}},
    {id:"from",title:"Where from",skill:"greet-y34",
     lines:[{jp:"どこから"+R("来","き")+"ましたか。",en:"Where did you come from?"},{jp:"ご"+R("出身","しゅっしん")+"は？",en:"Where are you from?"}],
     task:{kind:"choice",prompt:"You are Australian. Say so.",options:[
@@ -1294,7 +1294,7 @@ fixer:{name:"Yamada, the fixer",jp:R("山田","やまだ"),spr:"fixer",loc:"konb
     task:{kind:"gap",prompt:"Your cover says {{townEn}}. Fill the particle.",jp:"{{town}}＿＿＿"+R("住","す")+"んでいます。",en:"I live in {{townEn}}.",accept:["に"],opts:["に","で","を","へ"],rule:"住む takes に for the place you live. で is where an action happens; living is treated as existing somewhere."}},
    {id:"job",title:"Test: your job",skill:"greet-y56",
     lines:[{jp:"お"+R("仕事","しごと")+"は？",en:"Your job?"}],
-    task:{kind:"type",prompt:"Cover job: {{jobEn}}. Say it, polite form.",hint:"{{jobKana}}です",model:"{{jobKana}}です。",accept:[/(?:{{jobKana}}|{{jobPlain}})です$/],rule:"JOB です, or 私はJOBです. Forgetting the word here, in a back room that smells of pickles, is the cheap place to forget it.",slotCheck:"job"}},
+    task:{kind:"type",prompt:"Cover job: {{jobEn}}. Say it, polite form.",hint:"{{jobKana}}です",model:"{{jobKana}}です。",accept:[/(?:{{jobKana}}|{{jobPlain}})(?:です)?$/],rule:"JOB, JOB です, or 私はJOBです. Forgetting the word here, in a back room that smells of pickles, is the cheap place to forget it.",slotCheck:"job"}},
    {id:"stay",title:"Test: how long",skill:"num-y56",
     lines:[{jp:"どのくらい"+R("日本","にほん")+"にいますか。",en:"How long are you in Japan?"}],
     task:{kind:"choice",prompt:"Your cover says {{stayEn}}.",dynamic:"stay"}},
@@ -1513,7 +1513,7 @@ const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(M
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 const SAVE_KEY="mission-japan-save-v2";
 /* One number, counted up on every deploy, so a stale tab is obvious. Bump it with each live copy. */
-const BUILD={n:20,date:"2026-09-07"};
+const BUILD={n:21,date:"2026-09-07"};
 ["buildTag","buildEyebrow","buildMenu"].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=(id==="buildTag"?"MISSION · ":"")+`BUILD ${BUILD.n} · ${BUILD.date}`; });
 const INK=getComputedStyle(document.documentElement).getPropertyValue("--ink").trim();
 const PAPER=getComputedStyle(document.documentElement).getPropertyValue("--lcd").trim();
