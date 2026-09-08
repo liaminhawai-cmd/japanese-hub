@@ -66,6 +66,16 @@
   h2{font-size:25px;line-height:1.2;margin-bottom:3px}
   h2 .en{display:block;font-size:16px;font-weight:400;color:var(--muted);margin-top:2px}
   .lede{color:var(--muted);font-size:16.5px;margin:10px 0 18px}
+  /* a big, unmissable section heading, used for the itinerary */
+  .sec{font-size:24px;font-weight:700;margin:26px 0 4px;line-height:1.2}
+  .sec .en{display:block;font-size:15px;font-weight:400;color:var(--muted);margin-top:1px}
+  /* the panel a manner drops open into */
+  .drop{background:var(--paper);border:1px solid var(--line);border-left:6px solid var(--accent);
+        border-radius:12px;padding:15px 16px;margin-top:12px}
+  .drop .h{font-size:20px;font-weight:700}
+  .drop .h .en{font-size:15px;font-weight:400;color:var(--muted);margin-left:8px}
+  .drop p{font-size:17.5px;margin-top:7px;line-height:1.6}
+  .gt.sel{outline:3px solid var(--accent);outline-offset:2px}
   .stack{display:flex;flex-direction:column;gap:12px}
 
   /* big, obvious rows: places, and the sights inside a place */
@@ -145,6 +155,13 @@
   .bigshot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
   .bigshot.contain{aspect-ratio:4/3;background:var(--bg)}
   .bigshot.contain img{object-fit:contain}
+  /* ---------- maps ---------- */
+  .maps{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;align-items:start}
+  .mp{background:#dde9f5;border:1px solid var(--line);border-radius:12px;
+      padding:8px;position:relative;overflow:hidden}
+  .mp svg{display:block;width:100%;height:auto}
+  .mp .cap{font-size:11.5px;color:var(--muted);text-align:center;margin-top:5px;
+           font-weight:600;letter-spacing:.02em}
   .credit{font-size:13.5px;color:var(--muted);margin-top:8px;line-height:1.5}
   .where{font-size:15px;color:var(--muted);margin-top:4px}
 
@@ -251,6 +268,7 @@
   <button id="showClose">Close</button>
 </div>
 
+<script src="map.js"></script>
 <script src="data.js"></script>
 <script>
 (function(){
@@ -269,6 +287,44 @@
     if (window.PHOTOS && window.PHOTOS[u]) return window.PHOTOS[u];
     return u;
   }
+  // Two panels: where this place sits in Japan, and a closer view of the
+  // stretch of coast the whole tour runs along. Both are drawn from real
+  // coastline, inline, so they work with no connection.
+  function mapPanel(view, here){
+    var m = window.MAP; if (!m) return "";
+    var v = m[view], key = view === "japan" ? "j" : "r";
+    var svg = '<svg viewBox="0 0 ' + v.w + ' ' + v.h + '" aria-hidden="true">' +
+              '<rect width="' + v.w + '" height="' + v.h + '" fill="#dde9f5"/>';
+    v.d.forEach(function(d){
+      svg += '<path d="' + d + '" fill="#eef1e4" stroke="#a9b3a5" stroke-width="0.35"/>';
+    });
+    // the other stops, so a student sees the tour in order
+    Object.keys(m.places).forEach(function(id){
+      if (id === here) return;
+      var q = m.places[id][key];
+      svg += '<circle cx="' + q[0] + '" cy="' + q[1] + '" r="0.9" fill="#8a8f88"/>';
+    });
+    var pnt = m.places[here] && m.places[here][key];
+    if (pnt){
+      svg += '<circle cx="' + pnt[0] + '" cy="' + pnt[1] + '" r="3.2" fill="none" ' +
+             'stroke="#a83232" stroke-width="0.8"/>' +
+             '<circle cx="' + pnt[0] + '" cy="' + pnt[1] + '" r="1.7" fill="#a83232"/>';
+    }
+    if (view === "japan" && m.anchors.Tokyo){
+      var tk = m.anchors.Tokyo.j;
+      svg += '<circle cx="' + tk[0] + '" cy="' + tk[1] + '" r="1" fill="#556"/>' +
+             '<text x="' + (tk[0]+2.5) + '" y="' + (tk[1]+1.6) + '" font-size="4" fill="#445">Tokyo</text>';
+    }
+    return svg + '</svg>';
+  }
+  function maps(placeId){
+    if (!window.MAP || !window.MAP.places[placeId]) return "";
+    return '<div class="maps">' +
+      '<div class="mp">' + mapPanel("japan", placeId) + '<div class="cap">In Japan</div></div>' +
+      '<div class="mp">' + mapPanel("region", placeId) + '<div class="cap">Closer up</div></div>' +
+    '</div>';
+  }
+
   // One tile, used for places, sights and spots. Colour comes from position
   // so a grid never repeats a shade side by side.
   function tile(item, attr, meta, i){
@@ -320,7 +376,7 @@
            '<span class="en">Melbourne, 20 September 2026, 18:25</span></div>' +
            '<div class="nt">Open this on the day and it shows where we are up to.</div></div>';
     }
-    h += '<div>';
+    h += '<div class="sec">りょてい<span class="en">Itinerary</span></div><div>';
     TRIP.days.forEach(function(d, k){
       h += '<div class="day' + (k === i ? " now" : "") + '"><div class="n">' + d.n + '</div>' +
            '<div><div class="t">' + esc(d.ja) + '<span class="en">' + esc(d.en) + '</span></div>' +
@@ -355,6 +411,7 @@
     var h = '<div' + (q ? ' class="quiet"' : '') + '>' + head(p.ja, p.en) +
             '<p class="lede">' + esc(p.intro) + '</p>' +
             (p.note ? '<div class="tone-note">' + esc(p.note) + '</div>' : '') +
+            maps(p.id) +
             '<div class="grid" style="margin-top:16px">';
     p.sights.forEach(function(s2, i){
       h += tile(s2, 'data-sight="' + esc(p.id + "/" + s2.id) + '"',
@@ -400,37 +457,54 @@
   var phraseIndex = [];
   function renderPhrases(){
     phraseIndex = [];
+    PHRASES.forEach(function(g){ g.items.forEach(function(it){ phraseIndex.push(it); }); });
     var h = head("ことば", "Phrases") +
-            '<p class="lede">Tap any phrase to fill the screen with it, big enough ' +
-            'to hold up for someone to read.</p>';
-    PHRASES.forEach(function(g){
-      h += '<div class="grp"><h3>' + esc(g.ja) + '<span class="en">' + esc(g.en) + '</span></h3>' +
-           '<p class="note">' + esc(g.note) + '</p><div class="stack">';
-      g.items.forEach(function(it){
-        var k = phraseIndex.push(it) - 1;
-        h += '<button class="phrase" data-ph="' + k + '">' +
-               '<div class="jp">' + esc(it.ja) + '</div>' +
-               '<div class="ro">' + esc(it.ro) + '</div>' +
-               '<div class="en">' + esc(it.en) + '</div>' +
-               (it.tip ? '<div class="tip">' + esc(it.tip) + '</div>' : "") +
-               (it.show ? '<div class="showtag">show this to someone</div>' : "") +
-             '</button>';
-      });
-      h += '</div></div>';
+            '<p class="lede">Pick the situation you are in.</p><div class="grid">';
+    PHRASES.forEach(function(g, i){
+      h += tile(g, 'data-group="' + esc(g.id) + '"', g.items.length + " phrases", i);
     });
-    $("v-phrases").innerHTML = h;
+    $("v-phrases").innerHTML = h + '</div>';
+  }
+  function groupHtml(g){
+    var base = 0;
+    for (var i=0;i<PHRASES.length;i++){
+      if (PHRASES[i].id === g.id) break;
+      base += PHRASES[i].items.length;
+    }
+    var h = head(g.ja, g.en) + '<p class="lede">' + esc(g.note) + '</p><div class="stack">';
+    g.items.forEach(function(it, k){
+      h += '<button class="phrase" data-ph="' + (base + k) + '">' +
+             '<div class="jp">' + esc(it.ja) + '</div>' +
+             '<div class="ro">' + esc(it.ro) + '</div>' +
+             '<div class="en">' + esc(it.en) + '</div>' +
+             (it.tip ? '<div class="tip">' + esc(it.tip) + '</div>' : "") +
+             (it.show ? '<div class="showtag">tap to show someone</div>' : "") +
+           '</button>';
+    });
+    return h + '</div>';
   }
 
   /* ================= MANNERS ================= */
   function renderManners(){
     var h = head("マナー", "Manners that actually come up") +
             '<p class="lede">Not a full list. These are the ones that will happen to ' +
-            'you in the first two days.</p><div class="stack">';
-    MANNERS.forEach(function(m){
-      h += '<div class="manner"><div class="h">' + esc(m.ja) +
-           '<span class="en">' + esc(m.en) + '</span></div><p>' + esc(m.body) + '</p></div>';
+            'you in the first two days. Tap one to read it.</p><div class="grid">';
+    MANNERS.forEach(function(m, i){
+      h += tile(m, 'data-manner="' + i + '"', "", i);
     });
-    $("v-manners").innerHTML = h + '</div>';
+    $("v-manners").innerHTML = h + '</div><div id="mdrop"></div>';
+  }
+  // Short enough to read in place, so a manner drops open under the grid
+  // rather than sending anyone to another page.
+  function openManner(i){
+    var m = MANNERS[i]; if (!m) return;
+    [].forEach.call(document.querySelectorAll("[data-manner]"), function(b){
+      b.classList.toggle("sel", b.dataset.manner === String(i));
+    });
+    var d = $("mdrop");
+    d.innerHTML = '<div class="drop"><div class="h">' + esc(m.ja) +
+                  '<span class="en">' + esc(m.en) + '</span></div><p>' + esc(m.body) + '</p></div>';
+    d.scrollIntoView({ block: "nearest", behavior: "smooth" });
   }
 
   /* ================= navigation ================= */
@@ -489,6 +563,12 @@
       return push(function(){ setQuiet(r3.p.tone === "quiet");
         $("v-detail").innerHTML = spotHtml(r3.p, r3.s, r3.sp); }, r3.sp.ja, r3.sp.en);
     }
+    if ((t = e.target.closest("[data-group]"))){
+      var g = PHRASES.filter(function(x){ return x.id === t.dataset.group; })[0];
+      if (!g) return;
+      return push(function(){ $("v-detail").innerHTML = groupHtml(g); }, g.ja, g.en);
+    }
+    if ((t = e.target.closest("[data-manner]"))) return openManner(+t.dataset.manner);
     if ((t = e.target.closest("[data-ph]"))) return openShow(phraseIndex[+t.dataset.ph]);
     if (e.target.closest("#showClose")) return closeShow();
   });
