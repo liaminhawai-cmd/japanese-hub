@@ -247,7 +247,7 @@
     <button data-go="home" class="on"><span class="en">Today</span><span class="ja">きょう</span></button>
     <button data-go="places"><span class="en">Places</span><span class="ja">ばしょ</span></button>
     <button data-go="phrases"><span class="en">Phrases</span><span class="ja">ことば</span></button>
-    <button data-go="manners"><span class="en">Manners</span><span class="ja">マナー</span></button>
+    <button data-go="manners"><span class="en">Etiquette</span><span class="ja">マナー</span></button>
   </nav>
 </div>
 
@@ -486,9 +486,10 @@
 
   /* ================= MANNERS ================= */
   function renderManners(){
-    var h = head("マナー", "Manners that actually come up") +
-            '<p class="lede">Not a full list. These are the ones that will happen to ' +
-            'you in the first two days. Tap one to read it.</p><div class="grid">';
+    var h = head("マナー", "Etiquette") +
+            '<p class="lede">How these things are usually done in Japan. Not a full ' +
+            'list, just the ones that come up in the first couple of days. Tap one ' +
+            'to read it.</p><div class="grid">';
     MANNERS.forEach(function(m, i){
       h += tile(m, 'data-manner="' + i + '"', "", i);
     });
@@ -509,7 +510,7 @@
 
   /* ================= navigation ================= */
   var TABS = { home:["日本研修旅行","Japan Study Tour 2026"], places:["ばしょ","Places"],
-               phrases:["ことば","Phrases"], manners:["マナー","Manners"] };
+               phrases:["ことば","Phrases"], manners:["マナー","Etiquette"] };
   var stack = [];
   function setQuiet(on){ document.body.classList[on ? "add":"remove"]("quiet"); }
   function setHeader(ja, en, canBack){

@@ -1144,12 +1144,12 @@ window.PHRASES = [
    Short, blunt, and only things that actually come up on this trip.
    ------------------------------------------------------------------------- */
 window.MANNERS = [
-  { ja: "くつ", en: "Shoes", body: "Off at the door, every time, at home and at school and in temple buildings. Point them back towards the door once they are off. Keep your socks in good condition." },
-  { ja: "はし", en: "Chopsticks", body: "Never stand them upright in rice and never pass food chopstick to chopstick. Both are done at funerals, so at a dinner table they land badly. Rest them on the holder when you are not eating." },
-  { ja: "おふろ", en: "The bath", body: "Wash and rinse completely outside the bath, then get in to soak. The water is not drained between people. Do not put soap in it and do not pull the plug." },
-  { ja: "ゴミ", en: "Rubbish", body: "There are almost no public bins. You carry your rubbish until you get home or back to the hotel. Eating while walking is generally not done." },
-  { ja: "こえ", en: "Volume", body: "Trains and buses are quiet. No speakerphone, no music out loud, no shouting down the carriage. A group of Australians is louder than it thinks it is." },
-  { ja: "おじぎ", en: "Bowing", body: "A small bow from the waist covers hello, thank you and sorry. You do not need to get it perfect. Doing it at all is the point." },
-  { ja: "チップ", en: "Tipping", body: "Do not. There is no tipping in Japan and it causes confusion rather than pleasure. Good service is standard, not something you pay extra for." },
-  { ja: "けいたい", en: "Phones", body: "The sister school has a zero tolerance phone policy and it applies to us during school hours. At the homestay, less phone means more trip." }
+  { ja: "くつ", en: "Shoes", body: "Shoes come off at the entrance: at home, at school, and inside temple buildings. There is usually a step or a change of flooring showing where. Once they are off, turning them to face the door is the normal habit. You will be taking them off several times a day, so socks get seen." },
+  { ja: "はし", en: "Chopsticks", body: "Two things are avoided at the table because they belong to funeral customs: standing chopsticks upright in rice, and passing food from chopsticks to chopsticks. Otherwise, resting them on the holder between mouthfuls is the usual habit." },
+  { ja: "おふろ", en: "The bath", body: "You wash and rinse fully at the taps outside the bath, then get in to soak. The same water stays in for the next person, so soap stays out of it and the plug stays in. The order of who bathes when is up to the family." },
+  { ja: "ゴミ", en: "Rubbish", body: "Public bins are rare, so most people carry rubbish with them until they get home. Convenience stores usually have bins for things bought there. Eating while walking is uncommon; people tend to finish something where they bought it." },
+  { ja: "こえ", en: "Volume", body: "Trains and buses are generally quiet. People text rather than take calls, use headphones, and keep conversation low. It can feel surprisingly hushed at first, and it is worth noticing how the carriage sounds when you get on." },
+  { ja: "おじぎ", en: "Bowing", body: "A small bow from the waist does the work of hello, thank you and sorry. Depth varies with the situation, but nobody expects a visitor to judge that finely. Bowing at all reads as courteous." },
+  { ja: "チップ", en: "Tipping", body: "There is no tipping in Japan, in restaurants, taxis or hotels. Leaving money behind is more likely to puzzle someone, or have them chase you down the street to return it. The service you get is simply included." },
+  { ja: "けいたい", en: "Phones", body: "The sister school does not allow phone use during school hours, and that applies to us too while we are there. Elsewhere your phone is useful as a camera and translator. Many people find they reach for it less on a trip like this than they expect to." }
 ];
