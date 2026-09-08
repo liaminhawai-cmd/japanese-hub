@@ -17,9 +17,14 @@
      body copy at 18, and tap targets you cannot miss. Menus live at the TOP
      because that is where a thumb looks first on a page you are reading. */
   :root{
-    --bg:#f4efe6; --paper:#fbf7ee; --ink:#1a1a1a; --muted:#57503f;
-    --line:#d3c9b3; --line-soft:#e8e0cd; --accent:#a83232;
+    --bg:#f1f4f3; --paper:#ffffff; --ink:#1b1f1e; --muted:#5a625f;
+    --line:#d7dedb; --line-soft:#e6ecea; --accent:#a83232;
     --deep:#16375e; --ok:#2f6a3e;
+    /* Tile blocks, from the traditional palette and kept pale so black text
+       sits on them comfortably: asagi, sakura, wakatake, fuji, yamabuki,
+       sora, matcha, toki. Tiles cycle through these by position. */
+    --c1:#d9edf1; --c2:#fbe3e8; --c3:#dcecdc; --c4:#e4e1f0;
+    --c5:#fbeed2; --c6:#dde9f5; --c7:#e7edd4; --c8:#f7e3e6;
     --shadow:0 2px 10px rgba(0,0,0,.08);
 
     --font-en:Calibri,Carlito,'Segoe UI',Tahoma,Geneva,Verdana;
@@ -98,31 +103,35 @@
   .day.now{background:var(--paper);border-radius:12px;padding:12px 13px;
            border:1px solid var(--accent)}
 
-  /* ---------- spot tiles ---------- */
-  .tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-  @media (max-width:359px){.tiles{grid-template-columns:1fr}}
-  .tile{display:flex;flex-direction:column;background:var(--paper);
-        border:1px solid var(--line);border-radius:14px;overflow:hidden;
-        font-family:inherit;text-align:left;color:var(--ink);cursor:pointer;
-        box-shadow:var(--shadow);align-self:start}
-  .tile:active{transform:scale(.99)}
-  .art{aspect-ratio:4/3;position:relative;overflow:hidden;flex:0 0 auto;
-       border-bottom:1px solid var(--line);background:var(--bg);
-       display:flex;align-items:center;justify-content:center}
-  .art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-  .art.contain img{object-fit:contain}
-  /* No photo yet? The tile still has to look made, not broken. It shows the
-     first character or two of the Japanese name, large. On theme, and it
-     doubles as kanji exposure. */
-  .art.glyph{background:var(--line-soft)}
-  .art .g{line-height:1.15;color:var(--muted);opacity:.9;letter-spacing:.03em;
-          user-select:none;text-align:center;padding:0 10px;font-size:50px}
-  .art .g.n3{font-size:40px}
-  .art .g.n4{font-size:33px}
-  .art .g.n5{font-size:26px}
-  .tile .lab{padding:12px 13px 14px}
-  .tile .lab .ja{font-size:19px;font-weight:700;line-height:1.3}
-  .tile .lab .en{font-size:15px;color:var(--muted);margin-top:3px;line-height:1.35}
+  /* ---------- tiles: one component for places, sights and spots ----------
+     Fixed height so the grid stays even whether or not a photo exists, and
+     small enough that a screen holds six of them. Block colour instead of a
+     white card, because a wall of white cards is what made this dull. */
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  @media (min-width:560px){.grid{grid-template-columns:repeat(3,1fr)}}
+  .gt{height:138px;display:flex;flex-direction:column;overflow:hidden;
+      border-radius:13px;border:1px solid rgba(0,0,0,.07);cursor:pointer;
+      font-family:inherit;text-align:left;color:var(--ink);padding:0;
+      box-shadow:0 1px 4px rgba(0,0,0,.07)}
+  .gt:active{transform:scale(.985)}
+  .gt .ph{flex:1;position:relative;overflow:hidden;min-height:0}
+  .gt .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+  .gt .ph.contain img{object-fit:contain;background:rgba(255,255,255,.5)}
+  /* no photo: the Japanese name carries the tile */
+  .gt .big{flex:1;display:flex;align-items:center;justify-content:center;
+           padding:6px 8px 0;min-height:0}
+  .gt .big span{font-size:34px;line-height:1.15;text-align:center;opacity:.9}
+  .gt .big span.s3{font-size:28px}
+  .gt .big span.s4{font-size:23px}
+  .gt .big span.s5{font-size:18px}
+  .gt .lab{padding:8px 11px 10px}
+  .gt .lab .ja{font-size:15.5px;font-weight:700;line-height:1.25;
+               white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .gt .lab .en{font-size:12.5px;line-height:1.3;opacity:.72;margin-top:1px;
+               display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+               overflow:hidden}
+  .gt .lab .en.solo{font-size:14px;font-weight:600;opacity:.85;-webkit-line-clamp:2}
+  .gt .lab .meta{font-size:11px;opacity:.62;margin-top:3px}
 
   /* ---------- spot detail ---------- */
   .hook{font-size:19px;line-height:1.68;margin:16px 0 0}
@@ -146,6 +155,7 @@
   body.quiet{background:var(--bg)}
   body.quiet .top{background:var(--paper);border-bottom-color:var(--line)}
   .quiet .look{border-left-width:4px;background:transparent}
+  body.quiet .gt{background:#e6e6e4!important;border-color:rgba(0,0,0,.09)}
   .quiet .tone-note{background:transparent;border:1px solid var(--line);
         border-radius:12px;padding:15px 16px;margin:16px 0 4px;
         font-size:16.5px;color:var(--muted);line-height:1.62}
@@ -259,22 +269,26 @@
     if (window.PHOTOS && window.PHOTOS[u]) return window.PHOTOS[u];
     return u;
   }
-  // The tile art: a photo when there is one, otherwise the first characters of
-  // the Japanese name set large. Either way the tile looks finished.
-  function art(item, cls, small){
-    var fit = item.fit === "contain" ? " contain" : "";
+  // One tile, used for places, sights and spots. Colour comes from position
+  // so a grid never repeats a shade side by side.
+  function tile(item, attr, meta, i){
+    var body;
     if (item.photo){
-      return '<div class="' + cls + fit + '"><img src="' + esc(src(item.photo, small)) +
-             '" alt="" loading="lazy"></div>';
+      body = '<div class="ph' + (item.fit === "contain" ? " contain" : "") + '">' +
+             '<img src="' + esc(src(item.photo, true)) + '" alt="" loading="lazy"></div>';
+    } else {
+      var g = String(item.ja || "");
+      var k = g.length <= 2 ? "" : (g.length === 3 ? " s3" : (g.length === 4 ? " s4" : " s5"));
+      body = '<div class="big"><span class="' + k.trim() + '">' + esc(g) + '</span></div>';
     }
-    // On the detail page an empty frame is just a screenful of nothing to
-    // scroll past, so there simply is no image area until a photo exists.
-    if (cls === "bigshot") return "";
-    // On a tile the grid has to stay even, so it shows the whole Japanese
-    // name sized to fit. On theme, and it doubles as kanji exposure.
-    var g = String(item.ja || "");
-    var k = g.length <= 2 ? "" : (g.length === 3 ? " n3" : (g.length === 4 ? " n4" : " n5"));
-    return '<div class="' + cls + ' glyph"><span class="g' + k + '">' + esc(g) + '</span></div>';
+    var bg = item.tone === "quiet" ? "#e4e5e3" : "var(--c" + ((i % 8) + 1) + ")";
+    return '<button class="gt" style="background:' + bg + '" ' + attr + '>' +
+             body +
+             '<div class="lab">' +
+             (item.photo ? '<div class="ja">' + esc(item.ja) + '</div>' : '') +
+             '<div class="en' + (item.photo ? '' : ' solo') + '">' + esc(item.en) + '</div>' +
+             (meta ? '<div class="meta">' + esc(meta) + '</div>' : '') +
+           '</div></button>';
   }
 
   function todayIndex(){
@@ -327,14 +341,10 @@
   function renderPlaces(){
     var h = head("ばしょ", "Places we are going") +
             '<p class="lede">Tap a place, then the thing you are standing in front of.</p>' +
-            '<div class="stack">';
-    PLACES.forEach(function(p){
+            '<div class="grid">';
+    PLACES.forEach(function(p, i){
       var n = p.sights.reduce(function(a,s){ return a + s.spots.length; }, 0);
-      h += '<button class="row" data-place="' + esc(p.id) + '">' +
-             '<div class="rja">' + esc(p.ja) + '</div>' +
-             '<div class="ren">' + esc(p.en) + '</div>' +
-             '<div class="rmeta">' + esc(p.days) + '  ·  ' + n + ' things to find</div>' +
-           '</button>';
+      h += tile(p, 'data-place="' + esc(p.id) + '"', p.days + " · " + n + " to find", i);
     });
     $("v-places").innerHTML = h + '</div>';
   }
@@ -345,13 +355,10 @@
     var h = '<div' + (q ? ' class="quiet"' : '') + '>' + head(p.ja, p.en) +
             '<p class="lede">' + esc(p.intro) + '</p>' +
             (p.note ? '<div class="tone-note">' + esc(p.note) + '</div>' : '') +
-            '<div class="stack" style="margin-top:18px">';
-    p.sights.forEach(function(s){
-      h += '<button class="row" data-sight="' + esc(p.id + "/" + s.id) + '">' +
-             '<div class="rja">' + esc(s.ja) + '</div>' +
-             '<div class="ren">' + esc(s.en) + '</div>' +
-             '<div class="rmeta">' + s.spots.length + ' to look at</div>' +
-           '</button>';
+            '<div class="grid" style="margin-top:16px">';
+    p.sights.forEach(function(s2, i){
+      h += tile(s2, 'data-sight="' + esc(p.id + "/" + s2.id) + '"',
+                s2.spots.length + " to look at", i);
     });
     return h + '</div></div>';
   }
@@ -360,12 +367,9 @@
   function sightHtml(p, s){
     var q = p.tone === "quiet";
     var h = '<div' + (q ? ' class="quiet"' : '') + '>' + head(s.ja, s.en) +
-            '<p class="lede">' + esc(s.intro) + '</p><div class="tiles">';
-    s.spots.forEach(function(sp){
-      h += '<button class="tile" data-spot="' + esc(p.id + "/" + s.id + "/" + sp.id) + '">' +
-             art(sp, "art", true) +
-             '<div class="lab"><div class="ja">' + esc(sp.ja) + '</div>' +
-             '<div class="en">' + esc(sp.en) + '</div></div></button>';
+            '<p class="lede">' + esc(s.intro) + '</p><div class="grid">';
+    s.spots.forEach(function(sp, i){
+      h += tile(sp, 'data-spot="' + esc(p.id + "/" + s.id + "/" + sp.id) + '"', "", i);
     });
     return h + '</div></div>';
   }
@@ -376,7 +380,8 @@
                 : "Go and do this  やってみよう";
     return '<div' + (q ? ' class="quiet"' : '') + '>' + head(sp.ja, sp.en) +
            '<p class="where">' + esc(s.ja) + '  ' + esc(s.en) + '</p>' +
-           art(sp, "bigshot", false) +
+           (sp.photo ? '<div class="bigshot' + (sp.fit === "contain" ? " contain" : "") +
+              '"><img src="' + esc(src(sp.photo, false)) + '" alt=""></div>' : '') +
            (sp.credit ? '<p class="credit">' + esc(sp.credit) + '</p>' : '') +
            '<p class="hook">' + esc(sp.hook) + '</p>' +
            '<div class="look"><div class="lbl">' + esc(lbl) + '</div>' +

@@ -575,7 +575,8 @@ window.PLACES = [
             id: "zazen",
             ja: "ざぜん",
             en: "Zazen",
-            photo: null,
+            photo: "photos/soja-zazen.webp",
+            credit: "Zazen at the Centre Europeen du Zen Rinzai. Via Wikimedia Commons.",
             hook:
               "This is a Rinzai Zen temple, and Zen study here means sitting still " +
               "and doing nothing, on purpose, for a long time. Sitting meditation " +
