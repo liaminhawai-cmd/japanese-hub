@@ -810,6 +810,176 @@ shoes:[
 "....######.###..",
 "...#..........#.",
 "...############."],
+pickles:[
+"................",
+"....########....",
+"....#......#....",
+"...##########...",
+"...#........#...",
+"...#.##..##.#...",
+"...#........#...",
+"...#.##..##.#...",
+"...#........#...",
+"...#.##..##.#...",
+"...#........#...",
+"...#.##..##.#...",
+"...#........#...",
+"...##########...",
+"................",
+"................"],
+bag:[
+"................",
+".......##.......",
+"......#..#......",
+"...##########...",
+"...#........#...",
+"...#.######.#...",
+"...#.#....#.#...",
+"...#.######.#...",
+"...#........#...",
+"...#........#...",
+"...#.######.#...",
+"...#.#....#.#...",
+"...#.######.#...",
+"...#........#...",
+"...##########...",
+"................"],
+notes:[
+"................",
+"..###########...",
+"..#.........#...",
+"..#.#######.#...",
+"..#.........#...",
+"..#.#######.#...",
+"..#.........#...",
+"..#.#######.#...",
+"..#.........#...",
+"..#.#####...#...",
+"..#.........#...",
+"..#.###.....#...",
+"..#.........#...",
+"..###########...",
+"................",
+"................"],
+photo:[
+"................",
+".##############.",
+".#............#.",
+".#.##########.#.",
+".#.#........#.#.",
+".#.#..####..#.#.",
+".#.#.#....#.#.#.",
+".#.#.#....#.#.#.",
+".#.#..####..#.#.",
+".#.#........#.#.",
+".#.##########.#.",
+".#............#.",
+".#............#.",
+".##############.",
+"................",
+"................"],
+umbrella:[
+"................",
+".......##.......",
+".....######.....",
+"...##########...",
+"..############..",
+".##############.",
+"#..............#",
+".......##.......",
+".......##.......",
+".......##.......",
+".......##.......",
+".......##.......",
+".......##.......",
+".....####.......",
+".....#..........",
+".....##........."],
+coat:[
+"................",
+".....#....#.....",
+"....###..###....",
+"...############.",
+"..##############",
+".###..####..###.",
+".###..####..###.",
+".###..####..###.",
+"..#...####...#..",
+"..#...####...#..",
+"..#...####...#..",
+"..#...####...#..",
+"..#...####...#..",
+"..#...####...#..",
+"..#####..#####..",
+"................"],
+feed:[
+"................",
+"..############..",
+"..#..........#..",
+"..#.########.#..",
+"..#..........#..",
+"..#.########.#..",
+"..#..........#..",
+"..#.#####....#..",
+"..#..........#..",
+"..############..",
+"....##..........",
+"...##...........",
+"..##............",
+"................",
+"................",
+"................"],
+board:[
+"................",
+"......####......",
+".....##..##.....",
+"..##############",
+"..#....##....#..",
+"..#..........#..",
+"..#.########.#..",
+"..#..........#..",
+"..#.########.#..",
+"..#..........#..",
+"..#.######...#..",
+"..#..........#..",
+"..#.####.....#..",
+"..#..........#..",
+"..##############",
+"................"],
+music:[
+"................",
+"........######..",
+"........#.....#.",
+"........#....##.",
+"........#..###..",
+"........#.###...",
+"........#.......",
+"........#.......",
+"........#.......",
+"........#.......",
+"........#.......",
+"....#####.......",
+"...#######......",
+"..#########.....",
+"...#######......",
+"....#####......."],
+map:[
+"................",
+"..############..",
+"..#..#....#..#..",
+"..#..#....#..#..",
+"..#..#....#..#..",
+"..#..#.##.#..#..",
+"..#..#.##.#..#..",
+"..#..#....#..#..",
+"..#..#....#..#..",
+"..############..",
+"................",
+"................",
+"................",
+"................",
+"................",
+"................"],
 coin:[
 "................",
 "................",
@@ -1603,7 +1773,7 @@ const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(M
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 const SAVE_KEY="mission-japan-save-v2";
 /* One number, counted up on every deploy, so a stale tab is obvious. Bump it with each live copy. */
-const BUILD={n:26,date:"2026-09-07"};
+const BUILD={n:27,date:"2026-09-08"};
 ["buildTag","buildEyebrow","buildMenu"].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=(id==="buildTag"?"MISSION · ":"")+`BUILD ${BUILD.n} · ${BUILD.date}`; });
 const INK=getComputedStyle(document.documentElement).getPropertyValue("--ink").trim();
 const PAPER=getComputedStyle(document.documentElement).getPropertyValue("--lcd").trim();
@@ -1786,10 +1956,14 @@ NPCS.hq={name:"HQ, Melbourne",jp:R("本部","ほんぶ"),spr:"hq",loc:"hotel",re
    {id:"report",title:"Report the recipe",skill:"plain-form-expr-1-b3",
     lines:[{jp:"レシピは"+R("手","て")+"に"+R("入","はい")+"ったか。"+R("秘密","ひみつ")+"の"+R("材料","ざいりょう")+"は？",en:"Did you get the recipe? The secret ingredient?"}],
     task:{kind:"type",prompt:"Report the secret ingredient as something you read, not tasted: 〜だそうです (I gather) or 〜と書いてありました (it was written). Ingredient: {{secretEn}}.",hint:"秘密の材料は{{secret}}だそうです。",model:"秘密の材料は{{secret}}だそうです。",accept:[/{{secret}}.*(だそうです|そうです|とかいてありました|と書いてありました|らしいです)$/],rule:"NOUN + だそうです reports hearsay; 〜と書いてありました reports what was written. {{secret}}です flat out claims you tasted it. You read it, or photographed it."}},
-   {id:"decide",title:"Tomorrow",skill:"nominalisers-paragraphs",req:G=>G.done("hq","report")||"HQ wants the ingredient first. Then travel plans.",
+   {id:"home",title:"Tomorrow, plainly",cue:"HQ wants to know about tomorrow. You can just tell them.",skill:"verb-stem-choices",req:G=>G.done("hq","report")||"HQ wants the ingredient first. Then travel plans.",
+    lines:[{jp:"それで、"+R("明日","あした")+"はどうする？",en:"So, what about tomorrow?"}],
+    task:{kind:"type",prompt:"Tell HQ you are going home tomorrow. Plain and polite: あした、かえります。",hint:"あした、かえります。",model:"あした、かえります。",accept:[/(あした|明日).*(かえります|帰ります|でます|出ます|いきます|行きます)$/,/^(かえります|帰ります)$/],rule:"TIME + VERB ます: あした、かえります, tomorrow I go home. 帰ります is the verb for going back where you came from, not just leaving. This says the same thing as the ことにしました version without the decision built into the grammar."},
+    after:(G,ok)=>{G.flag("reported");return "「了解。キットカットも。」 Mission complete, pending Kit Kats. Your debrief is in the menu. To fly home, USE your passport at Narita; or keep wandering, there are people you have not finished with.";}},
+   {id:"decide",title:"Tomorrow, as a decision",cue:"The same news, said the way someone who chose it would say it.",skill:"nominalisers-paragraphs",req:G=>G.done("hq","report")||"HQ wants the ingredient first. Then travel plans.",
     lines:[{jp:"それで、"+R("明日","あした")+"はどうする？",en:"So, what about tomorrow?"}],
     task:{kind:"type",prompt:"Tell HQ you have decided to leave Japan tomorrow: 〜ことにしました.",hint:"明日、日本を出ることにしました。",model:"明日、日本を出ることにしました。",accept:[/(ことにしました|ことにします)$/],rule:"VERB (plain) + ことにしました: I decided to. ことになりました would mean it was decided for you; HQ wants to hear it was your call."},
-    after:(G,ok)=>{G.flag("reported");return "「了解。キットカットも。」 Mission complete, pending Kit Kats. Your debrief is in the menu. To fly home, USE your passport at Narita; or keep wandering, there are people you have not finished with.";}}
+    after:(G,ok)=>{const first=!G.is("reported");G.flag("reported");return (first?"「了解。キットカットも。」 Mission complete, pending Kit Kats. ":"")+"「"+R("自分","じぶん")+"で"+R("決","き")+"めたんだな。」 HQ notes that you decided, rather than being sent home, and approves the per diem without asking. "+(first?"Your debrief is in the menu. To fly home, USE your passport at Narita; or keep wandering, there are people you have not finished with.":"");}}
   ]};
 
 /* ---- sprites ---- */
@@ -1946,10 +2120,11 @@ function renderGoals(){
   const side=[["bagDone","かばん · Return the backpacker's bag"],["trained","バイト · Work a shift for Taisho"],["coinGiven","コイン · Fill the 62nd slot"]];
   const row=([f,t,fn])=>`<div class="g${(fn?fn():G.is(f))?" done":""}">${t}</div>`;
   const first=ORDERS.findIndex(o=>!orderDone(o)), complete=ORDERS.filter(orderDone).length;
-  const orders=ORDERS.map((o,i)=>orderDone(o)?`<div class="g done">${o.t}</div>`:i===first?`<div class="g"><span class="en" style="font-size:11px">Dana said:</span> ${orderText(o)}</div>`:`<div class="g" style="opacity:.45">…</div>`).join("");
-  $("goals").innerHTML=`<b>任務 · THE RAMEN RECIPE · ${complete}/${ORDERS.length}</b>${orders}<div class="en" style="font-size:11px;margin:2px 0 4px">Dana only ever gives the next step. Lost? Phone → 電話 → Chef Dana.</div><b style="margin-top:10px">副業 · SIDE JOBS</b>${side.map(row).join("")}`;
+  const orders=ORDERS.map((o,i)=>orderDone(o)?`<div class="g done">${o.t}</div>`:i===first?`<div class="g"><span class="en" style="font-size:11px">Dana said:</span> ${orderText(o)}${G.kit==="tourist"?"":`<div class="en" style="font-size:11px;margin-top:2px"><button class="k sm" id="goalEn" style="min-height:0;padding:2px 6px;font-size:11px">${G.goalEn?"かくす · hide":"えいご · in English"}</button>${G.goalEn?" "+esc(o.en):""}</div>`}</div>`:`<div class="g" style="opacity:.45">…</div>`).join("");
+  $("goals").innerHTML=`<b>任務 · THE RAMEN RECIPE · ${complete}/${ORDERS.length}</b>${orders}<div class="en" style="font-size:11px;margin:2px 0 4px">Dana only ever gives the next step, and the English is always free. Want more? Phone → 電話 → Chef Dana.</div><b style="margin-top:10px">副業 · SIDE JOBS</b>${side.map(row).join("")}`;
 }
 function renderHud(){
+  const ge=$("goalEn"); if(ge) ge.addEventListener("click",()=>{ G.goalEn=!G.goalEn; renderGoals(); renderHud(); save(); });
   const h=$("hearts"); h.innerHTML=""; for(let i=0;i<5;i++) h.appendChild(spriteCanvas(i<G.energy?"heart":"heart0",20));
   $("yen").textContent="¥"+G.yen.toLocaleString(); $("suspBar").style.width=G.susp+"%";
   $("sndBtn").textContent=(SND.on?"音 · Snd":"消音 · Mute")+(typeof MUSIC!=="undefined"&&MUSIC.playing>=0?" ♪":"");
@@ -2041,6 +2216,7 @@ function go(x){
   if(G.loc!=="airport"&&x!=="airport"&&!G.has("ticket")&&(G.loc==="station"||x==="station")&&G.loc!==x){ if(Math.random()<0.5){ G.susp=Math.min(100,G.susp+5); narr("You walk through the gate without a pass. Sato appears from nowhere: 「切符を買ってください。」 You buy nothing and are allowed through, watched. Suspicion +5."); } }
   { const toll=weatherToll(x); if(toll) narr(toll); }
   if(!G.worn.includes("shoes")&&x!=="alley"){ G.energy=Math.max(0,G.energy-1); narr("You walk there in socks. Tokyo pavement. -1 energy and several looks."); }
+  G.roads=G.roads||[]; const edge=[G.loc,x].sort().join(">"); if(!G.roads.includes(edge)) G.roads.push(edge);
   G.loc=x; G.visited=G.visited||{}; G.visited[x]=true; tick(1); G.moves++; SND.step(); if(G.moves%2===0) G.energy=Math.max(0,G.energy-1);
   delete G.flags.phoneRang; if(x!=="michelin") delete G.flags.notebookOpen;
   narr(`You go to ${LOCS[x].name}.`+(x==="michelin"&&!G.is("shownId")?" The door opens a crack. 「身分証は？」":""));
@@ -2090,7 +2266,7 @@ const mapKnown=k=>k===G.loc||(G.visited||{})[k]||["airport","station","konbini",
 function drawMap(c){
   const ctx=c.getContext("2d"), W=c.width, H=c.height, sx=W/336, sy=H/150; ctx.clearRect(0,0,W,H); ctx.fillStyle="#fff"; ctx.fillRect(0,0,W,H); ctx.fillStyle=INK;
   const px=k=>[Math.round(MAP_POS[k][0]*sx),Math.round(MAP_POS[k][1]*sy)];
-  const walked=(a,b)=>(G.visited||{})[a]&&(G.visited||{})[b];
+  const walked=(a,b)=>(G.roads||[]).includes([a,b].sort().join(">"));
   ctx.strokeStyle=INK;
   Object.keys(LOCS).forEach(a=>LOCS[a].exits.forEach(b=>{ if(a<b&&mapKnown(a)&&mapKnown(b)){ const [x1,y1]=px(a),[x2,y2]=px(b); ctx.lineWidth=walked(a,b)?2:1; ctx.setLineDash(walked(a,b)?[]:[3,3]); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); } }));
   ctx.setLineDash([]); ctx.lineWidth=1;
@@ -2111,7 +2287,7 @@ function renderPhone(box,app,text){
   let body="";
   if(app==="home"){
     body=`<h4>スマホ · ${G.loc==="michelin"?"screen dimmed":"free wifi"}</h4><div class="apps">
-      <button class="k" data-app="calls">📞 電話<br><small>Calls</small></button><button class="k" data-app="tsubuyaki">🐦 つぶやき<br><small>posts</small></button><button class="k" data-app="keijiban">📋 けいじばん<br><small>board</small></button><button class="k" data-app="hq">🎧 本部<br><small>HQ · ¥500</small></button><button class="k" data-app="weather">☂ 天気<br><small>weather</small></button><button class="k" data-app="music">♪ 音楽<br><small>music</small></button><button class="k" data-app="map">🗺 地図<br><small>map</small></button></div>
+      ${[["calls","phone","電話","Calls"],["tsubuyaki","feed","つぶやき","posts"],["keijiban","board","けいじばん","board"],["hq","hq","本部","HQ · ¥500"],["weather","umbrella","天気","weather"],["music","music","音楽","music"],["map","map","地図","map"]].map(([a,s,jp,en])=>`<button class="k" data-app="${a}"><span class="spr" data-spr="${s}" data-px="18"></span> ${jp}<br><small>${en}</small></button>`).join("")}</div>
       <div class="en" style="margin-top:8px">Calls cost. Feeds are free. Everything on here is in Japanese, and most of it is about wherever you are standing.</div>${text?`<div class="en" style="margin-top:6px">${esc(text)}</div>`:""}`;
   } else if(app==="calls"){
     const met=Object.keys(G.did||{}).filter(id=>NPCS[id]&&CALLS[id]);
@@ -2139,6 +2315,7 @@ function renderPhone(box,app,text){
     else { G.yen-=500; renderHud(); const t=G.hintText(); body=`<h4>本部 · HQ · roaming</h4><div class="bubble">${t}</div><div class="bubble" style="border-radius:10px 10px 2px 10px;text-align:right">キットカット、${R("買","か")}った？</div>${G.loc==="hotel"&&G.is("recipe")?'<div class="en">You have the goods. TALK to HQ from this lobby to report properly.</div>':""}<div><button class="k sm" data-sayen="${esc(t.replace(/<[^>]+>/g,""))}">▶ hear HQ</button></div>`; }
   }
   box.innerHTML=`${close}<div class="pscreen">${back}${body}</div><div class="btn"></div>`;
+  box.querySelectorAll(".spr").forEach(el=>el.replaceWith(spriteCanvas(el.dataset.spr,+el.dataset.px)));
   box.querySelectorAll("[data-app]").forEach(b=>b.addEventListener("click",()=>renderPhone(box,b.dataset.app,"")));
   box.querySelectorAll("[data-track]").forEach(b=>b.addEventListener("click",()=>{ const k=+b.dataset.track; if(MUSIC.playing===k) MUSIC.stop(); else { if(!SND.on){ toast("Sound is off. The 音 button in the HUD turns it on."); return; } const r=MUSIC.play(k); if(r) toast(r); } renderPhone(box,"music",""); renderHud(); }));
   box.querySelectorAll("[data-sub]").forEach(b=>b.addEventListener("click",()=>{ const tr=b.closest(".bubble,.post").querySelector(".tr"); tr.hidden=!tr.hidden; }));
@@ -2364,6 +2541,7 @@ const DISTRACT=[
   G=>{tick(1);return "You missed your stop and had to come back. An hour, gone, and your dignity with it.";}
 ];
 function distracted(){ if(!G||!$("playS").classList.contains("on")||$("menu").classList.contains("show")||leavingCleanly) return; const now=Date.now(); if(now-lastDistract<60000) return; lastDistract=now; const msg=pick(DISTRACT)(G); narr(msg+" The game goes on."); toast(msg); renderAll(); }
+document.addEventListener("click",e=>{ const a=e.target.closest&&e.target.closest('a[target="_blank"]'); if(a){ leavingCleanly=true; setTimeout(()=>leavingCleanly=false,4000); } },true);
 document.addEventListener("visibilitychange",()=>{ if(document.hidden) distracted(); });
 document.addEventListener("fullscreenchange",()=>{ if(!document.fullscreenElement) distracted(); });
 
