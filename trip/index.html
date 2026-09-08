@@ -12,14 +12,15 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9B%A9%3C/text%3E%3C/svg%3E">
 <style>
-  /* Palette matches the Japanese Hub so the tools read as one suite. This one
-     is used outdoors in September sun, so contrast is pushed harder than the
-     desk apps and nothing important is carried by colour alone. */
+  /* Read standing up, outdoors, in September sun, by a 13 year old holding a
+     phone in one hand. That drives every size in here: nothing below 15px,
+     body copy at 18, and tap targets you cannot miss. Menus live at the TOP
+     because that is where a thumb looks first on a page you are reading. */
   :root{
-    --bg:#f4efe6; --paper:#fbf7ee; --ink:#1a1a1a; --muted:#5f574a;
-    --line:#d8cfbb; --line-soft:#e8e0cd; --accent:#a83232;
-    --deep:#16375e; --ok:#2f6a3e; --warn:#8a6d1e;
-    --shadow:0 2px 10px rgba(0,0,0,.07);
+    --bg:#f4efe6; --paper:#fbf7ee; --ink:#1a1a1a; --muted:#57503f;
+    --line:#d3c9b3; --line-soft:#e8e0cd; --accent:#a83232;
+    --deep:#16375e; --ok:#2f6a3e;
+    --shadow:0 2px 10px rgba(0,0,0,.08);
 
     --font-en:Calibri,Carlito,'Segoe UI',Tahoma,Geneva,Verdana;
     --font-jp:'UD Digi Kyokasho N-R','UD Digi Kyokasho NP-R','UD Digi Kyokasho NK-R','UD デジタル教科書体 N-R','UDデジタル教科書体N-R','HGP教科書体','HG教科書体','YuKyokasho Yoko',YuKyokasho,'Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic',YuGothic,Meiryo;
@@ -27,207 +28,201 @@
   }
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html{-webkit-text-size-adjust:100%}
-  body{font-family:var(--font);background:var(--bg);color:var(--ink);line-height:1.55;
-       font-size:16px;padding-bottom:78px;overflow-wrap:break-word}
+  body{font-family:var(--font);background:var(--bg);color:var(--ink);
+       line-height:1.6;font-size:18px;overflow-wrap:break-word}
 
-  /* ---------- chrome ---------- */
-  header{position:sticky;top:0;z-index:40;background:var(--paper);
-         border-bottom:1px solid var(--line);padding:10px 14px;
-         padding-top:calc(10px + env(safe-area-inset-top));
-         display:flex;align-items:center;gap:10px;min-height:52px}
+  /* ---------- top bar: title, then the menu ---------- */
+  .top{position:sticky;top:0;z-index:40;background:var(--paper);
+       border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top)}
+  .bar{display:flex;align-items:center;gap:12px;padding:10px 14px 9px;min-height:56px}
   #back{border:1px solid var(--line);background:var(--bg);color:var(--ink);
-        font-family:inherit;font-size:14px;padding:6px 11px;border-radius:8px;
-        cursor:pointer;display:none;flex:0 0 auto}
+        font-family:inherit;font-size:16px;font-weight:600;padding:9px 14px;
+        border-radius:10px;cursor:pointer;display:none;flex:0 0 auto}
   #back.on{display:block}
   .htitle{min-width:0;flex:1}
-  .htitle .ja{font-size:15px;font-weight:700;line-height:1.25;
+  .htitle .ja{font-size:18px;font-weight:700;line-height:1.25;
               white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .htitle .en{font-size:11.5px;color:var(--muted);line-height:1.3;
+  .htitle .en{font-size:14px;color:var(--muted);line-height:1.3;
               white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-  main{max-width:680px;margin:0 auto;padding:14px 14px 20px}
+  nav{display:grid;grid-template-columns:repeat(4,1fr);
+      border-top:1px solid var(--line-soft);background:var(--paper)}
+  nav button{border:0;background:none;font-family:inherit;color:var(--muted);
+             padding:9px 2px 8px;cursor:pointer;border-bottom:4px solid transparent}
+  nav button .en{display:block;font-size:16px;font-weight:700;line-height:1.2}
+  nav button .ja{display:block;font-size:12px;opacity:.75;line-height:1.35}
+  nav button.on{color:var(--accent);border-bottom-color:var(--accent)}
+
+  main{max-width:680px;margin:0 auto;padding:16px 14px 40px}
   .view{display:none}
   .view.on{display:block}
 
-  /* ---------- shared bits ---------- */
-  h2{font-size:19px;line-height:1.25;margin-bottom:2px}
-  h2 .en{display:block;font-size:12.5px;font-weight:400;color:var(--muted);
-         letter-spacing:.02em;margin-top:1px}
-  .lede{color:var(--muted);font-size:14.5px;margin:8px 0 16px}
-  .eyebrow{font-size:10.5px;font-weight:800;letter-spacing:.14em;
-           text-transform:uppercase;color:var(--muted);margin:22px 0 9px}
-  .eyebrow:first-child{margin-top:4px}
+  /* ---------- shared ---------- */
+  h2{font-size:25px;line-height:1.2;margin-bottom:3px}
+  h2 .en{display:block;font-size:16px;font-weight:400;color:var(--muted);margin-top:2px}
+  .lede{color:var(--muted);font-size:16.5px;margin:10px 0 18px}
+  .stack{display:flex;flex-direction:column;gap:12px}
 
-  .card{display:block;width:100%;text-align:left;background:var(--paper);
-        border:1px solid var(--line);border-radius:12px;padding:14px;
-        font-family:inherit;font-size:16px;color:var(--ink);cursor:pointer;
-        box-shadow:var(--shadow)}
-  .card:active{transform:scale(.995)}
-  .stack{display:flex;flex-direction:column;gap:10px}
-  .card .cja{font-size:17px;font-weight:700;line-height:1.3}
-  .card .cen{font-size:13px;color:var(--muted);margin-top:1px}
-  .card .cmeta{font-size:12px;color:var(--muted);margin-top:7px;
-               padding-top:7px;border-top:1px solid var(--line-soft)}
+  /* big, obvious rows: places, and the sights inside a place */
+  .row{display:block;width:100%;text-align:left;background:var(--paper);
+       border:1px solid var(--line);border-radius:14px;padding:16px 17px;
+       font-family:inherit;color:var(--ink);cursor:pointer;box-shadow:var(--shadow);
+       position:relative;padding-right:44px}
+  .row:active{transform:scale(.995)}
+  .row .rja{font-size:21px;font-weight:700;line-height:1.3}
+  .row .ren{font-size:15.5px;color:var(--muted);margin-top:2px}
+  .row .rmeta{font-size:14px;color:var(--muted);margin-top:9px;
+              padding-top:9px;border-top:1px solid var(--line-soft)}
+  .row::after{content:"›";position:absolute;right:17px;top:50%;
+              transform:translateY(-50%);font-size:26px;color:var(--line);
+              line-height:1}
 
-  /* ---------- today strip ---------- */
-  .today{background:var(--deep);color:#fbf7ee;border-radius:12px;padding:14px 15px;
-         margin-bottom:16px;box-shadow:var(--shadow)}
-  .today .lbl{font-size:10.5px;font-weight:800;letter-spacing:.14em;
-              text-transform:uppercase;opacity:.72}
-  .today .d{font-size:19px;font-weight:700;margin-top:5px;line-height:1.3}
-  .today .d .en{display:block;font-size:13px;font-weight:400;opacity:.85;margin-top:1px}
-  .today .nt{font-size:13.5px;margin-top:8px;padding-top:8px;
-             border-top:1px solid rgba(251,247,238,.22);opacity:.93}
+  /* ---------- today ---------- */
+  .today{background:var(--deep);color:#fbf7ee;border-radius:14px;padding:17px 18px;
+         margin-bottom:18px;box-shadow:var(--shadow)}
+  .today .lbl{font-size:12px;font-weight:800;letter-spacing:.13em;
+              text-transform:uppercase;opacity:.75}
+  .today .d{font-size:23px;font-weight:700;margin-top:6px;line-height:1.28}
+  .today .d .en{display:block;font-size:15.5px;font-weight:400;opacity:.9;margin-top:3px}
+  .today .nt{font-size:16px;margin-top:11px;padding-top:11px;
+             border-top:1px solid rgba(251,247,238,.25);opacity:.95}
 
-  /* ---------- day list ---------- */
-  .day{display:grid;grid-template-columns:34px 1fr;gap:11px;padding:10px 0;
+  .day{display:grid;grid-template-columns:30px 1fr;gap:12px;padding:12px 0;
        border-bottom:1px solid var(--line-soft)}
   .day:last-child{border-bottom:0}
-  .day .n{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;
-          padding-top:3px}
+  .day .n{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;padding-top:4px}
   .day.now .n{color:var(--accent);font-weight:800}
-  .day .t{font-size:15px;font-weight:700}
-  .day .t .en{display:block;font-size:12.5px;font-weight:400;color:var(--muted)}
-  .day .nt{font-size:12.5px;color:var(--muted);margin-top:3px}
-  .day.now{background:var(--paper);border-radius:10px;padding:10px 11px;
-           border:1px solid var(--accent);border-bottom:1px solid var(--accent)}
+  .day .t{font-size:18px;font-weight:700}
+  .day .t .en{display:block;font-size:15px;font-weight:400;color:var(--muted)}
+  .day .nt{font-size:15px;color:var(--muted);margin-top:4px}
+  .day.now{background:var(--paper);border-radius:12px;padding:12px 13px;
+           border:1px solid var(--accent)}
 
-  /* ---------- spot tiles: the tap targets at a sight ---------- */
-  .tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-  @media (max-width:339px){.tiles{grid-template-columns:1fr}}
+  /* ---------- spot tiles ---------- */
+  .tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  @media (max-width:359px){.tiles{grid-template-columns:1fr}}
   .tile{display:flex;flex-direction:column;background:var(--paper);
-        border:1px solid var(--line);border-radius:12px;overflow:hidden;
+        border:1px solid var(--line);border-radius:14px;overflow:hidden;
         font-family:inherit;text-align:left;color:var(--ink);cursor:pointer;
-        box-shadow:var(--shadow)}
+        box-shadow:var(--shadow);align-self:start}
   .tile:active{transform:scale(.99)}
-  /* size to content: a tile with a photo must not stretch the one beside it */
-  .tile{align-self:start}
-  .shot{flex:0 0 auto}
-  /* photo slot. Andrew drops files in later; until then it is an honest,
-     labelled placeholder rather than a broken image. */
-  .shot{aspect-ratio:4/3;background:var(--bg);border-bottom:1px solid var(--line);
-        display:flex;align-items:center;justify-content:center;position:relative}
-  .shot{overflow:hidden}
-  .shot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-  .shot.empty{aspect-ratio:auto;height:52px;background:var(--line-soft)}
-  .bigshot.empty{aspect-ratio:auto;height:66px}
-  .shot .ph{font-size:10.5px;color:var(--muted);letter-spacing:.1em;
-            text-transform:uppercase;font-weight:700;opacity:.55}
-  .tile .lab{padding:10px 12px 12px}
-  .tile .lab .ja{font-size:15.5px;font-weight:700;line-height:1.3}
-  .tile .lab .en{font-size:12.5px;color:var(--muted);margin-top:1px}
-
-  /* ---------- quiet tone ----------
-     A place can set tone:"quiet" in the content file. Hiroshima does. It cools
-     the surface, drops the warm accent that carries the rest of the app, and
-     swaps the go-and-do prompt for something to think about. The register has
-     to change before a student has read a word, not after. */
-  body.quiet,
-  .quiet{--paper:#f2f1ef;--bg:#eceae7;--accent:#4a5560;--line:#cfcdc9;
-         --line-soft:#e0deda;--muted:#5a5750}
-  body.quiet{background:var(--bg)}
-  body.quiet header{background:var(--paper);border-bottom-color:var(--line)}
-  .quiet .look{border-left-width:3px;background:transparent}
-  .quiet .hook{font-size:16px}
-  .quiet .tone-note{background:transparent;border:1px solid var(--line);
-        border-radius:10px;padding:13px 14px;margin:14px 0 2px;
-        font-size:14.5px;color:var(--muted);line-height:1.6}
+  .art{aspect-ratio:4/3;position:relative;overflow:hidden;flex:0 0 auto;
+       border-bottom:1px solid var(--line);background:var(--bg);
+       display:flex;align-items:center;justify-content:center}
+  .art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+  .art.contain img{object-fit:contain}
+  /* No photo yet? The tile still has to look made, not broken. It shows the
+     first character or two of the Japanese name, large. On theme, and it
+     doubles as kanji exposure. */
+  .art.glyph{background:var(--line-soft)}
+  .art .g{line-height:1.15;color:var(--muted);opacity:.9;letter-spacing:.03em;
+          user-select:none;text-align:center;padding:0 10px;font-size:50px}
+  .art .g.n3{font-size:40px}
+  .art .g.n4{font-size:33px}
+  .art .g.n5{font-size:26px}
+  .tile .lab{padding:12px 13px 14px}
+  .tile .lab .ja{font-size:19px;font-weight:700;line-height:1.3}
+  .tile .lab .en{font-size:15px;color:var(--muted);margin-top:3px;line-height:1.35}
 
   /* ---------- spot detail ---------- */
-  .hook{font-size:16.5px;line-height:1.62;margin:14px 0 0}
-  .look{margin-top:16px;background:var(--paper);border:1px solid var(--accent);
-        border-left-width:5px;border-radius:10px;padding:13px 14px}
-  .look .lbl{font-size:10.5px;font-weight:800;letter-spacing:.13em;
-             text-transform:uppercase;color:var(--accent);margin-bottom:5px}
-  .look p{font-size:15px;line-height:1.55}
+  .hook{font-size:19px;line-height:1.68;margin:16px 0 0}
+  .look{margin-top:20px;background:var(--paper);border:1px solid var(--accent);
+        border-left-width:6px;border-radius:12px;padding:15px 16px}
+  .look .lbl{font-size:12px;font-weight:800;letter-spacing:.12em;
+             text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .look p{font-size:17.5px;line-height:1.6}
   .bigshot{aspect-ratio:16/10;background:var(--paper);border:1px solid var(--line);
-           border-radius:12px;display:flex;align-items:center;justify-content:center;
-           margin-top:14px;overflow:hidden}
-  .bigshot{position:relative}
+           border-radius:14px;margin-top:16px;overflow:hidden;position:relative}
   .bigshot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-  /* A painting is not a photo: letterboxing a hanging scroll destroys it.
-     fit:"contain" in the content file shows the work whole on a neutral
-     ground instead of cropping it. */
   .bigshot.contain{aspect-ratio:4/3;background:var(--bg)}
   .bigshot.contain img{object-fit:contain}
-  .shot.contain{background:var(--bg)}
-  .shot.contain img{object-fit:contain}
-  .credit{font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.5}
-  .bigshot .ph{font-size:11px;color:var(--muted);letter-spacing:.1em;
-               text-transform:uppercase;font-weight:700;opacity:.55}
+  .credit{font-size:13.5px;color:var(--muted);margin-top:8px;line-height:1.5}
+  .where{font-size:15px;color:var(--muted);margin-top:4px}
+
+  /* ---------- quiet tone (Hiroshima) ---------- */
+  body.quiet,
+  .quiet{--paper:#f2f1ef;--bg:#eceae7;--accent:#4a5560;--line:#c9c7c3;
+         --line-soft:#dedcd8;--muted:#524f49}
+  body.quiet{background:var(--bg)}
+  body.quiet .top{background:var(--paper);border-bottom-color:var(--line)}
+  .quiet .look{border-left-width:4px;background:transparent}
+  .quiet .tone-note{background:transparent;border:1px solid var(--line);
+        border-radius:12px;padding:15px 16px;margin:16px 0 4px;
+        font-size:16.5px;color:var(--muted);line-height:1.62}
 
   /* ---------- phrases ---------- */
-  .ph-note{font-size:13.5px;color:var(--muted);margin:6px 0 12px}
+  .grp{margin-top:26px}
+  .grp:first-of-type{margin-top:6px}
+  .grp h3{font-size:20px;font-weight:700}
+  .grp h3 .en{font-size:15px;font-weight:400;color:var(--muted);margin-left:8px}
+  .grp .note{font-size:15.5px;color:var(--muted);margin:5px 0 13px}
   .phrase{width:100%;text-align:left;background:var(--paper);border:1px solid var(--line);
-          border-radius:12px;padding:13px 14px;font-family:inherit;color:var(--ink);
+          border-radius:14px;padding:15px 16px;font-family:inherit;color:var(--ink);
           cursor:pointer;box-shadow:var(--shadow);display:block}
-  .phrase .jp{font-size:19px;line-height:1.5;font-weight:600}
-  .phrase .ro{font-size:13px;color:var(--muted);font-style:italic;margin-top:3px}
-  .phrase .en{font-size:14.5px;margin-top:4px}
-  .phrase .tip{font-size:13px;color:var(--muted);margin-top:8px;padding-top:8px;
+  .phrase .jp{font-size:24px;line-height:1.5;font-weight:600}
+  .phrase .ro{font-size:15px;color:var(--muted);font-style:italic;margin-top:4px}
+  .phrase .en{font-size:17px;margin-top:6px}
+  .phrase .tip{font-size:15px;color:var(--muted);margin-top:10px;padding-top:10px;
                border-top:1px solid var(--line-soft)}
-  .showtag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.1em;
+  .showtag{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.08em;
            text-transform:uppercase;color:var(--paper);background:var(--deep);
-           border-radius:10px;padding:3px 8px;margin-top:9px}
+           border-radius:12px;padding:5px 11px;margin-top:11px}
 
-  /* full-screen "hold this up" panel */
   #show{position:fixed;inset:0;z-index:90;background:var(--paper);display:none;
         flex-direction:column;padding:24px;padding-top:calc(24px + env(safe-area-inset-top))}
   #show.on{display:flex}
   #show .body{flex:1;display:flex;flex-direction:column;align-items:center;
-              justify-content:center;text-align:center;gap:18px}
-  #show .jp{font-size:34px;line-height:1.7;font-weight:700}
-  #show .en{font-size:16px;color:var(--muted)}
-  #show .hint{font-size:12.5px;color:var(--muted);letter-spacing:.05em;
-              text-transform:uppercase;font-weight:700}
+              justify-content:center;text-align:center;gap:20px}
+  #show .jp{font-size:38px;line-height:1.65;font-weight:700}
+  #show .en{font-size:18px;color:var(--muted)}
+  #show .hint{font-size:13px;color:var(--muted);letter-spacing:.09em;
+              text-transform:uppercase;font-weight:800}
   #show button{border:1px solid var(--line);background:var(--bg);color:var(--ink);
-               font-family:inherit;font-size:16px;padding:14px;border-radius:10px;
-               cursor:pointer;width:100%}
+               font-family:inherit;font-size:18px;font-weight:600;padding:16px;
+               border-radius:12px;cursor:pointer;width:100%}
 
   /* ---------- manners ---------- */
-  .manner{background:var(--paper);border:1px solid var(--line);border-radius:12px;
-          padding:13px 14px;box-shadow:var(--shadow)}
-  .manner .h{font-size:16px;font-weight:700}
-  .manner .h .en{font-size:12.5px;font-weight:400;color:var(--muted);margin-left:7px}
-  .manner p{font-size:14.5px;margin-top:5px}
-
-  /* ---------- bottom nav ---------- */
-  nav{position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--paper);
-      border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);
-      padding-bottom:env(safe-area-inset-bottom)}
-  nav button{border:0;background:none;font-family:inherit;color:var(--muted);
-             padding:9px 2px 10px;cursor:pointer;border-top:3px solid transparent}
-  nav button .ja{display:block;font-size:14px;font-weight:700;line-height:1.25}
-  nav button .en{display:block;font-size:10px;letter-spacing:.03em}
-  nav button.on{color:var(--accent);border-top-color:var(--accent)}
+  .manner{background:var(--paper);border:1px solid var(--line);border-radius:14px;
+          padding:15px 16px;box-shadow:var(--shadow)}
+  .manner .h{font-size:19px;font-weight:700}
+  .manner .h .en{font-size:15px;font-weight:400;color:var(--muted);margin-left:8px}
+  .manner p{font-size:17px;margin-top:6px}
 
   /* ---------- offline ---------- */
-  .save{background:var(--paper);border:1px solid var(--line);border-radius:12px;
-        padding:14px;margin-top:18px;box-shadow:var(--shadow)}
-  .save h3{font-size:15px;font-weight:700}
-  .save h3 .en{font-size:12.5px;font-weight:400;color:var(--muted);margin-left:6px}
-  .save p{font-size:13.5px;color:var(--muted);margin-top:5px}
-  .save button{margin-top:11px;width:100%;padding:13px;border-radius:10px;
+  .save{background:var(--paper);border:1px solid var(--line);border-radius:14px;
+        padding:16px;margin-top:22px;box-shadow:var(--shadow)}
+  .save h3{font-size:18px;font-weight:700}
+  .save h3 .en{font-size:15px;font-weight:400;color:var(--muted);margin-left:7px}
+  .save p{font-size:15.5px;color:var(--muted);margin-top:6px}
+  .save button{margin-top:13px;width:100%;padding:16px;border-radius:12px;
         border:1px solid var(--deep);background:var(--deep);color:#fbf7ee;
-        font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+        font-family:inherit;font-size:17px;font-weight:700;cursor:pointer}
   .save button[disabled]{opacity:.55;cursor:default}
-  .save .done{margin-top:11px;padding:11px 12px;border-radius:10px;
-        border:1px solid var(--ok);color:var(--ok);font-size:13.5px;font-weight:600}
-  .foot{font-size:12px;color:var(--muted);text-align:center;margin-top:26px;
-        line-height:1.6}
+  .save .done{margin-top:13px;padding:13px 14px;border-radius:12px;
+        border:1px solid var(--ok);color:var(--ok);font-size:15.5px;font-weight:600}
+
+  .foot{font-size:14.5px;color:var(--muted);text-align:center;margin-top:28px;line-height:1.6}
   :focus-visible{outline:3px solid var(--deep);outline-offset:2px}
   @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
 
-<header>
-  <button id="back" aria-label="Back">‹ もどる</button>
-  <div class="htitle">
-    <div class="ja" id="hja">日本研修旅行</div>
-    <div class="en" id="hen">Japan Study Tour 2026</div>
+<div class="top">
+  <div class="bar">
+    <button id="back" aria-label="Go back">‹ Back</button>
+    <div class="htitle">
+      <div class="ja" id="hja">日本研修旅行</div>
+      <div class="en" id="hen">Japan Study Tour 2026</div>
+    </div>
   </div>
-</header>
+  <nav>
+    <button data-go="home" class="on"><span class="en">Today</span><span class="ja">きょう</span></button>
+    <button data-go="places"><span class="en">Places</span><span class="ja">ばしょ</span></button>
+    <button data-go="phrases"><span class="en">Phrases</span><span class="ja">ことば</span></button>
+    <button data-go="manners"><span class="en">Manners</span><span class="ja">マナー</span></button>
+  </nav>
+</div>
 
 <main>
   <div class="view on" id="v-home"></div>
@@ -237,20 +232,13 @@
   <div class="view" id="v-detail"></div>
 </main>
 
-<nav>
-  <button data-go="home"    class="on"><span class="ja">きょう</span><span class="en">Today</span></button>
-  <button data-go="places"><span class="ja">ばしょ</span><span class="en">Places</span></button>
-  <button data-go="phrases"><span class="ja">ことば</span><span class="en">Phrases</span></button>
-  <button data-go="manners"><span class="ja">マナー</span><span class="en">Manners</span></button>
-</nav>
-
 <div id="show" role="dialog" aria-modal="true" aria-label="Show this to someone">
   <div class="body">
     <div class="hint">Hold this up</div>
     <div class="jp" id="showJp"></div>
     <div class="en" id="showEn"></div>
   </div>
-  <button id="showClose">とじる  Close</button>
+  <button id="showClose">Close</button>
 </div>
 
 <script src="data.js"></script>
@@ -263,54 +251,42 @@
       return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];
     });
   }
-  // Bilingual heading, Japanese first. Andrew's rule, applied in one place.
   function head(ja, en){
     return '<h2>' + esc(ja) + '<span class="en">' + esc(en) + '</span></h2>';
   }
-  function shot(photo, cls, fit){
-    if (photo){
-      // tiles are ~180px wide, so they take the -t copy and save the bandwidth
-      var src = (cls === "shot") ? photo.replace(/\.webp$/, "-t.webp") : photo;
-      // A self-contained copy (for review off the server) can carry its photos
-      // inline in window.PHOTOS. On the real site that map does not exist and
-      // the ordinary file path is used.
-      if (window.PHOTOS && window.PHOTOS[src]) src = window.PHOTOS[src];
-      return '<div class="' + cls + (fit === "contain" ? " contain" : "") +
-             '"><img src="' + esc(src) + '" alt="" loading="lazy"></div>';
+  function src(photo, small){
+    var u = small ? photo.replace(/\.webp$/, "-t.webp") : photo;
+    if (window.PHOTOS && window.PHOTOS[u]) return window.PHOTOS[u];
+    return u;
+  }
+  // The tile art: a photo when there is one, otherwise the first characters of
+  // the Japanese name set large. Either way the tile looks finished.
+  function art(item, cls, small){
+    var fit = item.fit === "contain" ? " contain" : "";
+    if (item.photo){
+      return '<div class="' + cls + fit + '"><img src="' + esc(src(item.photo, small)) +
+             '" alt="" loading="lazy"></div>';
     }
-    return '<div class="' + cls + ' empty"><span class="ph">photo to come</span></div>';
+    // On the detail page an empty frame is just a screenful of nothing to
+    // scroll past, so there simply is no image area until a photo exists.
+    if (cls === "bigshot") return "";
+    // On a tile the grid has to stay even, so it shows the whole Japanese
+    // name sized to fit. On theme, and it doubles as kanji exposure.
+    var g = String(item.ja || "");
+    var k = g.length <= 2 ? "" : (g.length === 3 ? " n3" : (g.length === 4 ? " n4" : " n5"));
+    return '<div class="' + cls + ' glyph"><span class="g' + k + '">' + esc(g) + '</span></div>';
   }
 
-  /* ---- where are we up to ---- */
   function todayIndex(){
-    var now = new Date();
-    var t = now.getFullYear() + "-" +
-            String(now.getMonth()+1).padStart(2,"0") + "-" +
-            String(now.getDate()).padStart(2,"0");
+    var n = new Date();
+    var t = n.getFullYear() + "-" + String(n.getMonth()+1).padStart(2,"0") +
+            "-" + String(n.getDate()).padStart(2,"0");
     for (var i=0;i<TRIP.days.length;i++){ if (TRIP.days[i].date === t) return i; }
     return -1;
   }
   function daysUntil(){
-    var now = new Date(); now.setHours(0,0,0,0);
-    var dep = new Date(TRIP.start + "T00:00:00");
-    return Math.round((dep - now) / 86400000);
-  }
-
-  /* ---- history so the phone's back button and our back button agree ---- */
-  var stack = [];
-  function setHeader(ja, en, canBack){
-    $("hja").textContent = ja;
-    $("hen").textContent = en;
-    $("back").className = canBack ? "on" : "";
-  }
-  function setQuiet(on){
-    document.body.classList[on ? "add" : "remove"]("quiet");
-  }
-  function showView(id){
-    ["home","places","phrases","manners","detail"].forEach(function(v){
-      $("v-"+v).className = "view" + (v === id ? " on" : "");
-    });
-    window.scrollTo(0,0);
+    var n = new Date(); n.setHours(0,0,0,0);
+    return Math.round((new Date(TRIP.start + "T00:00:00") - n) / 86400000);
   }
 
   /* ================= HOME ================= */
@@ -318,103 +294,101 @@
     var i = todayIndex(), h = "";
     if (i > -1){
       var d = TRIP.days[i];
-      h += '<div class="today"><div class="lbl">きょう  Today</div>' +
-           '<div class="d">' + esc(d.ja) + '<span class="en">Day ' + d.n + ' of 12: ' + esc(d.en) + '</span></div>' +
-           '<div class="nt">' + esc(d.note) + '</div></div>';
+      h += '<div class="today"><div class="lbl">Today  きょう</div>' +
+           '<div class="d">' + esc(d.ja) + '<span class="en">Day ' + d.n + ' of 12: ' +
+           esc(d.en) + '</span></div><div class="nt">' + esc(d.note) + '</div></div>';
     } else {
       var n = daysUntil();
       var line = n > 0 ? (n === 1 ? "Tomorrow." : n + " days to go.")
                        : "The tour is over. Welcome home.";
-      h += '<div class="today"><div class="lbl">しゅっぱつまで  Departure</div>' +
+      h += '<div class="today"><div class="lbl">Departure  しゅっぱつ</div>' +
            '<div class="d">' + esc(line) +
            '<span class="en">Melbourne, 20 September 2026, 18:25</span></div>' +
-           '<div class="nt">Open this on the day and it will show you where we are up to.</div></div>';
+           '<div class="nt">Open this on the day and it shows where we are up to.</div></div>';
     }
-
-    h += '<div class="eyebrow">りょてい  The trip</div><div>';
+    h += '<div>';
     TRIP.days.forEach(function(d, k){
-      h += '<div class="day' + (k === i ? " now" : "") + '">' +
-             '<div class="n">' + d.n + '</div>' +
-             '<div><div class="t">' + esc(d.ja) + '<span class="en">' + esc(d.en) + '</span></div>' +
-             '<div class="nt">' + esc(d.note) + '</div></div></div>';
+      h += '<div class="day' + (k === i ? " now" : "") + '"><div class="n">' + d.n + '</div>' +
+           '<div><div class="t">' + esc(d.ja) + '<span class="en">' + esc(d.en) + '</span></div>' +
+           '<div class="nt">' + esc(d.note) + '</div></div></div>';
     });
     h += '</div>';
-    h += '<div class="save" id="save">' +
-           '<h3>オフライン<span class="en">Save for offline</span></h3>' +
-           '<p>Press this on hotel or home wifi before you go out for the day. ' +
-           'It stores every page and photo on your phone, so the app still ' +
-           'works with no signal and no data.</p>' +
-           '<button id="saveBtn">ぜんぶ保存する  Save it all</button>' +
-         '</div>';
-    h += '<p class="foot">Everything in here works with no internet once the page ' +
-         'has loaded.<br>Meeting points, phone numbers and your emergency details ' +
+    h += '<div class="save" id="save"><h3>Save for offline<span class="en">オフライン</span></h3>' +
+         '<p>Press this on hotel or home wifi before you go out for the day. It ' +
+         'stores every page and photo on your phone, so the app still works with ' +
+         'no signal and no data.</p>' +
+         '<button id="saveBtn">Save it all  ぜんぶ保存</button></div>';
+    h += '<p class="foot">Meeting points, phone numbers and your emergency details ' +
          'are on your lanyard, not in this app.</p>';
     $("v-home").innerHTML = h;
   }
 
-  /* ================= PLACES ================= */
+  /* ================= PLACES: three short levels ================= */
   function renderPlaces(){
     var h = head("ばしょ", "Places we are going") +
-            '<p class="lede">Tap a place, then tap the thing you are standing in ' +
-            'front of.</p><div class="stack">';
+            '<p class="lede">Tap a place, then the thing you are standing in front of.</p>' +
+            '<div class="stack">';
     PLACES.forEach(function(p){
       var n = p.sights.reduce(function(a,s){ return a + s.spots.length; }, 0);
-      h += '<button class="card" data-place="' + esc(p.id) + '">' +
-             '<div class="cja">' + esc(p.ja) + '</div>' +
-             '<div class="cen">' + esc(p.en) + '</div>' +
-             '<div class="cmeta">' + esc(p.days) + '  ·  ' + n + ' things to find</div>' +
+      h += '<button class="row" data-place="' + esc(p.id) + '">' +
+             '<div class="rja">' + esc(p.ja) + '</div>' +
+             '<div class="ren">' + esc(p.en) + '</div>' +
+             '<div class="rmeta">' + esc(p.days) + '  ·  ' + n + ' things to find</div>' +
            '</button>';
     });
     $("v-places").innerHTML = h + '</div>';
   }
 
+  // level 2: the sights in a place, as short rows rather than one long page
   function placeHtml(p){
-    var h = '<div' + (p.tone === "quiet" ? ' class="quiet"' : '') + '>' +
-            head(p.ja, p.en) + '<p class="lede">' + esc(p.intro) + '</p>' +
-            (p.note ? '<div class="tone-note">' + esc(p.note) + '</div>' : '');
+    var q = p.tone === "quiet";
+    var h = '<div' + (q ? ' class="quiet"' : '') + '>' + head(p.ja, p.en) +
+            '<p class="lede">' + esc(p.intro) + '</p>' +
+            (p.note ? '<div class="tone-note">' + esc(p.note) + '</div>' : '') +
+            '<div class="stack" style="margin-top:18px">';
     p.sights.forEach(function(s){
-      h += '<div class="eyebrow">' + esc(s.ja) + '  ' + esc(s.en) + '</div>' +
-           '<p class="ph-note">' + esc(s.intro) + '</p><div class="tiles">';
-      s.spots.forEach(function(sp){
-        h += '<button class="tile" data-spot="' + esc(p.id + "/" + s.id + "/" + sp.id) + '">' +
-               shot(sp.photo, "shot", sp.fit) +
-               '<div class="lab"><div class="ja">' + esc(sp.ja) + '</div>' +
-               '<div class="en">' + esc(sp.en) + '</div></div>' +
-             '</button>';
-      });
-      h += '</div>';
+      h += '<button class="row" data-sight="' + esc(p.id + "/" + s.id) + '">' +
+             '<div class="rja">' + esc(s.ja) + '</div>' +
+             '<div class="ren">' + esc(s.en) + '</div>' +
+             '<div class="rmeta">' + s.spots.length + ' to look at</div>' +
+           '</button>';
     });
-    return h + '</div>';
+    return h + '</div></div>';
   }
 
-  function openPlace(id){
-    var p = PLACES.filter(function(x){ return x.id === id; })[0];
-    if (!p) return;
-    push(function(){ setQuiet(p.tone === "quiet"); $("v-detail").innerHTML = placeHtml(p); }, p.ja, p.en);
-  }
-
-  function openSpot(path){
-    var bits = path.split("/");
-    var p = PLACES.filter(function(x){ return x.id === bits[0]; })[0];
-    if (!p) return;
-    var s = p.sights.filter(function(x){ return x.id === bits[1]; })[0];
-    if (!s) return;
-    var sp = s.spots.filter(function(x){ return x.id === bits[2]; })[0];
-    if (!sp) return;
-    push(function(){ setQuiet(p.tone === "quiet"); $("v-detail").innerHTML = spotHtml(p, s, sp); }, sp.ja, sp.en);
+  // level 3: the tiles for one sight
+  function sightHtml(p, s){
+    var q = p.tone === "quiet";
+    var h = '<div' + (q ? ' class="quiet"' : '') + '>' + head(s.ja, s.en) +
+            '<p class="lede">' + esc(s.intro) + '</p><div class="tiles">';
+    s.spots.forEach(function(sp){
+      h += '<button class="tile" data-spot="' + esc(p.id + "/" + s.id + "/" + sp.id) + '">' +
+             art(sp, "art", true) +
+             '<div class="lab"><div class="ja">' + esc(sp.ja) + '</div>' +
+             '<div class="en">' + esc(sp.en) + '</div></div></button>';
+    });
+    return h + '</div></div>';
   }
 
   function spotHtml(p, s, sp){
-    var quiet = p.tone === "quiet";
-    var lbl = quiet ? "かんがえてみよう  Something to think about"
-                    : "やってみよう  Go and do this";
-    return '<div' + (quiet ? ' class="quiet"' : '') + '>' + head(sp.ja, sp.en) +
-            '<p class="ph-note">' + esc(s.ja) + '  ' + esc(s.en) + '</p>' +
-            shot(sp.photo, "bigshot", sp.fit) +
-            (sp.credit ? '<p class="credit">' + esc(sp.credit) + '</p>' : "") +
-            '<p class="hook">' + esc(sp.hook) + '</p>' +
-            '<div class="look"><div class="lbl">' + esc(lbl) + '</div>' +
-            '<p>' + esc(sp.look) + '</p></div></div>';
+    var q = p.tone === "quiet";
+    var lbl = q ? "Something to think about  かんがえてみよう"
+                : "Go and do this  やってみよう";
+    return '<div' + (q ? ' class="quiet"' : '') + '>' + head(sp.ja, sp.en) +
+           '<p class="where">' + esc(s.ja) + '  ' + esc(s.en) + '</p>' +
+           art(sp, "bigshot", false) +
+           (sp.credit ? '<p class="credit">' + esc(sp.credit) + '</p>' : '') +
+           '<p class="hook">' + esc(sp.hook) + '</p>' +
+           '<div class="look"><div class="lbl">' + esc(lbl) + '</div>' +
+           '<p>' + esc(sp.look) + '</p></div></div>';
+  }
+
+  function find(path){
+    var b = path.split("/");
+    var p = PLACES.filter(function(x){ return x.id === b[0]; })[0]; if (!p) return null;
+    var s = b[1] ? p.sights.filter(function(x){ return x.id === b[1]; })[0] : null;
+    var sp = (s && b[2]) ? s.spots.filter(function(x){ return x.id === b[2]; })[0] : null;
+    return { p: p, s: s, sp: sp };
   }
 
   /* ================= PHRASES ================= */
@@ -422,11 +396,11 @@
   function renderPhrases(){
     phraseIndex = [];
     var h = head("ことば", "Phrases") +
-            '<p class="lede">Tap any phrase to blow it up big enough to hold in ' +
-            'front of someone.</p>';
+            '<p class="lede">Tap any phrase to fill the screen with it, big enough ' +
+            'to hold up for someone to read.</p>';
     PHRASES.forEach(function(g){
-      h += '<div class="eyebrow">' + esc(g.ja) + '  ' + esc(g.en) + '</div>' +
-           '<p class="ph-note">' + esc(g.note) + '</p><div class="stack">';
+      h += '<div class="grp"><h3>' + esc(g.ja) + '<span class="en">' + esc(g.en) + '</span></h3>' +
+           '<p class="note">' + esc(g.note) + '</p><div class="stack">';
       g.items.forEach(function(it){
         var k = phraseIndex.push(it) - 1;
         h += '<button class="phrase" data-ph="' + k + '">' +
@@ -437,7 +411,7 @@
                (it.show ? '<div class="showtag">show this to someone</div>' : "") +
              '</button>';
       });
-      h += '</div>';
+      h += '</div></div>';
     });
     $("v-phrases").innerHTML = h;
   }
@@ -445,47 +419,46 @@
   /* ================= MANNERS ================= */
   function renderManners(){
     var h = head("マナー", "Manners that actually come up") +
-            '<p class="lede">Not a full list. These are the ones that will happen ' +
-            'to you in the first two days.</p><div class="stack">';
+            '<p class="lede">Not a full list. These are the ones that will happen to ' +
+            'you in the first two days.</p><div class="stack">';
     MANNERS.forEach(function(m){
       h += '<div class="manner"><div class="h">' + esc(m.ja) +
-           '<span class="en">' + esc(m.en) + '</span></div>' +
-           '<p>' + esc(m.body) + '</p></div>';
+           '<span class="en">' + esc(m.en) + '</span></div><p>' + esc(m.body) + '</p></div>';
     });
     $("v-manners").innerHTML = h + '</div>';
   }
 
   /* ================= navigation ================= */
-  var TABS = {
-    home:    ["日本研修旅行", "Japan Study Tour 2026"],
-    places:  ["ばしょ", "Places"],
-    phrases: ["ことば", "Phrases"],
-    manners: ["マナー", "Manners"]
-  };
+  var TABS = { home:["日本研修旅行","Japan Study Tour 2026"], places:["ばしょ","Places"],
+               phrases:["ことば","Phrases"], manners:["マナー","Manners"] };
+  var stack = [];
+  function setQuiet(on){ document.body.classList[on ? "add":"remove"]("quiet"); }
+  function setHeader(ja, en, canBack){
+    $("hja").textContent = ja; $("hen").textContent = en;
+    $("back").className = canBack ? "on" : "";
+  }
+  function showView(id){
+    ["home","places","phrases","manners","detail"].forEach(function(v){
+      $("v-"+v).className = "view" + (v === id ? " on" : "");
+    });
+    window.scrollTo(0,0);
+  }
   function goTab(name){
-    stack = [];
-    setQuiet(false);
-    showView(name);
+    stack = []; setQuiet(false); showView(name);
     setHeader(TABS[name][0], TABS[name][1], false);
     [].forEach.call(document.querySelectorAll("nav button"), function(b){
       b.className = b.dataset.go === name ? "on" : "";
     });
   }
-  // Each layer knows how to draw itself, so going back is just: draw the one
-  // underneath again. No cached HTML, nothing to get out of step.
   function push(draw, ja, en){
     stack.push({ draw: draw, ja: ja, en: en });
-    draw();
-    showView("detail");
-    setHeader(ja, en, true);
+    draw(); showView("detail"); setHeader(ja, en, true);
   }
   function back(){
     stack.pop();
     if (stack.length){
       var s = stack[stack.length-1];
-      s.draw();
-      showView("detail");
-      setHeader(s.ja, s.en, true);
+      s.draw(); showView("detail"); setHeader(s.ja, s.en, true);
     } else {
       var cur = document.querySelector("nav button.on");
       goTab(cur ? cur.dataset.go : "home");
@@ -494,34 +467,42 @@
 
   document.addEventListener("click", function(e){
     var t;
-    if ((t = e.target.closest("nav button")))       return goTab(t.dataset.go);
-    if ((t = e.target.closest("#back")))            return back();
-    if ((t = e.target.closest("[data-place]")))     return openPlace(t.dataset.place);
-    if ((t = e.target.closest("[data-spot]")))      return openSpot(t.dataset.spot);
-    if ((t = e.target.closest("[data-ph]")))        return openShow(phraseIndex[+t.dataset.ph]);
-    if (e.target.closest("#showClose"))             return closeShow();
+    if ((t = e.target.closest("nav button"))) return goTab(t.dataset.go);
+    if (e.target.closest("#back")) return back();
+    if ((t = e.target.closest("[data-place]"))){
+      var r = find(t.dataset.place); if (!r) return;
+      return push(function(){ setQuiet(r.p.tone === "quiet");
+        $("v-detail").innerHTML = placeHtml(r.p); }, r.p.ja, r.p.en);
+    }
+    if ((t = e.target.closest("[data-sight]"))){
+      var r2 = find(t.dataset.sight); if (!r2 || !r2.s) return;
+      return push(function(){ setQuiet(r2.p.tone === "quiet");
+        $("v-detail").innerHTML = sightHtml(r2.p, r2.s); }, r2.s.ja, r2.s.en);
+    }
+    if ((t = e.target.closest("[data-spot]"))){
+      var r3 = find(t.dataset.spot); if (!r3 || !r3.sp) return;
+      return push(function(){ setQuiet(r3.p.tone === "quiet");
+        $("v-detail").innerHTML = spotHtml(r3.p, r3.s, r3.sp); }, r3.sp.ja, r3.sp.en);
+    }
+    if ((t = e.target.closest("[data-ph]"))) return openShow(phraseIndex[+t.dataset.ph]);
+    if (e.target.closest("#showClose")) return closeShow();
   });
 
   function openShow(it){
     if (!it) return;
-    $("showJp").textContent = it.ja;
-    $("showEn").textContent = it.en;
+    $("showJp").textContent = it.ja; $("showEn").textContent = it.en;
     $("show").className = "on";
   }
   function closeShow(){ $("show").className = ""; }
   document.addEventListener("keydown", function(e){
-    if (e.key === "Escape"){ if ($("show").className === "on") closeShow(); else if (stack.length) back(); }
+    if (e.key !== "Escape") return;
+    if ($("show").className === "on") closeShow(); else if (stack.length) back();
   });
 
-  /* ---- offline ----
-     The service worker caches whatever is fetched. This button walks every
-     photo in the content so nothing is left to chance out on the road. It
-     needs a real server, so over file:// it says so honestly instead of
-     pretending to work. */
+  /* ================= offline ================= */
   if ("serviceWorker" in navigator && location.protocol.indexOf("http") === 0){
     navigator.serviceWorker.register("sw.js").catch(function(){});
   }
-
   function allPhotos(){
     var out = [];
     PLACES.forEach(function(p){ p.sights.forEach(function(s){
@@ -531,31 +512,23 @@
     }); });
     return out.filter(function(v,i,a){ return a.indexOf(v) === i; });
   }
-
   function markSaved(msg){
-    var box = $("save");
-    if (!box) return;
-    var b = $("saveBtn");
-    if (b) b.remove();
+    var box = $("save"); if (!box) return;
+    var b = $("saveBtn"); if (b) b.remove();
     var d = box.querySelector(".done");
     if (!d){ d = document.createElement("div"); d.className = "done"; box.appendChild(d); }
     d.textContent = msg;
   }
-
   document.addEventListener("click", function(e){
     if (!e.target.closest("#saveBtn")) return;
     var btn = $("saveBtn");
     if (location.protocol.indexOf("http") !== 0){
-      btn.disabled = true;
-      btn.textContent = "Open this from its web address first";
-      return;
+      btn.disabled = true; btn.textContent = "Open this from its web address first"; return;
     }
     var list = allPhotos(), done = 0;
-    btn.disabled = true;
-    btn.textContent = "Saving 0 of " + list.length;
+    btn.disabled = true; btn.textContent = "Saving 0 of " + list.length;
     Promise.all(list.map(function(u){
-      return fetch(u, { cache: "reload" })
-        .catch(function(){ return null; })
+      return fetch(u, { cache: "reload" }).catch(function(){ return null; })
         .then(function(){ done++; btn.textContent = "Saving " + done + " of " + list.length; });
     })).then(function(){
       try { localStorage.setItem("jtSaved", String(Date.now())); } catch(err){}
@@ -564,9 +537,8 @@
   });
 
   renderHome(); renderPlaces(); renderPhrases(); renderManners();
-  try {
-    if (localStorage.getItem("jtSaved")) markSaved("Saved. This app works with no signal.");
-  } catch(err){}
+  try { if (localStorage.getItem("jtSaved")) markSaved("Saved. This app works with no signal."); }
+  catch(err){}
   goTab("home");
 })();
 </script>
