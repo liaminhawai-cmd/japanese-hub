@@ -1776,7 +1776,7 @@ const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(M
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 const SAVE_KEY="mission-japan-save-v2";
 /* One number, counted up on every deploy, so a stale tab is obvious. Bump it with each live copy. */
-const BUILD={n:29,date:"2026-09-08"};
+const BUILD={n:30,date:"2026-09-08"};
 ["buildTag","buildEyebrow","buildMenu"].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=(id==="buildTag"?"MISSION · ":"")+`BUILD ${BUILD.n} · ${BUILD.date}`; });
 const INK=getComputedStyle(document.documentElement).getPropertyValue("--ink").trim();
 const PAPER=getComputedStyle(document.documentElement).getPropertyValue("--lcd").trim();
@@ -1956,14 +1956,17 @@ NPCS.hq={name:"HQ, Melbourne",jp:R("本部","ほんぶ"),spr:"hq",loc:"hotel",re
   bio:"Your handler. Works from a co-working space in Cremorne. Has asked about Kit Kats four times. Signs off your expenses, so: formal-ish.",
   small:[{jp:"キットカット、"+R("買","か")+"った？",en:"Did you buy the Kit Kats?"}],
   topics:[
-   {id:"report",title:"Report the recipe",skill:"plain-form-expr-1-b3",
+   {id:"tell",title:"The ingredient, plainly",cue:"HQ wants the ingredient. You can just name it.",skill:"particles-sentences",
+    lines:[{jp:"レシピは"+R("手","て")+"に"+R("入","はい")+"ったか。"+R("秘密","ひみつ")+"の"+R("材料","ざいりょう")+"は？",en:"Did you get the recipe? The secret ingredient?"}],
+    task:{kind:"type",prompt:"Tell HQ what the secret ingredient is. Name it: TOPIC は THING です. Ingredient: {{secretEn}}.",hint:"秘密の材料は{{secret}}です。",model:"秘密の材料は{{secret}}です。",accept:[/(ひみつ|秘密)の(ざいりょう|材料)は{{secret}}(です|でした)$/,/^{{secret}}(です|でした)$/],rule:"TOPIC は THING です names the thing: 秘密の材料は{{secret}}です. は marks what you are talking about, の joins the two nouns. The harder version of this same report, 〜だそうです, adds that you read it rather than tasted it, which is what a spy who photographed a notebook would say. Either one gets the ingredient to HQ."}},
+   {id:"report",title:"The ingredient, as something you read",cue:"You did not taste it. You read it off a page. Say so.",skill:"plain-form-expr-1-b3",
     lines:[{jp:"レシピは"+R("手","て")+"に"+R("入","はい")+"ったか。"+R("秘密","ひみつ")+"の"+R("材料","ざいりょう")+"は？",en:"Did you get the recipe? The secret ingredient?"}],
     task:{kind:"type",prompt:"Report the secret ingredient as something you read, not tasted: 〜だそうです (I gather) or 〜と書いてありました (it was written). Ingredient: {{secretEn}}.",hint:"秘密の材料は{{secret}}だそうです。",model:"秘密の材料は{{secret}}だそうです。",accept:[/{{secret}}.*(だそうです|[うくぐすつぬぶむるいた]そうです|とかいてありました|と書いてありました|らしいです)$/],rule:"NOUN + だそうです reports hearsay; 〜と書いてありました reports what was written. {{secret}}です flat out claims you tasted it. You read it, or photographed it."}},
-   {id:"home",title:"Tomorrow, plainly",cue:"HQ wants to know about tomorrow. You can just tell them.",skill:"verb-stem-choices",req:G=>G.done("hq","report")||"HQ wants the ingredient first. Then travel plans.",
+   {id:"home",title:"Tomorrow, plainly",cue:"HQ wants to know about tomorrow. You can just tell them.",skill:"verb-stem-choices",req:G=>G.done("hq","report")||G.done("hq","tell")||"HQ wants the ingredient first. Then travel plans.",
     lines:[{jp:"それで、"+R("明日","あした")+"はどうする？",en:"So, what about tomorrow?"}],
     task:{kind:"type",prompt:"Tell HQ you are going home tomorrow. Plain and polite: あした、かえります。",hint:"あした、かえります。",model:"あした、かえります。",accept:[/(あした|明日).*(かえります|帰ります|でます|出ます|いきます|行きます)$/,/^(かえります|帰ります)$/],rule:"TIME + VERB ます: あした、かえります, tomorrow I go home. 帰ります is the verb for going back where you came from, not just leaving. This says the same thing as the ことにしました version without the decision built into the grammar."},
     after:(G,ok)=>{G.flag("reported");return "「了解。キットカットも。」 Mission complete, pending Kit Kats. Your debrief is in the menu. To fly home, USE your passport at Narita; or keep wandering, there are people you have not finished with.";}},
-   {id:"decide",title:"Tomorrow, as a decision",cue:"The same news, said the way someone who chose it would say it.",skill:"nominalisers-paragraphs",req:G=>G.done("hq","report")||"HQ wants the ingredient first. Then travel plans.",
+   {id:"decide",title:"Tomorrow, as a decision",cue:"The same news, said the way someone who chose it would say it.",skill:"nominalisers-paragraphs",req:G=>G.done("hq","report")||G.done("hq","tell")||"HQ wants the ingredient first. Then travel plans.",
     lines:[{jp:"それで、"+R("明日","あした")+"はどうする？",en:"So, what about tomorrow?"}],
     task:{kind:"type",prompt:"Tell HQ you have decided to leave Japan tomorrow: 〜ことにしました.",hint:"明日、日本を出ることにしました。",model:"明日、日本を出ることにしました。",accept:[/(ことにしました|ことにします)$/],rule:"VERB (plain) + ことにしました: I decided to. ことになりました would mean it was decided for you; HQ wants to hear it was your call."},
     after:(G,ok)=>{const first=!G.is("reported");G.flag("reported");return (first?"「了解。キットカットも。」 Mission complete, pending Kit Kats. ":"")+"「"+R("自分","じぶん")+"で"+R("決","き")+"めたんだな。」 HQ notes that you decided, rather than being sent home, and approves the per diem without asking. "+(first?"Your debrief is in the menu. To fly home, USE your passport at Narita; or keep wandering, there are people you have not finished with.":"");}}
