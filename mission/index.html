@@ -120,6 +120,9 @@
   .hud .susp i{position:absolute;left:0;top:0;bottom:0;background:var(--ink)}
   .hud .clock{font-weight:700;letter-spacing:.06em}
   .inv{border-top:3px solid var(--ink);display:flex;align-items:center;gap:8px;padding:6px 12px;flex-wrap:wrap;min-height:54px}
+  .inv.more{-webkit-mask-image:linear-gradient(to right,#000 88%,transparent);mask-image:linear-gradient(to right,#000 88%,transparent)}
+  .inv.more.end{-webkit-mask-image:none;mask-image:none}
+  .inv .more-n{font-size:10px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;white-space:nowrap}
   .inv .lab{font-size:10px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase}
   .item{border:2px solid var(--ink);background:var(--lcd);padding:2px;display:flex;align-items:center;gap:6px;font-size:11px;text-transform:uppercase;letter-spacing:.06em;box-shadow:2px 2px 0 var(--ink)}
   .item canvas{width:28px;height:28px}
@@ -1773,7 +1776,7 @@ const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(M
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 const SAVE_KEY="mission-japan-save-v2";
 /* One number, counted up on every deploy, so a stale tab is obvious. Bump it with each live copy. */
-const BUILD={n:27,date:"2026-09-08"};
+const BUILD={n:28,date:"2026-09-08"};
 ["buildTag","buildEyebrow","buildMenu"].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=(id==="buildTag"?"MISSION · ":"")+`BUILD ${BUILD.n} · ${BUILD.date}`; });
 const INK=getComputedStyle(document.documentElement).getPropertyValue("--ink").trim();
 const PAPER=getComputedStyle(document.documentElement).getPropertyValue("--lcd").trim();
@@ -2123,19 +2126,22 @@ function renderGoals(){
   const orders=ORDERS.map((o,i)=>orderDone(o)?`<div class="g done">${o.t}</div>`:i===first?`<div class="g"><span class="en" style="font-size:11px">Dana said:</span> ${orderText(o)}${G.kit==="tourist"?"":`<div class="en" style="font-size:11px;margin-top:2px"><button class="k sm" id="goalEn" style="min-height:0;padding:2px 6px;font-size:11px">${G.goalEn?"かくす · hide":"えいご · in English"}</button>${G.goalEn?" "+esc(o.en):""}</div>`}</div>`:`<div class="g" style="opacity:.45">…</div>`).join("");
   $("goals").innerHTML=`<b>任務 · THE RAMEN RECIPE · ${complete}/${ORDERS.length}</b>${orders}<div class="en" style="font-size:11px;margin:2px 0 4px">Dana only ever gives the next step, and the English is always free. Want more? Phone → 電話 → Chef Dana.</div><b style="margin-top:10px">副業 · SIDE JOBS</b>${side.map(row).join("")}`;
 }
+function markInvOverflow(){ const b=$("inv"); if(!b) return; const over=b.scrollWidth>b.clientWidth+2; b.classList.toggle("more",over); b.classList.toggle("end",over&&b.scrollLeft+b.clientWidth>=b.scrollWidth-2); }
 function renderHud(){
   const ge=$("goalEn"); if(ge) ge.addEventListener("click",()=>{ G.goalEn=!G.goalEn; renderGoals(); renderHud(); save(); });
   const h=$("hearts"); h.innerHTML=""; for(let i=0;i<5;i++) h.appendChild(spriteCanvas(i<G.energy?"heart":"heart0",20));
   $("yen").textContent="¥"+G.yen.toLocaleString(); $("suspBar").style.width=G.susp+"%";
   $("sndBtn").textContent=(SND.on?"音 · Snd":"消音 · Mute")+(typeof MUSIC!=="undefined"&&MUSIC.playing>=0?" ♪":"");
-  ensureWeather(); $("clock").innerHTML=`DAY ${G.day} · ${String(G.hour).padStart(2,"0")}:00 · <span title="today's weather">${wx(G.wx.today).jp} ${G.wx.today.temp}°</span>`;
+  ensureWeather(); setTimeout(markInvOverflow,0); $("clock").innerHTML=`DAY ${G.day} · ${String(G.hour).padStart(2,"0")}:00 · <span title="today's weather">${wx(G.wx.today).jp} ${G.wx.today.temp}°</span>`;
   $("suspValue").textContent=G.susp+"/100";h.setAttribute("aria-label",G.energy+" of 5 energy");
   $("translationState").textContent=G.worn.includes("glasses")?"翻訳 ON · TRANSLATOR ON":"日本語 · JAPANESE";
   $("channelName").textContent=cur?"会話中 · IN CONVERSATION":"記録 · FIELD LOG";
 }
 function renderInv(){
   const box=$("inv"); box.innerHTML=`<span class="lab">持ち物 · Inventory</span>`;
-  Object.keys(G.bag).forEach(i=>{ const it=ITEMS[i]; const d=document.createElement("button"); d.className="item"+(G.worn.includes(i)?" worn":""); d.title=fill(it.desc,slots());if(it.wear)d.setAttribute("aria-pressed",String(G.worn.includes(i))); d.appendChild(spriteCanvas(i,28,G.worn.includes(i))); const n=document.createElement("span"); n.className="n"; n.textContent=plainJp(it.jp)+" · "+it.n+(G.count(i)>1?" ×"+G.count(i):"")+(G.worn.includes(i)?" · on":"")+(i==="dictionary"?" · "+DICT.count()+" built":""); d.appendChild(n); d.addEventListener("click",()=>useItem(i)); box.appendChild(d); });
+  /* what you are wearing, and what this place can be used on, come first: the row scrolls and the tail is easy to miss */
+  const usable=i=>Object.hasOwn(USE,i+"@"+G.loc)||Object.hasOwn(USE,i+"@*");
+  Object.keys(G.bag).sort((a,b)=>(G.worn.includes(b)-G.worn.includes(a))||(usable(b)-usable(a))).forEach(i=>{ const it=ITEMS[i]; const d=document.createElement("button"); d.className="item"+(G.worn.includes(i)?" worn":""); d.title=fill(it.desc,slots());if(it.wear)d.setAttribute("aria-pressed",String(G.worn.includes(i))); d.appendChild(spriteCanvas(i,28,G.worn.includes(i))); const n=document.createElement("span"); n.className="n"; n.textContent=plainJp(it.jp)+" · "+it.n+(G.count(i)>1?" ×"+G.count(i):"")+(G.worn.includes(i)?" · on":"")+(i==="dictionary"?" · "+DICT.count()+" built":""); d.appendChild(n); d.addEventListener("click",()=>useItem(i)); box.appendChild(d); });
 }
 let sub=null;
 function renderActs(){
@@ -2264,7 +2270,11 @@ const MAP_LABEL={airport:"AIRPORT",station:"UENO STN",konbini:"KONBINI",hotel:"H
 const mapKnown=k=>k===G.loc||(G.visited||{})[k]||["airport","station","konbini","hotel","alley"].includes(k)||(k==="michelin"&&G.is("knowOpen"));
 /* one map, three sizes: the HUD panel, the GO menu, the phone. Places are their own sprites; roads you have walked are solid, roads you only know of are dotted; you are the agent. */
 function drawMap(c){
-  const ctx=c.getContext("2d"), W=c.width, H=c.height, sx=W/336, sy=H/150; ctx.clearRect(0,0,W,H); ctx.fillStyle="#fff"; ctx.fillRect(0,0,W,H); ctx.fillStyle=INK;
+  /* draw in CSS pixels, not in a 336-wide space squeezed into 271: labels were landing near 9px */
+  const dpr=Math.min(2,window.devicePixelRatio||1), cw=Math.round(c.clientWidth||c.width||336), ch=Math.round(cw*150/336);
+  if(c.width!==Math.round(cw*dpr)){ c.width=Math.round(cw*dpr); c.height=Math.round(ch*dpr); c.style.height=ch+"px"; }
+  const ctx=c.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0);
+  const W=cw, H=ch, sx=W/336, sy=H/150; ctx.clearRect(0,0,W,H); ctx.fillStyle="#fff"; ctx.fillRect(0,0,W,H); ctx.fillStyle=INK;
   const px=k=>[Math.round(MAP_POS[k][0]*sx),Math.round(MAP_POS[k][1]*sy)];
   const walked=(a,b)=>(G.roads||[]).includes([a,b].sort().join(">"));
   ctx.strokeStyle=INK;
@@ -2572,6 +2582,9 @@ window.addEventListener("resize",paintTurn); window.addEventListener("orientatio
 $("menuBtn").addEventListener("click",openMenu);
 $("closeMenu").addEventListener("click",()=>closeMenu());
 $("subsBtn").addEventListener("click",()=>{ const on=SUBS.toggle(); $("subsBtn").textContent="字幕 · Subtitles: "+(on?"on":"off"); $("log").querySelectorAll(".ann .jp").forEach(j=>{ j.hidden=!on; j.parentElement.querySelector(".tr").hidden=!on||!G.worn.includes("glasses"); }); });
+$("inv").addEventListener("scroll",markInvOverflow,{passive:true});
+$("inv").addEventListener("wheel",e=>{ const b=$("inv"); if(b.scrollWidth<=b.clientWidth) return; if(Math.abs(e.deltaY)>Math.abs(e.deltaX)){ b.scrollLeft+=e.deltaY; e.preventDefault(); } },{passive:false});
+window.addEventListener("resize",()=>{ markInvOverflow(); if(G&&$("hudMap")) drawMap($("hudMap")); });
 $("fsBtn").addEventListener("click",()=>{ if(document.fullscreenElement){ leavingCleanly=true; document.exitFullscreen().finally(()=>setTimeout(()=>leavingCleanly=false,500)); } else if(document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(()=>toast("This browser will not go full screen. Same game without it.")); closeMenu(); });
 $("saveLeave").addEventListener("click",()=>{ leavingCleanly=true; save();if(!saveOK){leavingCleanly=false;toast("This browser could not save. Your mission is still open here.");return;} const done=()=>{closeMenu(false); show("titleS"); renderTitle(); setTimeout(()=>leavingCleanly=false,500); }; if(document.fullscreenElement) document.exitFullscreen().finally(done); else done(); });
 window.addEventListener("pagehide",save);
