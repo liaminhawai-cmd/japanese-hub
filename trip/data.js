@@ -786,8 +786,8 @@ window.PLACES = [
               "is lovely, say so. If dinner is good, say so. Polite, respectful, " +
               "grateful. That is the whole job, and it is not a hard one.",
             look:
-              "Tonight, offer to help with one thing after dinner. Tetsudaimashou " +
-              "ka. Even if they wave you away, ask."
+              "Tonight, offer to help with one thing after dinner. " +
+              "てつだいましょうか。Even if they wave you away, ask."
           },
           {
             id: "australians",
@@ -803,7 +803,7 @@ window.PLACES = [
               "people will be pleased with you for very little.",
             look:
               "Greet people you pass at school, even the ones you do not know. " +
-              "Ohayou gozaimasu costs nothing and it is remembered."
+              "おはようございます costs nothing and it is remembered."
           }
         ]
       },
@@ -853,8 +853,8 @@ window.PLACES = [
               "do with what you know.",
             look:
               "Learn one question you can ask anybody today and use it on at " +
-              "least three different people. Nanika supootsu o shimasu ka, do " +
-              "you play any sport, will get you a long way."
+              "least three different people. なにかスポーツをしますか。Do you " +
+              "play any sport? That one will get you a long way."
           },
           {
             id: "sado",
@@ -1040,6 +1040,7 @@ window.PLACES = [
 /* ---------------------------------------------------------------------------
    PHRASES
    Ordered by when a student actually needs them, not by grammar.
+   No romaji: students read kana, and the kana charts are one tap away.
    `show` marks the ones worth holding up to a Japanese person to read.
    ------------------------------------------------------------------------- */
 window.PHRASES = [
@@ -1049,10 +1050,10 @@ window.PHRASES = [
     en: "The first five minutes",
     note: "Meeting your host family. Learn these properly before you land.",
     items: [
-      { ja: "はじめまして。", ro: "Hajimemashite.", en: "Nice to meet you." },
-      { ja: "＿＿＿です。どうぞよろしくおねがいします。", ro: "___ desu. Douzo yoroshiku onegai shimasu.", en: "I'm ___. Please be good to me.", tip: "Say your first name. This is the single most useful sentence you own." },
-      { ja: "おせわになります。", ro: "Osewa ni narimasu.", en: "Thank you for having me.", tip: "Say this when you first arrive at the house. It means you know they are going to look after you." },
-      { ja: "これ、おみやげです。どうぞ。", ro: "Kore, omiyage desu. Douzo.", en: "This is a gift for you. Please take it.", tip: "Hand it over with both hands." }
+      { ja: "はじめまして。", en: "Nice to meet you." },
+      { ja: "＿＿＿です。どうぞよろしくおねがいします。", en: "I'm ___. Please be good to me.", tip: "Say your first name. This is the single most useful sentence you own." },
+      { ja: "おせわになります。", en: "Thank you for having me.", tip: "Say this when you first arrive at the house. It means you know they are going to look after you." },
+      { ja: "これ、おみやげです。どうぞ。", en: "This is a gift for you. Please take it.", tip: "Hand it over with both hands." }
     ]
   },
   {
@@ -1061,12 +1062,12 @@ window.PHRASES = [
     en: "At the table",
     note: "You will use these every single day.",
     items: [
-      { ja: "いただきます。", ro: "Itadakimasu.", en: "Before eating.", tip: "Everyone says it. Do not start before it." },
-      { ja: "ごちそうさまでした。", ro: "Gochisousama deshita.", en: "After eating.", tip: "Say it to whoever cooked." },
-      { ja: "おいしいです！", ro: "Oishii desu!", en: "This is delicious!", tip: "Use it more than you think you need to." },
-      { ja: "おかわりをおねがいします。", ro: "Okawari o onegai shimasu.", en: "Seconds please." },
-      { ja: "おなかがいっぱいです。", ro: "Onaka ga ippai desu.", en: "I'm full.", tip: "Kinder than leaving food. Finishing what you take is the polite move." },
-      { ja: "すみません、それはたべられません。", ro: "Sumimasen, sore wa taberaremasen.", en: "Sorry, I can't eat that.", show: true, tip: "For an allergy, show the card, do not rely on your accent." }
+      { ja: "いただきます。", en: "Before eating.", tip: "Everyone says it. Do not start before it." },
+      { ja: "ごちそうさまでした。", en: "After eating.", tip: "Say it to whoever cooked." },
+      { ja: "おいしいです！", en: "This is delicious!", tip: "Use it more than you think you need to." },
+      { ja: "おかわりをおねがいします。", en: "Seconds please." },
+      { ja: "おなかがいっぱいです。", en: "I'm full.", tip: "Kinder than leaving food. Finishing what you take is the polite move." },
+      { ja: "すみません、それはたべられません。", en: "Sorry, I can't eat that.", show: true, tip: "For an allergy, show the card, do not rely on your accent." }
     ]
   },
   {
@@ -1075,13 +1076,13 @@ window.PHRASES = [
     en: "Around the house",
     note: "Homestay basics. Ask rather than assume.",
     items: [
-      { ja: "ただいま。", ro: "Tadaima.", en: "I'm home.", tip: "Say it every time you walk in." },
-      { ja: "いってきます。", ro: "Ittekimasu.", en: "I'm off.", tip: "Say it every time you go out." },
-      { ja: "おやすみなさい。", ro: "Oyasuminasai.", en: "Good night." },
-      { ja: "おふろにはいってもいいですか。", ro: "Ofuro ni haitte mo ii desu ka.", en: "May I have a bath?", tip: "Wash yourself outside the bath first. The water in it is shared and stays clean for the next person." },
-      { ja: "せんたくをしてもいいですか。", ro: "Sentaku o shite mo ii desu ka.", en: "May I do some washing?" },
-      { ja: "Wi-Fiをつかってもいいですか。", ro: "Wi-Fi o tsukatte mo ii desu ka.", en: "May I use the wifi?", tip: "Ask once. If the answer is not an easy yes, leave it." },
-      { ja: "てつだいましょうか。", ro: "Tetsudaimashou ka.", en: "Shall I help?", tip: "Offer this at least once a day. It lands better than almost anything else you can say." }
+      { ja: "ただいま。", en: "I'm home.", tip: "Say it every time you walk in." },
+      { ja: "いってきます。", en: "I'm off.", tip: "Say it every time you go out." },
+      { ja: "おやすみなさい。", en: "Good night." },
+      { ja: "おふろにはいってもいいですか。", en: "May I have a bath?", tip: "Wash yourself outside the bath first. The water in it is shared and stays clean for the next person." },
+      { ja: "せんたくをしてもいいですか。", en: "May I do some washing?" },
+      { ja: "Wi-Fiをつかってもいいですか。", en: "May I use the wifi?", tip: "Ask once. If the answer is not an easy yes, leave it." },
+      { ja: "てつだいましょうか。", en: "Shall I help?", tip: "Offer this at least once a day. It lands better than almost anything else you can say." }
     ]
   },
   {
@@ -1090,12 +1091,12 @@ window.PHRASES = [
     en: "At school",
     note: "Soja Nishi Junior High School.",
     items: [
-      { ja: "おはようございます。", ro: "Ohayou gozaimasu.", en: "Good morning." },
-      { ja: "よろしくおねがいします。", ro: "Yoroshiku onegai shimasu.", en: "Please be good to me.", tip: "Say it to a new class, a new buddy, a club, a teacher. It works everywhere." },
-      { ja: "ありがとうございました。", ro: "Arigatou gozaimashita.", en: "Thank you (for what you just did).", tip: "Past tense. Use it at the end of a lesson or a club session." },
-      { ja: "もういちど、おねがいします。", ro: "Mou ichido, onegai shimasu.", en: "One more time, please." },
-      { ja: "ゆっくりおねがいします。", ro: "Yukkuri onegai shimasu.", en: "Slowly, please.", tip: "Better than pretending you understood." },
-      { ja: "これはなんですか。", ro: "Kore wa nan desu ka.", en: "What is this?" }
+      { ja: "おはようございます。", en: "Good morning." },
+      { ja: "よろしくおねがいします。", en: "Please be good to me.", tip: "Say it to a new class, a new buddy, a club, a teacher. It works everywhere." },
+      { ja: "ありがとうございました。", en: "Thank you (for what you just did).", tip: "Past tense. Use it at the end of a lesson or a club session." },
+      { ja: "もういちど、おねがいします。", en: "One more time, please." },
+      { ja: "ゆっくりおねがいします。", en: "Slowly, please.", tip: "Better than pretending you understood." },
+      { ja: "これはなんですか。", en: "What is this?" }
     ]
   },
   {
@@ -1104,12 +1105,12 @@ window.PHRASES = [
     en: "Out and about",
     note: "Shops, stations, temples.",
     items: [
-      { ja: "すみません。", ro: "Sumimasen.", en: "Excuse me / sorry.", tip: "The most useful word in Japan. Opens almost every interaction." },
-      { ja: "これをください。", ro: "Kore o kudasai.", en: "This one please.", tip: "Point. It is completely acceptable." },
-      { ja: "いくらですか。", ro: "Ikura desu ka.", en: "How much is it?" },
-      { ja: "トイレはどこですか。", ro: "Toire wa doko desu ka.", en: "Where is the toilet?", show: true },
-      { ja: "しゃしんをとってもいいですか。", ro: "Shashin o totte mo ii desu ka.", en: "May I take a photo?", tip: "Ask before photographing people, and check for no-photo signs inside temple halls." },
-      { ja: "だいじょうぶです。", ro: "Daijoubu desu.", en: "I'm fine / it's fine.", tip: "Also how you politely decline a plastic bag." }
+      { ja: "すみません。", en: "Excuse me / sorry.", tip: "The most useful word in Japan. Opens almost every interaction." },
+      { ja: "これをください。", en: "This one please.", tip: "Point. It is completely acceptable." },
+      { ja: "いくらですか。", en: "How much is it?" },
+      { ja: "トイレはどこですか。", en: "Where is the toilet?", show: true },
+      { ja: "しゃしんをとってもいいですか。", en: "May I take a photo?", tip: "Ask before photographing people, and check for no-photo signs inside temple halls." },
+      { ja: "だいじょうぶです。", en: "I'm fine / it's fine.", tip: "Also how you politely decline a plastic bag." }
     ]
   },
   {
@@ -1118,11 +1119,11 @@ window.PHRASES = [
     en: "If something goes wrong",
     note: "Hold the phone up and let someone read the Japanese. That is what these are for.",
     items: [
-      { ja: "たすけてください。", ro: "Tasukete kudasai.", en: "Please help me.", show: true },
-      { ja: "みちにまよいました。", ro: "Michi ni mayoimashita.", en: "I am lost.", show: true },
-      { ja: "にほんごがすこししかわかりません。えいごをはなせるひとはいますか。", ro: "Nihongo ga sukoshi shika wakarimasen. Eigo o hanaseru hito wa imasu ka.", en: "I only speak a little Japanese. Is there someone who speaks English?", show: true },
-      { ja: "びょうきです。びょういんにいきたいです。", ro: "Byouki desu. Byouin ni ikitai desu.", en: "I am unwell. I would like to go to a hospital.", show: true },
-      { ja: "せんせいにでんわしてください。", ro: "Sensei ni denwa shite kudasai.", en: "Please call my teacher.", show: true, tip: "Your teachers' numbers are on your lanyard, not in this app. Show the lanyard." }
+      { ja: "たすけてください。", en: "Please help me.", show: true },
+      { ja: "みちにまよいました。", en: "I am lost.", show: true },
+      { ja: "にほんごがすこししかわかりません。えいごをはなせるひとはいますか。", en: "I only speak a little Japanese. Is there someone who speaks English?", show: true },
+      { ja: "びょうきです。びょういんにいきたいです。", en: "I am unwell. I would like to go to a hospital.", show: true },
+      { ja: "せんせいにでんわしてください。", en: "Please call my teacher.", show: true, tip: "Your teachers' numbers are on your lanyard, not in this app. Show the lanyard." }
     ]
   },
   {
@@ -1131,10 +1132,10 @@ window.PHRASES = [
     en: "Saying goodbye",
     note: "The last morning. Worth rehearsing so you can get through it.",
     items: [
-      { ja: "ほんとうにおせわになりました。", ro: "Hontou ni osewa ni narimashita.", en: "Thank you sincerely for everything.", tip: "This is the one. It carries real weight in Japanese." },
-      { ja: "たのしかったです。", ro: "Tanoshikatta desu.", en: "I had a great time." },
-      { ja: "また、あいましょう。", ro: "Mata, aimashou.", en: "Let's meet again." },
-      { ja: "オーストラリアにきてください。", ro: "Oosutoraria ni kite kudasai.", en: "Please come to Australia." }
+      { ja: "ほんとうにおせわになりました。", en: "Thank you sincerely for everything.", tip: "This is the one. It carries real weight in Japanese." },
+      { ja: "たのしかったです。", en: "I had a great time." },
+      { ja: "また、あいましょう。", en: "Let's meet again." },
+      { ja: "オーストラリアにきてください。", en: "Please come to Australia." }
     ]
   }
 ];
