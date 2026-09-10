@@ -17,14 +17,20 @@
      body copy at 18, and tap targets you cannot miss. Menus live at the TOP
      because that is where a thumb looks first on a page you are reading. */
   :root{
-    --bg:#f1f4f3; --paper:#ffffff; --ink:#1b1f1e; --muted:#5a625f;
-    --line:#d7dedb; --line-soft:#e6ecea; --accent:#a83232;
+    /* The ground is a pale gold leaf, the colour of a 金地 screen rather
+       than metallic gold: warm enough to read as gold, light enough to keep
+       black text and the pale tiles comfortable on top of it. Hiroshima
+       overrides all of this back to a cool grey (see the quiet block). */
+    --bg:#f5ead1; --paper:#fffdf6; --ink:#1e1b14; --muted:#5c5647;
+    --line:#e0d3b2; --line-soft:#ece2c9; --accent:#a83232;
     --deep:#16375e; --ok:#2f6a3e;
     /* Tile blocks, from the traditional palette and kept pale so black text
        sits on them comfortably: asagi, sakura, wakatake, fuji, yamabuki,
-       sora, matcha, toki. Tiles cycle through these by position. */
+       sora, matcha, toki. Tiles cycle through these by position. The
+       yamabuki is deeper than the others on purpose: a paler one is too
+       close to the gold ground and the tile stops reading as a tile. */
     --c1:#d9edf1; --c2:#fbe3e8; --c3:#dcecdc; --c4:#e4e1f0;
-    --c5:#fbeed2; --c6:#dde9f5; --c7:#e7edd4; --c8:#f7e3e6;
+    --c5:#f3ddb0; --c6:#dde9f5; --c7:#e7edd4; --c8:#f7e3e6;
     --shadow:0 2px 10px rgba(0,0,0,.08);
 
     --font-en:Calibri,Carlito,'Segoe UI',Tahoma,Geneva,Verdana;
@@ -39,6 +45,7 @@
   /* ---------- top bar: title, then the menu ---------- */
   .top{position:sticky;top:0;z-index:40;background:var(--paper);
        border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top)}
+  .navline{border-top:1px solid var(--line-soft)}
   .bar{display:flex;align-items:center;gap:12px;padding:10px 14px 9px;min-height:56px}
   #back{border:1px solid var(--line);background:var(--bg);color:var(--ink);
         font-family:inherit;font-size:16px;font-weight:600;padding:9px 14px;
@@ -50,10 +57,10 @@
   .htitle .en{font-size:14px;color:var(--muted);line-height:1.3;
               white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-  nav{display:grid;grid-template-columns:repeat(4,1fr);
-      border-top:1px solid var(--line-soft);background:var(--paper)}
+  nav{display:flex;justify-content:center;gap:22px;max-width:680px;margin:0 auto;
+      padding:0 14px;background:var(--paper)}
   nav button{border:0;background:none;font-family:inherit;color:var(--muted);
-             padding:9px 2px 8px;cursor:pointer;border-bottom:4px solid transparent}
+             padding:9px 1px 8px;cursor:pointer;border-bottom:4px solid transparent}
   nav button .en{display:block;font-size:16px;font-weight:700;line-height:1.2}
   nav button .ja{display:block;font-size:12px;opacity:.75;line-height:1.35}
   nav button.on{color:var(--accent);border-bottom-color:var(--accent)}
@@ -269,17 +276,17 @@
       <div class="en" id="hen">Japan Study Tour 2026</div>
     </div>
   </div>
-  <nav>
-    <button data-go="home" class="on"><span class="en">Today</span><span class="ja">きょう</span></button>
-    <button data-go="places"><span class="en">Places</span><span class="ja">ばしょ</span></button>
+  <div class="navline"><nav>
+    <button data-go="places" class="on"><span class="en">Places</span><span class="ja">ばしょ</span></button>
     <button data-go="phrases"><span class="en">Phrases</span><span class="ja">ことば</span></button>
     <button data-go="manners"><span class="en">Etiquette</span><span class="ja">マナー</span></button>
-  </nav>
+    <button data-go="home"><span class="en">Itinerary</span><span class="ja">りょてい</span></button>
+  </nav></div>
 </div>
 
 <main>
-  <div class="view on" id="v-home"></div>
-  <div class="view" id="v-places"></div>
+  <div class="view" id="v-home"></div>
+  <div class="view on" id="v-places"></div>
   <div class="view" id="v-phrases"></div>
   <div class="view" id="v-manners"></div>
   <div class="view" id="v-detail"></div>
@@ -413,18 +420,14 @@
            '<span class="en">Melbourne, 20 September 2026, 18:25</span></div>' +
            '<div class="nt">Open this on the day and it shows where we are up to.</div></div>';
     }
-    h += '<div class="sec">りょてい<span class="en">Itinerary</span></div><div>';
+    /* The tab is called Itinerary now, so the page does not repeat itself. */
+    h += '<div>';
     TRIP.days.forEach(function(d, k){
       h += '<div class="day' + (k === i ? " now" : "") + '"><div class="n">' + d.n + '</div>' +
            '<div><div class="t">' + esc(d.ja) + '<span class="en">' + esc(d.en) + '</span></div>' +
            '<div class="nt">' + esc(d.note) + '</div></div></div>';
     });
     h += '</div>';
-    h += '<div class="save" id="save"><h3>Save for offline<span class="en">オフライン</span></h3>' +
-         '<p>Press this on hotel or home wifi before you go out for the day. It ' +
-         'stores every page and photo on your phone, so the app still works with ' +
-         'no signal and no data.</p>' +
-         '<button id="saveBtn">Save it all  ぜんぶ保存</button></div>';
     h += '<p class="foot">Meeting points, phone numbers and your emergency details ' +
          'are on your lanyard, not in this app.</p>';
     $("v-home").innerHTML = h;
@@ -439,7 +442,13 @@
       var n = p.sights.reduce(function(a,s){ return a + s.spots.length; }, 0);
       h += tile(p, 'data-place="' + esc(p.id) + '"', p.days + " · " + n + " to find", i);
     });
-    $("v-places").innerHTML = h + '</div>';
+    h += '</div>';
+    h += '<div class="save" id="save"><h3>Save for offline<span class="en">オフライン</span></h3>' +
+         '<p>Press this on hotel or home wifi before you go out for the day. It ' +
+         'stores every page and photo on your phone, so the app still works with ' +
+         'no signal and no data.</p>' +
+         '<button id="saveBtn">Save it all  ぜんぶ保存</button></div>';
+    $("v-places").innerHTML = h;
   }
 
   // level 2: the sights in a place, as short rows rather than one long page
@@ -567,7 +576,7 @@
   }
 
   /* ================= navigation ================= */
-  var TABS = { home:["日本研修旅行","Japan Study Tour 2026"], places:["ばしょ","Places"],
+  var TABS = { home:["りょてい","Itinerary"], places:["ばしょ","Places"],
                phrases:["ことば","Phrases"], manners:["マナー","Etiquette"] };
   var stack = [];
   function setQuiet(on){ document.body.classList[on ? "add":"remove"]("quiet"); }
@@ -599,7 +608,7 @@
       s.draw(); showView("detail"); setHeader(s.ja, s.en, true);
     } else {
       var cur = document.querySelector("nav button.on");
-      goTab(cur ? cur.dataset.go : "home");
+      goTab(cur ? cur.dataset.go : "places");
     }
   }
 
@@ -699,7 +708,7 @@
      back and the new photos get saved too. Keep in step with CACHE in sw.js. */
   try { if (localStorage.getItem(SAVED_KEY)) markSaved("Saved. This app works with no signal."); }
   catch(err){}
-  goTab("home");
+  goTab("places");
 })();
 </script>
 </body>
