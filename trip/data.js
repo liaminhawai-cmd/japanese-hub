@@ -1086,7 +1086,7 @@ window.PHRASES = [
   },
   {
     id: "house",
-    ja: "いえで",
+    ja: "うちで",
     en: "Around the house",
     note: "Homestay basics. Ask rather than assume.",
     items: [
