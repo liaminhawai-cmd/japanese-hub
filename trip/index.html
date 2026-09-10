@@ -205,11 +205,18 @@
      A tab down the right edge of every screen. It sits under the two
      full-screen panels, which are opaque, so it disappears on its own
      when one of them is open. */
+  /* iOS Safari does not lay a button out reliably with writing-mode, and
+     without -webkit-appearance:none it repaints one in its own style. So the
+     tab is stacked one character per line instead of rotated, and every
+     default button style is turned off explicitly. */
   #kanatab{position:fixed;right:0;top:52%;transform:translateY(-50%);z-index:80;
-        writing-mode:vertical-rl;background:var(--deep);color:#fbf7ee;
-        border:0;border-radius:13px 0 0 13px;padding:15px 7px;font-family:inherit;
-        font-size:16px;font-weight:700;letter-spacing:.06em;cursor:pointer;
+        -webkit-appearance:none;appearance:none;
+        background:var(--deep);color:#fbf7ee;
+        border:0;border-radius:13px 0 0 13px;padding:13px 9px;font-family:inherit;
+        font-size:16px;font-weight:700;line-height:1.18;cursor:pointer;
+        display:block;width:auto;text-align:center;
         box-shadow:-2px 2px 10px rgba(0,0,0,.22)}
+  #kanatab span{display:block}
 
   #kana{position:fixed;inset:0;z-index:95;background:var(--bg);display:none;
         flex-direction:column;padding-top:env(safe-area-inset-top)}
@@ -224,7 +231,15 @@
   /* The whole chart has to be visible at once, so the image is fitted to
      whatever room is left rather than scrolled. */
   #kana .kwrap{flex:1;min-height:0;display:flex;align-items:center;
-        justify-content:center;padding:8px 10px 12px}
+        justify-content:center;padding:8px 8px 4px}
+  #kana .kmore{flex:0 0 auto;padding:6px 10px calc(12px + env(safe-area-inset-bottom))}
+  #kana .kmore button{width:100%;padding:12px;border-radius:11px;
+        border:1px solid var(--line);background:var(--paper);color:var(--ink);
+        font-family:inherit;font-size:15.5px;font-weight:600;cursor:pointer;
+        -webkit-appearance:none;appearance:none;line-height:1.25}
+  #kana .kmore .en{font-size:13px;font-weight:400;color:var(--muted);margin-left:8px}
+  #kana .kmore button.on .en{color:rgba(251,247,238,.8)}
+  #kana .kmore button.on{background:var(--deep);border-color:var(--deep);color:#fbf7ee}
   #kana .kwrap img{max-width:100%;max-height:100%;width:auto;height:auto;
         display:block;border-radius:12px}
 
@@ -301,7 +316,7 @@
   <button id="showClose">Close</button>
 </div>
 
-<button id="kanatab" aria-label="Open the kana charts">かな</button>
+<button id="kanatab" aria-label="Open the kana charts"><span>か</span><span>な</span></button>
 
 <div id="kana" role="dialog" aria-modal="true" aria-label="Kana charts">
   <div class="kbar">
@@ -310,6 +325,7 @@
     <button data-kana="katakana">カタカナ</button>
   </div>
   <div class="kwrap"><img id="kanaImg" alt="Kana chart"></div>
+  <div class="kmore"><button id="kanaMore">＋ だくてん・ようおん<span class="en"></span></button></div>
 </div>
 
 <script src="map.js"></script>
@@ -534,19 +550,29 @@
   /* ---- kana charts ----------------------------------------------------
      One image per script, drawn as an SVG so it stays sharp at any size and
      is precached with the rest of the app. The charts are the standard
-     五十音表: columns read right to left from あ and finish at ん. Both
-     images are held in the page so the toggle does not blink offline. */
-  var KANA_SRC = { hiragana: "kana-hiragana.svg", katakana: "kana-katakana.svg" };
-  function drawKana(which){
+     五十音表: columns read right to left from あ and finish at ん. The tab
+     opens on the 46 alone so it is a quick check at a glance; the voiced
+     set and the yoon are one tap further in rather than something to
+     scroll past. All four images are precached. */
+  var kanaScript = "hiragana", kanaExtra = false;
+  function drawKana(){
     [].forEach.call(document.querySelectorAll("[data-kana]"), function(b){
-      b.className = b.dataset.kana === which ? "on" : "";
+      b.className = b.dataset.kana === kanaScript ? "on" : "";
     });
-    var img = $("kanaImg");
-    img.src = KANA_SRC[which] || KANA_SRC.hiragana;
-    img.alt = (which === "katakana" ? "Katakana" : "Hiragana") + " chart";
+    var img = $("kanaImg"), name = kanaScript + (kanaExtra ? "-plus" : "");
+    img.src = "kana-" + name + ".svg";
+    img.alt = (kanaScript === "katakana" ? "Katakana" : "Hiragana") +
+              (kanaExtra ? " voiced and small kana chart" : " chart");
+    var b = $("kanaMore");
+    b.className = kanaExtra ? "on" : "";
+    b.firstChild.nodeValue = kanaExtra ? "\u2190 \u3054\u3058\u3085\u3046\u304a\u3093"
+                                       : "\uff0b \u3060\u304f\u3066\u3093\u30fb\u3088\u3046\u304a\u3093";
+    b.querySelector(".en").textContent = kanaExtra ? "Back to the 46"
+                                                   : "Voiced and small kana";
   }
   function openKana(){
-    if (!$("kanaImg").getAttribute("src")) drawKana("hiragana");
+    kanaExtra = false;
+    drawKana();
     $("kana").className = "on";
   }
   function closeKana(){ $("kana").className = ""; }
@@ -641,7 +667,8 @@
     if (e.target.closest("#showClose")) return closeShow();
     if (e.target.closest("#kanatab")) return openKana();
     if (e.target.closest("#kanaClose")) return closeKana();
-    if ((t = e.target.closest("[data-kana]"))) return drawKana(t.dataset.kana);
+    if (e.target.closest("#kanaMore")){ kanaExtra = !kanaExtra; return drawKana(); }
+    if ((t = e.target.closest("[data-kana]"))){ kanaScript = t.dataset.kana; return drawKana(); }
   });
 
   function openShow(it){

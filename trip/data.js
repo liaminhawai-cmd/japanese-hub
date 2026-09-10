@@ -1142,6 +1142,35 @@ window.PHRASES = [
     ]
   },
   {
+    id: "wild",
+    ja: "とっておき",
+    en: "Wild card",
+    note: "Phrases nobody expects you to know. Learn one properly and use it " +
+          "once. Each one says where it lands best.",
+    items: [
+      { ja: "おつかれさまです。", en: "You've had a long day. / Well done today.",
+        tip: "The one that surprises people most. Say it to a host parent coming in from work, or to a student after club practice. It means you noticed they have been working. There is no English sentence that does this job, which is why it lands." },
+      { ja: "いってらっしゃい。", en: "Off you go. / Have a good day.",
+        tip: "The answer to いってきます. When someone leaves the house in the morning, say this from wherever you are. Most visitors never learn it and a family notices straight away." },
+      { ja: "おかえりなさい。", en: "Welcome home.",
+        tip: "Say it to whoever comes in, even if you only got home five minutes earlier yourself. It is the pair to ただいま. It sounds like you live there, which is the whole point." },
+      { ja: "まちがえたら、なおしてください。", en: "If I make a mistake, please correct me.",
+        tip: "Say this early, to your family or to a class. Japanese speakers are often too polite to correct a guest unless you ask, so this is you handing them permission. It also tells people you are here to learn, not just to visit." },
+      { ja: "りょうりがじょうずですね。", en: "You're a really good cook.",
+        tip: "Say it at the table, to whoever actually cooked. Better than おいしい on its own, because it praises the person and not only the food." },
+      { ja: "にほんごで、いちばんすきなことばはなんですか。", en: "What is your favourite word in Japanese?",
+        tip: "Ask a teacher or a host parent. Almost nobody is ever asked this, everybody has an answer, and the answer usually comes with a story. Have your own ready, because it comes straight back at you." },
+      { ja: "こどものとき、どんなあそびをしましたか。", en: "What games did you play when you were a child?",
+        tip: "For a host parent or a grandparent, at the dinner table. It moves the conversation off school and food, and older people in particular enjoy being asked something only they can answer." },
+      { ja: "このへんで、いちばんすきなばしょはどこですか。", en: "What is your favourite place around here?",
+        tip: "Ask it in Soja rather than in Kyoto. Visitors ask about famous places all the time and about ordinary towns almost never. There is a fair chance you end up being taken there." },
+      { ja: "オーストラリアについて、しりたいことはありますか。", en: "Is there anything you would like to know about Australia?",
+        tip: "Keep this one for when your Japanese runs out. It hands the next question to them, and they will happily carry the conversation for a while. Expect snakes, spiders and how long the flight was." },
+      { ja: "いっしょにしゃしんをとりませんか。", en: "Shall we take a photo together?",
+        tip: "とりませんか invites rather than asks for something, which is why it is the polite form to use. Ask a group at the end of a class or a club, not one person on their own, and not strangers at a temple." }
+    ]
+  },
+  {
     id: "thanks",
     ja: "おわかれ",
     en: "Saying goodbye",
