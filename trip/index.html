@@ -652,6 +652,7 @@
   if ("serviceWorker" in navigator && location.protocol.indexOf("http") === 0){
     navigator.serviceWorker.register("sw.js").catch(function(){});
   }
+  var SAVED_KEY = "jtSaved-v14";
   function allPhotos(){
     var out = [];
     PLACES.forEach(function(p){ p.sights.forEach(function(s){
@@ -674,19 +675,29 @@
     if (location.protocol.indexOf("http") !== 0){
       btn.disabled = true; btn.textContent = "Open this from its web address first"; return;
     }
-    var list = allPhotos(), done = 0;
+    var list = allPhotos(), done = 0, failed = 0;
     btn.disabled = true; btn.textContent = "Saving 0 of " + list.length;
     Promise.all(list.map(function(u){
-      return fetch(u, { cache: "reload" }).catch(function(){ return null; })
+      return fetch(u, { cache: "reload" })
+        .then(function(r){ if (!r.ok) failed++; }, function(){ failed++; })
         .then(function(){ done++; btn.textContent = "Saving " + done + " of " + list.length; });
     })).then(function(){
-      try { localStorage.setItem("jtSaved", String(Date.now())); } catch(err){}
+      if (failed){
+        /* honest: a photo that did not arrive is not saved. Leave the button. */
+        btn.disabled = false;
+        btn.textContent = "Saved " + (list.length - failed) + " of " + list.length +
+          " photos. Try again on wifi.";
+        return;
+      }
+      try { localStorage.setItem(SAVED_KEY, String(Date.now())); } catch(err){}
       markSaved("Saved. This app now works with no signal.");
     });
   });
 
   renderHome(); renderPlaces(); renderPhrases(); renderManners();
-  try { if (localStorage.getItem("jtSaved")) markSaved("Saved. This app works with no signal."); }
+  /* The key carries the app version, so after an update the button comes
+     back and the new photos get saved too. Keep in step with CACHE in sw.js. */
+  try { if (localStorage.getItem(SAVED_KEY)) markSaved("Saved. This app works with no signal."); }
   catch(err){}
   goTab("home");
 })();

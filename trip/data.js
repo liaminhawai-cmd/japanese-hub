@@ -1,11 +1,11 @@
 /* ============================================================================
    Japan Study Tour 2026 — content
    ----------------------------------------------------------------------------
-   Andrew edits THIS file. Nothing here is code you have to understand: it is
+   The teacher edits THIS file. Nothing here is code you have to understand: it is
    lists of things with labels on them. index.html never needs touching to add
    a sight, a spot or a phrase.
 
-   Conventions, fixed by Andrew:
+   Conventions, fixed by the teacher:
      - Instructions and body copy in English. Students are Years 8-11.
      - Headings bilingual, JAPANESE FIRST, then English.
      - Every spot ends with a "look" line: something to go and do, so the phone
@@ -73,7 +73,8 @@ window.PLACES = [
             photo: null,
             hook:
               "You are standing on a wooden platform about 13 metres above the " +
-              "hillside, held up by 168 pillars, and there is not a single nail " +
+              "hillside, held up by a lattice of huge zelkova pillars, the tallest " +
+              "over 12 metres, and there is not a single nail " +
               "in the frame holding it together. It is all joinery, cut so the " +
               "timbers lock into each other. In the Edo period there was a " +
               "superstition that if you jumped off and survived, your wish would " +
@@ -106,15 +107,17 @@ window.PLACES = [
             en: "Jishu Shrine",
             photo: null,
             hook:
-              "A small shrine behind the main hall with two stones set about 18 " +
+              "A small shrine behind the main hall with two stones set about 10 " +
               "metres apart. The idea is that you walk from one to the other with " +
               "your eyes shut. Make it, and love goes well for you. If a friend " +
               "has to steer you, you will need a go-between in real life too. It " +
-              "has been closed for restoration in recent years, so it may or may " +
-              "not be open when we come through.",
+              "has been shut for restoration since 2022 and the shrine has not " +
+              "set a reopening date, so it will be closed when we come through. " +
+              "The stones are still in there, just out of reach.",
             look:
-              "Pace out 18 metres somewhere flat and try it with your eyes shut. " +
-              "It is further than it sounds."
+              "Pace out 10 metres somewhere flat and out of the crowd, shut your " +
+              "eyes and try it with a friend walking beside you. It is further " +
+              "than it sounds."
           },
           {
             id: "sannenzaka",
@@ -141,8 +144,8 @@ window.PLACES = [
         en: "Kinkaku-ji, the Golden Pavilion",
         photo: "photos/kyoto-kinkakuji.webp",
         intro:
-          "A three-storey pavilion covered in gold leaf, sitting on the edge of a " +
-          "pond that reflects it.",
+          "A three-storey pavilion with gold leaf on its top two floors, sitting " +
+          "on the edge of a pond that reflects it.",
         spots: [
           {
             id: "gold",
@@ -168,8 +171,8 @@ window.PLACES = [
             photo: null,
             hook:
               "What you are looking at is not old. In 1950 a young monk who lived " +
-              "at the temple burned it to the ground on purpose, and then tried to " +
-              "take his own life on the hill behind. The building went up in about " +
+              "at the temple burned it to the ground on purpose, and was caught " +
+              "that evening on the hill behind. The building went up in about " +
               "an hour. It was rebuilt in 1955 from drawings and photographs. The " +
               "story became one of the most famous novels in Japan.",
             look:
@@ -255,11 +258,14 @@ window.PLACES = [
               "The approach spirals, doubles back and squeezes through narrow " +
               "gates, all designed so an attacking army gets strung out, confused " +
               "and stuck under fire from above. It works so well that visitors " +
-              "still get turned around. Nobody ever took this castle. It was never " +
-              "successfully attacked.",
+              "still get turned around. Nobody ever fought their way in. When an " +
+              "army finally fired on it, in 1868, the castle gave up before a " +
+              "battle started, so the maze was never really tested.",
             look:
-              "As you climb, notice how many times you change direction. Count the " +
-              "gates you pass through."
+              "As you climb, notice how many times you change direction. Some of " +
+              "the last gates before the keep are under scaffolding for repairs " +
+              "this year, so the squeeze may be tighter, or the route may bend " +
+              "around them. Count the gates you pass through anyway."
           },
           {
             id: "survived",
@@ -285,12 +291,14 @@ window.PLACES = [
               "Low down on the walls there are hatches that open straight " +
               "downwards, called ishi-otoshi, stone drops. Defenders opened them " +
               "and dropped rocks, or worse, on anyone at the base of the wall. " +
-              "There are also small square, triangular and circular holes all over " +
-              "the walls. Those are sama, firing ports. The shape tells you whether " +
-              "the person behind it had a gun or a bow.",
+              "There are also small holes all over the walls, some round, some " +
+              "triangular, some square, and a few tall thin slots. Those are sama, " +
+              "firing ports. The tall slots were for archers. The small shapes " +
+              "were all for matchlock guns.",
             look:
-              "Find a triangle hole and a square hole. Work out which one is for an " +
-              "archer and which is for a matchlock."
+              "Find all four shapes: a circle, a triangle, a square and a tall " +
+              "slot. Only one of them is for an archer. Work out why a bow needs " +
+              "that shape and a gun does not."
           }
         ]
       }
@@ -496,11 +504,13 @@ window.PLACES = [
             en: "The deer",
             photo: null,
             hook:
-              "The deer wander freely and are treated as messengers of the gods, " +
-              "so nobody moves them on. They are also completely shameless. They " +
-              "will take a map out of your hand, eat a ticket, or go through an " +
-              "open bag. Feeding them is not allowed, partly because paper and " +
-              "plastic make them sick.",
+              "The deer wander freely. They were once treated as messengers of " +
+              "the gods and fed, which is how they ended up living in the streets " +
+              "instead of on the mountain, and the town would quite like them to " +
+              "go back. They are also completely shameless. They will take a map " +
+              "out of your hand, eat a ticket, or go through an open bag. Feeding " +
+              "them is not allowed: the whole point is to get them living wild " +
+              "again, and a deer that eats paper and plastic gets sick.",
             look:
               "Keep your ferry ticket and your snacks zipped away. Then watch how " +
               "many tourists have not worked this out yet."
@@ -987,7 +997,7 @@ window.PLACES = [
     en: "Kobe, Motomachi",
     days: "Day 11, about 85 minutes",
     intro:
-      "The last stop before the airport, and it is short. Roughly 11:05 to 12:30 " +
+      "The last stop before the airport, and it is short. About an hour and a half " +
       "in Motomachi, then the coach leaves. Know what you want before you arrive.",
     sights: [
       {
@@ -996,8 +1006,8 @@ window.PLACES = [
         en: "Motomachi",
         photo: null,
         intro:
-          "A port district with a long shopping arcade and Japan's best known " +
-          "Chinatown next to it.",
+          "A port district with a long shopping arcade and one of Japan's three " +
+          "big Chinatowns next to it.",
         spots: [
           {
             id: "nankinmachi",
@@ -1009,7 +1019,9 @@ window.PLACES = [
               "1868 after more than two centuries of near-total isolation. Chinese " +
               "merchants settled here, and Nankinmachi grew out of that. It is a " +
               "few packed streets of street food, and the standard move is to buy " +
-              "small things from several stalls rather than sit down anywhere.",
+              "small things from several stalls rather than sit down anywhere. " +
+              "Hand the wrapper or skewer back to the stall you bought it from " +
+              "rather than hunting for a bin.",
             look:
               "You have well under two hours in total. Decide before you get off " +
               "the coach whether this stop is food or souvenirs, because it is not " +
@@ -1023,13 +1035,15 @@ window.PLACES = [
             hook:
               "In January 1995 an earthquake hit this city before dawn. More than " +
               "6,400 people died, mostly here. Elevated motorways fell on their " +
-              "sides and whole blocks burned. Almost everything you are walking " +
-              "past was rebuilt after it. Down at the waterfront a section of the " +
+              "sides and whole blocks burned. The arcade itself stayed up, but " +
+              "shops along it were wrecked, and a lot of what you are walking " +
+              "past was repaired or rebuilt after it. Down at the waterfront a " +
+              "section of the " +
               "old quay has been deliberately left broken and tilted, exactly as " +
               "the quake left it, as a memorial.",
             look:
-              "Look at the buildings around you and notice how new most of them " +
-              "are. That is not a coincidence."
+              "Look along the street and pick out the buildings that are plainly " +
+              "newer than the ones beside them. That is not a coincidence."
           }
         ]
       }
@@ -1119,7 +1133,8 @@ window.PHRASES = [
     en: "If something goes wrong",
     note: "Hold the phone up and let someone read the Japanese. That is what these are for.",
     items: [
-      { ja: "たすけてください。", en: "Please help me.", show: true },
+      { ja: "たすけてください。", en: "Please help me.", show: true,
+        tip: "This one is for real trouble, like being hurt or in danger. If you are only lost or stuck, use the two below." },
       { ja: "みちにまよいました。", en: "I am lost.", show: true },
       { ja: "にほんごがすこししかわかりません。えいごをはなせるひとはいますか。", en: "I only speak a little Japanese. Is there someone who speaks English?", show: true },
       { ja: "びょうきです。びょういんにいきたいです。", en: "I am unwell. I would like to go to a hospital.", show: true },
