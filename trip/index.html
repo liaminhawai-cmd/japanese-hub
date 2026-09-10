@@ -164,6 +164,7 @@
   .bigshot.contain img{object-fit:contain}
   /* ---------- maps ---------- */
   .maps{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;align-items:start}
+  .mp.wide{grid-column:1 / -1}
   .mp{background:#dde9f5;border:1px solid var(--line);border-radius:12px;
       padding:8px;position:relative;overflow:hidden}
   .mp svg{display:block;width:100%;height:auto}
@@ -350,38 +351,85 @@
   // Two panels: where this place sits in Japan, and a closer view of the
   // stretch of coast the whole tour runs along. Both are drawn from real
   // coastline, inline, so they work with no connection.
+  /* Where each label sits relative to its dot on the closer-up map. Worked
+     out by eye so nothing collides: the six stops run diagonally and two of
+     them, Hiroshima and Miyajima, are almost on top of each other. */
+  var MAP_LABEL = {
+    kyoto:     { dx:  0,   dy: -2.6, a: "middle", t: "Kyoto" },
+    kobe:      { dx:  0.4, dy:  4.2, a: "middle", t: "Kobe" },
+    himeji:    { dx:  0,   dy: -2.6, a: "middle", t: "Himeji" },
+    soja:      { dx:  0,   dy: -2.6, a: "middle", t: "Soja" },
+    hiroshima: { dx:  2.2, dy: -1.8, a: "start",  t: "Hiroshima" },
+    miyajima:  { dx: -2.2, dy:  3.4, a: "end",    t: "Miyajima" }
+  };
+  /* Two towns nobody stays in but everybody passes through or lands at. */
+  var MAP_CONTEXT = [
+    { k: "Osaka",          dx: 0.6, dy: -2.4, a: "middle" },
+    { k: "Kansai Airport", dx: 1.6, dy:  3.2, a: "middle" }
+  ];
+
   function mapPanel(view, here){
     var m = window.MAP; if (!m) return "";
     var v = m[view], key = view === "japan" ? "j" : "r";
+    var reg = view === "region";
     var svg = '<svg viewBox="0 0 ' + v.w + ' ' + v.h + '" aria-hidden="true">' +
               '<rect width="' + v.w + '" height="' + v.h + '" fill="#dde9f5"/>';
     v.d.forEach(function(d){
       svg += '<path d="' + d + '" fill="#eef1e4" stroke="#a9b3a5" stroke-width="0.35"/>';
     });
-    // the other stops, so a student sees the tour in order
+    function label(x, y, o, txt, size, fill, weight){
+      // A pale halo under the text so a name stays readable over the coast.
+      return '<text x="' + (x + o.dx) + '" y="' + (y + o.dy) + '" text-anchor="' +
+             o.a + '" font-size="' + size + '" fill="#eef1e4" stroke="#eef1e4" ' +
+             'stroke-width="1.5" stroke-linejoin="round">' + esc(txt) + '</text>' +
+             '<text x="' + (x + o.dx) + '" y="' + (y + o.dy) + '" text-anchor="' +
+             o.a + '" font-size="' + size + '" font-weight="' + weight + '" fill="' +
+             fill + '">' + esc(txt) + '</text>';
+    }
+    // The rest of the tour, so a student can see where this stop sits in it.
+    // Named on the closer-up map, where there is room for names.
     Object.keys(m.places).forEach(function(id){
       if (id === here) return;
       var q = m.places[id][key];
-      svg += '<circle cx="' + q[0] + '" cy="' + q[1] + '" r="0.9" fill="#8a8f88"/>';
+      svg += '<circle cx="' + q[0] + '" cy="' + q[1] + '" r="' + (reg ? 1.1 : 0.9) +
+             '" fill="#8a8f88"/>';
+      if (reg && MAP_LABEL[id]) svg += label(q[0], q[1], MAP_LABEL[id],
+                                             MAP_LABEL[id].t, 3.1, "#4a5148", "600");
     });
+    if (reg){
+      MAP_CONTEXT.forEach(function(c){
+        var a = m.anchors[c.k]; if (!a) return;
+        svg += '<circle cx="' + a.r[0] + '" cy="' + a.r[1] + '" r="0.8" fill="#b3b8b1"/>' +
+               label(a.r[0], a.r[1], c, c.k, 2.7, "#7a8078", "400");
+      });
+    }
     var pnt = m.places[here] && m.places[here][key];
     if (pnt){
       svg += '<circle cx="' + pnt[0] + '" cy="' + pnt[1] + '" r="3.2" fill="none" ' +
              'stroke="#a83232" stroke-width="0.8"/>' +
              '<circle cx="' + pnt[0] + '" cy="' + pnt[1] + '" r="1.7" fill="#a83232"/>';
+      var o = reg ? MAP_LABEL[here] : null;
+      if (o) svg += label(pnt[0], pnt[1], { dx:o.dx, dy:o.dy<0 ? o.dy-1.4 : o.dy+1.4, a:o.a },
+                          o.t, 3.6, "#a83232", "700");
     }
-    if (view === "japan" && m.anchors.Tokyo){
-      var tk = m.anchors.Tokyo.j;
-      svg += '<circle cx="' + tk[0] + '" cy="' + tk[1] + '" r="1" fill="#556"/>' +
-             '<text x="' + (tk[0]+2.5) + '" y="' + (tk[1]+1.6) + '" font-size="4" fill="#445">Tokyo</text>';
+    if (view === "japan"){
+      // On the whole country the six stops are almost one dot, so only the
+      // two ends of the map are named: it is orientation, not a road map.
+      [["Tokyo", 2.5, 1.6, "start"], ["Fukuoka", 0, 5, "middle"]].forEach(function(a){
+        var q = m.anchors[a[0]]; if (!q) return;
+        svg += '<circle cx="' + q.j[0] + '" cy="' + q.j[1] + '" r="1" fill="#556"/>' +
+               label(q.j[0], q.j[1], { dx:a[1], dy:a[2], a:a[3] }, a[0], 4, "#445", "400");
+      });
     }
     return svg + '</svg>';
   }
   function maps(placeId){
     if (!window.MAP || !window.MAP.places[placeId]) return "";
     return '<div class="maps">' +
-      '<div class="mp">' + mapPanel("japan", placeId) + '<div class="cap">In Japan</div></div>' +
-      '<div class="mp">' + mapPanel("region", placeId) + '<div class="cap">Closer up</div></div>' +
+      '<div class="mp wide">' + mapPanel("region", placeId) +
+        '<div class="cap">The tour, closer up</div></div>' +
+      '<div class="mp">' + mapPanel("japan", placeId) +
+        '<div class="cap">Where that is in Japan</div></div>' +
     '</div>';
   }
 
@@ -570,6 +618,37 @@
     b.querySelector(".en").textContent = kanaExtra ? "Back to the 46"
                                                    : "Voiced and small kana";
   }
+  /* ---- swipe between sections ------------------------------------------
+     Andrew: the tabs should not be something you scroll back up to reach.
+     They are pinned to the top anyway, but on a phone a sideways swipe is
+     the quicker move, so the whole page takes one. Inside a place, a swipe
+     right goes back a level, which is what a thumb expects. A swipe only
+     counts if it is clearly sideways, so it never fights normal scrolling. */
+  var TAB_ORDER = ["places", "phrases", "manners", "home"];
+  var tsX = 0, tsY = 0, tsT = 0, tracking = false;
+  document.addEventListener("touchstart", function(e){
+    if (e.touches.length !== 1) { tracking = false; return; }
+    if ($("kana").className === "on" || $("show").className === "on"){
+      tracking = false; return;
+    }
+    tsX = e.touches[0].clientX; tsY = e.touches[0].clientY;
+    tsT = Date.now(); tracking = true;
+  }, { passive: true });
+  document.addEventListener("touchend", function(e){
+    if (!tracking) return;
+    tracking = false;
+    var t = e.changedTouches[0];
+    var dx = t.clientX - tsX, dy = t.clientY - tsY;
+    if (Date.now() - tsT > 700) return;            // a drag, not a flick
+    if (Math.abs(dx) < 65 || Math.abs(dx) < Math.abs(dy) * 2) return;
+    if (stack.length){ if (dx > 0) back(); return; }
+    var cur = document.querySelector("nav button.on");
+    var i = TAB_ORDER.indexOf(cur ? cur.dataset.go : "places");
+    var n = i + (dx < 0 ? 1 : -1);
+    if (n < 0 || n >= TAB_ORDER.length) return;    // no wrapping round
+    goTab(TAB_ORDER[n]);
+  }, { passive: true });
+
   function openKana(){
     kanaExtra = false;
     drawKana();

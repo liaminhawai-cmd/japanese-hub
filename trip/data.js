@@ -61,7 +61,8 @@ window.PLACES = [
         id: "kiyomizu",
         ja: "清水寺",
         en: "Kiyomizu-dera",
-        photo: null,
+        photo: "photos/kyoto-kiyomizu.webp",
+            credit: "Kiyomizu-dera, via World History Encyclopedia.",
         intro:
           "A temple hanging off the side of a hill on a platform of wooden pillars. " +
           "It has been rebuilt many times. The current main hall dates from 1633.",
@@ -70,7 +71,8 @@ window.PLACES = [
             id: "butai",
             ja: "舞台",
             en: "The stage",
-            photo: null,
+            photo: "photos/kyoto-butai.webp",
+            credit: "Kiyomizu-dera, via World History Encyclopedia.",
             hook:
               "You are standing on a wooden platform about 13 metres above the " +
               "hillside, held up by a lattice of huge zelkova pillars, the tallest " +
@@ -88,7 +90,8 @@ window.PLACES = [
             id: "otowa",
             ja: "音羽の滝",
             en: "The Otowa waterfall",
-            photo: null,
+            photo: "photos/kyoto-otowa.webp",
+            credit: "Otowa waterfall, photo by Angus Kirk via Flickr.",
             hook:
               "Three streams of water fall into a pool, and you drink from one " +
               "with a cup on a long pole. Each stream is supposed to give you a " +
@@ -123,7 +126,8 @@ window.PLACES = [
             id: "sannenzaka",
             ja: "三年坂",
             en: "The approach streets",
-            photo: null,
+            photo: "photos/kyoto-sannenzaka.webp",
+            credit: "Sannenzaka in the rain, via Flickr.",
             hook:
               "The stone lanes below the temple are called Sannenzaka and " +
               "Ninenzaka, and the buildings along them are protected, which is " +
