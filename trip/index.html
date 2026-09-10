@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="google" content="notranslate">
-<meta name="theme-color" content="#e9d29b">
+<meta name="theme-color" content="#e3c274">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>日本研修旅行 Japan Study Tour</title>
@@ -21,7 +21,7 @@
        than metallic gold: warm enough to read as gold, light enough to keep
        black text and the pale tiles comfortable on top of it. Hiroshima
        overrides all of this back to a cool grey (see the quiet block). */
-    --bg:#e9d29b; --paper:#fffdf4; --ink:#1e1a10; --muted:#57503c;
+    --bg:#e3c274; --paper:#fffdf4; --ink:#1e1a10; --muted:#453a20;
     --line:#d4be8c; --line-soft:#e2d2a9; --accent:#a83232;
     --deep:#16375e; --ok:#2f6a3e;
     /* Tile blocks, from the traditional palette and kept pale so black text
@@ -40,15 +40,14 @@
   }
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html{-webkit-text-size-adjust:100%}
+  /* Real leaf, not a grid of squares: a seamless photographic tile drawn by
+     tools/make-gold-leaf.py. --bg is the fallback, and is the texture's own
+     mean colour, so a phone that never loads the image still gets gold. The
+     tile is 1024px shown at 512, which keeps it sharp on a 2x screen. */
   body{font-family:var(--font);background:var(--bg);color:var(--ink);
        line-height:1.6;font-size:18px;overflow-wrap:break-word;
-       background-image:
-         repeating-linear-gradient(90deg, rgba(140,105,40,.055) 0 1px, transparent 1px 78px),
-         repeating-linear-gradient(0deg,  rgba(140,105,40,.055) 0 1px, transparent 1px 78px),
-         repeating-linear-gradient(90deg, rgba(255,246,214,.5) 0 1px, transparent 1px 78px),
-         repeating-linear-gradient(0deg,  rgba(255,246,214,.5) 0 1px, transparent 1px 78px);
-       background-position:0 0, 0 0, 1px 1px, 1px 1px;
-       background-attachment:fixed}
+       background-image:url("gold-leaf.webp");
+       background-size:512px 512px;background-repeat:repeat}
 
   /* ---------- top bar: title, then the menu ---------- */
   .top{position:sticky;top:0;z-index:40;background:var(--paper);
@@ -696,7 +695,7 @@
   }
 
   /* ================= navigation ================= */
-  var BUILD = "Version 20, 10 September 2026";
+  var BUILD = "Version 21, 10 September 2026";
   var TABS = { home:["りょてい","Itinerary"], places:["ばしょ","Places"],
                phrases:["ことば","Phrases"], manners:["マナー","Etiquette"] };
   var stack = [];

@@ -16,13 +16,14 @@
    Bump CACHE when the app changes, or phones will keep serving the old copy.
    ========================================================================== */
 
-var CACHE = "japan-trip-v20";
+var CACHE = "japan-trip-v21";
 
 var SHELL = [
   "./",
   "./index.html",
   "./data.js",
   "./map.js",
+  "./gold-leaf.webp",
   "./kana-hiragana.svg",
   "./kana-katakana.svg",
   "./kana-hiragana-plus.svg",
