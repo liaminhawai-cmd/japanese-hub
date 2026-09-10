@@ -108,7 +108,8 @@ window.PLACES = [
             id: "jishu",
             ja: "地主神社",
             en: "Jishu Shrine",
-            photo: null,
+            photo: "photos/kyoto-jishu.webp",
+            credit: "Jishu Shrine, photo by Angus Kirk via Flickr.",
             hook:
               "A small shrine behind the main hall with two stones set about 10 " +
               "metres apart. The idea is that you walk from one to the other with " +
@@ -189,7 +190,8 @@ window.PLACES = [
         id: "nijo",
         ja: "二条城",
         en: "Nijo Castle",
-        photo: null,
+        photo: "photos/kyoto-nijo.webp",
+            credit: "Nijo Castle, via Wikimedia Commons.",
         intro:
           "The shogun's residence in Kyoto, built in 1603. This is where the last " +
           "shogun handed power back to the Emperor in 1867.",
@@ -231,7 +233,8 @@ window.PLACES = [
         id: "himejijo",
         ja: "姫路城",
         en: "Himeji Castle",
-        photo: null,
+        photo: "photos/himeji-castle.webp",
+            credit: "Himeji Castle, photo by jpellgen via Flickr.",
         intro:
           "Built in its current form in 1609. It is a World Heritage site and a " +
           "National Treasure.",
@@ -465,7 +468,8 @@ window.PLACES = [
         id: "itsukushima",
         ja: "厳島神社",
         en: "Itsukushima Shrine",
-        photo: "photos/miyajima-torii.webp",
+        photo: "photos/miyajima-itsukushima.webp",
+        credit: "Itsukushima Shrine, via Wikimedia Commons.",
         intro:
           "A shrine on stilts over the sea, with a gate standing in the water in " +
           "front of it. World Heritage listed.",
@@ -506,7 +510,8 @@ window.PLACES = [
             id: "deer",
             ja: "しか",
             en: "The deer",
-            photo: null,
+            photo: "photos/miyajima-deer.webp",
+            credit: "Deer near the torii gate, via Wikimedia Commons.",
             hook:
               "The deer wander freely. They were once treated as messengers of " +
               "the gods and fed, which is how they ended up living in the streets " +
@@ -1008,7 +1013,8 @@ window.PLACES = [
         id: "motomachi",
         ja: "元町",
         en: "Motomachi",
-        photo: null,
+        photo: "photos/kobe-motomachi.webp",
+            credit: "Kobe Motomachi, via Wikimedia Commons.",
         intro:
           "A port district with a long shopping arcade and one of Japan's three " +
           "big Chinatowns next to it.",

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="google" content="notranslate">
-<meta name="theme-color" content="#f4efe6">
+<meta name="theme-color" content="#e9d29b">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>日本研修旅行 Japan Study Tour</title>
@@ -21,16 +21,17 @@
        than metallic gold: warm enough to read as gold, light enough to keep
        black text and the pale tiles comfortable on top of it. Hiroshima
        overrides all of this back to a cool grey (see the quiet block). */
-    --bg:#f5ead1; --paper:#fffdf6; --ink:#1e1b14; --muted:#5c5647;
-    --line:#e0d3b2; --line-soft:#ece2c9; --accent:#a83232;
+    --bg:#e9d29b; --paper:#fffdf4; --ink:#1e1a10; --muted:#57503c;
+    --line:#d4be8c; --line-soft:#e2d2a9; --accent:#a83232;
     --deep:#16375e; --ok:#2f6a3e;
     /* Tile blocks, from the traditional palette and kept pale so black text
        sits on them comfortably: asagi, sakura, wakatake, fuji, yamabuki,
        sora, matcha, toki. Tiles cycle through these by position. The
-       yamabuki is deeper than the others on purpose: a paler one is too
-       close to the gold ground and the tile stops reading as a tile. */
+       two that used to be warm yellows, yamabuki and matcha, are a coral
+       and a deeper green here: against a gold ground a pale yellow tile
+       stops reading as a tile at all. */
     --c1:#d9edf1; --c2:#fbe3e8; --c3:#dcecdc; --c4:#e4e1f0;
-    --c5:#f3ddb0; --c6:#dde9f5; --c7:#e7edd4; --c8:#f7e3e6;
+    --c5:#f6d9c8; --c6:#dde9f5; --c7:#dbe6c2; --c8:#f7e3e6;
     --shadow:0 2px 10px rgba(0,0,0,.08);
 
     --font-en:Calibri,Carlito,'Segoe UI',Tahoma,Geneva,Verdana;
@@ -40,7 +41,14 @@
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html{-webkit-text-size-adjust:100%}
   body{font-family:var(--font);background:var(--bg);color:var(--ink);
-       line-height:1.6;font-size:18px;overflow-wrap:break-word}
+       line-height:1.6;font-size:18px;overflow-wrap:break-word;
+       background-image:
+         repeating-linear-gradient(90deg, rgba(140,105,40,.055) 0 1px, transparent 1px 78px),
+         repeating-linear-gradient(0deg,  rgba(140,105,40,.055) 0 1px, transparent 1px 78px),
+         repeating-linear-gradient(90deg, rgba(255,246,214,.5) 0 1px, transparent 1px 78px),
+         repeating-linear-gradient(0deg,  rgba(255,246,214,.5) 0 1px, transparent 1px 78px);
+       background-position:0 0, 0 0, 1px 1px, 1px 1px;
+       background-attachment:fixed}
 
   /* ---------- top bar: title, then the menu ---------- */
   .top{position:sticky;top:0;z-index:40;background:var(--paper);
@@ -177,7 +185,7 @@
   body.quiet,
   .quiet{--paper:#f2f1ef;--bg:#eceae7;--accent:#4a5560;--line:#c9c7c3;
          --line-soft:#dedcd8;--muted:#524f49}
-  body.quiet{background:var(--bg)}
+  body.quiet{background:var(--bg);background-image:none}
   body.quiet .top{background:var(--paper);border-bottom-color:var(--line)}
   .quiet .look{border-left-width:4px;background:transparent}
   body.quiet .gt{background:#e6e6e4!important;border-color:rgba(0,0,0,.09)}
@@ -278,6 +286,8 @@
         border:1px solid var(--ok);color:var(--ok);font-size:15.5px;font-weight:600}
 
   .foot{font-size:14.5px;color:var(--muted);text-align:center;margin-top:28px;line-height:1.6}
+  .foot .build{display:block;margin-top:8px;font-size:12.5px;opacity:.7;
+        letter-spacing:.04em}
   :focus-visible{outline:3px solid var(--deep);outline-offset:2px}
   @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -493,7 +503,10 @@
     });
     h += '</div>';
     h += '<p class="foot">Meeting points, phone numbers and your emergency details ' +
-         'are on your lanyard, not in this app.</p>';
+         'are on your lanyard, not in this app.' +
+         // A visible version, so "which one am I looking at" is answerable
+         // without guessing. Keep BUILD in step with CACHE in sw.js.
+         '<span class="build">' + esc(BUILD) + '</span></p>';
     $("v-home").innerHTML = h;
   }
 
@@ -534,7 +547,9 @@
   function sightHtml(p, s){
     var q = p.tone === "quiet";
     var h = '<div' + (q ? ' class="quiet"' : '') + '>' + head(s.ja, s.en) +
-            '<p class="lede">' + esc(s.intro) + '</p><div class="grid">';
+            '<p class="lede">' + esc(s.intro) + '</p>' +
+            (s.credit ? '<p class="credit">' + esc(s.credit) + '</p>' : '') +
+            '<div class="grid">';
     s.spots.forEach(function(sp, i){
       h += tile(sp, 'data-spot="' + esc(p.id + "/" + s.id + "/" + sp.id) + '"', "", i);
     });
@@ -681,6 +696,7 @@
   }
 
   /* ================= navigation ================= */
+  var BUILD = "Version 20, 10 September 2026";
   var TABS = { home:["りょてい","Itinerary"], places:["ばしょ","Places"],
                phrases:["ことば","Phrases"], manners:["マナー","Etiquette"] };
   var stack = [];
