@@ -89,6 +89,8 @@
   .drop .h{font-size:20px;font-weight:700}
   .drop .h .en{font-size:15px;font-weight:400;color:var(--muted);margin-left:8px}
   .drop p{font-size:17.5px;margin-top:7px;line-height:1.6}
+  .drop .mlink{margin-top:12px}
+  .drop .mlink a{color:var(--deep);font-weight:700;font-size:16.5px}
   .gt.sel{outline:3px solid var(--accent);outline-offset:2px}
   .stack{display:flex;flex-direction:column;gap:12px}
 
@@ -201,7 +203,10 @@
   .phrase{width:100%;text-align:left;background:var(--paper);border:1px solid var(--line);
           border-radius:14px;padding:15px 16px;font-family:inherit;color:var(--ink);
           cursor:pointer;box-shadow:var(--shadow);display:block}
-  .phrase .jp{font-size:24px;line-height:1.5;font-weight:600}
+  .phrase .jp{font-size:24px;line-height:1.5;font-weight:600;white-space:pre-line}
+  /* Anything already written out in lines, like the anthem, sets smaller so
+     a line of it does not wrap and lose its shape. */
+  .phrase .jp.lines{font-size:18.5px;line-height:1.5;font-weight:600}
   .phrase .en{font-size:17px;margin-top:6px}
   .phrase .tip{font-size:15px;color:var(--muted);margin-top:10px;padding-top:10px;
                border-top:1px solid var(--line-soft)}
@@ -585,9 +590,11 @@
     var h = head("ことば", "Phrases") +
             '<p class="lede">Pick the situation you are in. Everything is in kana. ' +
             'The \u304b\u306a tab down the side opens the charts if a character has ' +
-            'gone out of your head.</p><div class="grid">';
+            'gone out of your head. The last few are set pieces: learn those before ' +
+            'you fly.</p><div class="grid">';
     PHRASES.forEach(function(g, i){
-      h += tile(g, 'data-group="' + esc(g.id) + '"', g.items.length + " phrases", i);
+      h += tile(g, 'data-group="' + esc(g.id) + '"',
+                g.items.length + " " + (g.unit || "phrases"), i);
     });
     $("v-phrases").innerHTML = h + '</div>';
   }
@@ -600,7 +607,8 @@
     var h = head(g.ja, g.en) + '<p class="lede">' + esc(g.note) + '</p><div class="stack">';
     g.items.forEach(function(it, k){
       h += '<button class="phrase" data-ph="' + (base + k) + '">' +
-             '<div class="jp">' + esc(it.ja) + '</div>' +
+             '<div class="jp' + (it.ja.indexOf("\n") > -1 ? " lines" : "") + '">' +
+               esc(it.ja) + '</div>' +
              '<div class="en">' + esc(it.en) + '</div>' +
              (it.tip ? '<div class="tip">' + esc(it.tip) + '</div>' : "") +
              (it.show ? '<div class="showtag">tap to show someone</div>' : "") +
@@ -690,12 +698,18 @@
     });
     var d = $("mdrop");
     d.innerHTML = '<div class="drop"><div class="h">' + esc(m.ja) +
-                  '<span class="en">' + esc(m.en) + '</span></div><p>' + esc(m.body) + '</p></div>';
+                  '<span class="en">' + esc(m.en) + '</span></div><p>' + esc(m.body) + '</p>' +
+                  // Only ever an https link we put here ourselves. It needs
+                  // signal, so whatever matters is in the body text as well.
+                  (m.link && /^https:\/\//.test(m.link.url)
+                    ? '<p class="mlink"><a href="' + esc(m.link.url) + '" target="_blank" ' +
+                      'rel="noopener noreferrer">' + esc(m.link.label) + '</a></p>' : '') +
+                  '</div>';
     d.scrollIntoView({ block: "nearest", behavior: "smooth" });
   }
 
   /* ================= navigation ================= */
-  var BUILD = "Version 23, 10 September 2026";
+  var BUILD = "Version 24, 12 September 2026";
   var TABS = { home:["りょてい","Itinerary"], places:["ばしょ","Places"],
                phrases:["ことば","Phrases"], manners:["マナー","Etiquette"] };
   var stack = [];

@@ -1152,6 +1152,138 @@ window.PHRASES = [
     ]
   },
   {
+    id: "jiko",
+    ja: "じこしょうかい",
+    en: "Introducing yourself",
+    note: "The lines in order, the way you would say them standing up in front " +
+          "of a class. One to one with your host student you only need the first " +
+          "few. Learn this one properly: you will use it more than anything else " +
+          "in the app.",
+    items: [
+      { ja: "はじめまして。", en: "Nice to meet you.",
+        tip: "Only ever the first time you meet someone. Bow as you say it." },
+      { ja: "わたしのなまえは＿＿＿です。", en: "My name is ___.",
+        tip: "Family name first is the Japanese order, but your first name is easier for people to catch and easier to be called by." },
+      { ja: "＿＿＿とよんでください。", en: "Please call me ___.",
+        tip: "Useful if your name is long or hard to say. Give them a short version and they will use it all week." },
+      { ja: "＿＿さいです。", en: "I am ___ years old." },
+      { ja: "ちゅうがく２ねんせいです。", en: "I am in Year 8.",
+        tip: "Swap the year to match you. Year 8 = ちゅうがく２ねんせい, Year 9 = ちゅうがく３ねんせい, Year 10 = こうこう１ねんせい, Year 11 = こうこう２ねんせい." },
+      { ja: "オーストラリアのメルボルンからきました。", en: "I come from Melbourne, Australia.",
+        tip: "Expect a reaction. Melbourne is a long way away and people will say so." },
+      { ja: "かぞくは＿にんです。", en: "There are ___ people in my family.",
+        tip: "Count yourself. Then: ちちとははといもうととわたしです, my father, my mother, my younger sister and me." },
+      { ja: "しゅみは＿＿＿です。", en: "My hobby is ___.",
+        tip: "テニス, サッカー, バスケットボール, ピアノ, ダンス, ゲーム, りょうり, どくしょ. Say whichever is true, even if it is not impressive." },
+      { ja: "にほんごがだいすきです。", en: "I love Japanese.",
+        tip: "Say it. You are standing in a Japanese classroom having learnt their language, and they know how rare that is." },
+      { ja: "どうぞよろしくおねがいします。", en: "Please be good to me.",
+        tip: "The line that closes it. Bow again, and stop there." },
+      { ja: "しゅみはなんですか。", en: "What is your hobby?",
+        tip: "For one to one, not for the front of a class. Ask it back the moment you finish, and the conversation carries itself." }
+    ]
+  },
+  {
+    id: "arigatou",
+    ja: "おれいのことば",
+    en: "Thanking them for a class",
+    unit: "lines",
+    note: "For whoever speaks for the group after a calligraphy lesson, a tea " +
+          "ceremony, a club session. Say the first line, one or two middle ones, " +
+          "then the last. Slowly, and it will be fine.",
+    items: [
+      { ja: "＿＿＿についておしえてくれて、ありがとうございました。",
+        en: "Thank you very much for teaching us about ___.",
+        tip: "Put the activity in the gap: しょどう calligraphy, おちゃ tea, いけばな flower arranging, おこと the koto, ゆかた the yukata." },
+      { ja: "とてもたのしくて、いいけいけんでした。", en: "It was a lot of fun and a good experience." },
+      { ja: "みなさんとあえて、とてもよかったです。", en: "It was really good to meet you all." },
+      { ja: "＿＿＿きかいがあって、とてもよかったです。",
+        en: "The chance to ___ was really good.",
+        tip: "The gap takes a whole action: ゆかたをきる to wear a yukata, おことをひく to play the koto, しょどうをする to do calligraphy, いけばなをする to arrange flowers, おちゃかいにさんかする to take part in a tea ceremony, ぶかつどうにさんかする to join in club activities." },
+      { ja: "オーストラリアにかえっても、ここでならったことをいかしたいとおもいます。",
+        en: "Even back in Australia, we would like to keep using what we learnt here.",
+        tip: "The long one. Worth having if you are speaking at something formal, and worth skipping if you are not." },
+      { ja: "どうも、ありがとうございました。", en: "Thank you very much.",
+        tip: "Finish here, and bow. Do not add anything after it." }
+    ]
+  },
+  {
+    id: "tegami",
+    ja: "おれいのてがみ",
+    en: "Your thank you letter",
+    unit: "sentences",
+    note: "Write this for your host family near the end of the week. Pick only " +
+          "the ones that are true for you, keep them roughly in this order, and " +
+          "write it out by hand. Put the English underneath if you like: they " +
+          "will want to read both.",
+    items: [
+      { ja: "＿＿＿家のみなさんへ", en: "To the ___ family",
+        tip: "Their family name goes in the gap. This opens the letter." },
+      { ja: "みなさんのおかげで、この一週間はとてもたのしかったです。",
+        en: "Thanks to all of you, this week has been wonderful.",
+        tip: "おかげで means it happened because of them. It is the warmest way to start." },
+      { ja: "あっという間におわりました。", en: "It went by in a flash." },
+      { ja: "日本の生活も日本の家のようすもよくわかりました。",
+        en: "I have learnt a lot about Japanese life and Japanese homes." },
+      { ja: "とてもいいおもいでがたくさんできました。", en: "I have made so many good memories." },
+      { ja: "＿＿＿についておしえてくれて、ありがとうございます。",
+        en: "Thank you for teaching me about ___." },
+      { ja: "みなさんはとてもやさしいです。", en: "You are all so kind." },
+      { ja: "お母さんのりょうりはおいしかったです。", en: "Your cooking was delicious.",
+        tip: "Change お母さん to whoever actually cooked." },
+      { ja: "＿＿＿さんはとてもおもしろい人です。", en: "___ is such a funny, interesting person.",
+        tip: "Name one person in the family. Being noticed individually is what makes a letter land." },
+      { ja: "＿＿＿にいっしょに行くことができて、とてもうれしかったです。",
+        en: "I was so happy we could go to ___ together." },
+      { ja: "＿＿＿をいっしょにすることができて、とてもうれしかったです。",
+        en: "I was so happy we could do ___ together." },
+      { ja: "英語で話してくれて、ありがとうございます。とてもたすかりました。",
+        en: "Thank you for speaking English with me. It helped enormously.",
+        tip: "Worth writing. Speaking a second language all week is tiring, and they did it for you." },
+      { ja: "いろいろおせわになりました。", en: "You looked after me in so many ways.",
+        tip: "A set phrase with real weight in Japanese. It says you know how much was done for you." },
+      { ja: "まだ日本語が下手です。もっとがんばりたいです。",
+        en: "My Japanese is still poor. I want to work harder at it." },
+      { ja: "また日本に来たいです。", en: "I want to come to Japan again." },
+      { ja: "また、みなさんに会いたいです。", en: "I want to see you all again." },
+      { ja: "かえって、さみしくなります。", en: "I will miss you when I go home." },
+      { ja: "いつか、オーストラリアにあそびに来てください。",
+        en: "Please come and visit me in Australia one day." },
+      { ja: "メールではなしましょう。", en: "Let's keep in touch by email." },
+      { ja: "ほんとうに、ありがとうございました。さようなら。",
+        en: "Thank you sincerely for everything. Goodbye.",
+        tip: "Or またあいましょう, let's meet again, which is a kinder ending." },
+      { ja: "＿＿＿より", en: "From ___",
+        tip: "Your name, and that is the letter finished." }
+    ]
+  },
+  {
+    id: "anthem",
+    ja: "こっか",
+    en: "The anthem",
+    unit: "verses",
+    note: "Advance Australia Fair, in the words that have been official since " +
+          "January 2021. You may be asked to sing it at a welcome or farewell " +
+          "assembly, in front of everybody, with no music. Know the first verse " +
+          "by heart.",
+    items: [
+      { ja: "Australians all let us rejoice,\nFor we are one and free;\n" +
+            "We've golden soil and wealth for toil;\nOur home is girt by sea;\n" +
+            "Our land abounds in nature's gifts\nOf beauty rich and rare;\n" +
+            "In history's page, let every stage\nAdvance Australia Fair.\n" +
+            "In joyful strains then let us sing,\nAdvance Australia Fair.",
+        en: "First verse",
+        tip: "The second line changed in 2021: it is one and free now, not young and free. Anyone who learnt it before then still gets it wrong." },
+      { ja: "Beneath our radiant Southern Cross\nWe'll toil with hearts and hands;\n" +
+            "To make this Commonwealth of ours\nRenowned of all the lands;\n" +
+            "For those who've come across the seas\nWe've boundless plains to share;\n" +
+            "With courage let us all combine\nTo Advance Australia Fair.\n" +
+            "In joyful strains then let us sing,\nAdvance Australia Fair.",
+        en: "Second verse",
+        tip: "Usually only sung at something formal. Worth reading through so it does not catch you out." }
+    ]
+  },
+  {
     id: "wild",
     ja: "とっておき",
     en: "Wild card",
@@ -1199,6 +1331,20 @@ window.PHRASES = [
    Short, blunt, and only things that actually come up on this trip.
    ------------------------------------------------------------------------- */
 window.MANNERS = [
+  { ja: "京都のマナー", en: "Kyoto in particular",
+    body: "Kyoto asks more of visitors than anywhere else you are going, because " +
+          "so many people go there. The city's own guidance comes down to a few " +
+          "things. In Gion, do not stop, touch, follow or photograph a geiko or " +
+          "maiko you see in the street: they are on their way to work, and many " +
+          "of the side streets are private property where photography is not " +
+          "allowed at all. In crowded places do not stop dead to talk or take a " +
+          "photo, and do not walk four abreast, which a group of fourteen does " +
+          "without noticing. Put rubbish in a bin or carry it, and smoke nowhere " +
+          "except a marked smoking area. On trains and buses keep your voice " +
+          "down, take no calls, and give up your seat.",
+    link: { url: "https://kyoto.travel/en/responsible-travel/mind-your-manners/",
+            label: "Kyoto City's own guide for visitors" } },
+
   { ja: "くつ", en: "Shoes", body: "Shoes come off at the entrance: at home, at school, and inside temple buildings. There is usually a step or a change of flooring showing where. Once they are off, turning them to face the door is the normal habit. You will be taking them off several times a day, so socks get seen." },
   { ja: "はし", en: "Chopsticks", body: "Two things are avoided at the table because they belong to funeral customs: standing chopsticks upright in rice, and passing food from chopsticks to chopsticks. Otherwise, resting them on the holder between mouthfuls is the usual habit." },
   { ja: "おふろ", en: "The bath", body: "You wash and rinse fully at the taps outside the bath, then get in to soak. The same water stays in for the next person, so soap stays out of it and the plug stays in. The order of who bathes when is up to the family." },
