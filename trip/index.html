@@ -212,6 +212,13 @@
   .phrase .en{font-size:17px;margin-top:6px}
   .phrase .tip{font-size:15px;color:var(--muted);margin-top:10px;padding-top:10px;
                border-top:1px solid var(--line-soft)}
+  .kanaswap{display:block;width:100%;margin:0 0 14px;padding:12px;border-radius:12px;
+        border:1px solid var(--line);background:var(--paper);color:var(--ink);
+        font-family:inherit;font-size:16px;font-weight:700;cursor:pointer;
+        -webkit-appearance:none;appearance:none;box-shadow:var(--shadow)}
+  .kanaswap .en{font-size:13.5px;font-weight:400;color:var(--muted);margin-left:9px}
+  .kanaswap.on{background:var(--deep);border-color:var(--deep);color:#fbf7ee}
+  .kanaswap.on .en{color:rgba(251,247,238,.8)}
   .showtag{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.08em;
            text-transform:uppercase;color:var(--paper);background:var(--deep);
            border-radius:12px;padding:5px 11px;margin-top:11px}
@@ -600,20 +607,35 @@
     });
     $("v-phrases").innerHTML = h + '</div>';
   }
+  /* Speeches carry an all-kana version as well as the real text. A Year 8
+     reading aloud in front of a school should be able to rehearse from
+     something they can actually read. One switch for the whole group rather
+     than a control on every card. */
+  var kanaOnly = false;
   function groupHtml(g){
     var base = 0;
     for (var i=0;i<PHRASES.length;i++){
       if (PHRASES[i].id === g.id) break;
       base += PHRASES[i].items.length;
     }
-    var h = head(g.ja, g.en) + '<p class="lede">' + esc(g.note) + '</p><div class="stack">';
+    var h = head(g.ja, g.en) + '<p class="lede">' + esc(g.note) + '</p>';
+    var anyKana = g.items.some(function(x){ return !!x.kana; });
+    if (anyKana){
+      h += '<button class="kanaswap' + (kanaOnly ? " on" : "") + '" data-kanaswap="1">' +
+           (kanaOnly ? "\u6f22\u5b57\u3092\u3060\u3059<span class=\"en\">Put the kanji back</span>"
+                     : "\u304b\u306a\u3060\u3051<span class=\"en\">All kana</span>") + '</button>';
+    }
+    h += '<div class="stack">';
     g.items.forEach(function(it, k){
       h += '<button class="phrase" data-ph="' + (base + k) + '">' +
              // A speech needs its occasion above it, not buried in the tip:
              // the student delivering it has to find theirs at a glance.
              (it.label ? '<div class="plabel">' + esc(it.label) + '</div>' : "") +
-             '<div class="jp' + (it.ja.indexOf("\n") > -1 ? " lines" : "") + '">' +
-               esc(it.ja) + '</div>' +
+             (function(){
+               var body = (kanaOnly && it.kana) ? it.kana : it.ja;
+               return '<div class="jp' + (body.indexOf("\n") > -1 ? " lines" : "") + '">' +
+                      esc(body) + '</div>';
+             })() +
              '<div class="en">' + esc(it.en) + '</div>' +
              (it.tip ? '<div class="tip">' + esc(it.tip) + '</div>' : "") +
              (it.show ? '<div class="showtag">tap to show someone</div>' : "") +
@@ -714,7 +736,7 @@
   }
 
   /* ================= navigation ================= */
-  var BUILD = "Version 25, 12 September 2026";
+  var BUILD = "Version 26, 12 September 2026";
   var TABS = { home:["りょてい","Itinerary"], places:["ばしょ","Places"],
                phrases:["ことば","Phrases"], manners:["マナー","Etiquette"] };
   var stack = [];
@@ -781,6 +803,11 @@
     if (e.target.closest("#kanatab")) return openKana();
     if (e.target.closest("#kanaClose")) return closeKana();
     if (e.target.closest("#kanaMore")){ kanaExtra = !kanaExtra; return drawKana(); }
+    if (e.target.closest("[data-kanaswap]")){
+      kanaOnly = !kanaOnly;
+      if (stack.length) stack[stack.length - 1].draw();
+      return;
+    }
     if ((t = e.target.closest("[data-kana]"))){ kanaScript = t.dataset.kana; return drawKana(); }
   });
 
