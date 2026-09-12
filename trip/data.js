@@ -1284,6 +1284,56 @@ window.PHRASES = [
     ]
   },
   {
+    id: "speech",
+    ja: "スピーチ",
+    en: "Speaking for the group",
+    unit: "speeches",
+    note: "Four times in Soja, someone stands up and speaks for all of us. If " +
+          "that is you, this is your script. Learn it out loud, not in your " +
+          "head. Slow is better than fast, and a pause is better than a rush. " +
+          "The wide spaces are there to breathe.",
+    items: [
+      { label: "Thursday 24 September \u00b7 the first meeting",
+        ja: "みなさん、はじめまして。私たちはキューハイスクールの代表の＿＿＿と＿＿＿と＿＿＿です。\n" +
+            "私たちは、総社に来るのを　とても　楽しみに　していました。\n" +
+            "ほとんどの生徒は　日本に　来るのが　はじめてなので、　日本で　生活することは　とても　おもしろい　経験になる　と思います。\n" +
+            "キューハイスクールで　日本語と　日本の文化を　勉強していますが、日本語は、むずかしいので、まだまだ　上手じゃないです。\n" +
+            "これからの一週間、私たちに　日本語と　日本の文化を　教えてください。がんばりたいと思います。\n" +
+            "よろしく　お願いします。",
+        en: "Hello everyone, nice to meet you. We are the student representatives from Kew High School, ___, ___ and ___. We were really looking forward to coming to Soja. For most of us this is our first time in Japan, so living here is going to be a very interesting experience. We study Japanese language and culture at Kew High School, but Japanese is hard and we are not good at it yet. Over this coming week, please teach us your language and your culture. We will do our best. Thank you.",
+        tip: "The very first evening, minutes after you arrive, before you meet your host family. Three speakers. Put your own names in the gaps and say them clearly: it is the only part nobody can guess." },
+      { label: "Friday 25 September \u00b7 the welcome assembly",
+        ja: "みなさん、はじめまして。私たちはキューハイスクールの代表の＿＿＿と＿＿＿と＿＿＿です。私たちは、きのう　総社に　着きました。\n" +
+            "総社に　来る前に　姫路城に　行って　観光しました。日本に来る前に　日本の　お城などの　写真を　見たことが　ありましたが、実際に　見ると、とても　おもしろかったです。\n" +
+            "私たちは、学校で　日本語と　日本の文化を　勉強しています。日本語は　まだまだ　上手じゃないので、ぜひ　私たちに日本語を　教えてください。一週間は　みじかいですが、いろいろな　ことをしたいと　思います。\n" +
+            "よろしく　お願いします。",
+        en: "Hello everyone, nice to meet you. We are the student representatives from Kew High School, ___, ___ and ___. We arrived in Soja yesterday. On the way here we stopped at Himeji Castle. We had seen photographs of Japanese castles before we came, but seeing one for real was something else. We study Japanese language and culture at school. Our Japanese is still not good, so please teach us. One week is short, but we want to do a lot with it. Thank you.",
+        tip: "Broadcast to the whole school, so you are speaking to hundreds of people you cannot see. Three speakers. Look up at the end of each line rather than reading straight through." },
+      { label: "Tuesday 29 September \u00b7 the farewell assembly",
+        ja: "こんにちは。一週間、ありがとうございました。\n" +
+            "総社の皆さんのおかげで、私たちは　いろいろな　経験ができて、とてもいい思い出が　たくさん　できました。\n" +
+            "学校の　先生たちには、ていねいに　教えて　いただいたので、　勉強することができました。\n" +
+            "ホストファミリーの皆さん、　お世話になりました。ありがとうございました。\n" +
+            "機会があったら、また総社に来たい　と思います。皆さんも　ぜひ、メルボルンへ　来てください。\n" +
+            "ほんとうに　ありがとうございました。",
+        en: "Hello. Thank you for this week. Thanks to everyone in Soja we have had all sorts of experiences and made so many good memories. The teachers taught us carefully and we were able to learn. To our host families, thank you for looking after us. If we get the chance we would love to come back to Soja, and please come to Melbourne too. Thank you sincerely.",
+        tip: "Japanese only. Do not read the English out at this one. Two speakers. The last morning at school, so people will be feeling it: slow down rather than hurrying to get off the stage." },
+      { label: "Tuesday 29 September \u00b7 the farewell party",
+        ja: "こんばんは。一週間、ありがとうございました。\n" +
+            "総社の皆さんのおかげで、私たちは　いろいろな　経験ができて、とてもいい思い出が　たくさん　できました。\n" +
+            "学校の　先生たちには、ていねいに　教えて　いただいたので、　勉強することができました。\n" +
+            "ホストファミリーの皆さん、　お世話になりました。ありがとうございました。\n" +
+            "機会があったら、また総社に来たい　と思います。皆さんも　ぜひ、メルボルンへ　来てください。\n" +
+            "ありがとうございました。",
+        en: "Good evening. Thank you for this week. Thanks to everyone in Soja we have had all sorts of experiences and made so many good memories. The teachers taught us carefully and we were able to learn. To our host families, thank you for looking after us. If we get the chance we would love to come back to Soja, and please come to Melbourne too. Thank you.",
+        tip: "Almost the same as the assembly one, but こんばんは for the evening. Two speakers. This is a guide rather than a script: put it in your own words if you can, and say something that happened to you this week." },
+      { label: "Wednesday 30 September \u00b7 leaving",
+        ja: "ありがとうございました！　また　あいましょう！",
+        en: "Thank you very much! Let's meet again!",
+        tip: "All fourteen of us, together, at the bus. Nothing is scheduled and nobody has to speak, but this is the one everybody can say." }
+    ]
+  },
+  {
     id: "wild",
     ja: "とっておき",
     en: "Wild card",

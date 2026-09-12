@@ -203,6 +203,8 @@
   .phrase{width:100%;text-align:left;background:var(--paper);border:1px solid var(--line);
           border-radius:14px;padding:15px 16px;font-family:inherit;color:var(--ink);
           cursor:pointer;box-shadow:var(--shadow);display:block}
+  .phrase .plabel{font-size:12px;font-weight:800;letter-spacing:.08em;
+        text-transform:uppercase;color:var(--accent);margin-bottom:7px}
   .phrase .jp{font-size:24px;line-height:1.5;font-weight:600;white-space:pre-line}
   /* Anything already written out in lines, like the anthem, sets smaller so
      a line of it does not wrap and lose its shape. */
@@ -607,6 +609,9 @@
     var h = head(g.ja, g.en) + '<p class="lede">' + esc(g.note) + '</p><div class="stack">';
     g.items.forEach(function(it, k){
       h += '<button class="phrase" data-ph="' + (base + k) + '">' +
+             // A speech needs its occasion above it, not buried in the tip:
+             // the student delivering it has to find theirs at a glance.
+             (it.label ? '<div class="plabel">' + esc(it.label) + '</div>' : "") +
              '<div class="jp' + (it.ja.indexOf("\n") > -1 ? " lines" : "") + '">' +
                esc(it.ja) + '</div>' +
              '<div class="en">' + esc(it.en) + '</div>' +
@@ -709,7 +714,7 @@
   }
 
   /* ================= navigation ================= */
-  var BUILD = "Version 24, 12 September 2026";
+  var BUILD = "Version 25, 12 September 2026";
   var TABS = { home:["りょてい","Itinerary"], places:["ばしょ","Places"],
                phrases:["ことば","Phrases"], manners:["マナー","Etiquette"] };
   var stack = [];
