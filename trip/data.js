@@ -256,7 +256,8 @@ window.PLACES = [
         id: "nishiki",
         ja: "錦市場",
         en: "Nishiki Market",
-        photo: null,
+        photo: "photos/kyoto-nishiki.webp",
+        credit: "Nishiki Market, via Wikimedia Commons.",
         intro:
           "A covered lane four hundred metres long, packed with food stalls, and " +
           "the other thing the group asked for. It has been a market here for " +
@@ -478,6 +479,8 @@ window.PLACES = [
         ja: "平和記念公園",
         en: "Peace Memorial Park",
         photo: "photos/hiroshima-dome.webp",
+        hero: "photos/hiroshima-now-and-then.webp",
+        credit: "The same ground now and in 1945. Composite by Angus Kirk via Flickr.",
         intro:
           "An open park in the middle of a busy modern city. Before 1945 this " +
           "was the commercial heart of Hiroshima, full of shops and houses.",
@@ -525,7 +528,8 @@ window.PLACES = [
             id: "children",
             ja: "原爆の子の像",
             en: "The Children's Peace Monument",
-            photo: null,
+            photo: "photos/hiroshima-children.webp",
+            credit: "The Children's Peace Monument, photo by photo_fiend via Flickr.",
             hook:
               "Sadako Sasaki was two when the bomb fell and seemed unhurt. Ten " +
               "years later she developed leukaemia. She folded paper cranes in " +
@@ -542,7 +546,8 @@ window.PLACES = [
             id: "flame",
             ja: "平和の灯",
             en: "The Flame of Peace",
-            photo: null,
+            photo: "photos/hiroshima-flame.webp",
+            credit: "The Flame of Peace, with the museum behind it. Via Wikimedia Commons.",
             hook:
               "It has been alight since 1964 and it is meant to keep burning " +
               "until every nuclear weapon on earth is gone. That has not " +
@@ -556,7 +561,8 @@ window.PLACES = [
             id: "museum",
             ja: "平和記念資料館",
             en: "The museum",
-            photo: null,
+            photo: "photos/hiroshima-museum.webp",
+            credit: "Hiroshima Peace Memorial Museum, via Wikimedia Commons.",
             hook:
               "The museum is mostly ordinary objects that belonged to ordinary " +
               "people: a child's tricycle, a burnt school lunchbox, a watch " +

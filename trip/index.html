@@ -646,9 +646,12 @@
     var q = p.tone === "quiet";
     // A sight can carry a `hero`: an image worth seeing at full size when you
     // open the page, separate from the `photo` the tile crops to a strip.
+    // Failing that the tile's own photo shows here, because otherwise the
+    // page prints a credit for a picture that is not on it.
+    var big = s.hero || s.photo;
     var h = '<div' + (q ? ' class="quiet"' : '') + '>' + head(s.ja, s.en) +
             '<p class="lede">' + esc(s.intro) + '</p>' +
-            (s.hero ? '<div class="heroshot"><img src="' + esc(src(s.hero, false)) +
+            (big ? '<div class="heroshot"><img src="' + esc(src(big, false)) +
                '" alt=""></div>' : '') +
             (s.credit ? '<p class="credit">' + esc(s.credit) + '</p>' : '') +
             '<div class="grid">';
@@ -1046,7 +1049,7 @@
   }
 
   /* ================= navigation ================= */
-  var BUILD = "Version 43, 13 September 2026";
+  var BUILD = "Version 44, 13 September 2026";
   var TABS = { home:["りょてい","Itinerary"], places:["ばしょ","Places"],
                phrases:["ことば","Phrases"], manners:["マナー","Etiquette"] };
   var stack = [];
@@ -1240,6 +1243,9 @@
     PLACES.forEach(function(p){ p.sights.forEach(function(s){
       [s].concat(s.spots).forEach(function(x){
         if (x.photo){ out.push(x.photo); out.push(x.photo.replace(/\.webp$/, "-t.webp")); }
+        // A hero is never a tile, so it has no thumbnail, but it still has to
+        // come down with everything else or it is a hole on the plane.
+        if (x.hero) out.push(x.hero);
       });
     }); });
     return out.filter(function(v,i,a){ return a.indexOf(v) === i; });
