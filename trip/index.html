@@ -568,8 +568,10 @@
             maps(p.id) +
             '<div class="grid" style="margin-top:16px">';
     p.sights.forEach(function(s2, i){
+      // a sight can override the count, which is how Nijo says on its tile
+      // that it is not on this year's itinerary
       h += tile(s2, 'data-sight="' + esc(p.id + "/" + s2.id) + '"',
-                s2.spots.length + " to look at", i);
+                s2.meta || (s2.spots.length + " to look at"), i);
     });
     return h + '</div></div>';
   }
@@ -847,7 +849,7 @@
   }
 
   /* ================= navigation ================= */
-  var BUILD = "Version 29, 13 September 2026";
+  var BUILD = "Version 30, 13 September 2026";
   var TABS = { home:["りょてい","Itinerary"], places:["ばしょ","Places"],
                phrases:["ことば","Phrases"], manners:["マナー","Etiquette"] };
   var stack = [];

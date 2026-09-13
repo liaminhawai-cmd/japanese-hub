@@ -173,7 +173,7 @@ window.PLACES = [
             id: "fire",
             ja: "放火事件",
             en: "It burned down in 1950",
-            photo: null,
+            photo: "photos/kyoto-kinkakuji-garden.webp",
             hook:
               "What you are looking at is not old. In 1950 a young monk who lived " +
               "at the temple burned it to the ground on purpose, and was caught " +
@@ -187,14 +187,151 @@ window.PLACES = [
         ]
       },
       {
+        id: "fushimi",
+        ja: "伏見稲荷大社",
+        en: "Fushimi Inari Taisha",
+        photo: "photos/kyoto-fushimi-torii.webp",
+        intro:
+          "The shrine with the tunnel of orange gates, and the one the group " +
+          "asked for. It is dedicated to Inari, the kami of rice, and because " +
+          "rice meant wealth, of business ever since. Open all hours, free to " +
+          "walk into, and busier than anywhere else you will go in Kyoto.",
+        spots: [
+          {
+            id: "senbon",
+            ja: "千本鳥居",
+            en: "The thousand gates",
+            photo: "photos/kyoto-fushimi-torii.webp",
+            hook:
+              "Senbon torii means a thousand gates, and it undersells it: there " +
+              "are around ten thousand up the mountain. Every one was paid for " +
+              "by somebody. A company or a family donates a gate to say thank " +
+              "you for something that went well, or to ask for something that " +
+              "has not yet, and the bigger the gate the more it cost. They are " +
+              "repainted and replaced constantly, so the tunnel you walk through " +
+              "is never quite the same one twice.",
+            look:
+              "Walk a little way in, then turn around and look at the backs of " +
+              "the gates. The front is plain orange; the back carries the name " +
+              "of whoever paid for it and the date they did. You are walking " +
+              "through a list of people's hopes."
+          },
+          {
+            id: "kitsune",
+            ja: "きつね",
+            en: "The foxes",
+            photo: "photos/kyoto-fushimi-kitsune.webp",
+            hook:
+              "Foxes are everywhere here, in stone, in pairs, wearing red bibs. " +
+              "They are not Inari. They are Inari's messengers, and the red bib " +
+              "is an offering, the same kind people tie on roadside statues. " +
+              "Look at what each fox has in its mouth: a key, a jewel, a scroll, " +
+              "or a sheaf of rice. The key is for the rice granary.",
+            look:
+              "Find a fox holding a key and a fox holding a sheaf of rice. They " +
+              "are usually a pair, one either side of a gate, and they are not " +
+              "holding the same thing."
+          },
+          {
+            id: "yotsutsuji",
+            ja: "四つ辻",
+            en: "How far to go up",
+            photo: null,
+            hook:
+              "The whole mountain circuit is about four kilometres and takes two " +
+              "to three hours. Almost nobody does it, and you will not be doing " +
+              "it either. About half an hour up there is a junction called " +
+              "Yotsutsuji where the trees open out and the whole of Kyoto is laid " +
+              "out below you. That is the place to stop. Past it the crowds " +
+              "thin out fast, which tells you something about how far most " +
+              "people get.",
+            look:
+              "Climb to Yotsutsuji if there is time, and look back over the city " +
+              "before you turn around. Check with a teacher before going any " +
+              "further up than that."
+          }
+        ]
+      },
+      {
+        id: "nishiki",
+        ja: "錦市場",
+        en: "Nishiki Market",
+        photo: null,
+        intro:
+          "A covered lane four hundred metres long, packed with food stalls, and " +
+          "the other thing the group asked for. It has been a market here for " +
+          "about four hundred years and some of the shops have been run by the " +
+          "same families for generations. Kyoto people call it 京の台所, Kyoto's " +
+          "kitchen.",
+        spots: [
+          {
+            id: "daidokoro",
+            ja: "京の台所",
+            en: "Kyoto's kitchen",
+            photo: null,
+            hook:
+              "This is not a food court built for visitors. It is where Kyoto " +
+              "restaurants have bought their ingredients for centuries, and a " +
+              "lot of what is on the counters is here for the chefs rather than " +
+              "for you: yuba, the skin lifted off heated soy milk, fresh tofu, " +
+              "sea bream, sweet rolled omelette cooked in front of you. The " +
+              "narrowness is the point. The lane was never widened because the " +
+              "shops never moved.",
+            look:
+              "Find something on a counter you genuinely cannot identify, and " +
+              "ask what it is: これはなんですか。Somebody will tell you, and " +
+              "possibly hand you a piece."
+          },
+          {
+            id: "tsukemono",
+            ja: "つけもの",
+            en: "The pickles",
+            photo: null,
+            hook:
+              "Kyoto is famous for pickles and you will smell the shops before " +
+              "you reach them. Vegetables buried in salt, rice bran or miso for " +
+              "days or months until they turn into something else entirely. " +
+              "Shibazuke is purple and sharp, senmaizuke is thin white sheets of " +
+              "turnip, takuan is the bright yellow daikon that comes with school " +
+              "lunch. Most shops have a dish of samples out on the counter.",
+            look:
+              "Try a sample of something you are fairly sure you will not like. " +
+              "That is how most people find out they do."
+          },
+          {
+            id: "tabearuki",
+            ja: "たべあるき",
+            en: "Do not eat as you walk",
+            photo: null,
+            hook:
+              "This is the one rule the market cares about, and there are signs " +
+              "all the way along asking for it. If you buy something hot, eat it " +
+              "standing at the shop you bought it from, then move on. The lane is " +
+              "narrow and shoulder to shoulder, and a skewer of something oily " +
+              "held at chest height in that crowd ends up on somebody's clothes. " +
+              "Shops leave a space at the front for exactly this.",
+            look:
+              "Buy one thing, eat it where you bought it, and put the stick or " +
+              "the wrapper in that shop's bin before you walk on. There are " +
+              "almost no public bins, so it has to go back to the shop."
+          }
+        ]
+      },
+      {
         id: "nijo",
         ja: "二条城",
         en: "Nijo Castle",
+        meta: "not on the 2026 itinerary",
         photo: "photos/kyoto-nijo.webp",
-            credit: "Nijo Castle, via Wikimedia Commons.",
+        credit: "Nijo Castle, via Wikimedia Commons.",
         intro:
-          "The shogun's residence in Kyoto, built in 1603. This is where the last " +
-          "shogun handed power back to the Emperor in 1867.",
+          "We are not going here in 2026. The group was asked what it wanted from " +
+          "the two days in Kyoto and chose Fushimi Inari and Nishiki Market " +
+          "instead, which is a fair call: there is only so much you can do in two " +
+          "days. It is left in the app because it is worth knowing about, and " +
+          "because it is a twenty minute walk from Nijo-jo-mae station if a future " +
+          "group wants it. The shogun's residence in Kyoto, built in 1603, and the " +
+          "room where the last shogun handed power back to the Emperor in 1867.",
         spots: [
           {
             id: "uguisu",
@@ -259,7 +396,7 @@ window.PLACES = [
             id: "maze",
             ja: "迷路",
             en: "The path is a trap",
-            photo: null,
+            photo: "photos/himeji-approach.webp",
             hook:
               "Walking up to the keep feels like the path is wandering. It is. " +
               "The approach spirals, doubles back and squeezes through narrow " +
@@ -293,7 +430,7 @@ window.PLACES = [
             id: "ishiotoshi",
             ja: "石落とし",
             en: "The stone drops",
-            photo: null,
+            photo: "photos/himeji-ishiotoshi.webp",
             hook:
               "Low down on the walls there are hatches that open straight " +
               "downwards, called ishi-otoshi, stone drops. Defenders opened them " +
@@ -493,7 +630,7 @@ window.PLACES = [
             id: "why-water",
             ja: "なぜ海の上",
             en: "Why it is built over water",
-            photo: null,
+            photo: "photos/miyajima-low-tide.webp",
             hook:
               "The whole island was treated as a god, not just a place where a god " +
               "lived. That meant ordinary people were not supposed to set foot on " +
@@ -557,9 +694,9 @@ window.PLACES = [
             id: "sesshu",
             ja: "雪舟",
             en: "The boy who drew with his tears",
-            photo: "photos/soja-sesshu-landscape.webp",
+            photo: "photos/soja-sesshu-hall.webp",
             fit: "contain",
-            credit: "Ink landscape by Sesshu Toyo, 1420 to 1506. Public domain, via Wikimedia Commons.",
+            credit: "The scene in the hall at Hofukuji.",
             hook:
               "Sesshu was born in 1420 in Akahama, which is now part of Soja, and " +
               "he was sent to this temple as a small boy. The story is that he kept " +
