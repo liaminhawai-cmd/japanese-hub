@@ -175,6 +175,11 @@
   .bigshot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
   .bigshot.contain{aspect-ratio:4/3;background:var(--bg)}
   .bigshot.contain img{object-fit:contain}
+  /* A hero keeps the photographer's framing: no fixed ratio and no cropping,
+     because the whole point of one is that nothing is cut off. */
+  .heroshot{margin-top:16px;border:1px solid var(--line);border-radius:14px;
+            overflow:hidden;background:var(--paper);box-shadow:var(--shadow)}
+  .heroshot img{display:block;width:100%;height:auto}
   /* ---------- maps ---------- */
   .maps{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px;align-items:start}
   .mp.wide{grid-column:1 / -1}
@@ -580,8 +585,12 @@
   // level 3: the tiles for one sight
   function sightHtml(p, s){
     var q = p.tone === "quiet";
+    // A sight can carry a `hero`: an image worth seeing at full size when you
+    // open the page, separate from the `photo` the tile crops to a strip.
     var h = '<div' + (q ? ' class="quiet"' : '') + '>' + head(s.ja, s.en) +
             '<p class="lede">' + esc(s.intro) + '</p>' +
+            (s.hero ? '<div class="heroshot"><img src="' + esc(src(s.hero, false)) +
+               '" alt=""></div>' : '') +
             (s.credit ? '<p class="credit">' + esc(s.credit) + '</p>' : '') +
             '<div class="grid">';
     s.spots.forEach(function(sp, i){
@@ -850,7 +859,7 @@
   }
 
   /* ================= navigation ================= */
-  var BUILD = "Version 31, 13 September 2026";
+  var BUILD = "Version 32, 13 September 2026";
   var TABS = { home:["りょてい","Itinerary"], places:["ばしょ","Places"],
                phrases:["ことば","Phrases"], manners:["マナー","Etiquette"] };
   var stack = [];

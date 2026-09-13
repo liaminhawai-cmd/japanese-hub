@@ -605,7 +605,8 @@ window.PLACES = [
         id: "itsukushima",
         ja: "厳島神社",
         en: "Itsukushima Shrine",
-        photo: "photos/miyajima-itsukushima.webp",
+        photo: "photos/miyajima-torii.webp",
+        hero: "photos/miyajima-itsukushima.webp",
         credit: "Itsukushima Shrine, via Wikimedia Commons.",
         intro:
           "A shrine on stilts over the sea, with a gate standing in the water in " +
