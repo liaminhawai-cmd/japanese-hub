@@ -392,8 +392,8 @@ window.HubLever = (function () {
     var a = document.createElement("a");
     a.className = "hub-home";
     a.href = "../";
-    a.textContent = "⌂ にほんごハブ · Hub";
-    a.title = "Back to the Japanese Hub";
+    a.textContent = "⌂ ジャプリ";
+    a.title = "Back to ジャプリ";
     document.body.appendChild(a);
   }
   function init(opts) {
