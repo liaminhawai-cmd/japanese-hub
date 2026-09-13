@@ -1446,6 +1446,7 @@ window.PHRASES = [
   },
   {
     id: "speech",
+    say: false,
     ja: "スピーチ",
     en: "Speaking for the group",
     unit: "speeches",
@@ -1522,6 +1523,7 @@ window.PHRASES = [
   },
   {
     id: "signs",
+    say: false,
     ja: "かんじをよむ",
     en: "Reading the signs",
     unit: "signs",

@@ -40,6 +40,7 @@
     /* Signage is gothic everywhere in Japan, so the drawn signs do not
        borrow the textbook face the rest of the app reads in. */
     --font-sign:'Hiragino Kaku Gothic ProN','Hiragino Sans','Yu Gothic',YuGothic,'Noto Sans JP',Meiryo,'MS PGothic',sans-serif;
+    --spk:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M4 9v6h4l5 4V5L8 9H4zm12.5 3c0-1.6-.9-2.9-2.2-3.6v7.2c1.3-.7 2.2-2 2.2-3.6zM14.3 4.4v1.9c2.6.8 4.5 3.2 4.5 6s-1.9 5.2-4.5 6v1.9c3.6-.9 6.3-4.2 6.3-7.9s-2.7-7.1-6.3-7.9z'/%3E%3C/svg%3E");
     --font:var(--font-en),var(--font-jp),sans-serif;
   }
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -238,6 +239,24 @@
   .signart{margin:-2px 0 12px;display:flex;justify-content:center}
   .signart svg{display:block;width:auto;max-width:100%;height:auto;max-height:132px}
   .signart .sa text{font-family:var(--font-sign);letter-spacing:.02em}
+  /* The play control sits over the corner of its card. It stays hidden until
+     we know the device can actually say something; a recording shows it
+     regardless, because that plays anywhere. */
+  .pwrap{position:relative}
+  .say{display:none;position:absolute;top:9px;right:10px;z-index:2;
+       width:42px;height:42px;border-radius:50%;border:1px solid var(--line);
+       background:var(--paper);color:var(--deep);cursor:pointer;padding:0;
+       align-items:center;justify-content:center;box-shadow:var(--shadow)}
+  body.hasvoice .say,.say.rec{display:flex}
+  .say .spk{width:19px;height:19px;background:currentColor;
+       -webkit-mask:var(--spk) center/contain no-repeat;mask:var(--spk) center/contain no-repeat}
+  .say.on{background:var(--deep);color:var(--paper);border-color:var(--deep)}
+  .pwrap .phrase{padding-right:62px}
+  /* A card with sign art has no play button, so it keeps its full width. */
+  .pwrap .phrase:has(.signart){padding-right:16px}
+  #showSay .say{position:static;width:56px;height:56px;display:none}
+  body.hasvoice #showSay .say,#showSay .say.rec{display:flex}
+  #showSay .say .spk{width:25px;height:25px}
   .phrase .jp{font-size:24px;line-height:1.5;font-weight:600;white-space:pre-line}
   /* Anything already written out in lines, like the anthem, sets smaller so
      a line of it does not wrap and lose its shape. */
@@ -396,6 +415,7 @@
     <div class="hint">Hold this up</div>
     <div class="jp" id="showJp"></div>
     <div class="en" id="showEn"></div>
+    <div id="showSay"></div>
   </div>
   <button id="showClose">Close</button>
 </div>
@@ -671,7 +691,12 @@
   var phraseIndex = [];
   function renderPhrases(){
     phraseIndex = [];
-    PHRASES.forEach(function(g){ g.items.forEach(function(it){ phraseIndex.push(it); }); });
+    PHRASES.forEach(function(g){ g.items.forEach(function(it){
+      // A group can opt out of the synthetic voice while still
+      // playing a recording, so the item has to remember its group.
+      it.__say = g.say !== false;
+      phraseIndex.push(it);
+    }); });
     var h = head("ことば", "Phrases") +
             '<p class="lede">Pick the situation you are in. Everything is in kana. ' +
             'The \u304b\u306a tab down the side opens the charts if a character has ' +
@@ -811,6 +836,71 @@
     emergency: '<svg viewBox="0 0 240 148" class="sa" role="img" aria-label="The green emergency-exit sign: a white running figure heading for a doorway, labelled 非常口"><rect x="2" y="2" width="236" height="144" rx="8" fill="#00803c"/><rect x="150" y="20" width="70" height="100" fill="none" stroke="#fff" stroke-width="8"/><rect x="196" y="28" width="16" height="84" fill="#fff"/><circle cx="54" cy="30" r="12" fill="#fff"/><path d="M46 46 L70 78" stroke="#fff" stroke-width="15" stroke-linecap="round"/><path d="M56 52 L86 44" stroke="#fff" stroke-width="10" stroke-linecap="round"/><path d="M50 54 L26 66" stroke="#fff" stroke-width="10" stroke-linecap="round"/><path d="M68 76 L90 90 L98 106" fill="none" stroke="#fff" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/><path d="M68 76 L48 92 L32 80" fill="none" stroke="#fff" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/><text x="120" y="138" font-size="15" font-weight="700" fill="#fff" text-anchor="middle">非常口</text></svg>',
   };
 
+  /* ================= saying it out loud =================
+     A recording always wins. `audio` on an item names a file in audio/, and
+     that is the voice a student should be copying. Where there is no
+     recording the device reads the Japanese itself, and where the device has
+     no Japanese voice the button does not appear at all: a Japanese sentence
+     in an English voice teaches the wrong thing, and silence is honest.
+     Browsers publish the voice list late, so anything that asks early asks
+     again when it lands. */
+  var SAY = (function(){
+    var can = "speechSynthesis" in window, jaV = null, settled = false, waiting = [];
+    function find(){
+      try {
+        var vs = speechSynthesis.getVoices() || [];
+        for (var i=0;i<vs.length;i++) if (/^ja(-|_|$)/i.test(vs[i].lang)) return vs[i];
+      } catch (e){}
+      return null;
+    }
+    function land(){
+      jaV = find(); settled = true;
+      document.body.classList.toggle("hasvoice", !!jaV);
+      waiting.splice(0).forEach(function(f){ f(); });
+    }
+    if (can){
+      try {
+        if (speechSynthesis.getVoices().length) land();
+        speechSynthesis.addEventListener("voiceschanged", land);
+        setTimeout(land, 2000);
+      } catch (e){ settled = true; }
+    }
+    var el = null;
+    function stop(){
+      try { if (el){ el.pause(); el = null; } } catch (e){}
+      try { if (can) speechSynthesis.cancel(); } catch (e){}
+    }
+    return {
+      hasJa: function(){ return !!jaV; },
+      ready: function(f){ if (settled) f(); else waiting.push(f); },
+      /* One thing plays at a time: two phrases over each other is noise. */
+      play: function(it, ok, done){
+        stop();
+        if (it.audio){
+          el = new Audio("audio/" + it.audio);
+          el.onended = el.onerror = function(){ el = null; done(); };
+          el.play().then(ok, function(){ el = null; done(); });
+          return;
+        }
+        if (!jaV) return done();
+        var u = new SpeechSynthesisUtterance(it.ja);
+        u.voice = jaV; u.lang = "ja-JP"; u.rate = 0.85;
+        u.onend = u.onerror = done;
+        try { speechSynthesis.speak(u); ok(); } catch (e){ done(); }
+      },
+      stop: stop
+    };
+  })();
+
+  /* Nothing to play, nothing to show: signs are read rather than said, and
+     the ceremony speeches wait for a human voice rather than a synthetic one.
+     Either still plays a recording the moment one is dropped in. */
+  function sayBtn(it, i){
+    if (!it.audio && (it.__say === false || !it.ja)) return "";
+    return '<button class="say' + (it.audio ? " rec" : "") + '" data-say="' + i +
+           '" aria-label="Play this phrase"><span class="spk" aria-hidden="true"></span></button>';
+  }
+
   function groupHtml(g){
     var base = 0;
     for (var i=0;i<PHRASES.length;i++){
@@ -826,10 +916,14 @@
     }
     h += '<div class="stack">';
     g.items.forEach(function(it, k){
+      it.__say = g.say !== false;
       // `section` heads a run of items and belongs on the page. `label` names
       // one item and belongs inside its card. The speeches use the second.
       if (it.section) h += '<h3 class="psec">' + esc(it.section) + '</h3>';
-      h += '<button class="phrase" data-ph="' + (base + k) + '">' +
+      // The card is itself a button, so the play control cannot live inside
+      // it. It sits over the corner as a sibling instead.
+      h += '<div class="pwrap">' + sayBtn(it, base + k) +
+           '<button class="phrase" data-ph="' + (base + k) + '">' +
              // A sign is a picture before it is a word, so it leads the card:
              // down a long list the drawing is what the eye catches first.
              (it.art && SIGNART[it.art]
@@ -845,7 +939,7 @@
              '<div class="en">' + esc(it.en) + '</div>' +
              (it.tip ? '<div class="tip">' + esc(it.tip) + '</div>' : "") +
              (it.show ? '<div class="showtag">tap to show someone</div>' : "") +
-           '</button>';
+           '</button></div>';
     });
     return h + '</div>';
   }
@@ -952,7 +1046,7 @@
   }
 
   /* ================= navigation ================= */
-  var BUILD = "Version 42, 13 September 2026";
+  var BUILD = "Version 43, 13 September 2026";
   var TABS = { home:["りょてい","Itinerary"], places:["ばしょ","Places"],
                phrases:["ことば","Phrases"], manners:["マナー","Etiquette"] };
   var stack = [];
@@ -1029,6 +1123,7 @@
     try { history.pushState({ d: stack.length }, ""); } catch (e){}
   }
   function back(){
+    SAY.stop(); clearSay();
     if (!stack.length) return;
     if (history.state && history.state.d){ history.back(); return; }
     fwd.push(stack.pop()); renderTop();
@@ -1080,6 +1175,10 @@
     if ((t = e.target.closest("[data-manner]"))) return openManner(+t.dataset.manner);
     if ((t = e.target.closest("[data-ch]"))) return showRead(t);
     hideRead();
+    if ((t = e.target.closest("[data-say]"))){
+      e.stopPropagation();
+      return playSay(t, phraseIndex[+t.dataset.say]);
+    }
     if ((t = e.target.closest("[data-ph]"))) return openShow(phraseIndex[+t.dataset.ph]);
     if (e.target.closest("#showClose")) return closeShow();
     // Last page in a branch: the page itself is the way back. Ignore it if the
@@ -1100,12 +1199,30 @@
     if ((t = e.target.closest("[data-kana]"))){ kanaScript = t.dataset.kana; return drawKana(); }
   });
 
+  /* The button marks itself while it is talking, so a student who taps twice
+     can see why nothing new happened. */
+  var sayingNow = null;
+  function playSay(btn, it){
+    if (!it) return;
+    if (sayingNow === btn){ SAY.stop(); clearSay(); return; }
+    clearSay();
+    sayingNow = btn;
+    SAY.play(it, function(){ btn.classList.add("on"); }, clearSay);
+  }
+  function clearSay(){
+    if (sayingNow) sayingNow.classList.remove("on");
+    sayingNow = null;
+  }
+
   function openShow(it){
     if (!it) return;
     $("showJp").textContent = it.ja; $("showEn").textContent = it.en;
+    // Held up to a stranger, the phrase is worth hearing as well as reading.
+    var i = phraseIndex.indexOf(it);
+    $("showSay").innerHTML = i < 0 ? "" : sayBtn(it, i);
     $("show").className = "on";
   }
-  function closeShow(){ $("show").className = ""; }
+  function closeShow(){ SAY.stop(); clearSay(); $("show").className = ""; }
   document.addEventListener("keydown", function(e){
     if (e.key !== "Escape") return;
     if ($("kana").className === "on") closeKana();
