@@ -696,7 +696,6 @@ window.PLACES = [
             ja: "雪舟",
             en: "The boy who drew with his tears",
             photo: "photos/soja-sesshu-hall.webp",
-            fit: "contain",
             credit: "The scene in the hall at Hofukuji.",
             hook:
               "Sesshu was born in 1420 in Akahama, which is now part of Soja, and " +
@@ -705,8 +704,10 @@ window.PLACES = [
               "pillar as punishment. He cried, and used his toes to draw a mouse " +
               "on the floor with his own tears. The priest came back, saw the " +
               "mouse, thought it was real, and let him go. He grew up to be the " +
-              "most famous painter in Japanese history. The picture here is one " +
-              "of his, painted as a grown man in ink and nothing else.",
+              "most famous painter in Japanese history. The picture here is how " +
+              "the temple tells the story, hanging in the hall you will walk " +
+              "into: the boy tied to the pillar, and the mouse on the floor at " +
+              "his feet.",
             look:
               "Find the statue of the boy and the mouse. Then think about the fact " +
               "that he came from the same town as your host family."

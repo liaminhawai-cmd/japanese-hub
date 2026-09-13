@@ -59,13 +59,17 @@
      long way to travel for the commonest action in the app. */
   .bar{display:flex;align-items:center;gap:12px;padding:10px 14px 9px;
        min-height:56px;max-width:680px;margin:0 auto}
-  #back{border:1px solid var(--line);background:var(--bg);color:var(--ink);
-        font-family:inherit;font-size:16px;font-weight:600;padding:9px 14px;
-        border-radius:10px;cursor:pointer;display:none;flex:0 0 auto}
-  #back.on{display:block}
   .htitle{min-width:0;flex:1}
-  .htitle .ja{font-size:18px;font-weight:700;line-height:1.25;
-              white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  /* The trail replaces the Back button. Every step but the last is a button,
+     so you can jump two levels at once instead of stepping. It is in the
+     sticky bar, which means the way out is always on screen. */
+  .crumb{font-size:18px;font-weight:700;line-height:1.25;
+         white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .crumb button{border:0;background:none;padding:0;font-family:inherit;
+         font-size:15.5px;font-weight:600;color:var(--deep);cursor:pointer;
+         -webkit-appearance:none;appearance:none}
+  .crumb .sep{color:var(--muted);opacity:.7;margin:0 6px;font-weight:400;
+         font-size:15px}
   .htitle .en{font-size:14px;color:var(--muted);line-height:1.3;
               white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
@@ -323,14 +327,12 @@
   .save .done{margin-top:13px;padding:13px 14px;border-radius:12px;
         border:1px solid var(--ok);color:var(--ok);font-size:15.5px;font-weight:600}
 
-  /* After a long page the top bar is a scroll away, so the way back is also
-     at the bottom, and it says where it goes rather than just "back". */
-  .upback{display:block;width:100%;margin-top:26px;padding:14px;border-radius:13px;
-        border:1px solid var(--line);background:var(--paper);color:var(--ink);
-        font-family:inherit;font-size:18px;font-weight:700;cursor:pointer;
-        -webkit-appearance:none;appearance:none;box-shadow:var(--shadow);
-        text-align:center}
-  .upback .en{font-size:14.5px;font-weight:400;color:var(--muted);margin-left:9px}
+  /* The last page in a branch has nothing further to open, so the page itself
+     is the way back. The hint says so, because an invisible gesture is not a
+     feature. */
+  #v-detail.leaf{cursor:pointer}
+  .tapout{margin-top:24px;text-align:center;font-size:14.5px;color:var(--muted);
+        letter-spacing:.02em}
   .foot{font-size:14.5px;color:var(--muted);text-align:center;margin-top:28px;line-height:1.6}
   .foot .build{display:block;margin-top:8px;font-size:12.5px;opacity:.7;
         letter-spacing:.04em}
@@ -342,9 +344,8 @@
 
 <div class="top">
   <div class="bar">
-    <button id="back" aria-label="Go back">‹ Back</button>
     <div class="htitle">
-      <div class="ja" id="hja">日本研修旅行</div>
+      <div class="crumb" id="hja">日本研修旅行</div>
       <div class="en" id="hen">Japan Study Tour 2026</div>
     </div>
   </div>
@@ -802,6 +803,16 @@
     b.querySelector(".en").textContent = kanaExtra ? "Back to the 46"
                                                    : "Voiced and small kana";
   }
+  /* A tap is a press and a release in the same place. Anything else is a
+     scroll or a drag, and must not be read as "go back". */
+  var dragged = false, downX = 0, downY = 0;
+  document.addEventListener("pointerdown", function(e){
+    dragged = false; downX = e.clientX; downY = e.clientY;
+  }, { passive: true });
+  document.addEventListener("pointerup", function(e){
+    if (Math.abs(e.clientX - downX) > 10 || Math.abs(e.clientY - downY) > 10) dragged = true;
+  }, { passive: true });
+
   /* ---- swipe between sections ------------------------------------------
      Andrew: the tabs should not be something you scroll back up to reach.
      They are pinned to the top anyway, but on a phone a sideways swipe is
@@ -871,14 +882,25 @@
   }
 
   /* ================= navigation ================= */
-  var BUILD = "Version 33, 13 September 2026";
+  var BUILD = "Version 34, 13 September 2026";
   var TABS = { home:["りょてい","Itinerary"], places:["ばしょ","Places"],
                phrases:["ことば","Phrases"], manners:["マナー","Etiquette"] };
   var stack = [];
   function setQuiet(on){ document.body.classList[on ? "add":"remove"]("quiet"); }
-  function setHeader(ja, en, canBack){
-    $("hja").textContent = ja; $("hen").textContent = en;
-    $("back").className = canBack ? "on" : "";
+  // The trail: the tab, then every level above this one, then where you are.
+  // Everything but the last is a button that jumps straight to that depth.
+  function setHeader(ja, en){
+    var h = "";
+    if (stack.length){
+      h += '<button data-depth="0">' + esc(TABS[curTab()][0]) + '</button>' +
+           '<span class="sep">\u203a</span>';
+      for (var i = 0; i < stack.length - 1; i++){
+        h += '<button data-depth="' + (i + 1) + '">' + esc(stack[i].ja) + '</button>' +
+             '<span class="sep">\u203a</span>';
+      }
+    }
+    $("hja").innerHTML = h + esc(ja);
+    $("hen").textContent = en;
   }
   function showView(id){
     ["home","places","phrases","manners","detail"].forEach(function(v){
@@ -892,7 +914,7 @@
   }
   function showTab(name){
     setQuiet(false); showView(name);
-    setHeader(TABS[name][0], TABS[name][1], false);
+    setHeader(TABS[name][0], TABS[name][1]);
     [].forEach.call(document.querySelectorAll("nav button"), function(b){
       b.className = b.dataset.go === name ? "on" : "";
     });
@@ -902,12 +924,23 @@
   function renderTop(){
     if (!stack.length) return showTab(curTab());
     var s = stack[stack.length-1];
-    s.draw(); showView("detail"); setHeader(s.ja, s.en, true);
+    s.draw(); showView("detail"); setHeader(s.ja, s.en);
     var up = stack.length > 1 ? stack[stack.length-2]
                               : { ja: TABS[curTab()][0], en: TABS[curTab()][1] };
-    $("v-detail").insertAdjacentHTML("beforeend",
-      '<button class="upback" data-upback="1">\u2039 ' + esc(up.ja) +
-      '<span class="en">' + esc(up.en) + '</span></button>');
+    $("v-detail").className = "view on" + (s.leaf ? " leaf" : "");
+    if (s.leaf){
+      $("v-detail").insertAdjacentHTML("beforeend",
+        '<p class="tapout">Tap anywhere to go back to ' + esc(up.en) + '</p>');
+    }
+  }
+
+  // Jump straight to a depth rather than stepping. 0 is the tab itself.
+  function goDepth(target){
+    var n = stack.length - target;
+    if (n <= 0) return;
+    if (history.state && history.state.d){ history.go(-n); return; }
+    while (n--) fwd.push(stack.pop());
+    renderTop();
   }
 
   /* Every level of depth is a real browser history entry, so the browser's own
@@ -916,9 +949,9 @@
      browser too, so there is one path and the two cannot disagree. */
   // Levels stepped back out of are kept here, so Forward can step back in.
   var fwd = [];
-  function push(draw, ja, en){
+  function push(draw, ja, en, leaf){
     fwd = [];
-    stack.push({ draw: draw, ja: ja, en: en });
+    stack.push({ draw: draw, ja: ja, en: en, leaf: !!leaf });
     renderTop();
     try { history.pushState({ d: stack.length }, ""); } catch (e){}
   }
@@ -948,7 +981,7 @@
   document.addEventListener("click", function(e){
     var t;
     if ((t = e.target.closest("nav button"))) return goTab(t.dataset.go);
-    if (e.target.closest("#back") || e.target.closest("[data-upback]")) return back();
+    if ((t = e.target.closest("[data-depth]"))) return goDepth(+t.dataset.depth);
     if ((t = e.target.closest("[data-place]"))){
       var r = find(t.dataset.place); if (!r) return;
       return push(function(){ setQuiet(r.p.tone === "quiet");
@@ -962,7 +995,8 @@
     if ((t = e.target.closest("[data-spot]"))){
       var r3 = find(t.dataset.spot); if (!r3 || !r3.sp) return;
       return push(function(){ setQuiet(r3.p.tone === "quiet");
-        $("v-detail").innerHTML = spotHtml(r3.p, r3.s, r3.sp); }, r3.sp.ja, r3.sp.en);
+        $("v-detail").innerHTML = spotHtml(r3.p, r3.s, r3.sp); },
+        r3.sp.ja, r3.sp.en, true);
     }
     if ((t = e.target.closest("[data-group]"))){
       var g = PHRASES.filter(function(x){ return x.id === t.dataset.group; })[0];
@@ -974,6 +1008,13 @@
     hideRead();
     if ((t = e.target.closest("[data-ph]"))) return openShow(phraseIndex[+t.dataset.ph]);
     if (e.target.closest("#showClose")) return closeShow();
+    // Last page in a branch: the page itself is the way back. Ignore it if the
+    // pointer travelled (a scroll or a drag), if text is selected, or if
+    // something on the page wanted the tap.
+    if (e.target.closest("#v-detail.leaf") &&
+        !e.target.closest("button, a, [data-ch]") &&
+        !dragged &&
+        !(window.getSelection && String(window.getSelection()))) return back();
     if (e.target.closest("#kanatab")) return openKana();
     if (e.target.closest("#kanaClose")) return closeKana();
     if (e.target.closest("#kanaMore")){ kanaExtra = !kanaExtra; return drawKana(); }
