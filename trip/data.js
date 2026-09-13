@@ -1530,14 +1530,6 @@ window.PHRASES = [
           "are two characters and most repeat, so learning ten of them unlocks " +
           "far more than ten signs.",
     items: [
-      { section: "The two you cannot get wrong",
-        ja: "男　　女", en: "Men　　Women",
-        tip: "おとこ and おんな. Men is usually blue and women usually red, but the colour is a helper, not a rule, and plenty of places use neither. Read the character. 男 has a field 田 over strength 力; 女 is a person kneeling." },
-      { ja: "お手洗い　　トイレ", en: "Toilets",
-        tip: "おてあらい, literally hand-washing, is the polite one and the one on signs. トイレ is what everybody says out loud." },
-      { ja: "使用中　　空き", en: "Occupied　　Vacant",
-        tip: "しようちゅう and あき. On the latch of a cubicle door, and on the bathroom at your host family's house." },
-
       { section: "At the station",
         ja: "出口", en: "Way out",
         tip: "でぐち. 口 means mouth or opening, and it is on the end of almost every way in or out in Japan. Learn 口 and half of this section falls open." },
@@ -1555,6 +1547,14 @@ window.PHRASES = [
         tip: "さんばんせん. The number is what matters and it is always a numeral, so this one you can read today." },
       { ja: "大人　　小人", en: "Adult　　Child",
         tip: "おとな and こども. 小人 is the trap: the characters say small person and you would expect しょうじん, but on any ticket machine or fare table it is read こども. Years 7 to 12 pay the adult fare on JR from age 12." },
+      { section: "Toilets",
+        ja: "男　　女", en: "Men　　Women",
+        tip: "おとこ and おんな. Men is usually blue and women usually red, but the colour is a helper, not a rule, and plenty of places use neither. Read the character. 男 has a field 田 over strength 力; 女 is a person kneeling." },
+      { ja: "お手洗い　　トイレ", en: "Toilets",
+        tip: "おてあらい, literally hand-washing, is the polite one and the one on signs. トイレ is what everybody says out loud." },
+      { ja: "使用中　　空き", en: "Occupied　　Vacant",
+        tip: "しようちゅう and あき. On the latch of a cubicle door, and on the bathroom at your host family's house." },
+
       { section: "Doors and shops",
         ja: "押す　　引く", en: "Push　　Pull",
         tip: "おす and ひく. Often just the single character 押 or 引 on the glass. If a door will not move, you are almost certainly doing the other one." },
