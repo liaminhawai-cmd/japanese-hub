@@ -1260,27 +1260,22 @@ window.PHRASES = [
   {
     id: "anthem",
     ja: "こっか",
-    en: "The anthem",
+    en: "Advance Australia Fair",
     unit: "verses",
-    note: "Advance Australia Fair, in the words that have been official since " +
-          "January 2021. You may be asked to sing it at a welcome or farewell " +
-          "assembly, in front of everybody, with no music. Know the first verse " +
-          "by heart.",
+    note: "The Australian national anthem, in the current words.",
     items: [
       { ja: "Australians all let us rejoice,\nFor we are one and free;\n" +
             "We've golden soil and wealth for toil;\nOur home is girt by sea;\n" +
             "Our land abounds in nature's gifts\nOf beauty rich and rare;\n" +
             "In history's page, let every stage\nAdvance Australia Fair.\n" +
             "In joyful strains then let us sing,\nAdvance Australia Fair.",
-        en: "First verse",
-        tip: "The second line changed in 2021: it is one and free now, not young and free. Anyone who learnt it before then still gets it wrong." },
+        en: "First verse" },
       { ja: "Beneath our radiant Southern Cross\nWe'll toil with hearts and hands;\n" +
             "To make this Commonwealth of ours\nRenowned of all the lands;\n" +
             "For those who've come across the seas\nWe've boundless plains to share;\n" +
             "With courage let us all combine\nTo Advance Australia Fair.\n" +
             "In joyful strains then let us sing,\nAdvance Australia Fair.",
-        en: "Second verse",
-        tip: "Usually only sung at something formal. Worth reading through so it does not catch you out." }
+        en: "Second verse" }
     ]
   },
   {
