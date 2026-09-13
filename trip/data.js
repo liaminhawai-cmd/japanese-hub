@@ -1530,7 +1530,7 @@ window.PHRASES = [
           "are two characters and most repeat, so learning ten of them unlocks " +
           "far more than ten signs.",
     items: [
-      { label: "The two you cannot get wrong",
+      { section: "The two you cannot get wrong",
         ja: "男　　女", en: "Men　　Women",
         tip: "おとこ and おんな. Men is usually blue and women usually red, but the colour is a helper, not a rule, and plenty of places use neither. Read the character. 男 has a field 田 over strength 力; 女 is a person kneeling." },
       { ja: "お手洗い　　トイレ", en: "Toilets",
@@ -1538,7 +1538,7 @@ window.PHRASES = [
       { ja: "使用中　　空き", en: "Occupied　　Vacant",
         tip: "しようちゅう and あき. On the latch of a cubicle door, and on the bathroom at your host family's house." },
 
-      { label: "At the station",
+      { section: "At the station",
         ja: "出口", en: "Way out",
         tip: "でぐち. 口 means mouth or opening, and it is on the end of almost every way in or out in Japan. Learn 口 and half of this section falls open." },
       { ja: "入口", en: "Way in", tip: "いりぐち. The pair to 出口." },
@@ -1555,12 +1555,7 @@ window.PHRASES = [
         tip: "さんばんせん. The number is what matters and it is always a numeral, so this one you can read today." },
       { ja: "大人　　小人", en: "Adult　　Child",
         tip: "おとな and こども. 小人 is the trap: the characters say small person and you would expect しょうじん, but on any ticket machine or fare table it is read こども. Years 7 to 12 pay the adult fare on JR from age 12." },
-      { ja: "精算", en: "Fare adjustment",
-        tip: "せいさん. If the gate refuses your ticket you probably underpaid. Find the 精算 machine before the gate, feed it your ticket, pay the difference. It is a normal thing that happens to everybody, not a telling off." },
-      { ja: "女性専用車", en: "Women only carriage",
-        tip: "じょせいせんようしゃ. Marked in pink on the platform and the door. It applies at set times, usually weekday peak. Boys: check the floor markings before you board a carriage at the front or back of a train in the morning." },
-
-      { label: "Doors and shops",
+      { section: "Doors and shops",
         ja: "押す　　引く", en: "Push　　Pull",
         tip: "おす and ひく. Often just the single character 押 or 引 on the glass. If a door will not move, you are almost certainly doing the other one." },
       { ja: "営業中", en: "Open",
@@ -1574,7 +1569,7 @@ window.PHRASES = [
       { ja: "無料", en: "Free",
         tip: "むりょう. 料 means charge, and 無 means there is none of it." },
 
-      { label: "Temples and shrines",
+      { section: "Temples and shrines",
         ja: "拝観料", en: "Entry fee",
         tip: "はいかんりょう. 料 again, the charge. Grounds are often free and the halls and gardens are not." },
       { ja: "撮影禁止", en: "No photography",
@@ -1582,11 +1577,11 @@ window.PHRASES = [
       { ja: "立入禁止", en: "Do not enter",
         tip: "たちいりきんし. Same 禁止. Usually a rope, sometimes just the sign." },
       { ja: "手水舎", en: "The water basin",
-        tip: "てみずや, sometimes ちょうずや. Where you rinse your hands before going in. Left hand, right hand, then a little water into your left hand for your mouth. Never straight from the ladle." },
+        tip: "\u3066\u307f\u305a\u3084, sometimes \u3061\u3087\u3046\u305a\u3084. The stone basin near the entrance. You rinse before you go in, and one scoop of water does the whole thing.\n1. Take the ladle in your right hand and fill it once. That is all the water you get.\n2. Pour a little over your left hand.\n3. Move the ladle to your left hand and pour over your right.\n4. Back to your right hand. Pour into your cupped left hand and rinse your mouth from your hand. Never put the ladle to your lips.\n5. Spit quietly beside the basin, onto the stones, not back into the water.\n6. Rinse your left hand once more.\n7. Stand the ladle upright so the last of the water runs down the handle and cleans it, then lay it back face down.\nPlenty of basins have no ladle any more and just run water from a spout. Rinse your hands and that is enough." },
       { ja: "御朱印", en: "Shrine stamp",
         tip: "ごしゅいん. Hand-brushed calligraphy and a red seal, done in front of you in a special book. It is a record of a visit, not a souvenir, so it is bad form to ask for one if you have not been in." },
 
-      { label: "School and the house",
+      { section: "School and the house",
         ja: "玄関", en: "The entrance where shoes come off",
         tip: "げんかん. The step at the door of a house or a school. Shoes point back out towards the door once you have taken them off." },
       { ja: "上ばき", en: "Indoor shoes",
@@ -1596,7 +1591,7 @@ window.PHRASES = [
       { ja: "洗濯", en: "Washing",
         tip: "せんたく. On the machine at your host family's house, and in the phrase せんたくをしてもいいですか." },
 
-      { label: "Warnings",
+      { section: "Warnings",
         ja: "危険", en: "Danger",
         tip: "きけん. Usually red or yellow. This is the one to obey without working out why." },
       { ja: "注意", en: "Caution",

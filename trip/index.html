@@ -225,12 +225,18 @@
           cursor:pointer;box-shadow:var(--shadow);display:block}
   .phrase .plabel{font-size:12px;font-weight:800;letter-spacing:.08em;
         text-transform:uppercase;color:var(--accent);margin-bottom:7px}
+  /* A section heading sits on the gold between the cards, so the run of
+     items under it reads as a group. */
+  .psec{font-size:15px;font-weight:800;letter-spacing:.09em;
+        text-transform:uppercase;color:var(--ink);margin:22px 2px 0}
+  .stack > .psec:first-child{margin-top:2px}
   .phrase .jp{font-size:24px;line-height:1.5;font-weight:600;white-space:pre-line}
   /* Anything already written out in lines, like the anthem, sets smaller so
      a line of it does not wrap and lose its shape. */
   .phrase .jp.lines{font-size:18.5px;line-height:1.5;font-weight:600}
   .phrase .en{font-size:17px;margin-top:6px}
   .phrase .tip{font-size:15px;color:var(--muted);margin-top:10px;padding-top:10px;
+               white-space:pre-line;
                border-top:1px solid var(--line-soft)}
   .kanaswap{display:block;width:100%;margin:0 0 14px;padding:12px;border-radius:12px;
         border:1px solid var(--line);background:var(--paper);color:var(--ink);
@@ -782,6 +788,9 @@
     }
     h += '<div class="stack">';
     g.items.forEach(function(it, k){
+      // `section` heads a run of items and belongs on the page. `label` names
+      // one item and belongs inside its card. The speeches use the second.
+      if (it.section) h += '<h3 class="psec">' + esc(it.section) + '</h3>';
       h += '<button class="phrase" data-ph="' + (base + k) + '">' +
              // A speech needs its occasion above it, not buried in the tip:
              // the student delivering it has to find theirs at a glance.
@@ -901,7 +910,7 @@
   }
 
   /* ================= navigation ================= */
-  var BUILD = "Version 38, 13 September 2026";
+  var BUILD = "Version 39, 13 September 2026";
   var TABS = { home:["りょてい","Itinerary"], places:["ばしょ","Places"],
                phrases:["ことば","Phrases"], manners:["マナー","Etiquette"] };
   var stack = [];
