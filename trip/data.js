@@ -628,6 +628,28 @@ window.PLACES = [
               "and stand under it, which is a completely different experience."
           },
           {
+            id: "shio",
+            ja: "しお",
+            en: "The tide decides what you see",
+            photo: "photos/miyajima-low-tide.webp",
+            hook:
+              "Miyajima is two completely different places depending on the hour, " +
+              "and which one you get is already decided. There are two high tides " +
+              "and two low tides a day, and they slide about fifty minutes later " +
+              "each day, so the timing is never the same twice. Above about 250 " +
+              "centimetres the water is up and the gate looks like it is floating. " +
+              "Below about 100 the sea has gone out far enough that the seabed " +
+              "holds your weight and you can walk out and stand underneath it. " +
+              "Neither is better. They are just different days out, and you get " +
+              "the one the moon gives you.",
+            look:
+              "Look up the tide for the morning we are there before you get on " +
+              "the ferry, so you know which Miyajima you are walking into. If it " +
+              "is going to be low, wear shoes you do not mind getting muddy.",
+            link: { url: "https://www.miyajima.or.jp/english/sio/sio.php",
+                    label: "The Miyajima Tourist Association's tide table" }
+          },
+          {
             id: "why-water",
             ja: "なぜ海の上",
             en: "Why it is built over water",

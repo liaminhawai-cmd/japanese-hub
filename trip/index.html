@@ -98,6 +98,8 @@
   .drop .h{font-size:20px;font-weight:700}
   .drop .h .en{font-size:15px;font-weight:400;color:var(--muted);margin-left:8px}
   .drop p{font-size:17.5px;margin-top:7px;line-height:1.6}
+  .mlink{margin-top:16px}
+  .mlink a{color:var(--deep);font-weight:700;font-size:16.5px}
   .drop .mlink{margin-top:12px}
   .drop .mlink a{color:var(--deep);font-weight:700;font-size:16.5px}
   .gt.sel{outline:3px solid var(--accent);outline-offset:2px}
@@ -623,7 +625,14 @@
            (sp.credit ? '<p class="credit">' + esc(sp.credit) + '</p>' : '') +
            '<p class="hook">' + esc(sp.hook) + '</p>' +
            '<div class="look"><div class="lbl">' + esc(lbl) + '</div>' +
-           '<p>' + esc(sp.look) + '</p></div></div>';
+           '<p>' + esc(sp.look) + '</p></div>' +
+           // One https link out, for the few things that have to be looked up
+           // on the day. Whatever matters is in the text as well, since this
+           // needs signal and the rest of the app does not.
+           (sp.link && /^https:\/\//.test(sp.link.url)
+             ? '<p class="mlink"><a href="' + esc(sp.link.url) + '" target="_blank" ' +
+               'rel="noopener noreferrer">' + esc(sp.link.label) + '</a></p>' : '') +
+           '</div>';
   }
 
   function find(path){
@@ -882,7 +891,7 @@
   }
 
   /* ================= navigation ================= */
-  var BUILD = "Version 34, 13 September 2026";
+  var BUILD = "Version 35, 13 September 2026";
   var TABS = { home:["りょてい","Itinerary"], places:["ばしょ","Places"],
                phrases:["ことば","Phrases"], manners:["マナー","Etiquette"] };
   var stack = [];
