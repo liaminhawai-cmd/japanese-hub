@@ -176,7 +176,7 @@
   .bigshot.contain{aspect-ratio:4/3;background:var(--bg)}
   .bigshot.contain img{object-fit:contain}
   /* ---------- maps ---------- */
-  .maps{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;align-items:start}
+  .maps{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px;align-items:start}
   .mp.wide{grid-column:1 / -1}
   .mp{background:#dde9f5;border:1px solid var(--line);border-radius:12px;
       padding:8px;position:relative;overflow:hidden}
@@ -565,7 +565,6 @@
     var h = '<div' + (q ? ' class="quiet"' : '') + '>' + head(p.ja, p.en) +
             '<p class="lede">' + esc(p.intro) + '</p>' +
             (p.note ? '<div class="tone-note">' + esc(p.note) + '</div>' : '') +
-            maps(p.id) +
             '<div class="grid" style="margin-top:16px">';
     p.sights.forEach(function(s2, i){
       // a sight can override the count, which is how Nijo says on its tile
@@ -573,7 +572,9 @@
       h += tile(s2, 'data-sight="' + esc(p.id + "/" + s2.id) + '"',
                 s2.meta || (s2.spots.length + " to look at"), i);
     });
-    return h + '</div></div>';
+    // The maps go under the tiles. Andrew: it is the tiles they came for, and
+    // anyone who wants to know where they are can scroll for it.
+    return h + '</div>' + maps(p.id) + '</div>';
   }
 
   // level 3: the tiles for one sight
@@ -849,7 +850,7 @@
   }
 
   /* ================= navigation ================= */
-  var BUILD = "Version 30, 13 September 2026";
+  var BUILD = "Version 31, 13 September 2026";
   var TABS = { home:["りょてい","Itinerary"], places:["ばしょ","Places"],
                phrases:["ことば","Phrases"], manners:["マナー","Etiquette"] };
   var stack = [];
