@@ -22,6 +22,7 @@
        black text and the pale tiles comfortable on top of it. Hiroshima
        overrides all of this back to a cool grey (see the quiet block). */
     --bg:#e3c273; --paper:#fffdf4; --ink:#1c1808; --muted:#453a20;
+    --itinerary-paper:rgba(255,247,209,.90);
     --line:#d4be8c; --line-soft:#e2d2a9; --accent:#a83232;
     --deep:#16375e; --ok:#2f6a3e;
     /* Tile blocks, from the traditional palette and kept pale so black text
@@ -109,6 +110,9 @@
               line-height:1}
 
   /* ---------- today ---------- */
+  /* A pale yellow wash softens the leaf behind the itinerary, not the text. */
+  #v-home{background:var(--itinerary-paper);border:1px solid var(--line);
+          border-radius:14px;padding:14px}
   .today{background:var(--deep);color:#fbf7ee;border-radius:14px;padding:17px 18px;
          margin-bottom:18px;box-shadow:var(--shadow)}
   .today .lbl{font-size:12px;font-weight:800;letter-spacing:.13em;
@@ -843,7 +847,7 @@
   }
 
   /* ================= navigation ================= */
-  var BUILD = "Version 28, 13 September 2026";
+  var BUILD = "Version 29, 13 September 2026";
   var TABS = { home:["りょてい","Itinerary"], places:["ばしょ","Places"],
                phrases:["ことば","Phrases"], manners:["マナー","Etiquette"] };
   var stack = [];
