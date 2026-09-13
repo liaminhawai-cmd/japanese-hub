@@ -1195,7 +1195,8 @@ window.PLACES = [
             id: "nankinmachi",
             ja: "南京町",
             en: "Nankinmachi, the Chinatown",
-            photo: null,
+            photo: "photos/kobe-nankinmachi.webp",
+            credit: "The Chozan gate into Nankinmachi, via Wikimedia Commons.",
             hook:
               "Kobe was one of the first ports Japan opened to foreign ships in " +
               "1868 after more than two centuries of near-total isolation. Chinese " +
@@ -1213,7 +1214,9 @@ window.PLACES = [
             id: "quake",
             ja: "阪神・淡路大震災",
             en: "1995",
-            photo: null,
+            photo: "photos/kobe-quake.webp",
+            credit: "Port of Kobe Earthquake Memorial Park: the quay left exactly " +
+                    "as the 1995 quake made it. Via Wikimedia Commons.",
             hook:
               "In January 1995 an earthquake hit this city before dawn. More than " +
               "6,400 people died, mostly here. Elevated motorways fell on their " +
