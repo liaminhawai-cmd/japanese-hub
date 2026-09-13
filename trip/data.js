@@ -630,24 +630,30 @@ window.PLACES = [
           {
             id: "shio",
             ja: "しお",
-            en: "The tide decides what you see",
-            photo: "photos/miyajima-low-tide.webp",
+            en: "The tide on our morning",
+            photo: "photos/miyajima-itsukushima.webp",
+            credit: "Itsukushima Shrine, via Wikimedia Commons.",
             hook:
-              "Miyajima is two completely different places depending on the hour, " +
-              "and which one you get is already decided. There are two high tides " +
-              "and two low tides a day, and they slide about fifty minutes later " +
-              "each day, so the timing is never the same twice. Above about 250 " +
-              "centimetres the water is up and the gate looks like it is floating. " +
-              "Below about 100 the sea has gone out far enough that the seabed " +
-              "holds your weight and you can walk out and stand underneath it. " +
-              "Neither is better. They are just different days out, and you get " +
-              "the one the moon gives you.",
+              "The sea here moves about three metres between high and low, and it " +
+              "changes the place completely. On our morning the tide is in. High " +
+              "water is at 8:07 and the shrine floats from around six until ten, " +
+              "which is the whole time we are on the island. So you are getting it " +
+              "exactly as the picture above.\n" +
+              "That is not the consolation prize. It is the version the shrine was " +
+              "built for. The stilts, the gap under the corridors, the gate out in " +
+              "the channel: none of it makes sense on dry land, and all of it was " +
+              "designed to be met by boat with the water up. At high tide the " +
+              "building is doing its job. Later in the day the sea goes out and " +
+              "people walk across the sand to stand under the gate, which is a " +
+              "good thing to do and a completely different island. We will be on " +
+              "the road to Soja by then. It will keep.",
             look:
-              "Look up the tide for the morning we are there before you get on " +
-              "the ferry, so you know which Miyajima you are walking into. If it " +
-              "is going to be low, wear shoes you do not mind getting muddy.",
+              "Look along the corridors from the side and find where the water " +
+              "meets the floorboards. There is almost nothing between them. Then " +
+              "look out at the gate standing in open water and remember that in " +
+              "six hours you could have walked to it.",
             link: { url: "https://www.miyajima.or.jp/english/sio/sio.php",
-                    label: "The Miyajima Tourist Association's tide table" }
+                    label: "Check the tide yourself" }
           },
           {
             id: "why-water",
