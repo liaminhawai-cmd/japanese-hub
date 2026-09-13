@@ -219,6 +219,18 @@
   .kanaswap .en{font-size:13.5px;font-weight:400;color:var(--muted);margin-left:9px}
   .kanaswap.on{background:var(--deep);border-color:var(--deep);color:#fbf7ee}
   .kanaswap.on .en{color:rgba(251,247,238,.8)}
+  .phrase .ch{cursor:pointer}
+  #readbub{position:fixed;z-index:92;display:none;background:var(--deep);
+        color:#fbf7ee;border-radius:12px;padding:9px 14px 10px;text-align:center;
+        box-shadow:0 4px 16px rgba(0,0,0,.3);pointer-events:none}
+  #readbub.on{display:block}
+  #readbub b{display:block;font-size:30px;line-height:1.15;font-weight:600}
+  #readbub i{display:block;font-family:var(--font-en),sans-serif;font-style:normal;
+        font-size:14px;opacity:.85;margin-top:2px;white-space:nowrap}
+  #readbub::after{content:"";position:absolute;left:50%;margin-left:-7px;
+        border:7px solid transparent;border-top-color:var(--deep);top:100%}
+  #readbub.below::after{top:auto;bottom:100%;border-top-color:transparent;
+        border-bottom-color:var(--deep)}
   .showtag{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.08em;
            text-transform:uppercase;color:var(--paper);background:var(--deep);
            border-radius:12px;padding:5px 11px;margin-top:11px}
@@ -339,6 +351,8 @@
   </div>
   <button id="showClose">Close</button>
 </div>
+
+<div id="readbub" aria-hidden="true"></div>
 
 <button id="kanatab" aria-label="Open the kana charts"><span>か</span><span>な</span></button>
 
@@ -599,7 +613,8 @@
     var h = head("ことば", "Phrases") +
             '<p class="lede">Pick the situation you are in. Everything is in kana. ' +
             'The \u304b\u306a tab down the side opens the charts if a character has ' +
-            'gone out of your head. The last few are set pieces: learn those before ' +
+            'gone out of your head, and tapping a kana anywhere in the app tells ' +
+            'you what it says. The last few are set pieces: learn those before ' +
             'you fly.</p><div class="grid">';
     PHRASES.forEach(function(g, i){
       h += tile(g, 'data-group="' + esc(g.id) + '"',
@@ -612,6 +627,98 @@
      something they can actually read. One switch for the whole group rather
      than a control on every card. */
   var kanaOnly = false;
+  /* ---- tap a kana to be told what it says --------------------------------
+     A student who cannot read ひ should not have to leave the phrase, open a
+     chart and scan 46 cells. Kana is a closed set, so every reading is here:
+     one string, parsed once. Yoon are matched as pairs, so tapping き in きゃ
+     gives kya rather than ki. Kanji is deliberately not tappable: its reading
+     depends on the word around it, and guessing would teach the wrong thing. */
+  var KANA_READ = (function(){
+    var rows =
+      "\u3042a \u3044i \u3046u \u3048e \u304ao \u304bka \u304dki \u304fku \u3051ke \u3053ko " +
+      "\u3055sa \u3057shi \u3059su \u305bse \u305dso \u305fta \u3061chi \u3064tsu \u3066te \u3068to " +
+      "\u306ana \u306bni \u306cnu \u306dne \u306eno \u306fha \u3072hi \u3075fu \u3078he \u307bho " +
+      "\u307ema \u307fmi \u3080mu \u3081me \u3082mo \u3084ya \u3086yu \u3088yo " +
+      "\u3089ra \u308ari \u308bru \u308cre \u308dro \u308fwa \u3092o \u3093n " +
+      "\u304cga \u304egi \u3050gu \u3052ge \u3054go \u3056za \u3058ji \u305azu \u305cze \u305ezo " +
+      "\u3060da \u3062ji \u3065zu \u3067de \u3069do \u3070ba \u3073bi \u3076bu \u3079be \u307cbo " +
+      "\u3071pa \u3074pi \u3077pu \u307ape \u307dpo " +
+      "\u30a2a \u30a4i \u30a6u \u30a8e \u30aao \u30abka \u30adki \u30afku \u30b1ke \u30b3ko " +
+      "\u30b5sa \u30b7shi \u30b9su \u30bbse \u30bdso \u30bfta \u30c1chi \u30c4tsu \u30c6te \u30c8to " +
+      "\u30cana \u30cbni \u30ccnu \u30cdne \u30ceno \u30cfha \u30d2hi \u30d5fu \u30d8he \u30dbho " +
+      "\u30dema \u30dfmi \u30e0mu \u30e1me \u30e2mo \u30e4ya \u30e6yu \u30e8yo " +
+      "\u30e9ra \u30eari \u30ebru \u30ecre \u30edro \u30efwa \u30f2o \u30f3n " +
+      "\u30acga \u30aegi \u30b0gu \u30b2ge \u30b4go \u30b6za \u30b8ji \u30bazu \u30bcze \u30bezo " +
+      "\u30c0da \u30c2ji \u30c5zu \u30c7de \u30c9do \u30d0ba \u30d3bi \u30d6bu \u30d9be \u30dcbo " +
+      "\u30d1pa \u30d4pi \u30d7pu \u30dape \u30ddpo";
+    var yoon =
+      "\u304d\u3083kya \u304d\u3085kyu \u304d\u3087kyo \u3057\u3083sha \u3057\u3085shu \u3057\u3087sho " +
+      "\u3061\u3083cha \u3061\u3085chu \u3061\u3087cho \u306b\u3083nya \u306b\u3085nyu \u306b\u3087nyo " +
+      "\u3072\u3083hya \u3072\u3085hyu \u3072\u3087hyo \u307f\u3083mya \u307f\u3085myu \u307f\u3087myo " +
+      "\u308a\u3083rya \u308a\u3085ryu \u308a\u3087ryo \u304e\u3083gya \u304e\u3085gyu \u304e\u3087gyo " +
+      "\u3058\u3083ja \u3058\u3085ju \u3058\u3087jo \u3073\u3083bya \u3073\u3085byu \u3073\u3087byo " +
+      "\u3074\u3083pya \u3074\u3085pyu \u3074\u3087pyo " +
+      "\u30ad\u30e3kya \u30ad\u30e5kyu \u30ad\u30e7kyo \u30b7\u30e3sha \u30b7\u30e5shu \u30b7\u30e7sho " +
+      "\u30c1\u30e3cha \u30c1\u30e5chu \u30c1\u30e7cho \u30cb\u30e3nya \u30cb\u30e5nyu \u30cb\u30e7nyo " +
+      "\u30d2\u30e3hya \u30d2\u30e5hyu \u30d2\u30e7hyo \u30df\u30e3mya \u30df\u30e5myu \u30df\u30e7myo " +
+      "\u30ea\u30e3rya \u30ea\u30e5ryu \u30ea\u30e7ryo \u30ae\u30e3gya \u30ae\u30e5gyu \u30ae\u30e7gyo " +
+      "\u30b8\u30e3ja \u30b8\u30e5ju \u30b8\u30e7jo \u30d3\u30e3bya \u30d3\u30e5byu \u30d3\u30e7byo " +
+      "\u30d4\u30e3pya \u30d4\u30e5pyu \u30d4\u30e7pyo " +
+      // the borrowed-word sounds katakana adds, which the app needs for
+      // ホストファミリー and フェアウェル
+      "\u30d5\u30a1fa \u30d5\u30a3fi \u30d5\u30a7fe \u30d5\u30a9fo " +
+      "\u30a6\u30a3wi \u30a6\u30a7we \u30a6\u30a9wo \u30c6\u30a3ti \u30c7\u30a3di " +
+      "\u30c1\u30a7che \u30b7\u30a7she \u30b8\u30a7je \u30c4\u30a1tsa";
+    var m = {};
+    function add(str, n){
+      str.split(" ").forEach(function(e){
+        if (e) m[e.slice(0, n)] = e.slice(n);
+      });
+    }
+    add(rows, 1); add(yoon, 2);
+    m["\u3063"] = m["\u30c3"] = "doubles the next consonant";
+    m["\u30fc"] = "holds the vowel before it";
+    return m;
+  })();
+
+  /* Wrap every readable kana in its own tappable span. Everything else, kanji
+     and punctuation included, passes through as plain text. */
+  function readable(text){
+    var out = "", i = 0;
+    while (i < text.length){
+      var two = text.substr(i, 2), one = text.charAt(i);
+      if (KANA_READ[two]){
+        out += '<span class="ch" data-ch="' + esc(two) + '">' + esc(two) + '</span>';
+        i += 2;
+      } else if (KANA_READ[one]){
+        out += '<span class="ch" data-ch="' + esc(one) + '">' + esc(one) + '</span>';
+        i += 1;
+      } else {
+        out += esc(one);
+        i += 1;
+      }
+    }
+    return out;
+  }
+
+  function showRead(el){
+    var ch = el.dataset.ch, read = KANA_READ[ch];
+    if (!read) return;
+    var bub = $("readbub");
+    bub.innerHTML = '<b>' + esc(ch) + '</b><i>' + esc(read) + '</i>';
+    bub.className = "on";
+    var r = el.getBoundingClientRect(), bw = bub.offsetWidth, bh = bub.offsetHeight;
+    // sits above the character, or below it when there is no room above
+    var x = Math.min(Math.max(8, r.left + r.width / 2 - bw / 2),
+                     window.innerWidth - bw - 8);
+    var above = r.top > bh + 14;
+    bub.style.left = x + "px";
+    bub.style.top = (above ? r.top - bh - 10 : r.bottom + 10) + "px";
+    bub.className = "on" + (above ? "" : " below");
+  }
+  function hideRead(){ $("readbub").className = ""; }
+  window.addEventListener("scroll", hideRead, { passive: true });
+
   function groupHtml(g){
     var base = 0;
     for (var i=0;i<PHRASES.length;i++){
@@ -634,7 +741,7 @@
              (function(){
                var body = (kanaOnly && it.kana) ? it.kana : it.ja;
                return '<div class="jp' + (body.indexOf("\n") > -1 ? " lines" : "") + '">' +
-                      esc(body) + '</div>';
+                      readable(body) + '</div>';
              })() +
              '<div class="en">' + esc(it.en) + '</div>' +
              (it.tip ? '<div class="tip">' + esc(it.tip) + '</div>' : "") +
@@ -736,7 +843,7 @@
   }
 
   /* ================= navigation ================= */
-  var BUILD = "Version 27, 13 September 2026";
+  var BUILD = "Version 28, 13 September 2026";
   var TABS = { home:["りょてい","Itinerary"], places:["ばしょ","Places"],
                phrases:["ことば","Phrases"], manners:["マナー","Etiquette"] };
   var stack = [];
@@ -798,6 +905,8 @@
       return push(function(){ $("v-detail").innerHTML = groupHtml(g); }, g.ja, g.en);
     }
     if ((t = e.target.closest("[data-manner]"))) return openManner(+t.dataset.manner);
+    if ((t = e.target.closest("[data-ch]"))) return showRead(t);
+    hideRead();
     if ((t = e.target.closest("[data-ph]"))) return openShow(phraseIndex[+t.dataset.ph]);
     if (e.target.closest("#showClose")) return closeShow();
     if (e.target.closest("#kanatab")) return openKana();
