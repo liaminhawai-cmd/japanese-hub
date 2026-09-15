@@ -124,6 +124,40 @@
               transform:translateY(-50%);font-size:26px;color:var(--line);
               line-height:1}
 
+  /* ---------- before you fly ---------- */
+  .pfrow{margin-bottom:14px;border-color:var(--accent)}
+  .pfcount{font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+       color:var(--accent);margin:0 2px 12px}
+  .pfitem{background:var(--paper);border:1px solid var(--line);border-radius:14px;
+       padding:14px 16px 16px;box-shadow:var(--shadow)}
+  .pfitem.done{opacity:.72}
+  .pftick{display:flex;align-items:center;gap:11px;width:100%;text-align:left;
+       background:none;border:0;padding:0;font-family:inherit;color:var(--ink);cursor:pointer}
+  .pftick .box{flex:0 0 auto;width:26px;height:26px;border-radius:7px;
+       border:2px solid var(--line);background:#fff;position:relative}
+  .pfitem.done .pftick .box{background:var(--deep);border-color:var(--deep)}
+  /* The tick is drawn rather than typed so it never lands on a missing glyph. */
+  .pfitem.done .pftick .box::after{content:"";position:absolute;left:8px;top:3px;
+       width:6px;height:12px;border:solid #fff;border-width:0 3px 3px 0;
+       transform:rotate(42deg)}
+  .pftick .nm{font-size:19px;font-weight:700;line-height:1.35}
+  .pfitem.done .pftick .nm{text-decoration:line-through;text-decoration-thickness:2px}
+  .pfitem .why{font-size:16px;margin:10px 0 0}
+  .pfitem .how{font-size:15px;color:var(--muted);margin:9px 0 0;padding-top:9px;
+       border-top:1px solid var(--line-soft)}
+  .pflinks{margin:12px 0 0;display:flex;flex-wrap:wrap;gap:9px}
+  .pfget{display:inline-block;background:var(--deep);color:#fbf7ee;text-decoration:none;
+       font-size:15px;font-weight:700;padding:9px 15px;border-radius:9px}
+  .pffork{margin-top:12px;padding:12px 14px;border-radius:11px;
+       background:var(--bg);border:1px solid var(--line-soft)}
+  .pffork .fl{font-size:13px;font-weight:800;letter-spacing:.08em;
+       text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .pffork p{margin:0;font-size:15.5px}
+  .pfextra{margin-top:18px;padding:14px 16px;border-radius:14px;
+       border:1px dashed var(--line);background:var(--paper)}
+  .pfextra .fl{font-size:13px;font-weight:800;letter-spacing:.08em;
+       text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .pfextra p{margin:0;font-size:15.5px;color:var(--muted)}
   /* ---------- today ---------- */
   /* A pale yellow wash softens the leaf behind the itinerary, not the text. */
   #v-home{background:var(--itinerary-paper);border:1px solid var(--line);
@@ -589,6 +623,16 @@
            '<span class="en">Melbourne, 20 September 2026, 18:25</span></div>' +
            '<div class="nt">Open this on the day and it shows where we are up to.</div></div>';
     }
+    /* Everything here is done at home before anyone leaves, so it sits above
+       the days rather than in among them, and it says how far along you are
+       without being opened. */
+    h += '<button class="row pfrow" data-preflight="1">' +
+           '<div class="rja">' + esc(PREFLIGHT.ja) + '</div>' +
+           '<div class="ren">' + esc(PREFLIGHT.en) + '</div>' +
+           '<div class="rmeta">' + pfCount() + ' of ' + PREFLIGHT.items.length +
+             ' done. Apps to install and one form to fill in, all on wifi ' +
+             'before we go.</div></button>';
+
     /* The tab is called Itinerary now, so the page does not repeat itself. */
     h += '<div>';
     TRIP.days.forEach(function(d, k){
@@ -603,6 +647,63 @@
          // without guessing. Keep BUILD in step with CACHE in sw.js.
          '<span class="build">' + esc(BUILD) + '</span></p>';
     $("v-home").innerHTML = h;
+  }
+
+  /* ================= before you fly =================
+     Ticks live in this browser and nowhere else: no account, nothing sent,
+     and a student who clears their history simply starts again. Both store
+     links are shown rather than guessing the phone from the user agent,
+     because a wrong guess sends someone to a store they cannot install from
+     and there is no way for them to tell that is what happened. */
+  var PF_KEY = "jtPreflight-v1";
+  function pfDone(){
+    try { return JSON.parse(localStorage.getItem(PF_KEY) || "{}") || {}; }
+    catch (e){ return {}; }
+  }
+  function pfSet(id, on){
+    var d = pfDone();
+    if (on) d[id] = 1; else delete d[id];
+    try { localStorage.setItem(PF_KEY, JSON.stringify(d)); } catch (e){}
+  }
+  function pfCount(){
+    var d = pfDone(), n = 0;
+    PREFLIGHT.items.forEach(function(it){ if (d[it.id]) n++; });
+    return n;
+  }
+  function store(url, label){
+    if (!/^https:\/\//.test(url)) return "";
+    return '<a class="pfget" href="' + esc(url) + '" target="_blank" ' +
+           'rel="noopener noreferrer">' + esc(label) + '</a>';
+  }
+  function preflightHtml(){
+    var d = pfDone();
+    var h = head(PREFLIGHT.ja, PREFLIGHT.en) +
+            '<p class="lede">' + esc(PREFLIGHT.note) + '</p>' +
+            '<p class="pfcount" id="pfcount">' + pfCount() + ' of ' +
+            PREFLIGHT.items.length + ' done</p><div class="stack">';
+    PREFLIGHT.items.forEach(function(it){
+      h += '<div class="pfitem' + (d[it.id] ? " done" : "") + '" data-pf="' + esc(it.id) + '">' +
+           '<button class="pftick" aria-pressed="' + (d[it.id] ? "true" : "false") + '">' +
+             '<span class="box" aria-hidden="true"></span>' +
+             '<span class="nm">' + esc(it.name) + '</span></button>' +
+           '<p class="why">' + esc(it.why) + '</p>' +
+           (it.how ? '<p class="how">' + esc(it.how) + '</p>' : "");
+      if (it.site) h += '<p class="pflinks">' + store(it.site.url, it.site.label) + '</p>';
+      if (it.ios || it.android){
+        h += '<p class="pflinks">' + store(it.ios, "iPhone") +
+             store(it.android, "Android") + '</p>';
+      }
+      (it.forks || []).forEach(function(f){
+        h += '<div class="pffork"><div class="fl">' + esc(f.label) + '</div>' +
+             '<p>' + esc(f.text) + '</p>' +
+             (f.url ? '<p class="pflinks">' + store(f.url, "Get the app") + '</p>' : "") +
+             '</div>';
+      });
+      h += '</div>';
+    });
+    h += '</div><div class="pfextra"><div class="fl">' + esc(PREFLIGHT.extra.head) +
+         '</div><p>' + esc(PREFLIGHT.extra.text) + '</p></div>';
+    return h;
   }
 
   /* ================= PLACES: three short levels ================= */
@@ -1049,7 +1150,7 @@
   }
 
   /* ================= navigation ================= */
-  var BUILD = "Version 45, 13 September 2026";
+  var BUILD = "Version 46, 15 September 2026";
   var TABS = { home:["りょてい","Itinerary"], places:["ばしょ","Places"],
                phrases:["ことば","Phrases"], manners:["マナー","Etiquette"] };
   var stack = [];
@@ -1178,6 +1279,21 @@
     if ((t = e.target.closest("[data-manner]"))) return openManner(+t.dataset.manner);
     if ((t = e.target.closest("[data-ch]"))) return showRead(t);
     hideRead();
+    if (e.target.closest("[data-preflight]")){
+      return push(function(){ $("v-detail").innerHTML = preflightHtml(); },
+                  PREFLIGHT.ja, PREFLIGHT.en);
+    }
+    if ((t = e.target.closest(".pftick"))){
+      var row = t.closest("[data-pf]"), id = row.dataset.pf;
+      var on = !row.classList.contains("done");
+      row.classList.toggle("done", on);
+      t.setAttribute("aria-pressed", on ? "true" : "false");
+      pfSet(id, on);
+      var c = $("pfcount");
+      if (c) c.textContent = pfCount() + " of " + PREFLIGHT.items.length + " done";
+      renderHome();
+      return;
+    }
     if ((t = e.target.closest("[data-say]"))){
       e.stopPropagation();
       return playSay(t, phraseIndex[+t.dataset.say]);

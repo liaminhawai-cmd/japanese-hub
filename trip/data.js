@@ -1658,6 +1658,101 @@ window.PHRASES = [
    MANNERS
    Short, blunt, and only things that actually come up on this trip.
    ------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------ *
+ * PREFLIGHT: the one page in this app that needs wifi and is meant to *
+ * be finished before anybody leaves. Every store link is opened at    *
+ * home, on purpose.                                                   *
+ * ------------------------------------------------------------------ */
+window.PREFLIGHT = {
+  ja: "しゅっぱつのまえに",
+  en: "Before you fly",
+  note: "Do all of this at home on wifi, in the week before we go. Doing it " +
+        "at the airport means fourteen people downloading at once on a bad " +
+        "connection, and doing it in Japan means paying for the data. Tap an " +
+        "item to tick it off. The ticks are yours and nobody else sees them.",
+  items: [
+    {
+      id: "vjw",
+      name: "Visit Japan Web",
+      why: "The government site for your arrival and customs details. Fill it " +
+           "in before you fly and you walk past the paper forms at Kansai " +
+           "instead of filling them in standing up.",
+      how: "It is a website, not an app. Bookmark it, and screenshot the QR " +
+           "codes it gives you at the end: you need them when you land, and " +
+           "you may not have signal in the arrivals hall.",
+      site: { url: "https://www.vjw.digital.go.jp/", label: "Open Visit Japan Web" }
+    },
+    {
+      id: "maps",
+      name: "Google Maps",
+      why: "Train times, platform numbers and walking directions. This is the " +
+           "one you will use most.",
+      how: "Install it, then download the offline map for each city while you " +
+           "still have wifi: search the city, tap its name along the bottom, " +
+           "then Download. Offline maps still give you walking directions " +
+           "with no signal at all.",
+      ios: "https://apps.apple.com/us/app/google-maps/id585027354",
+      android: "https://play.google.com/store/apps/details?id=com.google.android.apps.maps"
+    },
+    {
+      id: "translate",
+      name: "Google Translate",
+      why: "Point the camera at a sign or a menu and it reads it for you. " +
+           "Useful the moment the kanji stops being the ones you know.",
+      how: "Open it, go to offline languages and download Japanese. Do this " +
+           "before you fly or the camera will not work without signal.",
+      ios: "https://apps.apple.com/us/app/google-translate/id414706506",
+      android: "https://play.google.com/store/apps/details?id=com.google.android.apps.translate"
+    },
+    {
+      id: "voicetra",
+      name: "VoiceTra",
+      why: "You speak, it says it in Japanese, they answer, it says it back in " +
+           "English. Built by Japan's own national research institute and " +
+           "noticeably better than Google Translate at an actual back and " +
+           "forth conversation, which is what you will want at the dinner " +
+           "table.",
+      how: "It is free and there is nothing to set up.",
+      ios: "https://apps.apple.com/us/app/voicetra/id581137577",
+      android: "https://play.google.com/store/apps/details?id=jp.go.nict.voicetra"
+    },
+    {
+      id: "suica",
+      name: "Suica, for trains and convenience stores",
+      why: "One card that taps you through the ticket gates and pays for " +
+           "things at the konbini. What you do about it depends entirely on " +
+           "which phone you have, so read your half and ignore the other one.",
+      forks: [
+        {
+          label: "On an iPhone",
+          text: "Download Welcome Suica Mobile and set it up before you fly. " +
+                "You can top it up with an ordinary Australian card through " +
+                "Apple Pay. Needs an iPhone XR or newer running iOS 17.2 or " +
+                "later, so check yours now rather than at the airport.",
+          url: "https://apps.apple.com/us/app/id6738336566"
+        },
+        {
+          label: "On an Android",
+          text: "Assume it will not work. Mobile Suica generally only runs on " +
+                "phones actually sold in Japan, whatever the store page says. " +
+                "Plan to buy a plastic card instead: Suica, PASMO and ICOCA " +
+                "all do the same job and you can get one at the airport or at " +
+                "the first station. This is normal and it is not a problem."
+        }
+      ]
+    }
+  ],
+  extra: {
+    head: "Worth having, not worth stressing about",
+    text: "Tabelog is what people in Japan actually use to find somewhere to " +
+          "eat, and is handy on the days you are choosing your own meals. " +
+          "Japan Transit Planner and Navitime are dedicated train apps some " +
+          "people prefer as a backup when a line gets complicated. Search the " +
+          "store yourself for these two rather than following a link: we have " +
+          "not checked their current listings, and store addresses go stale."
+  }
+};
+
 window.MANNERS = [
   { ja: "京都のマナー", en: "Kyoto in particular",
     body: "Kyoto asks more of visitors than anywhere else you are going, because " +
