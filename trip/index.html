@@ -365,17 +365,25 @@
         display:block;border-radius:12px}
 
   #show{position:fixed;inset:0;z-index:90;background:var(--paper);display:none;
-        flex-direction:column;padding:24px;padding-top:calc(24px + env(safe-area-inset-top))}
+        flex-direction:column;padding:24px;padding-top:calc(24px + env(safe-area-inset-top));
+        overflow-y:auto}
   #show.on{display:flex}
-  #show .body{flex:1;display:flex;flex-direction:column;align-items:center;
-              justify-content:center;text-align:center;gap:20px}
+  /* A long card (an anthem verse, a ceremony speech) is taller than the phone.
+     The body grows, the dialog scrolls, and Close stays stuck to the bottom of
+     the screen, because there is no Escape key on a phone. */
+  #show .body{flex:1 0 auto;display:flex;flex-direction:column;align-items:center;
+              justify-content:center;text-align:center;gap:20px;min-height:0}
   #show .jp{font-size:38px;line-height:1.65;font-weight:700}
+  #show .jp.long{font-size:26px;line-height:1.7}
+  #show .jp.verse{font-size:22px;line-height:1.75}
   #show .en{font-size:18px;color:var(--muted)}
   #show .hint{font-size:13px;color:var(--muted);letter-spacing:.09em;
               text-transform:uppercase;font-weight:800}
   #show button{border:1px solid var(--line);background:var(--bg);color:var(--ink);
                font-family:inherit;font-size:18px;font-weight:600;padding:16px;
                border-radius:12px;cursor:pointer;width:100%}
+  #show #showClose{position:sticky;bottom:0;flex:none;margin-top:20px;
+                   box-shadow:0 -10px 16px -8px rgba(0,0,0,.18)}
 
   /* ---------- manners ---------- */
   .manner{background:var(--paper);border:1px solid var(--line);border-radius:14px;
@@ -1150,7 +1158,7 @@
   }
 
   /* ================= navigation ================= */
-  var BUILD = "Version 46, 15 September 2026";
+  var BUILD = "Version 47, 16 September 2026";
   var TABS = { home:["りょてい","Itinerary"], places:["ばしょ","Places"],
                phrases:["ことば","Phrases"], manners:["マナー","Etiquette"] };
   var stack = [];
@@ -1335,7 +1343,12 @@
 
   function openShow(it){
     if (!it) return;
-    $("showJp").textContent = it.ja; $("showEn").textContent = it.en;
+    // A speech or an anthem verse does not fit at phrase size; step it down so
+    // it can still be read at arm's length without three screens of scrolling.
+    var jp = $("showJp"), n = it.ja.length;
+    jp.textContent = it.ja;
+    jp.className = "jp" + (n > 120 ? " verse" : n > 40 ? " long" : "");
+    $("showEn").textContent = it.en;
     // Held up to a stranger, the phrase is worth hearing as well as reading.
     var i = phraseIndex.indexOf(it);
     $("showSay").innerHTML = i < 0 ? "" : sayBtn(it, i);
@@ -1353,7 +1366,11 @@
   if ("serviceWorker" in navigator && location.protocol.indexOf("http") === 0){
     navigator.serviceWorker.register("sw.js").catch(function(){});
   }
-  var SAVED_KEY = "jtSaved-v14";
+  /* Keyed to BUILD, not to a number typed here, so every release brings the
+     Save button back by itself. It was pinned at v14 through thirty-odd
+     releases, which meant a phone that saved once kept showing "Saved" and
+     never fetched the photos added since. */
+  var SAVED_KEY = "jtSaved-" + BUILD;
   function allPhotos(){
     var out = [];
     PLACES.forEach(function(p){ p.sights.forEach(function(s){
@@ -1393,7 +1410,12 @@
           " photos. Try again on wifi.";
         return;
       }
-      try { localStorage.setItem(SAVED_KEY, String(Date.now())); } catch(err){}
+      try {
+        Object.keys(localStorage).forEach(function(k){
+          if (k.indexOf("jtSaved-") === 0 && k !== SAVED_KEY) localStorage.removeItem(k);
+        });
+        localStorage.setItem(SAVED_KEY, String(Date.now()));
+      } catch(err){}
       markSaved("Saved. This app now works with no signal.");
     });
   });
