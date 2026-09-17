@@ -1753,6 +1753,130 @@ window.PREFLIGHT = {
   }
 };
 
+/* ------------------------------------------------------------------ *
+ * MONEY: no app in Japan can look up a rate, so the student sets it   *
+ * and the whole page follows. Prices are ballpark, and say so.        *
+ * ------------------------------------------------------------------ */
+window.MONEY = {
+  ja: "おかね",
+  en: "Money",
+  rate: 110,
+  note: "Set the rate yourself and everything below follows it. Check it " +
+        "each morning on wifi, the same way you would check the weather: " +
+        "the yen moves, and by the end of twelve days it will not be what " +
+        "it was when we left.",
+  shortcutHead: "Doing it in your head",
+  shortcut: "Learn the \u00a51000 line above and work from it: half of it is " +
+            "\u00a5500, ten of it is \u00a510000. You almost never need to be " +
+            "exact, you need to know whether something is a coffee or a " +
+            "jacket. Today \u00a51000 is about ",
+  ladder: [100, 500, 1000, 3000, 5000, 10000],
+  costsHead: "What things actually cost",
+  costsNote: "Rough prices, to give you a feel for whether something is " +
+             "cheap or dear before you convert it. Nothing here is exact and " +
+             "prices differ between a station kiosk and a back street.",
+  costs: [
+    { what: "A drink from a vending machine", yen: "140 to 180",
+      note: "They are everywhere, they take coins and IC cards, and the red " +
+            "label means hot." },
+    { what: "Onigiri at a convenience store", yen: "150 to 200",
+      note: "A rice ball. One of these and a drink is a normal quick lunch." },
+    { what: "A konbini bento or sandwich", yen: "400 to 700",
+      note: "They will heat the bento for you if you ask." },
+    { what: "A bowl of ramen", yen: "900 to 1200",
+      note: "Often ordered from a ticket machine at the door before you sit " +
+            "down." },
+    { what: "Gyudon, a beef bowl", yen: "500 to 700",
+      note: "Fast, filling and about the cheapest hot meal you will find." },
+    { what: "Soft serve ice cream", yen: "400 to 600",
+      note: "Matcha, and whatever the local one is. Worth it." },
+    { what: "A short train or bus ride", yen: "150 to 300",
+      note: "Tap in and out with your IC card and you never think about it." },
+    { what: "A coin locker at a station", yen: "300 to 700",
+      note: "Depends on the size. Useful on a day you are carrying a bag you " +
+            "do not want." },
+    { what: "Gachapon, a capsule toy", yen: "300 to 500",
+      note: "The machines in rows outside shops. You get what you get." },
+    { what: "Omamori, a charm from a shrine", yen: "500 to 1000",
+      note: "Bought for a purpose, study or health or safe travel, rather " +
+            "than as a keepsake." },
+    { what: "Goshuin, a shrine or temple stamp", yen: "300 to 500",
+      note: "Brushed in front of you. You need the book to put it in, which " +
+            "costs more." },
+    { what: "A box of sweets to take home", yen: "800 to 1500",
+      note: "The regional ones at station shops are the point. Individually " +
+            "wrapped, which is why they work as a present." }
+  ]
+};
+
+/* ------------------------------------------------------------------ *
+ * EMERGENCY: two numbers that never change, and the words to say once *
+ * somebody picks up. Trip-specific numbers stay on the lanyard.       *
+ * ------------------------------------------------------------------ */
+window.EMERGENCY = {
+  ja: "きんきゅう",
+  en: "If something goes wrong",
+  note: "Read this now, before you need it. Your teachers' numbers, the " +
+        "hotel and your insurance details are on your lanyard, not in here.",
+  numbers: [
+    { n: "110", ja: "けいさつ", who: "Police",
+      detail: "Crime, or something that feels threatening." },
+    { n: "119", ja: "しょうぼう・きゅうきゅう", who: "Fire and ambulance",
+      detail: "Fire, or anybody hurt or seriously ill. The same number does " +
+              "both." }
+  ],
+  facts: "Both are free, and both work from any phone, including a locked " +
+         "one and one with no Japanese SIM. Say your words slowly. Ask for " +
+         "English and wait: an interpreter can be brought onto the call, but " +
+         "it takes a moment, so do not hang up.",
+  sayHead: "What to say",
+  say: [
+    { ja: "たすけて ください。", en: "Help, please." },
+    { ja: "きゅうきゅうしゃ を おねがいします。", en: "An ambulance, please." },
+    { ja: "けいさつ を おねがいします。", en: "The police, please." },
+    { ja: "かじ です。", en: "There is a fire." },
+    { ja: "けが を しました。", en: "I am hurt." },
+    { ja: "ともだち が けが を しました。", en: "My friend is hurt." },
+    { ja: "えいご が わかる ひと は いますか。",
+      en: "Is there anyone who understands English?" }
+  ],
+  whereHead: "Saying where you are",
+  where: "This is the hard part on a phone. Look for the nearest sign and " +
+         "read it out, even badly: a station name, a shop name, a street " +
+         "sign. If you cannot find one, ask the nearest person " +
+         "\u300c\u3053\u3053\u306f \u3069\u3053 \u3067\u3059\u304b\u3002\u300d " +
+         "and hand them the phone. People will help.",
+  lostHead: "If you are just lost",
+  lost: "Not an emergency, and it happens on every tour. Stop walking. Go " +
+        "into the nearest convenience store or up to a station attendant, " +
+        "say \u300c\u307f\u3061\u306b \u307e\u3088\u3044\u307e\u3057\u305f\u3002\u300d " +
+        "and show them where you are trying to get to. Then ring a teacher. " +
+        "Staying put and being found is always faster than wandering.",
+  /* Consular numbers are Andrew's to supply: an emergency page is the last
+     place to print a number nobody has checked. Empty means the block does
+     not render at all. */
+  consular: []
+};
+
+/* ------------------------------------------------------------------ *
+ * REVISE: the rest of the suite, for the long stretches. Needs wifi,  *
+ * and says so, because everything else in this app does not.          *
+ * ------------------------------------------------------------------ */
+window.REVISE = {
+  ja: "ふくしゅう",
+  en: "Revision on the plane and in the evenings",
+  note: "The grammar hub and the rest of the tools are on the same site as " +
+        "this app. Handy on a long flight or a quiet evening at the hotel. " +
+        "Unlike the rest of this app these need wifi, so open them at the " +
+        "hotel rather than on a train.",
+  links: [
+    { url: "https://liaminhawai-cmd.github.io/japanese-hub/grammar/",
+      label: "Grammar hub" },
+    { url: "https://liaminhawai-cmd.github.io/japanese-hub/",
+      label: "\u30b8\u30e3\u30d7\u30ea, everything else" }
+  ]
+};
+
 window.MANNERS = [
   { ja: "京都のマナー", en: "Kyoto in particular",
     body: "Kyoto asks more of visitors than anywhere else you are going, because " +

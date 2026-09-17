@@ -158,6 +158,64 @@
   .pfextra .fl{font-size:13px;font-weight:800;letter-spacing:.08em;
        text-transform:uppercase;color:var(--muted);margin-bottom:6px}
   .pfextra p{margin:0;font-size:15.5px;color:var(--muted)}
+  /* ---------- money ---------- */
+  .rateset{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;
+       background:var(--paper);border:1px solid var(--line);border-radius:14px;
+       padding:13px 16px;box-shadow:var(--shadow);margin-bottom:12px}
+  .rateset label{font-size:22px;font-weight:700}
+  .rateset input{width:5.2em;font:inherit;font-size:22px;font-weight:700;
+       color:var(--deep);border:0;border-bottom:2px solid var(--accent);
+       background:none;padding:0 2px;text-align:center;-moz-appearance:textfield}
+  .rateset input::-webkit-outer-spin-button,
+  .rateset input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  .rateset .rn{font-size:13.5px;color:var(--muted)}
+  .conv{display:flex;align-items:center;gap:10px;background:var(--paper);
+       border:1px solid var(--line);border-radius:14px;padding:13px 16px;
+       box-shadow:var(--shadow)}
+  .conv label{flex:1;font-size:17px;font-weight:700;display:flex;
+       align-items:baseline;gap:6px}
+  .conv input{width:100%;min-width:0;font:inherit;font-size:21px;font-weight:700;
+       color:var(--deep);border:0;border-bottom:2px solid var(--line);
+       background:none;padding:2px;-moz-appearance:textfield}
+  .conv input::-webkit-outer-spin-button,
+  .conv input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  .conv .eq{font-size:19px;color:var(--muted)}
+  .cvhint{font-size:13.5px;color:var(--muted);margin:7px 2px 0}
+  .ladder{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:14px}
+  .lr{background:var(--paper);border:1px solid var(--line);border-radius:11px;
+       padding:9px 12px;display:flex;justify-content:space-between;align-items:baseline}
+  .lr .ly{font-size:17px;font-weight:700}
+  .lr .la{font-size:16px;color:var(--deep);font-weight:700}
+  .tipbox .th{font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);margin-bottom:6px}
+  .tipbox{background:var(--paper);border:1px dashed var(--line);border-radius:14px;
+       padding:13px 16px;margin:16px 0 0;font-size:15.5px;color:var(--muted)}
+  .cost{background:var(--paper);border:1px solid var(--line);border-radius:14px;
+       padding:13px 16px;box-shadow:var(--shadow)}
+  .cost .cw{font-size:17px;font-weight:700}
+  .cost .cy{font-size:20px;font-weight:700;color:var(--deep);margin-top:3px}
+  .cost .cy .ca{font-size:15px;color:var(--muted);font-weight:600;margin-left:9px}
+  .cost .cn{font-size:14.5px;color:var(--muted);margin:8px 0 0}
+
+  /* ---------- if something goes wrong ---------- */
+  .row.urgent{border-color:var(--accent);border-width:2px}
+  .dial{display:block;text-decoration:none;color:var(--ink);background:var(--paper);
+       border:2px solid var(--accent);border-radius:14px;padding:14px 17px;
+       box-shadow:var(--shadow);margin-bottom:11px}
+  .dial .dn{display:block;font-size:44px;line-height:1.05;font-weight:800;
+       color:var(--accent);letter-spacing:.04em}
+  .dial .dn.sm{font-size:26px;letter-spacing:0}
+  .dial .dw{display:block;font-size:17px;margin-top:3px}
+  .dial .dw b{font-weight:700;margin-right:9px}
+  .dial .dd{display:block;font-size:14.5px;color:var(--muted);margin-top:7px;
+       padding-top:7px;border-top:1px solid var(--line-soft)}
+  .dial.calm{border-color:var(--line)}
+  .dial.calm .dn{color:var(--deep)}
+
+  /* ---------- revision, at the foot of the itinerary ---------- */
+  .revise{margin-top:18px;padding:14px 16px;border-radius:14px;
+       border:1px solid var(--line);background:var(--paper)}
+  .revise .fl{font-size:16px;font-weight:700;margin-bottom:5px}
+  .revise p{margin:0;font-size:15px;color:var(--muted)}
   /* ---------- today ---------- */
   /* A pale yellow wash softens the leaf behind the itinerary, not the text. */
   #v-home{background:var(--itinerary-paper);border:1px solid var(--line);
@@ -641,6 +699,17 @@
              ' done. Apps to install and one form to fill in, all on wifi ' +
              'before we go.</div></button>';
 
+    h += '<button class="row" data-money="1">' +
+           '<div class="rja">' + esc(MONEY.ja) + '</div>' +
+           '<div class="ren">' + esc(MONEY.en) + '</div>' +
+           '<div class="rmeta">What things cost, and a converter set to the ' +
+             'rate you give it.</div></button>';
+    h += '<button class="row urgent" data-sos="1">' +
+           '<div class="rja">' + esc(EMERGENCY.ja) + '</div>' +
+           '<div class="ren">' + esc(EMERGENCY.en) + '</div>' +
+           '<div class="rmeta">110 and 119, and what to say once somebody ' +
+             'answers. Worth reading before you need it.</div></button>';
+
     /* The tab is called Itinerary now, so the page does not repeat itself. */
     h += '<div>';
     TRIP.days.forEach(function(d, k){
@@ -649,6 +718,10 @@
            '<div class="nt">' + esc(d.note) + '</div></div></div>';
     });
     h += '</div>';
+    h += '<div class="revise"><div class="fl">' + esc(REVISE.ja) + '  ' +
+           esc(REVISE.en) + '</div><p>' + esc(REVISE.note) + '</p><p class="pflinks">' +
+           REVISE.links.map(function(l){ return store(l.url, l.label); }).join("") +
+           '</p></div>';
     h += '<p class="foot">Meeting points, phone numbers and your emergency details ' +
          'are on your lanyard, not in this app.' +
          // A visible version, so "which one am I looking at" is answerable
@@ -711,6 +784,111 @@
     });
     h += '</div><div class="pfextra"><div class="fl">' + esc(PREFLIGHT.extra.head) +
          '</div><p>' + esc(PREFLIGHT.extra.text) + '</p></div>';
+    return h;
+  }
+
+  /* ================= money =================
+     The rate is the student's, kept in their own browser, because no app on
+     a Japanese train can go and look one up. Everything on the page is
+     derived from it, so changing it changes the lot. */
+  var RATE_KEY = "jtRate-v1";
+  function rate(){
+    var v;
+    try { v = parseFloat(localStorage.getItem(RATE_KEY)); } catch (e){}
+    return (v && v > 0 && v < 100000) ? v : MONEY.rate;
+  }
+  function setRate(v){ try { localStorage.setItem(RATE_KEY, String(v)); } catch (e){} }
+  function aud(yen){
+    var v = yen / rate();
+    /* Cents below ten dollars, whole dollars above: nobody at a vending
+       machine needs two decimal places on a jacket. */
+    return v < 10 ? "$" + v.toFixed(2) : "$" + Math.round(v);
+  }
+  function moneyHtml(){
+    var h = head(MONEY.ja, MONEY.en) + '<p class="lede">' + esc(MONEY.note) + '</p>';
+    h += '<div class="rateset"><label for="rateIn">¥<input id="rateIn" type="number" ' +
+         'inputmode="decimal" min="1" step="0.5" value="' + rate() + '"> = A$1</label>' +
+         '<span class="rn">Tap the number to change it</span></div>';
+    h += '<div class="conv">' +
+         '<label>¥ <input id="cvYen" type="number" inputmode="numeric" placeholder="1000"></label>' +
+         '<span class="eq">=</span>' +
+         '<label>A$ <input id="cvAud" type="number" inputmode="decimal" placeholder="9"></label>' +
+         '</div><p class="cvhint">Type in either box.</p>';
+    h += '<div class="ladder" id="ladder">' + ladderHtml() + '</div>';
+    // Anchored to the live rate rather than a figure baked into the text,
+    // which would quietly start lying the moment somebody changes it.
+    h += '<div class="tipbox"><div class="th">' + esc(MONEY.shortcutHead) + '</div>' +
+         esc(MONEY.shortcut) + '<b id="anchor">' + aud(1000) + '</b>.</div>';
+    h += '<h3 class="psec">' + esc(MONEY.costsHead) + '</h3>' +
+         '<p class="lede">' + esc(MONEY.costsNote) + '</p><div class="stack">';
+    MONEY.costs.forEach(function(c){
+      h += '<div class="cost"><div class="cw">' + esc(c.what) + '</div>' +
+           '<div class="cy">¥' + esc(c.yen) + '<span class="ca" data-yenrange="' +
+             esc(c.yen) + '">' + costAud(c.yen) + '</span></div>' +
+           '<p class="cn">' + esc(c.note) + '</p></div>';
+    });
+    return h + '</div>';
+  }
+  function ladderHtml(){
+    return MONEY.ladder.map(function(y){
+      return '<div class="lr"><span class="ly">¥' + y.toLocaleString() +
+             '</span><span class="la">' + aud(y) + '</span></div>';
+    }).join("");
+  }
+  function costAud(range){
+    var n = String(range).match(/\d+/g);
+    if (!n) return "";
+    return n.length > 1 ? aud(+n[0]) + " to " + aud(+n[n.length - 1]) : aud(+n[0]);
+  }
+  /* One rate change has to move every number on the page at once. */
+  function moneyRefresh(){
+    var l = $("ladder"); if (l) l.innerHTML = ladderHtml();
+    var an = $("anchor"); if (an) an.textContent = aud(1000);
+    var cs = document.querySelectorAll("[data-yenrange]");
+    for (var i = 0; i < cs.length; i++) cs[i].textContent = costAud(cs[i].dataset.yenrange);
+    var y = $("cvYen");
+    if (y && y.value !== "") convFrom("yen");
+  }
+  function convFrom(which){
+    var y = $("cvYen"), a = $("cvAud");
+    if (!y || !a) return;
+    if (which === "yen"){
+      a.value = y.value === "" ? "" : (parseFloat(y.value) / rate()).toFixed(2);
+    } else {
+      y.value = a.value === "" ? "" : Math.round(parseFloat(a.value) * rate());
+    }
+  }
+
+  /* ================= if something goes wrong =================
+     Two numbers, then the words. The words are the part that fails people:
+     dialling is easy and freezing once somebody answers is not. */
+  function emergencyHtml(){
+    var h = head(EMERGENCY.ja, EMERGENCY.en) +
+            '<p class="lede">' + esc(EMERGENCY.note) + '</p>';
+    EMERGENCY.numbers.forEach(function(x){
+      h += '<a class="dial" href="tel:' + esc(x.n) + '">' +
+             '<span class="dn">' + esc(x.n) + '</span>' +
+             '<span class="dw"><b>' + esc(x.who) + '</b>' + esc(x.ja) + '</span>' +
+             '<span class="dd">' + esc(x.detail) + '</span></a>';
+    });
+    h += '<p class="tipbox">' + esc(EMERGENCY.facts) + '</p>';
+    h += '<h3 class="psec">' + esc(EMERGENCY.sayHead) + '</h3><div class="stack">';
+    EMERGENCY.say.forEach(function(x){
+      h += '<div class="phrase"><div class="jp">' + readable(x.ja) + '</div>' +
+           '<div class="en">' + esc(x.en) + '</div></div>';
+    });
+    h += '</div>';
+    h += '<h3 class="psec">' + esc(EMERGENCY.whereHead) + '</h3>' +
+         '<p class="lede">' + esc(EMERGENCY.where) + '</p>';
+    h += '<h3 class="psec">' + esc(EMERGENCY.lostHead) + '</h3>' +
+         '<p class="lede">' + esc(EMERGENCY.lost) + '</p>';
+    (EMERGENCY.consular || []).forEach(function(c, i){
+      if (i === 0) h += '<h3 class="psec">Consular help</h3>';
+      h += '<a class="dial calm" href="tel:' + esc(String(c.n).replace(/[^+\d]/g, "")) +
+           '"><span class="dn sm">' + esc(c.n) + '</span>' +
+           '<span class="dw"><b>' + esc(c.who) + '</b></span>' +
+           (c.detail ? '<span class="dd">' + esc(c.detail) + '</span>' : "") + '</a>';
+    });
     return h;
   }
 
@@ -1158,7 +1336,7 @@
   }
 
   /* ================= navigation ================= */
-  var BUILD = "Version 47, 16 September 2026";
+  var BUILD = "Version 48, 17 September 2026";
   var TABS = { home:["りょてい","Itinerary"], places:["ばしょ","Places"],
                phrases:["ことば","Phrases"], manners:["マナー","Etiquette"] };
   var stack = [];
@@ -1287,6 +1465,14 @@
     if ((t = e.target.closest("[data-manner]"))) return openManner(+t.dataset.manner);
     if ((t = e.target.closest("[data-ch]"))) return showRead(t);
     hideRead();
+    if (e.target.closest("[data-money]")){
+      return push(function(){ $("v-detail").innerHTML = moneyHtml(); },
+                  MONEY.ja, MONEY.en);
+    }
+    if (e.target.closest("[data-sos]")){
+      return push(function(){ $("v-detail").innerHTML = emergencyHtml(); },
+                  EMERGENCY.ja, EMERGENCY.en);
+    }
     if (e.target.closest("[data-preflight]")){
       return push(function(){ $("v-detail").innerHTML = preflightHtml(); },
                   PREFLIGHT.ja, PREFLIGHT.en);
@@ -1355,6 +1541,15 @@
     $("show").className = "on";
   }
   function closeShow(){ SAY.stop(); clearSay(); $("show").className = ""; }
+  document.addEventListener("input", function(e){
+    if (e.target.id === "rateIn"){
+      var v = parseFloat(e.target.value);
+      if (v && v > 0 && v < 100000){ setRate(v); moneyRefresh(); }
+      return;
+    }
+    if (e.target.id === "cvYen") return convFrom("yen");
+    if (e.target.id === "cvAud") return convFrom("aud");
+  });
   document.addEventListener("keydown", function(e){
     if (e.key !== "Escape") return;
     if ($("kana").className === "on") closeKana();
