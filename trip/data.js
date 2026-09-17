@@ -1856,18 +1856,32 @@ window.EMERGENCY = {
      the group will be on an Australian SIM roaming, where 03- does not
      connect; +81 works from a Japanese phone too, so one number covers
      everybody and nobody has to work out which case they are in. */
-  consularNote: "Not the first call. If somebody is hurt or in danger it is " +
-                "119, and if you are in any trouble at all it is your teacher " +
-                "before anyone else. This is for the serious and unusual: a " +
-                "lost or stolen passport, or being arrested.",
+  consularNote: "Not the first call, and probably not the second. If somebody " +
+                "is hurt it is 119, and for anything else at all it is your " +
+                "teacher before anyone else. These are for the serious and " +
+                "unusual: a lost or stolen passport, or being arrested. They " +
+                "are in the order you should try them.",
   consular: [
+    { n: "+61 2 6261 3305",
+      tag: "24 hours, every day",
+      who: "Consular Emergency Centre, Canberra",
+      detail: "The only one of these that is staffed around the clock. If it " +
+              "is the middle of the night in Japan and something serious has " +
+              "happened, this is the one that answers. From inside Australia " +
+              "it is 1300 555 135, which is the number to give your family " +
+              "before you go." },
+    { n: "+81 6 6941 9448",
+      tag: "Osaka, business hours",
+      who: "Australian Consulate-General, consular section",
+      detail: "The nearest Australian office to everywhere we are going, and " +
+              "the right department to reach directly. If nobody picks up, " +
+              "the switchboard is +81 6 6941 9271. You can also walk in: " +
+              "Twin 21 MID Tower, 16th floor, 2-1-61 Shiromi, Chuo-ku, Osaka." },
     { n: "+81 3 5232 4111",
-      who: "Australian Embassy, Tokyo",
-      detail: "Dial it exactly as written, including the plus. From a " +
-              "Japanese phone it is 03-5232-4111. Tokyo is a long way from " +
-              "where we will be and this is a daytime switchboard, so it is " +
-              "for passports and paperwork rather than anything happening " +
-              "right now." }
+      tag: "Tokyo, business hours",
+      who: "Australian Embassy",
+      detail: "The embassy itself, and by far the furthest from us. Try Osaka " +
+              "first. From a Japanese phone this one is 03-5232-4111." }
   ]
 };
 
