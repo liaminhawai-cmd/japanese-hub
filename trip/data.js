@@ -1852,10 +1852,23 @@ window.EMERGENCY = {
         "say \u300c\u307f\u3061\u306b \u307e\u3088\u3044\u307e\u3057\u305f\u3002\u300d " +
         "and show them where you are trying to get to. Then ring a teacher. " +
         "Staying put and being found is always faster than wandering.",
-  /* Consular numbers are Andrew's to supply: an emergency page is the last
-     place to print a number nobody has checked. Empty means the block does
-     not render at all. */
-  consular: []
+  /* Andrew supplied this one. Stored in international form because most of
+     the group will be on an Australian SIM roaming, where 03- does not
+     connect; +81 works from a Japanese phone too, so one number covers
+     everybody and nobody has to work out which case they are in. */
+  consularNote: "Not the first call. If somebody is hurt or in danger it is " +
+                "119, and if you are in any trouble at all it is your teacher " +
+                "before anyone else. This is for the serious and unusual: a " +
+                "lost or stolen passport, or being arrested.",
+  consular: [
+    { n: "+81 3 5232 4111",
+      who: "Australian Embassy, Tokyo",
+      detail: "Dial it exactly as written, including the plus. From a " +
+              "Japanese phone it is 03-5232-4111. Tokyo is a long way from " +
+              "where we will be and this is a daytime switchboard, so it is " +
+              "for passports and paperwork rather than anything happening " +
+              "right now." }
+  ]
 };
 
 /* ------------------------------------------------------------------ *

@@ -883,7 +883,11 @@
     h += '<h3 class="psec">' + esc(EMERGENCY.lostHead) + '</h3>' +
          '<p class="lede">' + esc(EMERGENCY.lost) + '</p>';
     (EMERGENCY.consular || []).forEach(function(c, i){
-      if (i === 0) h += '<h3 class="psec">Consular help</h3>';
+      if (i === 0){
+        h += '<h3 class="psec">Consular help</h3>';
+        if (EMERGENCY.consularNote)
+          h += '<p class="lede">' + esc(EMERGENCY.consularNote) + '</p>';
+      }
       h += '<a class="dial calm" href="tel:' + esc(String(c.n).replace(/[^+\d]/g, "")) +
            '"><span class="dn sm">' + esc(c.n) + '</span>' +
            '<span class="dw"><b>' + esc(c.who) + '</b></span>' +
@@ -1336,7 +1340,7 @@
   }
 
   /* ================= navigation ================= */
-  var BUILD = "Version 48, 17 September 2026";
+  var BUILD = "Version 49, 17 September 2026";
   var TABS = { home:["りょてい","Itinerary"], places:["ばしょ","Places"],
                phrases:["ことば","Phrases"], manners:["マナー","Etiquette"] };
   var stack = [];
