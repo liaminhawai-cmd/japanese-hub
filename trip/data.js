@@ -1716,31 +1716,6 @@ window.PREFLIGHT = {
       ios: "https://apps.apple.com/us/app/voicetra/id581137577",
       android: "https://play.google.com/store/apps/details?id=jp.go.nict.voicetra"
     },
-    {
-      id: "suica",
-      name: "Suica, for trains and convenience stores",
-      why: "One card that taps you through the ticket gates and pays for " +
-           "things at the konbini. What you do about it depends entirely on " +
-           "which phone you have, so read your half and ignore the other one.",
-      forks: [
-        {
-          label: "On an iPhone",
-          text: "Download Welcome Suica Mobile and set it up before you fly. " +
-                "You can top it up with an ordinary Australian card through " +
-                "Apple Pay. Needs an iPhone XR or newer running iOS 17.2 or " +
-                "later, so check yours now rather than at the airport.",
-          url: "https://apps.apple.com/us/app/id6738336566"
-        },
-        {
-          label: "On an Android",
-          text: "Assume it will not work. Mobile Suica generally only runs on " +
-                "phones actually sold in Japan, whatever the store page says. " +
-                "Plan to buy a plastic card instead: Suica, PASMO and ICOCA " +
-                "all do the same job and you can get one at the airport or at " +
-                "the first station. This is normal and it is not a problem."
-        }
-      ]
-    }
   ],
   extra: {
     head: "Worth having, not worth stressing about",
@@ -1771,6 +1746,24 @@ window.MONEY = {
             "exact, you need to know whether something is a coffee or a " +
             "jacket. Today \u00a51000 is about ",
   ladder: [100, 500, 1000, 3000, 5000, 10000],
+  icHead: "Getting an IC card working",
+  icNote: "One card taps you through the ticket gates and pays at the " +
+          "convenience store, and what you do about it depends entirely on " +
+          "which phone you have. Read your half and ignore the other one.",
+  ic: [
+    { label: "On an iPhone",
+      text: "Download Welcome Suica Mobile and set it up before you fly. You " +
+            "can top it up with an ordinary Australian card through Apple " +
+            "Pay. Needs an iPhone XR or newer running iOS 17.2 or later, so " +
+            "check yours now rather than at the airport.",
+      url: "https://apps.apple.com/us/app/id6738336566" },
+    { label: "On an Android",
+      text: "Assume it will not work. Mobile Suica generally only runs on " +
+            "phones actually sold in Japan, whatever the store page says. " +
+            "Plan to buy a plastic card instead: Suica, PASMO and ICOCA all " +
+            "do the same job and you can get one at the airport or at the " +
+            "first station. This is normal and it is not a problem." }
+  ],
   costsHead: "What things actually cost",
   costsNote: "Rough prices, to give you a feel for whether something is " +
              "cheap or dear before you convert it. Nothing here is exact and " +

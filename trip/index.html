@@ -80,6 +80,24 @@
 
   nav{display:flex;justify-content:center;gap:22px;max-width:680px;margin:0 auto;
       padding:0 14px;background:var(--paper)}
+  /* Five labels will not sit across a narrow phone at the spacing four had.
+     They must stay on one line each: a label that wraps makes its tab taller
+     than the rest and knocks the Japanese out of line across the bar. */
+  nav button .en,nav button .ja{white-space:nowrap}
+  @media (max-width:520px){
+    nav{gap:9px;padding:0 6px}
+    nav button .en{font-size:14px}
+    nav button .ja{font-size:10.5px}
+  }
+  /* Below about 340px the five will not shrink far enough to fit, so the bar
+     scrolls inside itself rather than dragging the whole page sideways. */
+  @media (max-width:340px){
+    nav{gap:6px;overflow-x:auto;justify-content:flex-start;
+        scrollbar-width:none;-ms-overflow-style:none}
+    nav::-webkit-scrollbar{display:none}
+    nav button{flex:0 0 auto}
+    nav button .en{font-size:12.5px}
+  }
   nav button{border:0;background:none;font-family:inherit;color:var(--muted);
              padding:9px 1px 8px;cursor:pointer;border-bottom:4px solid transparent}
   nav button .en{display:block;font-size:16px;font-weight:700;line-height:1.2}
@@ -501,6 +519,7 @@
     <button data-go="phrases"><span class="en">Phrases</span><span class="ja">ことば</span></button>
     <button data-go="manners"><span class="en">Etiquette</span><span class="ja">マナー</span></button>
     <button data-go="home"><span class="en">Itinerary</span><span class="ja">りょてい</span></button>
+    <button data-go="info"><span class="en">Info</span><span class="ja">あんない</span></button>
   </nav></div>
 </div>
 
@@ -509,6 +528,7 @@
   <div class="view on" id="v-places"></div>
   <div class="view" id="v-phrases"></div>
   <div class="view" id="v-manners"></div>
+  <div class="view" id="v-info"></div>
   <div class="view" id="v-detail"></div>
 </main>
 
@@ -691,27 +711,6 @@
            '<span class="en">Melbourne, 20 September 2026, 18:25</span></div>' +
            '<div class="nt">Open this on the day and it shows where we are up to.</div></div>';
     }
-    /* Everything here is done at home before anyone leaves, so it sits above
-       the days rather than in among them, and it says how far along you are
-       without being opened. */
-    h += '<button class="row pfrow" data-preflight="1">' +
-           '<div class="rja">' + esc(PREFLIGHT.ja) + '</div>' +
-           '<div class="ren">' + esc(PREFLIGHT.en) + '</div>' +
-           '<div class="rmeta">' + pfCount() + ' of ' + PREFLIGHT.items.length +
-             ' done. Apps to install and one form to fill in, all on wifi ' +
-             'before we go.</div></button>';
-
-    h += '<button class="row" data-money="1">' +
-           '<div class="rja">' + esc(MONEY.ja) + '</div>' +
-           '<div class="ren">' + esc(MONEY.en) + '</div>' +
-           '<div class="rmeta">What things cost, and a converter set to the ' +
-             'rate you give it.</div></button>';
-    h += '<button class="row urgent" data-sos="1">' +
-           '<div class="rja">' + esc(EMERGENCY.ja) + '</div>' +
-           '<div class="ren">' + esc(EMERGENCY.en) + '</div>' +
-           '<div class="rmeta">110 and 119, and what to say once somebody ' +
-             'answers. Worth reading before you need it.</div></button>';
-
     /* The tab is called Itinerary now, so the page does not repeat itself. */
     h += '<div>';
     TRIP.days.forEach(function(d, k){
@@ -720,10 +719,6 @@
            '<div class="nt">' + esc(d.note) + '</div></div></div>';
     });
     h += '</div>';
-    h += '<div class="revise"><div class="fl">' + esc(REVISE.ja) + '  ' +
-           esc(REVISE.en) + '</div><p>' + esc(REVISE.note) + '</p><p class="pflinks">' +
-           REVISE.links.map(function(l){ return store(l.url, l.label); }).join("") +
-           '</p></div>';
     h += '<p class="foot">Meeting points, phone numbers and your emergency details ' +
          'are on your lanyard, not in this app.' +
          // A visible version, so "which one am I looking at" is answerable
@@ -789,6 +784,43 @@
     return h;
   }
 
+  /* ================= travel information =================
+     Emergency numbers, the app checklist and the money pages were each built
+     wherever there was room at the time, which left them scattered across the
+     itinerary. They are one kind of thing and they belong behind one label a
+     worried student or parent can find without hunting. */
+  function renderInfo(){
+    var h = head("あんない", "Travel Information") +
+            '<p class="lede">Everything practical in one place: who to ring, ' +
+            'what to install before we go, and what things cost. Worth reading ' +
+            'through once at home rather than for the first time when you ' +
+            'need it.</p>';
+    h += '<button class="row urgent" data-sos="1">' +
+           '<div class="rja">' + esc(EMERGENCY.ja) + '</div>' +
+           '<div class="ren">' + esc(EMERGENCY.en) + '</div>' +
+           '<div class="rmeta">110 and 119 first, then consular help. And ' +
+             'what to say once somebody answers.</div></button>';
+    h += '<button class="row pfrow" data-preflight="1">' +
+           '<div class="rja">' + esc(PREFLIGHT.ja) + '</div>' +
+           '<div class="ren">' + esc(PREFLIGHT.en) + '</div>' +
+           '<div class="rmeta">' + pfCount() + ' of ' + PREFLIGHT.items.length +
+             ' done. Apps to install and one form to fill in, all on wifi ' +
+             'before we go.</div></button>';
+    h += '<button class="row" data-money="1">' +
+           '<div class="rja">' + esc(MONEY.ja) + '</div>' +
+           '<div class="ren">' + esc(MONEY.en) + '</div>' +
+           '<div class="rmeta">A converter you set yourself, what things ' +
+             'cost, and getting an IC card working on your phone.</div></button>';
+    h += '<div class="revise"><div class="fl">' + esc(REVISE.ja) + '  ' +
+         esc(REVISE.en) + '</div><p>' + esc(REVISE.note) + '</p>' +
+         '<p class="pflinks">' +
+         REVISE.links.map(function(l){ return store(l.url, l.label); }).join("") +
+         '</p></div>';
+    h += '<p class="foot">Meeting points, your teachers\' numbers and your ' +
+         'emergency details are on your lanyard, not in this app.</p>';
+    $("v-info").innerHTML = h;
+  }
+
   /* ================= money =================
      The rate is the student's, kept in their own browser, because no app on
      a Japanese train can go and look one up. Everything on the page is
@@ -821,6 +853,16 @@
     // which would quietly start lying the moment somebody changes it.
     h += '<div class="tipbox"><div class="th">' + esc(MONEY.shortcutHead) + '</div>' +
          esc(MONEY.shortcut) + '<b id="anchor">' + aud(1000) + '</b>.</div>';
+    // The IC card is a money question that happens to involve an app, and it
+    // was getting lost at the bottom of a list of downloads.
+    h += '<h3 class="psec">' + esc(MONEY.icHead) + '</h3>' +
+         '<p class="lede">' + esc(MONEY.icNote) + '</p>';
+    MONEY.ic.forEach(function(f){
+      h += '<div class="pffork"><div class="fl">' + esc(f.label) + '</div>' +
+           '<p>' + esc(f.text) + '</p>' +
+           (f.url ? '<p class="pflinks">' + store(f.url, "Get the app") + '</p>' : "") +
+           '</div>';
+    });
     h += '<h3 class="psec">' + esc(MONEY.costsHead) + '</h3>' +
          '<p class="lede">' + esc(MONEY.costsNote) + '</p><div class="stack">';
     MONEY.costs.forEach(function(c){
@@ -1280,7 +1322,7 @@
      the quicker move, so the whole page takes one. Inside a place, a swipe
      right goes back a level, which is what a thumb expects. A swipe only
      counts if it is clearly sideways, so it never fights normal scrolling. */
-  var TAB_ORDER = ["places", "phrases", "manners", "home"];
+  var TAB_ORDER = ["places", "phrases", "manners", "home", "info"];
   var tsX = 0, tsY = 0, tsT = 0, tracking = false;
   document.addEventListener("touchstart", function(e){
     if (e.touches.length !== 1) { tracking = false; return; }
@@ -1343,9 +1385,14 @@
   }
 
   /* ================= navigation ================= */
-  var BUILD = "Version 50, 17 September 2026";
+  var BUILD = "Version 52, 17 September 2026";
   var TABS = { home:["りょてい","Itinerary"], places:["ばしょ","Places"],
-               phrases:["ことば","Phrases"], manners:["マナー","Etiquette"] };
+               phrases:["ことば","Phrases"], manners:["マナー","Etiquette"],
+               // The tab says Info because "Travel Information" will not sit on
+               // one line on a 360px phone, and a label that wraps makes its
+               // tab taller than the rest. The page it opens says the name in
+               // full, in both scripts.
+               info:["あんない","Travel Information"] };
   var stack = [];
   function setQuiet(on){ document.body.classList[on ? "add":"remove"]("quiet"); }
   // The trail: the tab, then every level above this one, then where you are.
@@ -1364,7 +1411,7 @@
     $("hen").textContent = en;
   }
   function showView(id){
-    ["home","places","phrases","manners","detail"].forEach(function(v){
+    ["home","places","phrases","manners","info","detail"].forEach(function(v){
       $("v-"+v).className = "view" + (v === id ? " on" : "");
     });
     window.scrollTo(0,0);
@@ -1492,7 +1539,7 @@
       pfSet(id, on);
       var c = $("pfcount");
       if (c) c.textContent = pfCount() + " of " + PREFLIGHT.items.length + " done";
-      renderHome();
+      renderInfo();
       return;
     }
     if ((t = e.target.closest("[data-say]"))){
@@ -1622,7 +1669,7 @@
     });
   });
 
-  renderHome(); renderPlaces(); renderPhrases(); renderManners();
+  renderHome(); renderPlaces(); renderPhrases(); renderManners(); renderInfo();
   /* The key carries the app version, so after an update the button comes
      back and the new photos get saved too. Keep in step with CACHE in sw.js. */
   try { if (localStorage.getItem(SAVED_KEY)) markSaved("Saved. This app works with no signal."); }
