@@ -16,7 +16,7 @@
    Bump CACHE when the app changes, or phones will keep serving the old copy.
    ========================================================================== */
 
-var CACHE = "japan-trip-v52";
+var CACHE = "japan-trip-v54";
 
 var SHELL = [
   "./",
@@ -30,7 +30,9 @@ var SHELL = [
   "./kana-katakana-plus.svg",
   "./manifest.webmanifest",
   "./icon-192.png",
-  "./icon-512.png"
+  "./icon-512.png",
+  "./icon-180.png",
+  "./icon-maskable-512.png"
 ];
 
 self.addEventListener("install", function (e) {
@@ -41,8 +43,16 @@ self.addEventListener("install", function (e) {
       return Promise.all(SHELL.map(function (u) {
         return c.add(u).catch(function () { /* optional file, keep going */ });
       }));
-    }).then(function () { return self.skipWaiting(); })
+    })
+    /* No skipWaiting here on purpose. A new worker waits until the page
+       offers the update and somebody taps it, rather than replacing the app
+       underneath a student halfway through reading something. The page
+       cannot notice a waiting worker if it never waits. */
   );
+});
+
+self.addEventListener("message", function (e) {
+  if (e.data && e.data.type === "SKIP_WAITING") self.skipWaiting();
 });
 
 self.addEventListener("activate", function (e) {
@@ -61,6 +71,19 @@ self.addEventListener("activate", function (e) {
    the moment a phone has signal instead of a reload or two later. Offline,
    the network call fails at once and the cache answers. */
 function isPhoto(url){ return url.pathname.indexOf("/photos/") > -1; }
+
+function offline(){
+  return new Response("", { status: 504, statusText: "offline" });
+}
+
+/* The app itself, whichever of the two ways in survived. Deliberately does
+   not consult the requested URL: for a navigation we always want the app. */
+function navFallback(done){
+  return caches.match("./index.html").then(function (p) {
+    if (p) return done(p);
+    return caches.match("./").then(function (q) { done(q || offline()); });
+  });
+}
 
 self.addEventListener("fetch", function (e) {
   var req = e.request;
@@ -93,6 +116,7 @@ self.addEventListener("fetch", function (e) {
       var settled = false;
       function done(r){ if (!settled && r){ settled = true; resolve(r); } }
       var timer = setTimeout(function () {
+        if (req.mode === "navigate") return navFallback(done);
         caches.match(req).then(done);
       }, 2500);
 
@@ -107,15 +131,12 @@ self.addEventListener("fetch", function (e) {
         }
       }).catch(function () {
         clearTimeout(timer);
-        caches.match(req).then(function (hit) {
-          if (hit) return done(hit);
-          if (req.mode === "navigate"){
-            return caches.match("./index.html").then(function (p) {
-              done(p || new Response("", { status: 504, statusText: "offline" }));
-            });
-          }
-          done(new Response("", { status: 504, statusText: "offline" }));
-        });
+        /* A navigation anywhere inside this folder means "open the app".
+           There is one page and it never changes its address, so a cache miss
+           here is not a missing page, it is somebody arriving with no signal.
+           Answer with the app rather than a 404 they cannot act on. */
+        if (req.mode === "navigate") return navFallback(done);
+        caches.match(req).then(function (hit) { done(hit || offline()); });
       });
     })
   );

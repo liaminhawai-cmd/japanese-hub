@@ -5,11 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="google" content="notranslate">
 <meta name="theme-color" content="#e3c273">
+<meta name="mobile-web-app-capable" content="yes">
+<!-- Still needed: older iOS reads only the apple- spelling. -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
+<!-- What sits under the icon on the home screen. Without it iOS uses the
+     page title, which is long and in two scripts. -->
+<meta name="apple-mobile-web-app-title" content="Japan Tour">
 <title>日本研修旅行 Japan Study Tour</title>
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9B%A9%3C/text%3E%3C/svg%3E">
 <style>
   /* Read standing up, outdoors, in September sun, by a 13 year old holding a
@@ -236,6 +241,16 @@
        border:1px solid var(--line);background:var(--paper)}
   .revise .fl{font-size:16px;font-weight:700;margin-bottom:5px}
   .revise p{margin:0;font-size:15px;color:var(--muted)}
+  /* An update lands silently otherwise, and a student on a train has no way
+     of knowing one arrived. Bottom of the screen so a thumb reaches it, and
+     clear of the kana tab on the right edge. */
+  #newver{position:fixed;left:12px;right:12px;bottom:12px;z-index:95;
+      display:flex;flex-direction:column;align-items:flex-start;gap:1px;
+      background:var(--deep);color:#fbf7ee;border:0;border-radius:13px;
+      padding:13px 17px;font-family:inherit;font-size:17px;font-weight:700;
+      text-align:left;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.3)}
+  #newver[hidden]{display:none}
+  #newver span{font-size:14px;font-weight:600;opacity:.85}
   /* ---------- today ---------- */
   /* A pale yellow wash softens the leaf behind the itinerary, not the text. */
   #v-home{background:var(--itinerary-paper);border:1px solid var(--line);
@@ -543,6 +558,8 @@
 </div>
 
 <div id="readbub" aria-hidden="true"></div>
+
+<button id="newver" hidden>New version ready<span>Tap to load it</span></button>
 
 <button id="kanatab" aria-label="Open the kana charts"><span>か</span><span>な</span></button>
 
@@ -1385,7 +1402,7 @@
   }
 
   /* ================= navigation ================= */
-  var BUILD = "Version 52, 17 September 2026";
+  var BUILD = "Version 54, 18 September 2026";
   var TABS = { home:["りょてい","Itinerary"], places:["ばしょ","Places"],
                phrases:["ことば","Phrases"], manners:["マナー","Etiquette"],
                // The tab says Info because "Travel Information" will not sit on
@@ -1612,8 +1629,43 @@
   });
 
   /* ================= offline ================= */
+  /* Registered only where it can work: a service worker needs http or https,
+     so opening the file straight off a disk does nothing and errors nowhere.
+
+     The update dance. The worker no longer jumps the queue on install, so a
+     new one sits waiting and we can say so rather than swapping the app out
+     from under somebody mid-sentence. Tapping the bar tells it to take over;
+     that fires controllerchange, and we reload once. */
   if ("serviceWorker" in navigator && location.protocol.indexOf("http") === 0){
-    navigator.serviceWorker.register("sw.js").catch(function(){});
+    navigator.serviceWorker.register("sw.js").then(function(reg){
+      function offer(){
+        var bar = $("newver");
+        if (!bar || !reg.waiting) return;
+        bar.hidden = false;
+        bar.onclick = function(){
+          bar.hidden = true;
+          reg.waiting.postMessage({ type: "SKIP_WAITING" });
+        };
+      }
+      function watch(w){
+        if (!w) return;
+        w.addEventListener("statechange", function(){
+          // A worker reaching "installed" with one already in charge means an
+          // update. With nobody in charge it is simply the first install.
+          if (w.state === "installed" && navigator.serviceWorker.controller) offer();
+        });
+      }
+      if (reg.waiting && navigator.serviceWorker.controller) offer();
+      watch(reg.installing);
+      reg.addEventListener("updatefound", function(){ watch(reg.installing); });
+    }).catch(function(){});
+
+    var reloading = false;
+    navigator.serviceWorker.addEventListener("controllerchange", function(){
+      if (reloading) return;      // controllerchange can fire more than once
+      reloading = true;
+      location.reload();
+    });
   }
   /* Keyed to BUILD, not to a number typed here, so every release brings the
      Save button back by itself. It was pinned at v14 through thirty-odd
