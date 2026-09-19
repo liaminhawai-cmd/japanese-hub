@@ -1458,76 +1458,115 @@ window.PHRASES = [
     say: false,
     ja: "スピーチ",
     en: "Speaking for the group",
-    unit: "speeches",
-    note: "Four times in Soja, someone stands up and speaks for all of us. If " +
-          "that is you, this is your script. Learn it out loud, not in your " +
-          "head. Slow is better than fast, and a pause is better than a rush. " +
-          "The wide spaces are there to breathe.",
+    unit: "parts",
+    note: "Find your number. Eleven of you have a line of your own, and all " +
+          "fourteen speak at least twice whatever your number. Learn yours out " +
+          "loud rather than in your head: slow beats fast, and a pause beats a " +
+          "rush. The wide spaces are there to breathe, and the blanks are where " +
+          "names go.",
     items: [
-      { label: "Thursday 24 September \u00b7 the first meeting",
-        ja: "みなさん、はじめまして。私たちはキューハイスクールの代表の＿＿＿と＿＿＿と＿＿＿です。\n" +
-            "私たちは、総社に来るのを　とても　楽しみに　していました。\n" +
-            "ほとんどの生徒は　日本に　来るのが　はじめてなので、　日本で　生活することは　とても　おもしろい　経験になる　と思います。\n" +
-            "キューハイスクールで　日本語と　日本の文化を　勉強していますが、日本語は、むずかしいので、まだまだ　上手じゃないです。\n" +
-            "これからの一週間、私たちに　日本語と　日本の文化を　教えてください。がんばりたいと思います。\n" +
-            "よろしく　お願いします。",
-        kana:
-              "みなさん、はじめまして。わたしたちは　キューハイスクールの　だいひょうの　＿＿＿と　＿＿＿と　＿＿＿です。\n" +
-              "わたしたちは、そうじゃに　くるのを　とても　たのしみに　していました。\n" +
-              "ほとんどの　せいとは　にほんに　くるのが　はじめてなので、　にほんで　せいかつすることは　とても　おもしろい　けいけんになる　とおもいます。\n" +
-              "キューハイスクールで　にほんごと　にほんの　ぶんかを　べんきょうしていますが、にほんごは、むずかしいので、まだまだ　じょうずじゃないです。\n" +
-              "これからの　いっしゅうかん、わたしたちに　にほんごと　にほんの　ぶんかを　おしえてください。がんばりたいと　おもいます。\n" +
-              "よろしく　おねがいします。",
-        en: "Hello everyone, nice to meet you. We are the student representatives from Kew High School, ___, ___ and ___. We were really looking forward to coming to Soja. For most of us this is our first time in Japan, so living here is going to be a very interesting experience. We study Japanese language and culture at Kew High School, but Japanese is hard and we are not good at it yet. Over this coming week, please teach us your language and your culture. We will do our best. Thank you.",
-        tip: "The very first evening, minutes after you arrive, before you meet your host family. Three speakers. Put your own names in the gaps and say them clearly: it is the only part nobody can guess." },
-      { label: "Friday 25 September \u00b7 the welcome assembly",
-        ja: "みなさん、はじめまして。私たちはキューハイスクールの代表の＿＿＿と＿＿＿と＿＿＿です。私たちは、きのう　総社に　着きました。\n" +
-            "総社に　来る前に　姫路城に　行って　観光しました。日本に来る前に　日本の　お城などの　写真を　見たことが　ありましたが、実際に　見ると、とても　おもしろかったです。\n" +
-            "私たちは、学校で　日本語と　日本の文化を　勉強しています。日本語は　まだまだ　上手じゃないので、ぜひ　私たちに日本語を　教えてください。一週間は　みじかいですが、いろいろな　ことをしたいと　思います。\n" +
-            "よろしく　お願いします。",
-        kana:
-              "みなさん、はじめまして。わたしたちは　キューハイスクールの　だいひょうの　＿＿＿と　＿＿＿と　＿＿＿です。わたしたちは、きのう　そうじゃに　つきました。\n" +
-              "そうじゃに　くるまえに　ひめじじょうに　いって　かんこうしました。にほんに　くるまえに　にほんの　おしろなどの　しゃしんを　みたことが　ありましたが、じっさいに　みると、とても　おもしろかったです。\n" +
-              "わたしたちは、がっこうで　にほんごと　にほんの　ぶんかを　べんきょうしています。にほんごは　まだまだ　じょうずじゃないので、ぜひ　わたしたちに　にほんごを　おしえてください。いっしゅうかんは　みじかいですが、いろいろな　ことを　したいと　おもいます。\n" +
-              "よろしく　おねがいします。",
-        en: "Hello everyone, nice to meet you. We are the student representatives from Kew High School, ___, ___ and ___. We arrived in Soja yesterday. On the way here we stopped at Himeji Castle. We had seen photographs of Japanese castles before we came, but seeing one for real was something else. We study Japanese language and culture at school. Our Japanese is still not good, so please teach us. One week is short, but we want to do a lot with it. Thank you.",
-        tip: "Broadcast to the whole school, so you are speaking to hundreds of people you cannot see. Three speakers. Look up at the end of each line rather than reading straight through." },
-      { label: "Tuesday 29 September \u00b7 the farewell assembly",
-        ja: "こんにちは。一週間、ありがとうございました。\n" +
-            "総社の皆さんのおかげで、私たちは　いろいろな　経験ができて、とてもいい思い出が　たくさん　できました。\n" +
-            "学校の　先生たちには、ていねいに　教えて　いただいたので、　勉強することができました。\n" +
-            "ホストファミリーの皆さん、　お世話になりました。ありがとうございました。\n" +
-            "機会があったら、また総社に来たい　と思います。皆さんも　ぜひ、メルボルンへ　来てください。\n" +
-            "ほんとうに　ありがとうございました。",
-        kana:
-              "こんにちは。いっしゅうかん、ありがとうございました。\n" +
-              "そうじゃの　みなさんの　おかげで、わたしたちは　いろいろな　けいけんが　できて、とても　いい　おもいでが　たくさん　できました。\n" +
-              "がっこうの　せんせいたちには、ていねいに　おしえて　いただいたので、　べんきょうすることが　できました。\n" +
-              "ホストファミリーの　みなさん、　おせわに　なりました。ありがとうございました。\n" +
-              "きかいが　あったら、また　そうじゃに　きたい　とおもいます。みなさんも　ぜひ、メルボルンへ　きてください。\n" +
-              "ほんとうに　ありがとうございました。",
-        en: "Hello. Thank you for this week. Thanks to everyone in Soja we have had all sorts of experiences and made so many good memories. The teachers taught us carefully and we were able to learn. To our host families, thank you for looking after us. If we get the chance we would love to come back to Soja, and please come to Melbourne too. Thank you sincerely.",
-        tip: "Japanese only. Do not read the English out at this one. Two speakers. The last morning at school, so people will be feeling it: slow down rather than hurrying to get off the stage." },
-      { label: "Tuesday 29 September \u00b7 the farewell party",
-        ja: "こんばんは。一週間、ありがとうございました。\n" +
-            "総社の皆さんのおかげで、私たちは　いろいろな　経験ができて、とてもいい思い出が　たくさん　できました。\n" +
-            "学校の　先生たちには、ていねいに　教えて　いただいたので、　勉強することができました。\n" +
-            "ホストファミリーの皆さん、　お世話になりました。ありがとうございました。\n" +
-            "機会があったら、また総社に来たい　と思います。皆さんも　ぜひ、メルボルンへ　来てください。\n" +
-            "ありがとうございました。",
-        kana:
-              "こんばんは。いっしゅうかん、ありがとうございました。\n" +
-              "そうじゃの　みなさんの　おかげで、わたしたちは　いろいろな　けいけんが　できて、とても　いい　おもいでが　たくさん　できました。\n" +
-              "がっこうの　せんせいたちには、ていねいに　おしえて　いただいたので、　べんきょうすることが　できました。\n" +
-              "ホストファミリーの　みなさん、　おせわに　なりました。ありがとうございました。\n" +
-              "きかいが　あったら、また　そうじゃに　きたい　とおもいます。みなさんも　ぜひ、メルボルンへ　きてください。\n" +
-              "ありがとうございました。",
-        en: "Good evening. Thank you for this week. Thanks to everyone in Soja we have had all sorts of experiences and made so many good memories. The teachers taught us carefully and we were able to learn. To our host families, thank you for looking after us. If we get the chance we would love to come back to Soja, and please come to Melbourne too. Thank you.",
-        tip: "Almost the same as the assembly one, but こんばんは for the evening. Two speakers. This is a guide rather than a script: put it in your own words if you can, and say something that happened to you this week." },
-      { label: "Wednesday 30 September \u00b7 leaving",
+
+      { section: "Thursday 24 September · the first meeting",
+        label: "Student 9",
+        ja: "みなさん、はじめまして。私たちはキューハイスクールの代表の＿＿＿と＿＿＿と＿＿＿です。\n私たちは、総社に来るのを　とても　楽しみに　していました。",
+        kana: "みなさん、はじめまして。わたしたちはキューハイスクールのだいひょうの＿＿＿と＿＿＿と＿＿＿です。\nわたしたちは、そうじゃにくるのを　とても　たのしみに　していました。",
+        en: "Hello everyone, nice to meet you. We are the student representatives from Kew High School, ___, ___ and ___. We have been really looking forward to coming to Soja.",
+        tip: "The first evening, not long after the coach arrives and before you meet your host family. You open, and you name all three of you." },
+
+      { label: "Student 10",
+        ja: "ほとんどの生徒は　日本に　来るのが　はじめてなので、日本で　生活することは　とても　おもしろい　経験になる　と思います。\nキューハイスクールで　日本語と　日本の文化を　勉強していますが、日本語は、むずかしいので、まだまだ　上手じゃないです。",
+        kana: "ほとんどのせいとは　にほんに　くるのが　はじめてなので、にほんで　せいかつすることは　とても　おもしろい　けいけんになる　とおもいます。\nキューハイスクールで　にほんごと　にほんのぶんかを　べんきょうしていますが、にほんごは、むずかしいので、まだまだ　じょうずじゃないです。",
+        en: "For most of us this is our first time in Japan, so living here will be a really interesting experience. We study Japanese language and culture at Kew High School, but Japanese is hard, so we are not very good at it yet.",
+        tip: "The longest of the three. Take the comma after なので as a real pause." },
+
+      { label: "Student 11",
+        ja: "これからの一週間、私たちに　日本語と　日本の文化を　教えてください。\nがんばりたいと思います。よろしく　お願いします。",
+        kana: "これからのいっしゅうかん、わたしたちに　にほんごと　にほんのぶんかを　おしえてください。\nがんばりたいとおもいます。よろしく　おねがいします。",
+        en: "Over the week ahead, please teach us Japanese and about Japanese culture. We will do our best. Thank you.",
+        tip: "You finish. よろしくお願いします is the last thing anyone hears, so give it its own breath and mean it." },
+
+      { section: "Friday 25 September · the welcome assembly",
+        label: "Student 5",
+        ja: "みなさん、はじめまして。私たちはキューハイスクールの代表の＿＿＿と＿＿＿と＿＿＿です。\n私たちは、昨日、総社に　着きました。",
+        kana: "みなさん、はじめまして。わたしたちはキューハイスクールのだいひょうの＿＿＿と＿＿＿と＿＿＿です。\nわたしたちは、きのう、そうじゃに　つきました。",
+        en: "Hello everyone, nice to meet you. We are the student representatives from Kew High School, ___, ___ and ___. We arrived in Soja yesterday.",
+        tip: "Broadcast from the music room to the whole school, so you are speaking to hundreds of people you cannot see. That is easier, not harder." },
+
+      { label: "Student 6",
+        ja: "総社に　来ることを、ずっと楽しみにしていました。\n総社西中学校のみなさんに会えて、本当にうれしいです。",
+        kana: "そうじゃに　くることを、ずっとたのしみにしていました。\nそうじゃにしちゅうがっこうのみなさんにあえて、ほんとうにうれしいです。",
+        en: "We have been looking forward to coming to Soja for a long time. We are so happy to meet everyone at Soja Nishi Junior High School.",
+        tip: "The shortest part of the three. Do not rush it just because it is short." },
+
+      { label: "Student 7",
+        ja: "私たちは、学校で　日本語と　日本の文化を　勉強しています。\n日本語は　まだまだ　上手じゃないので、ぜひ　私たちに　日本語を　教えてください。\n一週間は　みじかいですが、いろいろな　ことを　したいと　思います。よろしく　お願いします。",
+        kana: "わたしたちは、がっこうで　にほんごと　にほんのぶんかを　べんきょうしています。\nにほんごは　まだまだ　じょうずじゃないので、ぜひ　わたしたちに　にほんごを　おしえてください。\nいっしゅうかんは　みじかいですが、いろいろな　ことを　したいと　おもいます。よろしく　おねがいします。",
+        en: "We study Japanese language and culture at school. We are still not very good at Japanese, so please do teach us. One week is short, but we want to do all sorts of things. Thank you.",
+        tip: "You close the assembly. Three lines, three breaths." },
+
+      { label: "Everyone, one by one",
+        ja: "（名前）です。よろしくお願いします。",
+        kana: "（なまえ）です。よろしくおねがいします。",
+        en: "I'm ___. Pleased to meet you.",
+        tip: "All fourteen of you, straight after the three speakers, one after another. Your own name where the brackets are. It is four seconds and it is the moment several hundred people learn who you are, so say it clearly and do not mumble your own name." },
+
+      { section: "Monday 28 September · Showa Itsutsuboshi Gakuen",
+        label: "Student 3",
+        ja: "昭和五つ星学園のみなさん、今日は本当にありがとうございました。\nみなさんと過ごした時間は、とても楽しかったです。日本語や英語で、たくさん話すことができて、嬉しかったです。\n今日学んだことを大切にして、これからも頑張りたいと思います。\n本当にありがとうございました。またお会いできる日を楽しみにしています。",
+        kana: "しょうわいつつぼしがくえんのみなさん、きょうは　ほんとうに　ありがとうございました。\nみなさんと　すごした　じかんは、とても　たのしかったです。にほんごや　えいごで、たくさん　はなすことが　できて、うれしかったです。\nきょう　まなんだことを　たいせつにして、これからも　がんばりたいと　おもいます。\nほんとうに　ありがとうございました。また　おあいできる　ひを　たのしみに　しています。",
+        en: "Thank you so much for today, everyone at Showa Itsutsuboshi Gakuen. The time we spent with you was so enjoyable, and it made us happy to talk with you so much, in Japanese and in English. We will treasure what we learned today and keep doing our best. Thank you again, and we look forward to the day we can meet you again.",
+        tip: "At the end of a whole day there, just before the bus leaves for Soja Nishi, at about three. You speak for all of us and nobody else is named." },
+
+      { section: "Tuesday 29 September · the farewell assembly",
+        label: "Student 3",
+        ja: "こんにちは。一週間、ありがとうございました。\n総社の皆さんのおかげで、私たちは　いろいろな　経験ができて、とてもいい思い出が　たくさん　できました。\n学校の　先生たちには、ていねいに　教えて　いただいたので、勉強することが　できました。",
+        kana: "こんにちは。いっしゅうかん、ありがとうございました。\nそうじゃのみなさんのおかげで、わたしたちは　いろいろな　けいけんができて、とてもいいおもいでが　たくさん　できました。\nがっこうの　せんせいたちには、ていねいに　おしえて　いただいたので、べんきょうすることが　できました。",
+        en: "Hello. Thank you for this week. Thanks to everyone in Soja we have had all sorts of experiences and made many good memories. The teachers here taught us so carefully that we were really able to learn.",
+        tip: "Japanese only at this one. Do not read the English out. You open, Student 4 finishes." },
+
+      { label: "Student 4",
+        ja: "ホストファミリーの皆さん、お世話になりました。ありがとうございました。\n機会があったら、また総社に来たい　と思います。皆さんも　ぜひ、メルボルンへ　来てください。\nほんとうに　ありがとうございました。",
+        kana: "ホストファミリーのみなさん、おせわになりました。ありがとうございました。\nきかいがあったら、またそうじゃにきたい　とおもいます。みなさんも　ぜひ、メルボルンへ　きてください。\nほんとうに　ありがとうございました。",
+        en: "To our host families, thank you for looking after us. If we get the chance we would love to come back to Soja, and please do come to Melbourne yourselves. Thank you, truly.",
+        tip: "Your host family is in the room. お世話になりました is the whole week in four words, so do not throw it away." },
+
+      { label: "Everyone, one by one",
+        ja: "わたしの文字は「＿」です。\n「＿」は「＿＿」という意味です。\nなぜなら、＿＿＿＿＿＿＿＿だからです。",
+        kana: "わたしのもじは「＿」です。\n「＿」は「＿＿」といういみです。\nなぜなら、＿＿＿＿＿＿＿＿だからです。",
+        en: "My character is ___. ___ means ___. Because ___.",
+        tip: "The character you wrote at the calligraphy session the day before. Same three lines for everyone, your own character, your own reason. Decide your なぜなら on the Monday while the brush is still in your hand, not on the Tuesday morning." },
+
+      { label: "Students 12, 13 and 14",
+        ja: "出し物",
+        kana: "だしもの",
+        en: "The performance, no speaking part",
+        tip: "You three are on the ceremony support and the 出し物 rather than a speech, so there is no line here to learn. Ask a teacher what the item is and when you rehearse it. Everyone takes part in this one." },
+
+      { section: "Tuesday 29 September · the farewell party",
+        label: "Student 1",
+        ja: "こんばんは。ホストファミリーのみなさん、この一週間、本当にありがとうございました。\n毎日が　新しい発見で、あっという間の一週間でした。みなさんの優しさを、私たちはずっと忘れません。",
+        kana: "こんばんは。ホストファミリーのみなさん、このいっしゅうかん、ほんとうにありがとうございました。\nまいにちが　あたらしいはっけんで、あっというまのいっしゅうかんでした。みなさんのやさしさを、わたしたちはずっとわすれません。",
+        en: "Good evening. To our host families, thank you so much for this week. Every day brought something new and the week went by in a flash. We will never forget your kindness.",
+        tip: "Evening, at Sunroad Kibiji, so こんばんは rather than こんにちは. This is a draft: you are expected to put it in your own words closer to the day, keeping the same ideas." },
+
+      { label: "Student 2",
+        ja: "また会える日を、心から楽しみにしています。\n皆さんも　ぜひ、メルボルンへ　来てください。\nありがとうございました。",
+        kana: "またあえるひを、こころからたのしみにしています。\nみなさんも　ぜひ、メルボルンへ　きてください。\nありがとうございました。",
+        en: "We are truly looking forward to the day we can meet again. Please come to Melbourne yourselves. Thank you.",
+        tip: "You finish the evening. Same as Student 1: this is a draft to make your own." },
+
+      { section: "Wednesday 30 September · leaving",
+        label: "Student 8",
+        ja: "みなさん、本当にお世話になりました。\n総社で、たくさんの思い出ができました。\nまた再会できるのを楽しみにしています。ありがとうございました！",
+        kana: "みなさん、ほんとうにおせわになりました。\nそうじゃで、たくさんのおもいでができました。\nまたさいかいできるのをたのしみにしています。ありがとうございました！",
+        en: "Thank you all so much for everything. We made so many memories in Soja. We are looking forward to seeing you again. Thank you!",
+        tip: "At the bus, nothing scheduled, nobody in rows. Short and warm is the whole job." },
+
+      { label: "Everyone, together",
         ja: "ありがとうございました！　また　あいましょう！",
         en: "Thank you very much! Let's meet again!",
-        tip: "All fourteen of us, together, at the bus. Nothing is scheduled and nobody has to speak, but this is the one everybody can say." }
+        tip: "All fourteen of us, together, at the bus. Nobody has to speak alone and this is the one everybody can say." }
+
     ]
   },
   {
