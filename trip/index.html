@@ -393,6 +393,13 @@
   /* Anything already written out in lines, like the anthem, sets smaller so
      a line of it does not wrap and lose its shape. */
   .phrase .jp.lines{font-size:18.5px;line-height:1.5;font-weight:600}
+  /* Furigana needs headroom or the readings collide with the line above.
+     ruby-position keeps them over the kanji on the browsers that ask. */
+  .phrase .jp.ruby{line-height:2.1}
+  .phrase .jp.ruby.lines{line-height:2.15}
+  .phrase .jp ruby{ruby-position:over;-webkit-ruby-position:over}
+  .phrase .jp rt{font-size:.46em;font-weight:600;color:var(--muted);
+       letter-spacing:.02em;line-height:1.1;text-align:center}
   .phrase .en{font-size:17px;margin-top:6px}
   .phrase .tip{font-size:15px;color:var(--muted);margin-top:10px;padding-top:10px;
                white-space:pre-line;
@@ -1149,6 +1156,19 @@
     return out;
   }
 
+  /* 漢字[かんじ] becomes <ruby>. The base keeps its tappable kana the way
+     the rest of the app has them; the small reading above does not, because
+     nobody can hit six-point type with a thumb. */
+  function rubyHtml(text){
+    var out = "", re = /([\u4e00-\u9faf々〆ヶ]+)\[([^\]]*)\]/g, last = 0, m;
+    while ((m = re.exec(text))){
+      out += readable(text.slice(last, m.index));
+      out += "<ruby>" + readable(m[1]) + "<rt>" + esc(m[2]) + "</rt></ruby>";
+      last = m.index + m[0].length;
+    }
+    return out + readable(text.slice(last));
+  }
+
   function showRead(el){
     var ch = el.dataset.ch, read = KANA_READ[ch];
     if (!read) return;
@@ -1293,9 +1313,14 @@
              // the student delivering it has to find theirs at a glance.
              (it.label ? '<div class="plabel">' + esc(it.label) + '</div>' : "") +
              (function(){
-               var body = (kanaOnly && it.kana) ? it.kana : it.ja;
-               return '<div class="jp' + (body.indexOf("\n") > -1 ? " lines" : "") + '">' +
-                      readable(body) + '</div>';
+               // All-kana wins when it is switched on; otherwise the furigana
+               // version if this item has one, and plain kanji if it does not.
+               var kana = kanaOnly && it.kana;
+               var body = kana ? it.kana : (it.furi || it.ja);
+               var plain = kana ? it.kana : it.ja;
+               return '<div class="jp' + (plain.indexOf("\n") > -1 ? " lines" : "") +
+                      (!kana && it.furi ? " ruby" : "") + '">' +
+                      (!kana && it.furi ? rubyHtml(body) : readable(body)) + '</div>';
              })() +
              '<div class="en">' + esc(it.en) + '</div>' +
              (it.tip ? '<div class="tip">' + esc(it.tip) + '</div>' : "") +
@@ -1407,7 +1432,7 @@
   }
 
   /* ================= navigation ================= */
-  var BUILD = "Version 59, 19 September 2026";
+  var BUILD = "Version 61, 19 September 2026";
   var TABS = { home:["りょてい","Itinerary"], places:["ばしょ","Places"],
                phrases:["ことば","Phrases"], manners:["マナー","Etiquette"],
                // The tab says Info because "Travel Information" will not sit on
