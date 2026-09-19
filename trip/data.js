@@ -1570,6 +1570,62 @@ window.PHRASES = [
     ]
   },
   {
+    id: "tspeech",
+    say: false,
+    ja: "せんせいのスピーチ",
+    en: "The teachers' speeches",
+    unit: "speeches",
+    note: "Not yours to learn, but worth knowing what comes before your bit. " +
+          "Every name is a blank here, including the people being thanked: on " +
+          "the day the exact form of address comes off the printed document, " +
+          "which has the surnames and the correct titles on it. Read these as " +
+          "the shape of each ceremony rather than as a script.",
+    items: [
+
+      { section: "Thursday 24 September · the first meeting",
+        label: "The principal",
+        ja: "みなさん、はじめまして！キューハイスクール校長の＿＿＿です。\n副市長様、教育長様、総社西中学校の校長先生をはじめ、教育委員会の皆様、総社西中学校の先生方、そしてホストファミリーの皆さん、今日は本当にありがとうございます。ついに　みなさんに会えて、とても嬉しいです。\n京都や姫路、宮島をまわって、今日、総社西中学校に到着しました。こんなに温かく迎えていただいて、感激しています。\nこの交流は2007年に総社の皆さんがメルボルンへ来てくださったのが始まりで、今年で19年目、キューハイスクールにとっては7回目の総社訪問です。この一週間、たくさん笑って、たくさん　お友達になれたらいいなと思います。\nよろしくお願いします！",
+        en: "Hi everyone! I'm ___, the principal of Kew High School. Thank you to the Vice Mayor, the Chief of the Board of Education and the Principal of Soja Nishi Junior High School, along with everyone from the Board of Education, the teachers here, and our host families, for having us today. It is wonderful to finally meet you all in person. We have travelled through Kyoto, Himeji and Miyajima, and today we have arrived at Soja Nishi Junior High School. Thank you for such a warm welcome. This exchange began in 2007, when Soja first came to us in Melbourne. This is our 19th year, and Kew High School's 7th visit to Soja. My hope for this week is simple: lots of laughs, and lots of new friends.",
+        tip: "Opens the evening, in English with a teacher reading the Japanese. Students 9, 10 and 11 follow." },
+
+      { section: "Friday 25 September · the welcome assembly",
+        label: "The principal",
+        ja: "総社西中学校のみなさん、こんにちは。キューハイスクール校長の＿＿＿です。\n画面越しですが、みなさんにご挨拶できて嬉しいです。今日から一週間、私たちの生徒がお世話になります。\nたくさん話しかけて、たくさん友達になってください。よろしくお願いします。",
+        en: "Hello, everyone at Soja Nishi Junior High School. I'm ___, the principal of Kew High School. Even through a screen, it is wonderful to greet you all. For the week ahead, our students will be in your care. Please talk to them as much as you can, and make lots of friends. Thank you.",
+        tip: "Broadcast from the music room. Then Students 5, 6 and 7, then all fourteen say their own names." },
+
+      { section: "During the week · the staffroom",
+        label: "The principal",
+        ja: "みなさん、こんにちは！総社西中学校に来られて嬉しいです。\n総社訪問はもう7回目、交流は19年目になります。いつも温かく迎えてくださって、本当にありがとうございます。\n今週もどうぞよろしくお願いします！",
+        en: "Hi everyone! Great to be back at Soja Nishi Junior High School. This is our 7th visit, and our 19th year of this exchange. Thank you for always making us feel so welcome. Looking forward to a great week with you all.",
+        tip: "Informal, to the staff rather than the school. No day or time set for this one yet." },
+
+      { label: "The head of science",
+        ja: "総社西中学校の皆さん、はじめまして。＿＿＿と申します。キューハイスクールで理科主任をしています。\n今回、生徒たちと一緒に総社に来ることができて、とても嬉しく思っています。\n一週間、どうぞよろしくお願いいたします。",
+        en: "Hello everyone at Soja Nishi Junior High School. My name is ___ and I am head of science at Kew High School. I am very glad to be here in Soja with the students. Thank you very much for the week ahead.",
+        tip: "Opening in Japanese rather than having it read for you, which lands well in a staffroom." },
+
+      { section: "Tuesday 29 September · the farewell assembly",
+        label: "The principal",
+        ja: "総社西中学校の皆さん、こんにちは。私たちの交流はあっという間に終わってしまいましたが、一週間、とてもお世話になり、ありがとうございました。総社西中学校の皆さんのおかげで、とても素晴らしい一週間を過ごすことができました。皆さんとてもいい思い出を作ることができ、感謝しています。\n皆さんと一緒に過ごした楽しい時間、新しい体験、そして、皆さんから教えていただいた日本の文化を、私たちは一生の思い出として大切にします。これからも、この貴重な交流プログラムをずっと続けていきたいと思っています。\n私たちは、また2年後にこちらに伺うつもりですが、その前に総社市の皆さんがメルボルンにいらっしゃいますね。メルボルンでお待ちしています。皆さんとお会いできるのを楽しみにしています。\nありがとうございます。",
+        en: "Hello, everyone at Soja Nishi Junior High School. Our time together has flown by, but thank you so much for taking care of us throughout the week. Thanks to everyone here, we have had a truly wonderful week, and we are grateful to have made such good memories. The time we spent together, the new experiences, and the Japanese culture you taught us will be cherished as lifelong memories. We hope to continue this exchange for many years to come. We plan to visit again in two years, but before that we look forward to welcoming Soja to Melbourne. Thank you very much.",
+        tip: "English from the principal, Japanese read by a teacher. Students 3 and 4 follow, then everyone's calligraphy character." },
+
+      { section: "Tuesday 29 September · the farewell party",
+        label: "The principal",
+        ja: "市長さんはじめ、校長先生、先生方、そしてホストファミリーの皆さん、こんばんは。私たちの時間はあっという間に過ぎてしまいましたが、この一週間お世話になり、ありがとうございました。\nホストファミリーの皆さん、先生方、総社市の皆さんのおかげで、とても素晴らしい一週間を過ごすことができました。皆さんのおかげで、素晴らしい思い出をたくさん作ることができ、感謝しています。皆さんと一緒に過ごした楽しい時間、新しい体験、そして教えていただいた日本の文化は、私たちにとって一生の宝物です。これからも、この貴重な交流プログラムをずっと続けていきたいと思っています。\n私たちは、また2年後に総社市に伺う予定ですが、その前に総社市の生徒さんや先生方がメルボルンにいらっしゃるので、メルボルンでお会いできるのを楽しみにしています。\n改めて、この一週間ありがとうございました。",
+        en: "Good evening to the Mayor, the Principal, the teachers, and our host families. Our time here has flown by. Thank you for taking care of us this past week. Thanks to our host families, the teachers and everyone in Soja City, we have had a wonderful week and made memories we will keep. The time together, the new experiences and the Japanese culture you taught us are a lifelong treasure. We hope this exchange continues for many years. We plan to return in two years, and before that we look forward to seeing Soja's students and teachers in Melbourne. Thank you again for this week.",
+        tip: "Evening, at Sunroad Kibiji, delivered in both languages. Students 1 and 2 follow." },
+
+      { section: "Wednesday 30 September · leaving",
+        label: "The head of science",
+        ja: "みなさん、本当に素晴らしい一週間をありがとうございました。この思い出を大切にします。またお会いできる日を楽しみにしています。",
+        en: "Thank you all for a truly wonderful week. We will cherish these memories and look forward to the day we can meet again.",
+        tip: "At the bus, with a teacher translating. Student 8 follows, then everyone together." }
+
+    ]
+  },
+  {
     id: "signs",
     say: false,
     ja: "かんじをよむ",
