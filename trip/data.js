@@ -1466,7 +1466,7 @@ window.PHRASES = [
           "names go.",
     items: [
 
-      { section: "The first meeting",
+      { section: "Thursday 24 September · the first meeting",
         label: "Student 9",
         ja: "みなさん、はじめまして。私たちはキューハイスクールの代表の＿＿＿と＿＿＿と＿＿＿です。\n私たちは、総社に来るのを　とても　楽しみに　していました。",
         kana: "みなさん、はじめまして。わたしたちはキューハイスクールのだいひょうの＿＿＿と＿＿＿と＿＿＿です。\nわたしたちは、そうじゃにくるのを　とても　たのしみに　していました。",
@@ -1485,7 +1485,7 @@ window.PHRASES = [
         en: "Over the week ahead, please teach us Japanese and about Japanese culture. We will do our best. Thank you.",
         tip: "You finish. よろしくお願いします is the last thing anyone hears, so give it its own breath and mean it." },
 
-      { section: "The welcome assembly",
+      { section: "Friday 25 September · the welcome assembly",
         label: "Student 5",
         ja: "みなさん、はじめまして。私たちはキューハイスクールの代表の＿＿＿と＿＿＿と＿＿＿です。\n私たちは、昨日、総社に　着きました。",
         kana: "みなさん、はじめまして。わたしたちはキューハイスクールのだいひょうの＿＿＿と＿＿＿と＿＿＿です。\nわたしたちは、きのう、そうじゃに　つきました。",
@@ -1510,14 +1510,14 @@ window.PHRASES = [
         en: "I'm ___. Pleased to meet you.",
         tip: "All fourteen of you, straight after the three speakers, one after another. Your own name where the brackets are. It is four seconds and it is the moment several hundred people learn who you are, so say it clearly and do not mumble your own name." },
 
-      { section: "Showa Itsutsuboshi Gakuen",
+      { section: "Monday 28 September · Showa Itsutsuboshi Gakuen",
         label: "Student 3",
         ja: "昭和五つ星学園のみなさん、今日は本当にありがとうございました。\nみなさんと過ごした時間は、とても楽しかったです。日本語や英語で、たくさん話すことができて、嬉しかったです。\n今日学んだことを大切にして、これからも頑張りたいと思います。\n本当にありがとうございました。またお会いできる日を楽しみにしています。",
         kana: "しょうわいつつぼしがくえんのみなさん、きょうは　ほんとうに　ありがとうございました。\nみなさんと　すごした　じかんは、とても　たのしかったです。にほんごや　えいごで、たくさん　はなすことが　できて、うれしかったです。\nきょう　まなんだことを　たいせつにして、これからも　がんばりたいと　おもいます。\nほんとうに　ありがとうございました。また　おあいできる　ひを　たのしみに　しています。",
         en: "Thank you so much for today, everyone at Showa Itsutsuboshi Gakuen. The time we spent with you was so enjoyable, and it made us happy to talk with you so much, in Japanese and in English. We will treasure what we learned today and keep doing our best. Thank you again, and we look forward to the day we can meet you again.",
         tip: "At the end of a whole day there, just before the bus leaves for Soja Nishi, at about three. You speak for all of us and nobody else is named." },
 
-      { section: "The farewell assembly, at school",
+      { section: "Tuesday 29 September · the farewell assembly",
         label: "Student 3",
         ja: "こんにちは。一週間、ありがとうございました。\n総社の皆さんのおかげで、私たちは　いろいろな　経験ができて、とてもいい思い出が　たくさん　できました。\n学校の　先生たちには、ていねいに　教えて　いただいたので、勉強することが　できました。",
         kana: "こんにちは。いっしゅうかん、ありがとうございました。\nそうじゃのみなさんのおかげで、わたしたちは　いろいろな　けいけんができて、とてもいいおもいでが　たくさん　できました。\nがっこうの　せんせいたちには、ていねいに　おしえて　いただいたので、べんきょうすることが　できました。",
@@ -1534,7 +1534,7 @@ window.PHRASES = [
         ja: "わたしの文字は「＿」です。\n「＿」は「＿＿」という意味です。\nなぜなら、＿＿＿＿＿＿＿＿だからです。",
         kana: "わたしのもじは「＿」です。\n「＿」は「＿＿」といういみです。\nなぜなら、＿＿＿＿＿＿＿＿だからです。",
         en: "My character is ___. ___ means ___. Because ___.",
-        tip: "The character you wrote at the calligraphy session the day before. Same three lines for everyone, your own character, your own reason. Decide your なぜなら while the brush is still in your hand at the calligraphy session, not on the morning itself." },
+        tip: "The character you wrote at the calligraphy session the day before. Same three lines for everyone, your own character, your own reason. Decide your なぜなら on the Monday while the brush is still in your hand, not on the Tuesday morning." },
 
       { label: "Students 12, 13 and 14",
         ja: "出し物",
@@ -1542,7 +1542,7 @@ window.PHRASES = [
         en: "The performance, no speaking part",
         tip: "You three are on the ceremony support and the 出し物 rather than a speech, so there is no line here to learn. Ask a teacher what the item is and when you rehearse it. Everyone takes part in this one." },
 
-      { section: "The farewell party, in the evening",
+      { section: "Tuesday 29 September · the farewell party",
         label: "Student 1",
         ja: "こんばんは。ホストファミリーのみなさん、この一週間、本当にありがとうございました。\n毎日が　新しい発見で、あっという間の一週間でした。みなさんの優しさを、私たちはずっと忘れません。",
         kana: "こんばんは。ホストファミリーのみなさん、このいっしゅうかん、ほんとうにありがとうございました。\nまいにちが　あたらしいはっけんで、あっというまのいっしゅうかんでした。みなさんのやさしさを、わたしたちはずっとわすれません。",
@@ -1555,7 +1555,7 @@ window.PHRASES = [
         en: "We are truly looking forward to the day we can meet again. Please come to Melbourne yourselves. Thank you.",
         tip: "You finish the evening. Same as Student 1: this is a draft to make your own." },
 
-      { section: "Leaving",
+      { section: "Wednesday 30 September · leaving",
         label: "Student 8",
         ja: "みなさん、本当にお世話になりました。\n総社で、たくさんの思い出ができました。\nまた再会できるのを楽しみにしています。ありがとうございました！",
         kana: "みなさん、ほんとうにおせわになりました。\nそうじゃで、たくさんのおもいでができました。\nまたさいかいできるのをたのしみにしています。ありがとうございました！",
@@ -1582,19 +1582,19 @@ window.PHRASES = [
           "the shape of each ceremony rather than as a script.",
     items: [
 
-      { section: "The first meeting",
+      { section: "Thursday 24 September · the first meeting",
         label: "The principal",
         ja: "みなさん、はじめまして！キューハイスクール校長の＿＿＿です。\n副市長様、教育長様、総社西中学校の校長先生をはじめ、教育委員会の皆様、総社西中学校の先生方、そしてホストファミリーの皆さん、今日は本当にありがとうございます。ついに　みなさんに会えて、とても嬉しいです。\n京都や姫路、宮島をまわって、今日、総社西中学校に到着しました。こんなに温かく迎えていただいて、感激しています。\nこの交流は2007年に総社の皆さんがメルボルンへ来てくださったのが始まりで、今年で19年目、キューハイスクールにとっては7回目の総社訪問です。この一週間、たくさん笑って、たくさん　お友達になれたらいいなと思います。\nよろしくお願いします！",
         en: "Hi everyone! I'm ___, the principal of Kew High School. Thank you to the Vice Mayor, the Chief of the Board of Education and the Principal of Soja Nishi Junior High School, along with everyone from the Board of Education, the teachers here, and our host families, for having us today. It is wonderful to finally meet you all in person. We have travelled through Kyoto, Himeji and Miyajima, and today we have arrived at Soja Nishi Junior High School. Thank you for such a warm welcome. This exchange began in 2007, when Soja first came to us in Melbourne. This is our 19th year, and Kew High School's 7th visit to Soja. My hope for this week is simple: lots of laughs, and lots of new friends.",
         tip: "Opens the evening, in English with a teacher reading the Japanese. Students 9, 10 and 11 follow." },
 
-      { section: "The welcome assembly",
+      { section: "Friday 25 September · the welcome assembly",
         label: "The principal",
         ja: "総社西中学校のみなさん、こんにちは。キューハイスクール校長の＿＿＿です。\n画面越しですが、みなさんにご挨拶できて嬉しいです。今日から一週間、私たちの生徒がお世話になります。\nたくさん話しかけて、たくさん友達になってください。よろしくお願いします。",
         en: "Hello, everyone at Soja Nishi Junior High School. I'm ___, the principal of Kew High School. Even through a screen, it is wonderful to greet you all. For the week ahead, our students will be in your care. Please talk to them as much as you can, and make lots of friends. Thank you.",
         tip: "Broadcast from the music room. Then Students 5, 6 and 7, then all fourteen say their own names." },
 
-      { section: "The staffroom",
+      { section: "During the week · the staffroom",
         label: "The principal",
         ja: "みなさん、こんにちは！総社西中学校に来られて嬉しいです。\n総社訪問はもう7回目、交流は19年目になります。いつも温かく迎えてくださって、本当にありがとうございます。\n今週もどうぞよろしくお願いします！",
         en: "Hi everyone! Great to be back at Soja Nishi Junior High School. This is our 7th visit, and our 19th year of this exchange. Thank you for always making us feel so welcome. Looking forward to a great week with you all.",
@@ -1605,19 +1605,19 @@ window.PHRASES = [
         en: "Hello everyone at Soja Nishi Junior High School. My name is ___ and I am head of science at Kew High School. I am very glad to be here in Soja with the students. Thank you very much for the week ahead.",
         tip: "Opening in Japanese rather than having it read for you, which lands well in a staffroom." },
 
-      { section: "The farewell assembly, at school",
+      { section: "Tuesday 29 September · the farewell assembly",
         label: "The principal",
         ja: "総社西中学校の皆さん、こんにちは。私たちの交流はあっという間に終わってしまいましたが、一週間、とてもお世話になり、ありがとうございました。総社西中学校の皆さんのおかげで、とても素晴らしい一週間を過ごすことができました。皆さんとてもいい思い出を作ることができ、感謝しています。\n皆さんと一緒に過ごした楽しい時間、新しい体験、そして、皆さんから教えていただいた日本の文化を、私たちは一生の思い出として大切にします。これからも、この貴重な交流プログラムをずっと続けていきたいと思っています。\n私たちは、また2年後にこちらに伺うつもりですが、その前に総社市の皆さんがメルボルンにいらっしゃいますね。メルボルンでお待ちしています。皆さんとお会いできるのを楽しみにしています。\nありがとうございます。",
         en: "Hello, everyone at Soja Nishi Junior High School. Our time together has flown by, but thank you so much for taking care of us throughout the week. Thanks to everyone here, we have had a truly wonderful week, and we are grateful to have made such good memories. The time we spent together, the new experiences, and the Japanese culture you taught us will be cherished as lifelong memories. We hope to continue this exchange for many years to come. We plan to visit again in two years, but before that we look forward to welcoming Soja to Melbourne. Thank you very much.",
         tip: "English from the principal, Japanese read by a teacher. Students 3 and 4 follow, then everyone's calligraphy character." },
 
-      { section: "The farewell party, in the evening",
+      { section: "Tuesday 29 September · the farewell party",
         label: "The principal",
         ja: "市長さんはじめ、校長先生、先生方、そしてホストファミリーの皆さん、こんばんは。私たちの時間はあっという間に過ぎてしまいましたが、この一週間お世話になり、ありがとうございました。\nホストファミリーの皆さん、先生方、総社市の皆さんのおかげで、とても素晴らしい一週間を過ごすことができました。皆さんのおかげで、素晴らしい思い出をたくさん作ることができ、感謝しています。皆さんと一緒に過ごした楽しい時間、新しい体験、そして教えていただいた日本の文化は、私たちにとって一生の宝物です。これからも、この貴重な交流プログラムをずっと続けていきたいと思っています。\n私たちは、また2年後に総社市に伺う予定ですが、その前に総社市の生徒さんや先生方がメルボルンにいらっしゃるので、メルボルンでお会いできるのを楽しみにしています。\n改めて、この一週間ありがとうございました。",
         en: "Good evening to the Mayor, the Principal, the teachers, and our host families. Our time here has flown by. Thank you for taking care of us this past week. Thanks to our host families, the teachers and everyone in Soja City, we have had a wonderful week and made memories we will keep. The time together, the new experiences and the Japanese culture you taught us are a lifelong treasure. We hope this exchange continues for many years. We plan to return in two years, and before that we look forward to seeing Soja's students and teachers in Melbourne. Thank you again for this week.",
         tip: "Evening, at Sunroad Kibiji, delivered in both languages. Students 1 and 2 follow." },
 
-      { section: "Leaving",
+      { section: "Wednesday 30 September · leaving",
         label: "The head of science",
         ja: "みなさん、本当に素晴らしい一週間をありがとうございました。この思い出を大切にします。またお会いできる日を楽しみにしています。",
         en: "Thank you all for a truly wonderful week. We will cherish these memories and look forward to the day we can meet again.",
