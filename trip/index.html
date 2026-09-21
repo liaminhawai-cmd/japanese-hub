@@ -193,7 +193,14 @@
   .qbox .ql{font-size:12.5px;font-weight:800;letter-spacing:.08em;
        text-transform:uppercase;color:var(--bg);margin-bottom:5px}
   .qbox p{margin:0;font-size:17px;line-height:1.55}
+  /* The journal prompt is a second, quieter block: different job from the
+     question, so it should not read as more of the same sentence. */
+  .jbox{margin-top:11px;padding-top:11px}
   .qrow{border-color:var(--deep)}
+  .jrow{margin-top:11px;padding-top:10px;border-top:1px dashed var(--line)}
+  .jrow .jl{font-size:12px;font-weight:800;letter-spacing:.07em;
+       text-transform:uppercase;color:var(--deep)}
+  .jrow p{margin:5px 0 0;font-size:15.5px;line-height:1.5;color:var(--muted)}
   .qcard{position:relative;background:var(--paper);border:1px solid var(--line);
        border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)}
   .qcard.now{border-color:var(--accent);border-width:2px}
@@ -755,6 +762,8 @@
            // somebody already is when they open the app in the evening.
            (d.q ? '<div class="qbox"><div class="ql">Today\'s question  きょうの しつもん</div>' +
                   '<p>' + esc(d.q) + '</p></div>' : "") +
+           (d.j ? '<div class="qbox jbox"><div class="ql">In your journal  にっき</div>' +
+                  '<p>' + esc(d.j) + '</p></div>' : "") +
            '</div>';
     } else {
       var n = daysUntil();
@@ -766,10 +775,11 @@
            '<div class="nt">Open this on the day and it shows where we are up to.</div></div>';
     }
     h += '<button class="row qrow" data-questions="1">' +
-           '<div class="rja">きょうの しつもん</div>' +
-           '<div class="ren">The daily question</div>' +
-           '<div class="rmeta">One a day, all twelve. None of them can be ' +
-             'answered from this app, which is the point.</div></button>';
+           '<div class="rja">しつもん と にっき</div>' +
+           '<div class="ren">The question and the journal</div>' +
+           '<div class="rmeta">Something to notice and something to write, ' +
+             'for each of the twelve days. Neither can be done from a ' +
+             'phone.</div></button>';
 
     /* The tab is called Itinerary now, so the page does not repeat itself. */
     h += '<div>';
@@ -888,17 +898,21 @@
      you will be asked is what makes you look in the first place. */
   function questionsHtml(){
     var today = todayIndex();
-    var h = head("きょうの しつもん", "The daily question") +
-            '<p class="lede">One for each day. None of them has its answer in ' +
-            'here, or anywhere on your phone: you have to be there, looking at ' +
-            'the thing. Read tomorrow\'s tonight, because knowing the question ' +
-            'is what makes you notice the answer.</p><div class="stack">';
+    var h = head("しつもん と にっき", "The question and the journal") +
+            '<p class="lede">Two things for each day. The question has no ' +
+            'answer in here or anywhere on your phone: you have to be there, ' +
+            'looking at the thing. Read tomorrow\'s tonight, because knowing ' +
+            'the question is what makes you notice the answer. The journal ' +
+            'prompt is for the paper book, in the evening, and you will want ' +
+            'day one again on the last night.</p><div class="stack">';
     TRIP.days.forEach(function(d, i){
       if (!d.q) return;
       h += '<div class="qcard' + (i === today ? " now" : "") + '">' +
              '<div class="qn">Day ' + d.n + '<span>' + esc(d.ja) + '  ' +
                esc(d.en) + '</span></div>' +
              '<p>' + esc(d.q) + '</p>' +
+             (d.j ? '<div class="jrow"><div class="jl">In your journal  にっき</div>' +
+                    '<p>' + esc(d.j) + '</p></div>' : "") +
              (i === today ? '<div class="qtag">today</div>' : "") +
            '</div>';
     });
@@ -1487,7 +1501,7 @@
   }
 
   /* ================= navigation ================= */
-  var BUILD = "Version 62, 21 September 2026";
+  var BUILD = "Version 63, 21 September 2026";
   var TABS = { home:["りょてい","Itinerary"], places:["ばしょ","Places"],
                phrases:["ことば","Phrases"], manners:["マナー","Etiquette"],
                // The tab says Info because "Travel Information" will not sit on
@@ -1623,7 +1637,7 @@
     hideRead();
     if (e.target.closest("[data-questions]")){
       return push(function(){ $("v-detail").innerHTML = questionsHtml(); },
-                  "きょうの しつもん", "The daily question");
+                  "しつもん と にっき", "The question and the journal");
     }
     if (e.target.closest("[data-money]")){
       return push(function(){ $("v-detail").innerHTML = moneyHtml(); },
