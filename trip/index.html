@@ -186,6 +186,26 @@
   .pfextra .fl{font-size:13px;font-weight:800;letter-spacing:.08em;
        text-transform:uppercase;color:var(--muted);margin-bottom:6px}
   .pfextra p{margin:0;font-size:15.5px;color:var(--muted)}
+  /* ---------- the daily question ---------- */
+  .qbox{margin-top:13px;padding-top:12px;border-top:1px solid var(--line)}
+  /* Gold rather than the usual accent: this label sits on the deep blue of
+     the today card, where a dark red barely separates from the ground. */
+  .qbox .ql{font-size:12.5px;font-weight:800;letter-spacing:.08em;
+       text-transform:uppercase;color:var(--bg);margin-bottom:5px}
+  .qbox p{margin:0;font-size:17px;line-height:1.55}
+  .qrow{border-color:var(--deep)}
+  .qcard{position:relative;background:var(--paper);border:1px solid var(--line);
+       border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)}
+  .qcard.now{border-color:var(--accent);border-width:2px}
+  .qcard .qn{font-size:13px;font-weight:800;letter-spacing:.07em;
+       text-transform:uppercase;color:var(--muted)}
+  .qcard .qn span{display:block;font-size:15px;font-weight:600;letter-spacing:0;
+       text-transform:none;color:var(--ink);margin-top:2px}
+  .qcard p{margin:9px 0 0;font-size:16.5px;line-height:1.55}
+  .qcard .qtag{position:absolute;top:-9px;right:14px;background:var(--accent);
+       color:#fff;font-size:11.5px;font-weight:800;letter-spacing:.09em;
+       text-transform:uppercase;padding:3px 9px;border-radius:7px}
+
   /* ---------- money ---------- */
   .rateset{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;
        background:var(--paper);border:1px solid var(--line);border-radius:14px;
@@ -730,7 +750,12 @@
       var d = TRIP.days[i];
       h += '<div class="today"><div class="lbl">Today  きょう</div>' +
            '<div class="d">' + esc(d.ja) + '<span class="en">Day ' + d.n + ' of 12: ' +
-           esc(d.en) + '</span></div><div class="nt">' + esc(d.note) + '</div></div>';
+           esc(d.en) + '</span></div><div class="nt">' + esc(d.note) + '</div>' +
+           // Today's question rides on today's card, because that is where
+           // somebody already is when they open the app in the evening.
+           (d.q ? '<div class="qbox"><div class="ql">Today\'s question  きょうの しつもん</div>' +
+                  '<p>' + esc(d.q) + '</p></div>' : "") +
+           '</div>';
     } else {
       var n = daysUntil();
       var line = n > 0 ? (n === 1 ? "Tomorrow." : n + " days to go.")
@@ -740,6 +765,12 @@
            '<span class="en">Melbourne, 20 September 2026, 18:25</span></div>' +
            '<div class="nt">Open this on the day and it shows where we are up to.</div></div>';
     }
+    h += '<button class="row qrow" data-questions="1">' +
+           '<div class="rja">きょうの しつもん</div>' +
+           '<div class="ren">The daily question</div>' +
+           '<div class="rmeta">One a day, all twelve. None of them can be ' +
+             'answered from this app, which is the point.</div></button>';
+
     /* The tab is called Itinerary now, so the page does not repeat itself. */
     h += '<div>';
     TRIP.days.forEach(function(d, k){
@@ -848,6 +879,30 @@
     h += '<p class="foot">Meeting points, your teachers\' numbers and your ' +
          'emergency details are on your lanyard, not in this app.</p>';
     $("v-info").innerHTML = h;
+  }
+
+  /* ================= the daily question =================
+     Twelve questions, one per day, and not one of them answerable from a
+     phone. Every answer is somewhere a student has to be standing, looking
+     at the thing. Shown ahead as well as on the day, because knowing what
+     you will be asked is what makes you look in the first place. */
+  function questionsHtml(){
+    var today = todayIndex();
+    var h = head("きょうの しつもん", "The daily question") +
+            '<p class="lede">One for each day. None of them has its answer in ' +
+            'here, or anywhere on your phone: you have to be there, looking at ' +
+            'the thing. Read tomorrow\'s tonight, because knowing the question ' +
+            'is what makes you notice the answer.</p><div class="stack">';
+    TRIP.days.forEach(function(d, i){
+      if (!d.q) return;
+      h += '<div class="qcard' + (i === today ? " now" : "") + '">' +
+             '<div class="qn">Day ' + d.n + '<span>' + esc(d.ja) + '  ' +
+               esc(d.en) + '</span></div>' +
+             '<p>' + esc(d.q) + '</p>' +
+             (i === today ? '<div class="qtag">today</div>' : "") +
+           '</div>';
+    });
+    return h + '</div>';
   }
 
   /* ================= money =================
@@ -1432,7 +1487,7 @@
   }
 
   /* ================= navigation ================= */
-  var BUILD = "Version 61, 19 September 2026";
+  var BUILD = "Version 62, 21 September 2026";
   var TABS = { home:["りょてい","Itinerary"], places:["ばしょ","Places"],
                phrases:["ことば","Phrases"], manners:["マナー","Etiquette"],
                // The tab says Info because "Travel Information" will not sit on
@@ -1566,6 +1621,10 @@
     if ((t = e.target.closest("[data-manner]"))) return openManner(+t.dataset.manner);
     if ((t = e.target.closest("[data-ch]"))) return showRead(t);
     hideRead();
+    if (e.target.closest("[data-questions]")){
+      return push(function(){ $("v-detail").innerHTML = questionsHtml(); },
+                  "きょうの しつもん", "The daily question");
+    }
     if (e.target.closest("[data-money]")){
       return push(function(){ $("v-detail").innerHTML = moneyHtml(); },
                   MONEY.ja, MONEY.en);

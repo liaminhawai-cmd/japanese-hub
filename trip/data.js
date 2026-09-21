@@ -23,18 +23,30 @@ window.TRIP = {
   end: "2026-10-01",
 
   days: [
-    { n: 1,  date: "2026-09-20", ja: "しゅっぱつ",        en: "Melbourne to Singapore",  note: "18:25 depart Melbourne. Overnight on the plane." },
-    { n: 2,  date: "2026-09-21", ja: "きょうと",          en: "Arrive Kansai, on to Kyoto", note: "08:50 land at Kansai. Train to Kyoto, then sightseeing." },
-    { n: 3,  date: "2026-09-22", ja: "きょうと",          en: "Kyoto",                   note: "Full day in Kyoto." },
-    { n: 4,  date: "2026-09-23", ja: "ひめじ・ひろしま",  en: "Kyoto, Himeji, Hiroshima", note: "Bullet train. Himeji Castle on the way. Peace Park and museum in the afternoon. Night in Hiroshima." },
-    { n: 5,  date: "2026-09-24", ja: "みやじま・そうじゃ", en: "Miyajima, then Soja",     note: "Miyajima in the morning. Reach Soja late afternoon for the welcome, then home with your host family." },
-    { n: 6,  date: "2026-09-25", ja: "そうじゃ",          en: "Soja: sister school",     note: "First day at the sister school. Welcome assembly, classes with your buddy, and getting dressed in yukata in the afternoon." },
-    { n: 7,  date: "2026-09-26", ja: "そうじゃ",          en: "Soja",                    note: "Out around Soja with your buddies: a grape farm, lunch, and making wagashi." },
-    { n: 8,  date: "2026-09-27", ja: "そうじゃ",          en: "Soja",                    note: "The whole day with your host family." },
-    { n: 9,  date: "2026-09-28", ja: "そうじゃ",          en: "Soja",                    note: "Out to Soja Itsutsuboshi Gakuen for the day, and back to school mid afternoon." },
-    { n: 10, date: "2026-09-29", ja: "そうじゃ",          en: "Soja: farewell party",    note: "Tea ceremony and calligraphy, the farewell assembly, then the farewell party in the evening. Your dashimono is tonight." },
-    { n: 11, date: "2026-09-30", ja: "こうべ",            en: "Soja, Kobe, fly out",     note: "08:30 leave Soja. Motomachi in Kobe, then Kansai Airport." },
-    { n: 12, date: "2026-10-01", ja: "メルボルン",        en: "Home",                    note: "11:00 arrive Melbourne." }
+    { n: 1,  date: "2026-09-20", ja: "しゅっぱつ",        en: "Melbourne to Singapore",  note: "18:25 depart Melbourne. Overnight on the plane.",
+      q: "Changi at two in the morning, on the way through. Find one sign with more than two writing systems on it. Work out which ones, and who each is for." },
+    { n: 2,  date: "2026-09-21", ja: "きょうと",          en: "Arrive Kansai, on to Kyoto", note: "08:50 land at Kansai. Train to Kyoto, then sightseeing.",
+      q: "You have been in Japan about an hour when you get on the train to Kyoto. Before you arrive, find one thing on that train that no Melbourne train has. There are several, and one of them is a sound." },
+    { n: 3,  date: "2026-09-22", ja: "きょうと",          en: "Kyoto",                   note: "Full day in Kyoto.",
+      q: "Go a little way up through the torii at Fushimi Inari, then turn round and look at the backs of the gates. Every one of them is written on. Work out what the writing is for." },
+    { n: 4,  date: "2026-09-23", ja: "ひめじ・ひろしま",  en: "Kyoto, Himeji, Hiroshima", note: "Bullet train. Himeji Castle on the way. Peace Park and museum in the afternoon. Night in Hiroshima.",
+      q: "The white walls at Himeji have holes cut in them, and they are not all the same shape. Find two different shapes and work out why a castle would want both." },
+    { n: 5,  date: "2026-09-24", ja: "みやじま・そうじゃ", en: "Miyajima, then Soja",     note: "Miyajima in the morning. Reach Soja late afternoon for the welcome, then home with your host family.",
+      q: "The shrine at Miyajima is built out over the water on legs. Look down through the gaps in the floorboards. Why would you build a floor that lets the sea come up through it?" },
+    { n: 6,  date: "2026-09-25", ja: "そうじゃ",          en: "Soja: sister school",     note: "First day at the sister school. Welcome assembly, classes with your buddy, and getting dressed in yukata in the afternoon.",
+      q: "This school has no cleaners. Find out when the cleaning happens and what your buddy's job is. Ask to be given one." },
+    { n: 7,  date: "2026-09-26", ja: "そうじゃ",          en: "Soja",                    note: "Out around Soja with your buddies: a grape farm, lunch, and making wagashi.",
+      q: "The wagashi you make today is supposed to look like something from this time of year. Work out what season the sweet is telling you it is, and how you can tell." },
+    { n: 8,  date: "2026-09-27", ja: "そうじゃ",          en: "Soja",                    note: "The whole day with your host family.",
+      q: "You have been in this house a few days now. Find three things about it that no house in Melbourne has. The bathroom will give you one of them on its own." },
+    { n: 9,  date: "2026-09-28", ja: "そうじゃ",          en: "Soja",                    note: "Out to Soja Itsutsuboshi Gakuen for the day, and back to school mid afternoon.",
+      q: "This is the second Japanese school you have been inside. Find one thing it does differently from the sister school, and one thing it does exactly the same." },
+    { n: 10, date: "2026-09-29", ja: "そうじゃ",          en: "Soja: farewell party",    note: "Tea ceremony and calligraphy, the farewell assembly, then the farewell party in the evening. Your dashimono is tonight.",
+      q: "In the tea ceremony you turn the bowl before you drink. Watch which way, and how far. Then work out why the bowl has a front at all." },
+    { n: 11, date: "2026-09-30", ja: "こうべ",            en: "Soja, Kobe, fly out",     note: "08:30 leave Soja. Motomachi in Kobe, then Kansai Airport.",
+      q: "Kobe was one of the first ports Japan opened to foreigners, and Motomachi still shows it. Find a building that does not look Japanese. Then find a second one, and guess how old they both are." },
+    { n: 12, date: "2026-10-01", ja: "メルボルン",        en: "Home",                    note: "11:00 arrive Melbourne.",
+      q: "You land at eleven in the morning into the city you have lived in your whole life. On the way out of the airport, notice one ordinary thing about Melbourne that you have never once noticed before. That is the trip still working." }
   ]
 };
 
