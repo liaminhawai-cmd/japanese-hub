@@ -2042,25 +2042,16 @@ window.REVISE = {
 
 window.MANNERS = [
   { ja: "京都のマナー", en: "Kyoto in particular",
-    body: "Kyoto asks more of visitors than anywhere else you are going, because " +
-          "so many people go there. The city's own guidance comes down to a few " +
-          "things. In Gion, do not stop, touch, follow or photograph a geiko or " +
-          "maiko you see in the street: they are on their way to work, and many " +
-          "of the side streets are private property where photography is not " +
-          "allowed at all. In crowded places do not stop dead to talk or take a " +
-          "photo, and do not walk four abreast, which a group of fourteen does " +
-          "without noticing. Put rubbish in a bin or carry it, and smoke nowhere " +
-          "except a marked smoking area. On trains and buses keep your voice " +
-          "down, take no calls, and give up your seat.",
+    body: "More is asked of visitors in Kyoto than anywhere else you are going, simply because so many people go there. The city's own advice comes down to a few things. In Gion, if you see a geiko or maiko in the street, do not stop her, touch her, follow her or photograph her. She is on her way to work, and many of those side streets are private property where you cannot take photos at all. In a crowd, do not stop dead to talk or take a picture, and do not spread out four abreast, which a group of fourteen does without noticing. Use a bin or carry your rubbish, and smoke only in a marked smoking area. On trains and buses, keep your voice down, do not take calls, and give up your seat.",
     link: { url: "https://kyoto.travel/en/responsible-travel/mind-your-manners/",
             label: "Kyoto City's own guide for visitors" } },
 
-  { ja: "くつ", en: "Shoes", body: "Shoes come off at the entrance: at home, at school, and inside temple buildings. There is usually a step or a change of flooring showing where. Once they are off, turning them to face the door is the normal habit. You will be taking them off several times a day, so socks get seen." },
-  { ja: "はし", en: "Chopsticks", body: "Two things are avoided at the table because they belong to funeral customs: standing chopsticks upright in rice, and passing food from chopsticks to chopsticks. Otherwise, resting them on the holder between mouthfuls is the usual habit." },
-  { ja: "おふろ", en: "The bath", body: "You wash and rinse fully at the taps outside the bath, then get in to soak. The same water stays in for the next person, so soap stays out of it and the plug stays in. The order of who bathes when is up to the family." },
-  { ja: "ゴミ", en: "Rubbish", body: "Public bins are rare, so most people carry rubbish with them until they get home. Convenience stores usually have bins for things bought there. Eating while walking is uncommon; people tend to finish something where they bought it." },
-  { ja: "こえ", en: "Volume", body: "Trains and buses are generally quiet. People text rather than take calls, use headphones, and keep conversation low. It can feel surprisingly hushed at first, and it is worth noticing how the carriage sounds when you get on." },
-  { ja: "おじぎ", en: "Bowing", body: "A small bow from the waist does the work of hello, thank you and sorry. Depth varies with the situation, but nobody expects a visitor to judge that finely. Bowing at all reads as courteous." },
-  { ja: "チップ", en: "Tipping", body: "There is no tipping in Japan, in restaurants, taxis or hotels. Leaving money behind is more likely to puzzle someone, or have them chase you down the street to return it. The service you get is simply included." },
-  { ja: "けいたい", en: "Phones", body: "The sister school does not allow phone use during school hours, and that applies to us too while we are there. Elsewhere your phone is useful as a camera and translator. Many people find they reach for it less on a trip like this than they expect to." }
+  { ja: "くつ", en: "Shoes", body: "Shoes come off at the door: at home, at school, and inside temple buildings. A step or a change in the flooring shows you where. Once they are off, turn them round to face the door, which is what everyone else does. You will do this several times a day, so your socks are on show a lot more than you are used to." },
+  { ja: "はし", en: "Chopsticks", body: "Two things to avoid at the table, both because they belong to funerals: never stand your chopsticks upright in rice, and never pass food from your chopsticks straight to someone else's. The rest is easy. Between mouthfuls, rest them on the little holder next to your plate." },
+  { ja: "おふろ", en: "The bath", body: "Wash and rinse yourself properly at the taps first, sitting down, and only get in the bath once you are clean. The whole family uses the same water after you, so no soap goes in it and the plug stays put. Your host family will tell you when it is your turn." },
+  { ja: "ゴミ", en: "Rubbish", body: "There are almost no public bins, so most people carry their rubbish around until they get home. Convenience stores will have a bin for things you bought there. People do not usually eat while they walk either: they finish it standing where they bought it." },
+  { ja: "こえ", en: "Volume", body: "Trains and buses are quiet. People text instead of taking calls, wear headphones, and talk in low voices. It feels very hushed at first. Listen to how the carriage sounds when you get on, and match it." },
+  { ja: "おじぎ", en: "Bowing", body: "A small bow from the waist does the job of hello, thank you and sorry. How deep it goes depends on the situation, but nobody expects a visitor to get that exactly right. Any bow at all comes across as polite, so bow." },
+  { ja: "チップ", en: "Tipping", body: "Nobody tips in Japan, not in restaurants, taxis or hotels. Leave money behind and you will confuse someone, or they will chase you down the street to give it back. Good service is simply part of what you paid for." },
+  { ja: "けいたい", en: "Phones", body: "The sister school does not allow phones during school hours, and that goes for us as well while we are there. Everywhere else yours is useful as a camera and a translator. Most people find they pick it up far less on a trip like this than they expected to." }
 ];

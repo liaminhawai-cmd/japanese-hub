@@ -126,6 +126,23 @@
   .sec{font-size:24px;font-weight:700;margin:26px 0 4px;line-height:1.2}
   .sec .en{display:block;font-size:15px;font-weight:400;color:var(--muted);margin-top:1px}
   /* the panel a manner drops open into */
+  /* Takes the screen rather than opening below the grid. Scrolls if the text
+     is long, and the closing line sits at the end of it rather than floating,
+     so it cannot cover the last sentence. */
+  #sheet{position:fixed;inset:0;z-index:92;display:none;overflow-y:auto;
+      background:var(--paper);padding:26px 22px 30px;
+      padding-top:calc(26px + env(safe-area-inset-top));
+      padding-bottom:calc(30px + env(safe-area-inset-bottom));cursor:pointer}
+  #sheet.on{display:block}
+  #sheet .sh{font-size:30px;font-weight:700;line-height:1.3}
+  #sheet .sh .en{display:block;font-size:17px;font-weight:400;color:var(--muted);
+      margin-top:3px}
+  #sheet p{font-size:19px;line-height:1.65;margin-top:16px}
+  #sheet .mlink{margin-top:20px}
+  #sheet .mlink a{color:var(--deep);font-weight:700;font-size:17px}
+  #sheet .tapout{margin-top:26px;font-size:13.5px;letter-spacing:.09em;
+      text-transform:uppercase;font-weight:800;color:var(--muted)}
+
   .drop{background:var(--paper);border:1px solid var(--line);border-left:6px solid var(--accent);
         border-radius:12px;padding:15px 16px;margin-top:12px}
   .drop .h{font-size:20px;font-weight:700}
@@ -594,6 +611,11 @@
     <div id="showSay"></div>
   </div>
   <button id="showClose">Close</button>
+</div>
+
+<div id="sheet" role="dialog" aria-modal="true" aria-label="Etiquette">
+  <div class="sbody" id="sheetBody"></div>
+  <p class="tapout" id="sheetOut">Tap anywhere to close</p>
 </div>
 
 <div id="readbub" aria-hidden="true"></div>
@@ -1442,7 +1464,8 @@
   var tsX = 0, tsY = 0, tsT = 0, tracking = false;
   document.addEventListener("touchstart", function(e){
     if (e.touches.length !== 1) { tracking = false; return; }
-    if ($("kana").className === "on" || $("show").className === "on"){
+    if ($("kana").className === "on" || $("show").className === "on" ||
+        $("sheet").className === "on"){
       tracking = false; return;
     }
     tsX = e.touches[0].clientX; tsY = e.touches[0].clientY;
@@ -1479,29 +1502,29 @@
     MANNERS.forEach(function(m, i){
       h += tile(m, 'data-manner="' + i + '"', "", i);
     });
-    $("v-manners").innerHTML = h + '</div><div id="mdrop"></div>';
+    $("v-manners").innerHTML = h + '</div>';
   }
-  // Short enough to read in place, so a manner drops open under the grid
-  // rather than sending anyone to another page.
+  /* It used to open under the whole grid, which meant tapping the first tile
+     put the text somewhere below eight others, well off the screen. It takes
+     over the screen now and closes on a tap anywhere, so there is nowhere for
+     it to hide and nothing to scroll back from. */
   function openManner(i){
     var m = MANNERS[i]; if (!m) return;
-    [].forEach.call(document.querySelectorAll("[data-manner]"), function(b){
-      b.classList.toggle("sel", b.dataset.manner === String(i));
-    });
-    var d = $("mdrop");
-    d.innerHTML = '<div class="drop"><div class="h">' + esc(m.ja) +
-                  '<span class="en">' + esc(m.en) + '</span></div><p>' + esc(m.body) + '</p>' +
-                  // Only ever an https link we put here ourselves. It needs
-                  // signal, so whatever matters is in the body text as well.
-                  (m.link && /^https:\/\//.test(m.link.url)
-                    ? '<p class="mlink"><a href="' + esc(m.link.url) + '" target="_blank" ' +
-                      'rel="noopener noreferrer">' + esc(m.link.label) + '</a></p>' : '') +
-                  '</div>';
-    d.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    $("sheetBody").innerHTML =
+      '<div class="sh">' + esc(m.ja) + '<span class="en">' + esc(m.en) +
+      '</span></div><p>' + esc(m.body) + '</p>' +
+      // Only ever an https link we put here ourselves. It needs signal, so
+      // whatever matters is in the body text as well.
+      (m.link && /^https:\/\//.test(m.link.url)
+        ? '<p class="mlink"><a href="' + esc(m.link.url) + '" target="_blank" ' +
+          'rel="noopener noreferrer">' + esc(m.link.label) + '</a></p>' : '');
+    $("sheet").className = "on";
+    $("sheet").scrollTop = 0;
   }
+  function closeSheet(){ $("sheet").className = ""; }
 
   /* ================= navigation ================= */
-  var BUILD = "Version 63, 21 September 2026";
+  var BUILD = "Version 64, 23 September 2026";
   var TABS = { home:["りょてい","Itinerary"], places:["ばしょ","Places"],
                phrases:["ことば","Phrases"], manners:["マナー","Etiquette"],
                // The tab says Info because "Travel Information" will not sit on
@@ -1537,6 +1560,7 @@
     return c ? c.dataset.go : "places";
   }
   function showTab(name){
+    closeSheet();
     setQuiet(false); showView(name);
     setHeader(TABS[name][0], TABS[name][1]);
     [].forEach.call(document.querySelectorAll("nav button"), function(b){
@@ -1632,6 +1656,12 @@
       if (!g) return;
       return push(function(){ $("v-detail").innerHTML = groupHtml(g); }, g.ja, g.en);
     }
+    // A tap anywhere on the sheet closes it, except on the one link it may
+    // carry, which has somewhere else to go.
+    if (e.target.closest("#sheet")){
+      if (!e.target.closest("a")) closeSheet();
+      return;
+    }
     if ((t = e.target.closest("[data-manner]"))) return openManner(+t.dataset.manner);
     if ((t = e.target.closest("[data-ch]"))) return showRead(t);
     hideRead();
@@ -1726,7 +1756,8 @@
   });
   document.addEventListener("keydown", function(e){
     if (e.key !== "Escape") return;
-    if ($("kana").className === "on") closeKana();
+    if ($("sheet").className === "on") closeSheet();
+    else if ($("kana").className === "on") closeKana();
     else if ($("show").className === "on") closeShow();
     else if (stack.length) back();
   });
