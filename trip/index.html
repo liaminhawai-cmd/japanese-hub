@@ -938,11 +938,12 @@
     var today = todayIndex();
     var h = head("しつもん と にっき", "The question and the journal") +
             '<p class="lede">Two things for each day. The question has no ' +
-            'answer in here or anywhere on your phone: you have to be there, ' +
-            'looking at the thing. Read tomorrow\'s tonight, because knowing ' +
-            'the question is what makes you notice the answer. The journal ' +
-            'prompt is for the paper book, in the evening, and you will want ' +
-            'day one again on the last night.</p><div class="stack">';
+            'answer in here or anywhere else on your phone: you have to be ' +
+            'there, looking at the thing. Read tomorrow\'s question tonight, ' +
+            'because knowing what to look for is what makes you spot it. The ' +
+            'journal prompt is for the paper book, in the evening, and you ' +
+            'will want to read day one again on the last night.</p>' +
+            '<div class="stack">';
     TRIP.days.forEach(function(d, i){
       if (!d.q) return;
       h += '<div class="qcard' + (i === today ? " now" : "") + '">' +
@@ -1540,7 +1541,7 @@
   function closeSheet(){ $("sheet").className = ""; }
 
   /* ================= navigation ================= */
-  var BUILD = "Version 65, 24 September 2026";
+  var BUILD = "Version 66, 24 September 2026";
   var TABS = { home:["りょてい","Itinerary"], places:["ばしょ","Places"],
                phrases:["ことば","Phrases"], manners:["マナー","Etiquette"],
                // The tab says Info because "Travel Information" will not sit on
