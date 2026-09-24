@@ -1274,7 +1274,7 @@ window.PHRASES = [
     note: "Meeting your host family. Learn these properly before you land.",
     items: [
       { ja: "はじめまして。", en: "Nice to meet you." },
-      { ja: "＿＿＿です。どうぞよろしくおねがいします。", en: "I'm ___. Please be good to me.", tip: "Say your first name. This is the single most useful sentence you own." },
+      { ja: "＿＿＿です。どうぞよろしくおねがいします。", en: "I'm ___. Please be good to me.", tip: "Say your first name. The most useful sentence you will learn." },
       { ja: "おせわになります。", en: "Thank you for having me.", tip: "Say this when you first arrive at the house. It means you know they are going to look after you." },
       { ja: "これ、おみやげです。どうぞ。", en: "This is a gift for you. Please take it.", tip: "Hand it over with both hands." }
     ]
@@ -1289,8 +1289,8 @@ window.PHRASES = [
       { ja: "ごちそうさまでした。", en: "After eating.", tip: "Say it to whoever cooked." },
       { ja: "おいしいです！", en: "This is delicious!", tip: "Use it more than you think you need to." },
       { ja: "おかわりをおねがいします。", en: "Seconds please." },
-      { ja: "おなかがいっぱいです。", en: "I'm full.", tip: "Kinder than leaving food. Finishing what you take is the polite move." },
-      { ja: "すみません、それはたべられません。", en: "Sorry, I can't eat that.", show: true, tip: "For an allergy, show the card, do not rely on your accent." }
+      { ja: "おなかがいっぱいです。", en: "I'm full.", tip: "Kinder than leaving food on the plate. Take what you know you will finish, then finish it." },
+      { ja: "すみません、それはたべられません。", en: "Sorry, I can't eat that.", show: true, tip: "If it is an allergy, show them the card. Do not count on being understood from your pronunciation alone." }
     ]
   },
   {
@@ -1305,7 +1305,7 @@ window.PHRASES = [
       { ja: "おふろにはいってもいいですか。", en: "May I have a bath?", tip: "Wash yourself outside the bath first. The water in it is shared and stays clean for the next person." },
       { ja: "せんたくをしてもいいですか。", en: "May I do some washing?" },
       { ja: "Wi-Fiをつかってもいいですか。", en: "May I use the wifi?", tip: "Ask once. If the answer is not an easy yes, leave it." },
-      { ja: "てつだいましょうか。", en: "Shall I help?", tip: "Offer this at least once a day. It lands better than almost anything else you can say." }
+      { ja: "てつだいましょうか。", en: "Shall I help?", tip: "Offer this at least once a day. Nothing else you can say will go down as well." }
     ]
   },
   {
@@ -1328,12 +1328,12 @@ window.PHRASES = [
     en: "Out and about",
     note: "Shops, stations, temples.",
     items: [
-      { ja: "すみません。", en: "Excuse me / sorry.", tip: "The most useful word in Japan. Opens almost every interaction." },
+      { ja: "すみません。", en: "Excuse me / sorry.", tip: "The most useful word in Japan. It starts almost every exchange you will have with a stranger." },
       { ja: "これをください。", en: "This one please.", tip: "Point. It is completely acceptable." },
       { ja: "いくらですか。", en: "How much is it?" },
       { ja: "トイレはどこですか。", en: "Where is the toilet?", show: true },
       { ja: "しゃしんをとってもいいですか。", en: "May I take a photo?", tip: "Ask before photographing people, and check for no-photo signs inside temple halls." },
-      { ja: "だいじょうぶです。", en: "I'm fine / it's fine.", tip: "Also how you politely decline a plastic bag." }
+      { ja: "だいじょうぶです。", en: "I'm fine / it's fine.", tip: "It is also how you turn down a plastic bag politely." }
     ]
   },
   {
@@ -1362,7 +1362,7 @@ window.PHRASES = [
       { ja: "はじめまして。", en: "Nice to meet you.",
         tip: "Only ever the first time you meet someone. Bow as you say it." },
       { ja: "わたしのなまえは＿＿＿です。", en: "My name is ___.",
-        tip: "Family name first is the Japanese order, but your first name is easier for people to catch and easier to be called by." },
+        tip: "The Japanese order puts the family name first, but give them your first name: it is easier to catch, and easier for people to call you by all week." },
       { ja: "＿＿＿とよんでください。", en: "Please call me ___.",
         tip: "Useful if your name is long or hard to say. Give them a short version and they will use it all week." },
       { ja: "＿＿さいです。", en: "I am ___ years old." },
@@ -1431,7 +1431,7 @@ window.PHRASES = [
       { ja: "お母さんのりょうりはおいしかったです。", en: "Your cooking was delicious.",
         tip: "Change お母さん to whoever actually cooked." },
       { ja: "＿＿＿さんはとてもおもしろい人です。", en: "___ is such a funny, interesting person.",
-        tip: "Name one person in the family. Being noticed individually is what makes a letter land." },
+        tip: "Name one person in the family. A letter means far more to someone when it mentions them by name." },
       { ja: "＿＿＿にいっしょに行くことができて、とてもうれしかったです。",
         en: "I was so happy we could go to ___ together." },
       { ja: "＿＿＿をいっしょにすることができて、とてもうれしかったです。",
@@ -1440,7 +1440,7 @@ window.PHRASES = [
         en: "Thank you for speaking English with me. It helped enormously.",
         tip: "Worth writing. Speaking a second language all week is tiring, and they did it for you." },
       { ja: "いろいろおせわになりました。", en: "You looked after me in so many ways.",
-        tip: "A set phrase with real weight in Japanese. It says you know how much was done for you." },
+        tip: "A set phrase with real weight in Japanese. It tells them you know how much they did for you." },
       { ja: "まだ日本語が下手です。もっとがんばりたいです。",
         en: "My Japanese is still poor. I want to work harder at it." },
       { ja: "また日本に来たいです。", en: "I want to come to Japan again." },
@@ -1461,7 +1461,7 @@ window.PHRASES = [
     ja: "こっか",
     en: "Advance Australia Fair",
     unit: "verses",
-    note: "The Australian national anthem, in the current words.",
+    note: "The Australian national anthem, in the words used now.",
     items: [
       { ja: "Australians all let us rejoice,\nFor we are one and free;\n" +
             "We've golden soil and wealth for toil;\nOur home is girt by sea;\n" +
@@ -1541,7 +1541,7 @@ window.PHRASES = [
         furi: "（名前[なまえ]）です。よろしくお願[ねが]いします。",
         kana: "（なまえ）です。よろしくおねがいします。",
         en: "I'm ___. Pleased to meet you.",
-        tip: "All fourteen of you, straight after the three speakers, one after another. Your own name where the brackets are. It is four seconds and it is the moment several hundred people learn who you are, so say it clearly and do not mumble your own name." },
+        tip: "All fourteen of you, straight after the three speakers, one after another. Your own name where the brackets are. It takes four seconds, and it is the moment several hundred people find out who you are. Say it clearly, and do not mumble your own name." },
 
       { section: "Monday 28 September · Showa Itsutsuboshi Gakuen",
         label: "Student 3",
@@ -1578,7 +1578,7 @@ window.PHRASES = [
         furi: "出[だ]し物[もの]",
         kana: "だしもの",
         en: "The performance, no speaking part",
-        tip: "You three are on the ceremony support and the 出し物 rather than a speech, so there is no line here to learn. Ask a teacher what the item is and when you rehearse it. Everyone takes part in this one." },
+        tip: "You three are doing the ceremony support and the 出し物 instead of a speech, so there is no line here to learn. Ask a teacher what the item is and when you rehearse it. Everyone takes part in this one." },
 
       { section: "Tuesday 29 September · the farewell party",
         label: "Student 1",
@@ -1648,7 +1648,7 @@ window.PHRASES = [
         ja: "総社西中学校の皆さん、はじめまして。＿＿＿と申します。キューハイスクールで理科主任をしています。\n今回、生徒たちと一緒に総社に来ることができて、とても嬉しく思っています。\n一週間、どうぞよろしくお願いいたします。",
         furi: "総社西中学校[そうじゃにしちゅうがっこう]の皆[みな]さん、はじめまして。＿＿＿と申[もう]します。キューハイスクールで理科主任[りかしゅにん]をしています。\n今回[こんかい]、生徒[せいと]たちと一緒[いっしょ]に総社[そうじゃ]に来[く]ることができて、とても嬉[うれ]しく思[おも]っています。\n一週間[いっしゅうかん]、どうぞよろしくお願[ねが]いいたします。",
         en: "Hello everyone at Soja Nishi Junior High School. My name is ___ and I am head of science at Kew High School. I am very glad to be here in Soja with the students. Thank you very much for the week ahead.",
-        tip: "Opening in Japanese rather than having it read for you, which lands well in a staffroom." },
+        tip: "Opening in Japanese instead of having it read for you, which goes down well in a staffroom." },
 
       { section: "Tuesday 29 September · the farewell assembly",
         label: "The principal",
@@ -1686,7 +1686,7 @@ window.PHRASES = [
     items: [
       { section: "At the station",
         ja: "出口", en: "Way out", art: "exit",
-        tip: "でぐち. 口 means mouth or opening, and it is on the end of almost every way in or out in Japan. Learn 口 and half of this section falls open." },
+        tip: "でぐち. 口 means mouth or opening, and it is on the end of almost every way in or out in Japan. Learn 口 and half this section makes sense straight away." },
       { ja: "入口", en: "Way in", art: "entrance", tip: "いりぐち. The pair to 出口." },
       { ja: "東口　西口　南口　北口", en: "East, west, south, north exit", art: "compass",
         tip: "ひがしぐち, にしぐち, みなみぐち, きたぐち. A big station has several and they can be ten minutes apart on opposite sides of the building. Agree which one before you split up, and if you get it wrong you are not lost, you are just on the wrong side." },
@@ -1700,7 +1700,7 @@ window.PHRASES = [
       { ja: "３番線", en: "Platform 3", art: "platform",
         tip: "さんばんせん. The number is what matters and it is always a numeral, so this one you can read today." },
       { ja: "大人　　小人", en: "Adult　　Child", art: "fare",
-        tip: "おとな and こども. 小人 is the trap: the characters say small person and you would expect しょうじん, but on any ticket machine or fare table it is read こども. Years 7 to 12 pay the adult fare on JR from age 12." },
+        tip: "おとな and こども. 小人 is the trap. The characters say small person, so you would expect しょうじん, but on a ticket machine or a fare table it is always read こども. Years 7 to 12 pay the adult fare on JR from age 12." },
       { section: "Toilets",
         ja: "男　　女", en: "Men　　Women", art: "toiletmf",
         tip: "おとこ and おんな. Men is usually blue and women usually red, but the colour is a helper, not a rule, and plenty of places use neither. Read the character. 男 has a field 田 over strength 力; 女 is a person kneeling." },
@@ -1721,7 +1721,7 @@ window.PHRASES = [
       { ja: "税込　　税抜", en: "Tax included　　Tax not included", art: "tax",
         tip: "ぜいこみ and ぜいぬき. If the shelf says 税抜 the price at the till will be about ten per cent more." },
       { ja: "無料", en: "Free",
-        tip: "むりょう. 料 means charge, and 無 means there is none of it." },
+        tip: "むりょう. 料 means a charge, and 無 means there is not one." },
 
       { section: "Temples and shrines",
         ja: "拝観料", en: "Entry fee",
@@ -1758,17 +1758,16 @@ window.PHRASES = [
     id: "wild",
     ja: "とっておき",
     en: "Wild card",
-    note: "Phrases nobody expects you to know. Learn one properly and use it " +
-          "once. Each one says where it lands best.",
+    note: "Phrases nobody expects you to know. Learn one properly and use it once. Each one tells you where it works best.",
     items: [
       { ja: "おつかれさまです。", en: "You've had a long day. / Well done today.",
-        tip: "The one that surprises people most. Say it to a host parent coming in from work, or to a student after club practice. It means you noticed they have been working. There is no English sentence that does this job, which is why it lands." },
+        tip: "The one that surprises people most. Say it to a host parent coming in from work, or to a student after club practice. It tells them you noticed they have been working hard. English has no sentence that does this, which is why it catches people off guard." },
       { ja: "いってらっしゃい。", en: "Off you go. / Have a good day.",
         tip: "The answer to いってきます. When someone leaves the house in the morning, say this from wherever you are. Most visitors never learn it and a family notices straight away." },
       { ja: "おかえりなさい。", en: "Welcome home.",
         tip: "Say it to whoever comes in, even if you only got home five minutes earlier yourself. It is the pair to ただいま. It sounds like you live there, which is the whole point." },
       { ja: "まちがえたら、なおしてください。", en: "If I make a mistake, please correct me.",
-        tip: "Say this early, to your family or to a class. Japanese speakers are often too polite to correct a guest unless you ask, so this is you handing them permission. It also tells people you are here to learn, not just to visit." },
+        tip: "Say this early, to your family or to a class. Japanese speakers are often too polite to correct a guest unless you ask, so you have to give them permission. It also tells people you are here to learn, not just to visit." },
       { ja: "りょうりがじょうずですね。", en: "You're a really good cook.",
         tip: "Say it at the table, to whoever actually cooked. Better than おいしい on its own, because it praises the person and not only the food." },
       { ja: "にほんごで、いちばんすきなことばはなんですか。", en: "What is your favourite word in Japanese?",
@@ -1780,7 +1779,7 @@ window.PHRASES = [
       { ja: "オーストラリアについて、しりたいことはありますか。", en: "Is there anything you would like to know about Australia?",
         tip: "Keep this one for when your Japanese runs out. It hands the next question to them, and they will happily carry the conversation for a while. Expect snakes, spiders and how long the flight was." },
       { ja: "いっしょにしゃしんをとりませんか。", en: "Shall we take a photo together?",
-        tip: "とりませんか invites rather than asks for something, which is why it is the polite form to use. Ask a group at the end of a class or a club, not one person on their own, and not strangers at a temple." }
+        tip: "とりませんか is an invitation rather than a request, which is what makes it the polite one. Ask a group at the end of a class or a club, not one person on their own, and not strangers at a temple." }
     ]
   },
   {

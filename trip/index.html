@@ -313,10 +313,12 @@
   .today .nt{font-size:16px;margin-top:11px;padding-top:11px;
              border-top:1px solid rgba(251,247,238,.25);opacity:.95}
 
-  .day{display:grid;grid-template-columns:30px 1fr;gap:12px;padding:12px 0;
+  .day{display:grid;grid-template-columns:38px 1fr;gap:12px;padding:12px 0;
        border-bottom:1px solid var(--line-soft)}
   .day:last-child{border-bottom:0}
   .day .n{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;padding-top:4px}
+  .day .n .wd{display:block;font-size:11px;font-weight:700;letter-spacing:.04em;
+       text-transform:uppercase;margin-top:1px}
   .day.now .n{color:var(--accent);font-weight:800}
   .day .t{font-size:18px;font-weight:700}
   .day .t .en{display:block;font-size:15px;font-weight:400;color:var(--muted)}
@@ -773,12 +775,24 @@
   }
 
   /* ================= HOME ================= */
+  /* Worked out from the date rather than typed in, so it cannot drift if a
+     day ever moves. Parsed as local rather than letting the browser read the
+     string as UTC, which can land a day early depending on where you are. */
+  var DAYNAMES = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  function weekday(iso, short){
+    var p = String(iso).split("-");
+    if (p.length !== 3) return "";
+    var name = DAYNAMES[new Date(+p[0], +p[1] - 1, +p[2]).getDay()] || "";
+    return short ? name.slice(0, 3) : name;
+  }
+
   function renderHome(){
     var i = todayIndex(), h = "";
     if (i > -1){
       var d = TRIP.days[i];
       h += '<div class="today"><div class="lbl">Today  きょう</div>' +
-           '<div class="d">' + esc(d.ja) + '<span class="en">Day ' + d.n + ' of 12: ' +
+           '<div class="d">' + esc(d.ja) + '<span class="en">' +
+           esc(weekday(d.date)) + ' \u00b7 day ' + d.n + ' of 12: ' +
            esc(d.en) + '</span></div><div class="nt">' + esc(d.note) + '</div>' +
            // Today's question rides on today's card, because that is where
            // somebody already is when they open the app in the evening.
@@ -793,7 +807,8 @@
                        : "The tour is over. Welcome home.";
       h += '<div class="today"><div class="lbl">Departure  しゅっぱつ</div>' +
            '<div class="d">' + esc(line) +
-           '<span class="en">Melbourne, 20 September 2026, 18:25</span></div>' +
+           '<span class="en">' + esc(weekday(TRIP.days[0].date)) +
+           ' 20 September 2026, 18:25 from Melbourne</span></div>' +
            '<div class="nt">Open this on the day and it shows where we are up to.</div></div>';
     }
     h += '<button class="row qrow" data-questions="1">' +
@@ -806,7 +821,8 @@
     /* The tab is called Itinerary now, so the page does not repeat itself. */
     h += '<div>';
     TRIP.days.forEach(function(d, k){
-      h += '<div class="day' + (k === i ? " now" : "") + '"><div class="n">' + d.n + '</div>' +
+      h += '<div class="day' + (k === i ? " now" : "") + '"><div class="n">' + d.n +
+           '<span class="wd">' + esc(weekday(d.date, true)) + '</span></div>' +
            '<div><div class="t">' + esc(d.ja) + '<span class="en">' + esc(d.en) + '</span></div>' +
            '<div class="nt">' + esc(d.note) + '</div></div></div>';
     });
@@ -1524,7 +1540,7 @@
   function closeSheet(){ $("sheet").className = ""; }
 
   /* ================= navigation ================= */
-  var BUILD = "Version 64, 23 September 2026";
+  var BUILD = "Version 65, 24 September 2026";
   var TABS = { home:["りょてい","Itinerary"], places:["ばしょ","Places"],
                phrases:["ことば","Phrases"], manners:["マナー","Etiquette"],
                // The tab says Info because "Travel Information" will not sit on
