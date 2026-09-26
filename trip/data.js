@@ -13,6 +13,12 @@
      - AU spelling. No em dashes in anything a student reads.
      - `photo` is a filename in this folder, or null. Null renders a labelled
        placeholder, so the app works today and improves when photos land.
+     - Any `intro`, `hook` or `look` can be followed by `introJa`, `hookJa` or
+       `lookJa`: the same paragraph in Japanese, printed under the English so
+       a student can hand the phone to their host family. Soja has the full
+       set. Everywhere else the field is simply absent and nothing prints.
+       This Japanese is written for an adult native reader, not for the
+       students, so it carries ordinary kanji and no furigana.
    ========================================================================== */
 
 window.TRIP = {
@@ -739,6 +745,7 @@ window.PLACES = [
       "Kew through the same program. Soja is in Okayama Prefecture, on the " +
       "Kibiji, an old road through rice country. Two things here are genuinely " +
       "significant, and if nobody tells you, you will walk past both of them.",
+    introJa: "ここは、ほかの旅行では味わえない一週間です。総社西中学校はキューハイスクールの姉妹校で、この一週間は総社市が運営する交流事業として行われています。参加しているのは総社西中学校だけではなく、市内のほかの中学校からも、同じ事業でキューハイスクールに生徒が来ています。総社は岡山県にあり、田園の中を通る古い道、吉備路沿いの町です。この町には本当に価値のあるものが二つありますが、誰かに教えてもらわなければ、どちらも気づかずに通り過ぎてしまいます。",
     sights: [
       {
         id: "hofukuji",
@@ -748,6 +755,7 @@ window.PLACES = [
         intro:
           "A Zen temple just outside town. Japan's greatest ink painter grew up " +
           "here, and he was a local boy.",
+        introJa: "町のすぐ外にある禅寺です。日本を代表する水墨画家がこの寺で育ちました。しかも、地元出身の少年でした。",
         spots: [
           {
             id: "sesshu",
@@ -766,9 +774,11 @@ window.PLACES = [
               "the temple tells the story, hanging in the hall you will walk " +
               "into: the boy tied to the pillar, and the mouse on the floor at " +
               "his feet.",
+            hookJa: "雪舟は1420年、今の総社市赤浜に生まれ、幼いころにこの寺に預けられました。伝えられているのは、禅の修行をせずに絵ばかり描いていたため、和尚に柱へ縛りつけられた、という話です。雪舟は泣き、こぼれた涙を足の指につけて、床にねずみを描きました。戻ってきた和尚はそのねずみを本物だと思い、雪舟を許しました。その少年が、のちに日本美術史でもっとも有名な画家になります。ここにある絵は、この寺がその話を伝えているもので、みなさんが入る本堂に掛かっています。柱に縛られた少年と、その足もとの床のねずみが描かれています。",
             look:
               "Find the statue of the boy and the mouse. Then think about the fact " +
-              "that he came from the same town as your host family."
+              "that he came from the same town as your host family.",
+            lookJa: "少年とねずみの像を探してみましょう。そして、その少年がホストファミリーと同じ町の出身だということを考えてみてください。"
           },
           {
             id: "hofukuji-pagoda",
@@ -783,9 +793,11 @@ window.PLACES = [
               "the wars and burned. Every other building on this site was " +
               "destroyed. This one was not. Everything else you can see around it " +
               "was built afterwards.",
+            hookJa: "この三重塔は1376年に建てられ、高さは約18メートルです。岡山県で二番目に古い塔で、朱塗りで、屋根には重い本瓦が葺かれています。ここで足を止めてほしいのは次のことです。1575年、この寺は戦火に巻き込まれて焼けました。境内のほかの建物はすべて失われましたが、この塔だけは焼け残りました。まわりに見える建物は、すべてそのあとに建てられたものです。",
             look:
               "Stand at the base and look up. Then look at the buildings around it " +
-              "and remember they are the replacements. This is the survivor."
+              "and remember they are the replacements. This is the survivor.",
+            lookJa: "塔の足もとに立って、見上げてみましょう。そのあとまわりの建物を見て、それがすべて建て直されたものだと思い出してください。生き残ったのは、この塔です。"
           },
           {
             id: "zazen",
@@ -798,9 +810,11 @@ window.PLACES = [
               "is called zazen. It sounds easy until you try it. If a monk walks " +
               "past with a flat wooden stick, that is a kyosaku, and being tapped " +
               "with it is not a punishment. You ask for it, to help you refocus.",
+            hookJa: "ここは臨済宗の禅寺です。ここでの修行は、長いあいだ、わざと何もせずにじっと座ることです。座って行う瞑想を座禅といいます。簡単そうに聞こえますが、やってみると違います。平たい木の棒を持ったお坊さんが横を通ったら、それは警策です。打たれるのは罰ではありません。集中し直すために、自分からお願いするものです。",
             look:
               "Try sitting completely still for two minutes without touching your " +
-              "phone. Notice how long two minutes is."
+              "phone. Notice how long two minutes is.",
+            lookJa: "スマホに触らずに、二分間まったく動かずに座ってみましょう。二分がどれくらい長いか、感じてみてください。"
           }
         ]
       },
@@ -813,6 +827,7 @@ window.PLACES = [
           "The five-storey pagoda standing in the rice fields. It is the symbol of " +
           "this whole area, and it is on an emperor's orders from over 1200 years " +
           "ago.",
+        introJa: "田んぼの中に立つ五重塔です。この地域全体の象徴で、もとは1200年以上前の天皇の命令によって建てられた寺です。",
         spots: [
           {
             id: "shomu",
@@ -830,9 +845,11 @@ window.PLACES = [
               "Province. So this field you are standing in was part of a " +
               "nationwide project ordered from the capital, and the reason it is " +
               "here at all is a decision made in the year 741.",
+            hookJa: "741年、聖武天皇は日本のすべての国に寺を建てるよう命じました。いくつかではなく、すべての国にです。当時の日本は疫病、飢饉、反乱に苦しんでおり、仏教の力で国全体を、一国ずつ守ろうという考えでした。こうして建てられた寺を国分寺といいます。ここは備中国の国分寺です。つまり、いま立っているこの場所は、都から命じられた全国規模の事業の一部でした。この寺がここにあるのは、741年の決定によるものです。",
             look:
               "Look around at how much farmland there is. Then think about what it " +
-              "took to build something this size out here, that long ago."
+              "took to build something this size out here, that long ago.",
+            lookJa: "まわりに広がる田畑の広さを見てみましょう。そして、これほど大きなものを、こんな昔にこの場所に建てるのに何が必要だったか、考えてみてください。"
           },
           {
             id: "kokubunji-pagoda",
@@ -848,9 +865,11 @@ window.PLACES = [
               "Japanese pagodas are famously hard to knock down. The central pillar " +
               "and the loosely stacked storeys let the whole thing sway instead of " +
               "snapping.",
+            hookJa: "高さは約34メートルあり、田んぼの向こう、遠くからでも見えます。ただし年代には注意してください。奈良時代の塔は焼失し、今建っているのは1843年から1844年にかけて再建されたものです。それでも、台風も地震も多いこの国で、およそ180年間立ち続けてきたことになります。日本の塔は倒れにくいことで知られています。中心を通る心柱と、ゆるく積み重ねられた各層のおかげで、塔全体が折れずに揺れることができるのです。",
             look:
               "Walk around it and watch how it changes against the sky. This is the " +
-              "view on half the postcards in Okayama."
+              "view on half the postcards in Okayama.",
+            lookJa: "塔のまわりを歩いて、空を背にした姿がどう変わるか見てみましょう。岡山の絵はがきの半分は、この景色です。"
           },
           {
             id: "akagome",
@@ -866,10 +885,12 @@ window.PLACES = [
               "festival for it. We are here from the 24th of September. There is a " +
               "real chance you will see the field in colour, and most visitors to " +
               "Japan never do.",
+            hookJa: "寺の前に植えられているのは赤米です。古代米の一種で、いま食べられている白米よりも、日本の稲のもとになった野生の品種に近いお米です。昔は神様へのお供えにされていました。今ではめずらしいお米です。うれしいのはここからです。赤米は九月半ばごろの二週間ほど、実るにつれて赤く色づき、その時期にはお祭りも開かれます。私たちがここに来るのは九月二十四日からです。田んぼが色づいているところを見られる可能性は十分にあります。日本を訪れる人のほとんどは、それを見ることがありません。",
             look:
               "Look at the colour of the field in front of the temple, then " +
               "photograph the pagoda with the red rice in the foreground. That " +
-              "shot only exists for a couple of weeks a year."
+              "shot only exists for a couple of weeks a year.",
+            lookJa: "寺の前の田んぼの色を見て、手前に赤米を入れて五重塔の写真を撮ってみましょう。この一枚が撮れるのは、一年のうち二週間ほどだけです。"
           }
         ]
       },
@@ -881,6 +902,7 @@ window.PLACES = [
         intro:
           "Things that turn up during the homestay week. Okayama grows fruit " +
           "the rest of Japan treats as a luxury.",
+        introJa: "ホームステイの一週間のあいだに出会うものです。岡山では、ほかの地域では高級品として扱われる果物が作られています。",
         spots: [
           {
             id: "muscat",
@@ -897,10 +919,12 @@ window.PLACES = [
               "sunshine, because it gets so little rain. At the farm you pick " +
               "one bunch. Only one, and that is not stinginess: these are top " +
               "grade grapes and a single good bunch is genuinely expensive.",
+            hookJa: "岡山は日本のマスカットの産地として知られ、みなさんが手渡される緑色のぶどうはマスカット・オブ・アレキサンドリアです。日本の収穫量のほとんどがこの県のものです。日常の果物というより贈答品として扱われ、デパートで売られている良い一房は、ちょっとしたごちそうより高いこともあります。ここで育つ理由は天気です。岡山は雨が少ないことから「晴れの国」と呼ばれています。農園で摘むのは一房だけです。けちなのではありません。最高級のぶどうで、良い一房は本当に高価なのです。",
             look:
               "Take your time choosing your one bunch, then say oishii desu to " +
               "whoever hands it to you. Notice how carefully the fruit is " +
-              "presented, because presentation is half of it here."
+              "presented, because presentation is half of it here.",
+            lookJa: "一房をゆっくり選びましょう。そして渡してくれた人に「おいしいです」と言ってみてください。果物がどれほどていねいに並べられているかにも注目してください。日本では、見せ方も味と同じくらい大切にされています。"
           }
         ]
       },
@@ -912,6 +936,7 @@ window.PLACES = [
         intro:
           "Our sister school. You will be here across several days, in uniform, " +
           "with a buddy. This is not a tour stop. It is a school day.",
+        introJa: "キューハイスクールの姉妹校です。数日にわたって、制服を着て、バディと一緒に過ごします。ここは観光地ではありません。ふつうの学校生活です。",
         spots: [
           {
             id: "souji",
@@ -924,8 +949,10 @@ window.PLACES = [
               "called souji and it is a normal part of the timetable, not a " +
               "punishment. The thinking is that if you have to clean it, you think " +
               "harder about messing it up. You will be doing it too.",
+            hookJa: "この学校に清掃員はいません。一日の終わりに全員が手を止めて、教室も廊下もトイレも、学校じゅうを掃除します。これを掃除といい、罰ではなく、時間割の中にあるふつうの活動です。自分で掃除するなら、汚さないように気をつけるようになる、という考え方です。みなさんも一緒にやります。",
             look:
-              "Watch what your buddy picks up without being told. Then do that."
+              "Watch what your buddy picks up without being told. Then do that.",
+            lookJa: "バディが言われなくても何を拾っているか、見てみましょう。そして同じことをしてみてください。"
           },
           {
             id: "indoor-shoes",
@@ -938,9 +965,11 @@ window.PLACES = [
               "houses, some restaurants, and temple buildings. The line between " +
               "outside and inside is taken seriously, and walking in with outdoor " +
               "shoes reads roughly the way walking on someone's bed would at home.",
+            hookJa: "玄関で上履きに履き替えます。入口近くにある靴入れは下駄箱といいます。これは学校だけの習慣ではありません。家でも、一部の飲食店でも、お寺の建物でも同じです。外と内の境目は大切に考えられていて、外靴のまま上がるのは、オーストラリアで人のベッドの上を歩くようなものだと思ってください。",
             look:
               "Check your socks before you leave the house each morning. Holes get " +
-              "noticed here."
+              "noticed here.",
+            lookJa: "毎朝、家を出る前に靴下を確認しましょう。穴が開いていると、ここではすぐに気づかれます。"
           },
           {
             id: "bukatsu",
@@ -954,9 +983,11 @@ window.PLACES = [
               "activity. You are joining two club sessions. You are not expected " +
               "to be good. You are expected to have a go and to bow at the start " +
               "and the end.",
+            hookJa: "放課後はほとんどの生徒が部活動に参加し、しかも本格的に取り組みます。ほぼ毎日、週末もあり、一年を通して続きます。日本の生徒にとっての部活は、昼休みの活動というより、本格的なスポーツ活動に近いものです。みなさんは二回の部活動に参加します。上手である必要はありません。やってみることと、始めと終わりにきちんと礼をすることが大切です。",
             look:
               "Ask your buddy which club they are in and how many days a week they " +
-              "train. Watch their face when you tell them what we do at Kew."
+              "train. Watch their face when you tell them what we do at Kew.",
+            lookJa: "バディに何の部活に入っているか、週に何日練習しているか聞いてみましょう。そして、オーストラリアの学校ではどうなのかを伝えたときの顔を見てみてください。"
           }
         ]
       },
@@ -968,6 +999,7 @@ window.PLACES = [
         intro:
           "The best week of the trip, and the part nobody else gets. You live in " +
           "a Japanese house with people who chose to have you there.",
+        introJa: "この旅行でいちばんの一週間で、ほかの旅行では経験できない部分です。受け入れを引き受けてくれた家族の家で、日本の暮らしを一緒に送ります。",
         spots: [
           {
             id: "chance",
@@ -982,9 +1014,11 @@ window.PLACES = [
               "the weekend. Join in at the club. A week of that will teach you " +
               "more Japanese than a term of lessons, and the families who enjoy " +
               "hosting most are the ones whose student joined in.",
+            hookJa: "ホストファミリーは、みなさんを迎え入れることを引き受けてくれた家庭です。精いっぱい世話をしてくれますから、安心してください。迷惑をかけているのでは、と気にする必要はありません。大切なのは、誘われたら「はい」と言うことです。出された料理は、何か分からないものでも食べてみましょう。週末に連れて行ってくれる場所には一緒に行きましょう。部活にも参加しましょう。その一週間で、授業の一学期分より多くの日本語が身につきます。そしてホストファミリーがいちばん楽しいと感じるのは、生徒が一緒に加わってくれたときです。",
             look:
               "Say yes to one thing this week you would normally say no to. " +
-              "Somebody will offer you something odd to eat. Start there."
+              "Somebody will offer you something odd to eat. Start there.",
+            lookJa: "今週、いつもなら断ることを一つだけ「はい」と言ってみましょう。誰かが変わった食べ物をすすめてくれるはずです。まずはそこからです。"
           },
           {
             id: "guest",
@@ -1000,9 +1034,11 @@ window.PLACES = [
               "pets, the beach, your family, and ask about theirs. If the house " +
               "is lovely, say so. If dinner is good, say so. Polite, respectful, " +
               "grateful. That is the whole job, and it is not a hard one.",
+            hookJa: "手伝いを申し出ましょう。食卓を片づける、食器を洗う、自分のものを片づける。洗濯も自分でやりましょうかと言ってみてください。断られても驚かないでください。家じゅうの分をまとめて洗うほうが楽だからです。大事なのは、申し出ることそのものです。できるだけ話しかけましょう。家や、ペットや、海や、家族の写真を見せて、相手の家族のことも聞いてみてください。家がすてきだと思ったら、そう言いましょう。ごはんがおいしかったら、そう言いましょう。ていねいに、敬意をもって、感謝を伝える。やることはそれだけで、難しいことではありません。",
             look:
               "Tonight, offer to help with one thing after dinner. " +
-              "てつだいましょうか。Even if they wave you away, ask."
+              "てつだいましょうか。Even if they wave you away, ask.",
+            lookJa: "今夜、夕食のあとに何か一つ手伝いを申し出てみましょう。「てつだいましょうか。」断られても、声をかけることが大切です。"
           },
           {
             id: "australians",
@@ -1016,9 +1052,11 @@ window.PLACES = [
               "they will remember. That is not a weight to carry around. It just " +
               "means friendliness goes further here than it does at home, and " +
               "people will be pleased with you for very little.",
+            hookJa: "頭のすみに置いておいてほしいことが一つあります。この事業に参加しているオーストラリアの学校はキューハイスクールだけです。ですから、総社の多くの人にとって、みなさんは「オーストラリアの生徒たち」であり、覚えてもらえるのはこのグループです。重く受け止める必要はありません。ただ、ここでは人なつっこさが家にいるときよりもずっと遠くまで届きますし、ほんの小さなことでも喜んでもらえる、ということです。",
             look:
               "Greet people you pass at school, even the ones you do not know. " +
-              "おはようございます costs nothing and it is remembered."
+              "おはようございます costs nothing and it is remembered.",
+            lookJa: "学校ですれ違う人には、知らない人にもあいさつしましょう。「おはようございます」はただですし、ちゃんと覚えてもらえます。"
           }
         ]
       },
@@ -1033,6 +1071,7 @@ window.PLACES = [
           "practice, making Japanese sweets, and getting dressed in a yukata. " +
           "Specialist teachers come in for several of them, so it is worth " +
           "knowing what you are walking into.",
+        introJa: "姉妹校と総社市が、体験型の活動をいくつも用意してくれています。給食、ほかの学校での一日、茶道、習字、和菓子づくり、浴衣の着付けです。いくつかには専門の先生が来てくださいますので、何をするのか知っておく価値があります。",
         spots: [
           {
             id: "kyushoku",
@@ -1047,10 +1086,12 @@ window.PLACES = [
               "Nobody starts until the whole room has said itadakimasu. The menu " +
               "is planned by a nutritionist, there is milk every day, and in " +
               "Okayama a fair bit of it will have been grown nearby.",
+            hookJa: "食堂はなく、メニューを選ぶこともありません。クラス全員が同じ食事を、同じ時間に、教室で食べます。給食は調理室から運ばれ、当番の生徒が白い割烹着と帽子を着けて配ります。当番は全員に回ってきます。教室じゅうが「いただきます」と言うまで、誰も食べ始めません。献立は栄養士が考えていて、牛乳は毎日つきます。岡山では、かなりの食材が地元で育てられたものです。",
             look:
               "Find out whose turn it is to serve today, and ask your buddy how " +
               "often their turn comes around. Then eat what you are given, " +
-              "including the bit you are unsure about."
+              "including the bit you are unsure about.",
+            lookJa: "今日の配膳当番が誰なのか確かめて、バディに当番がどれくらいの頻度で回ってくるか聞いてみましょう。そして、出されたものは、よく分からないものも含めて食べてみてください。"
           },
           {
             id: "itsutsuboshi",
@@ -1066,10 +1107,12 @@ window.PLACES = [
               "time. Nobody will hand you a list of phrases beforehand, which is " +
               "exactly why it works: you will find out how much you can actually " +
               "do with what you know.",
+            hookJa: "総社にあるもう一つの学校で一日過ごします。二つのキャンパスを回り、途中でそちらの給食をいただきます。そこで行われるのは交流です。この旅行の中で、唯一台本のない活動です。一緒に行う活動や、体を動かしながら言葉も使うようなゲームがあると思います。事前に使える表現の一覧が配られることはありません。だからこそ意味があります。今の自分の日本語でどこまでできるのか、実際に分かるからです。",
             look:
               "Learn one question you can ask anybody today and use it on at " +
               "least three different people. なにかスポーツをしますか。Do you " +
-              "play any sport? That one will get you a long way."
+              "play any sport? That one will get you a long way.",
+            lookJa: "今日は、誰にでも聞ける質問を一つ覚えて、少なくとも三人に使ってみましょう。「なにかスポーツをしますか。」この一つでかなり会話が続きます。"
           },
           {
             id: "sado",
@@ -1087,11 +1130,13 @@ window.PLACES = [
               "turn it back before you hand it over. Finish with a slurp. It " +
               "sounds rude and it is the opposite: it tells your host you are done " +
               "and it was good.",
+            hookJa: "茶道は、お茶を飲むことそのものが目的ではありません。誰かが心を込めて自分のためにお茶を点ててくれ、それを同じ気持ちで受け取る、ということです。使うのは抹茶で、粉にした緑茶を竹の茶筅で泡立てたもので、しっかり苦いお茶です。だから先に和菓子をいただきます。お菓子を食べてから、お茶を飲みます。茶碗には正面があり、いちばん美しい面です。そこに口をつけないように、飲む前に茶碗を二回ほど回し、返すときに戻します。最後は音を立てて吸い切ります。失礼に聞こえるかもしれませんが、逆です。飲み終わったこと、おいしかったことを亭主に伝える作法です。",
             look:
               "The phrase behind the whole thing is ichigo ichie, one time, one " +
               "meeting. This exact group of people will never be in this room " +
               "together again. See if you can hold that thought for the length of " +
-              "one bowl of tea."
+              "one bowl of tea.",
+            lookJa: "茶道の根底にある言葉が「一期一会」です。この顔ぶれがこの部屋にそろうことは、二度とありません。お茶一杯のあいだ、そのことを心に置いていられるか、試してみてください。"
           },
           {
             id: "shodo",
@@ -1107,11 +1152,13 @@ window.PLACES = [
               "order you built a character in. With ink on paper it shows, and " +
               "your teacher will spot it instantly. There is also no rubbing out. " +
               "You commit to the stroke and live with it.",
+            hookJa: "筆はペンのように傾けず、まっすぐ立てて持ちます。動かすのは指ではなく、ひじと肩です。押さえれば線は太く、上げれば細くなりますから、筆は二つの仕事を同時にしていることになります。みんながつまずくのは、筆を使うと書き順が見えてしまうことです。キーボードでは、どの順で書いたか誰にも分かりません。でも紙の上の墨では分かりますし、先生にはすぐ見抜かれます。消すこともできません。一画を引いたら、それと付き合っていくしかありません。",
             look:
               "You will practise, then write one good copy at the end, and you " +
               "may get to put your character onto something to bring home. Put " +
               "your good copy beside the model and find the single stroke that " +
-              "differs most. That one stroke is the lesson."
+              "differs most. That one stroke is the lesson.",
+            lookJa: "練習をしたあと、最後に清書を一枚書きます。書いた字を、持ち帰れるものに仕上げられるかもしれません。清書をお手本の横に並べて、いちばん違っている一画を探してみましょう。その一画が、今日の学びです。"
           },
           {
             id: "wagashi",
@@ -1128,9 +1175,11 @@ window.PLACES = [
               "far less sweet than an Australian sweet, on purpose, because they " +
               "are made to sit against bitter matcha rather than compete with it. " +
               "Each design has its own name, often a poetic one.",
+            hookJa: "和菓子はお茶と一緒にいただくお菓子で、食べる前にまず目で楽しむように作られています。手で形を作るのは、たいてい練り切りです。白あんに色をつけ、竹のへらと手のひらで形を整えます。形は季節を表しますので、九月の終わりなら秋、つまり菊、もみじ、柿、栗などが出てくるはずです。オーストラリアのお菓子よりずっと甘さが控えめですが、それはわざとです。苦い抹茶と張り合うのではなく、抹茶に寄り添うように作られているからです。それぞれの意匠には、詩のような名前がついていることもよくあります。",
             look:
               "Before you eat yours, work out what it is supposed to be and which " +
-              "season it belongs to. Then ask what its name is."
+              "season it belongs to. Then ask what its name is.",
+            lookJa: "食べる前に、それが何を表していて、どの季節のものなのか考えてみましょう。そのあと、名前を聞いてみてください。"
           }
 ,
           {
@@ -1149,9 +1198,11 @@ window.PLACES = [
               "say kimono is the formal end of the family: silk, lined, worn " +
               "over an under-robe, needing someone else to put it on you and " +
               "costing more than a car. Yours is the easy end.",
+            hookJa: "浴衣も着物の一つです。「着物」は文字どおり着るものという意味で、その仲間全体を指します。浴衣はそのうち、裏地のない、夏用の薄い木綿のものです。名前はそのまま湯あがりの衣で、「浴」はお風呂、「衣」は着るもの。もともとは入浴のあとに着るものだったからで、今も温泉旅館の部屋に用意されています。現在は主に夏祭りの服で、花火や盆踊りのときに着られます。「着物」と聞いて多くの人が思い浮かべるのは、もっと格式の高いほうでしょう。絹で、裏地があり、長襦袢の上に着て、着付けには人の手が要り、値段は車より高いこともあります。みなさんが着るのは、いちばん気軽なほうです。",
             look:
               "Feel the fabric. Plain cotton, and that is the point: this is " +
-              "clothing for a hot night, not a costume."
+              "clothing for a hot night, not a costume.",
+            lookJa: "生地に触ってみましょう。ただの木綿です。そこが大事なところで、これは衣装ではなく、暑い夜のための普段着なのです。"
           },
           {
             id: "yukata-left",
@@ -1166,10 +1217,12 @@ window.PLACES = [
               "dressed for a funeral. Getting it backwards is not exactly rude, " +
               "but everyone in the room will notice straight away, the way you " +
               "would notice a jumper on inside out.",
+            hookJa: "本当に大事な決まりが一つだけあります。これです。先に右の身頃を体に当て、そのうえに左の身頃を重ねます。左が上です。みんながこれに厳しいのは、逆の右が上の合わせ方が、亡くなった人に着せる着方だからです。間違えても失礼というわけではありませんが、その場の全員がすぐ気づきます。セーターを裏返しに着ている人に気づくのと同じです。",
             look:
               "Check yourself before anyone else does. Looking down at your own " +
               "chest, the left panel should be on top and the opening should " +
-              "point to your right."
+              "point to your right.",
+            lookJa: "人に指摘される前に、自分で確かめましょう。自分の胸元を見下ろしたとき、左の身頃が上にあり、合わせ目が自分の右側を向いていれば正解です。"
           },
           {
             id: "yukata-wear",
@@ -1185,10 +1238,12 @@ window.PLACES = [
               "Traditionally you wear geta, wooden sandals, with bare feet. A " +
               "yukata is cut narrow at the bottom, so you cannot take a normal " +
               "Australian stride in one.",
+            hookJa: "帯を締めます。女性は幅の広い帯を背中で結び、リボンのような形にすることが多いです。男性は細い帯を、腰の低い位置、おなかより下で締めます。えりは首もとがきれいに見えるように整えましょう。全体がずり上がってきたら、前を開いて直すのではなく、後ろから直してください。伝統的には、素足に下駄をはきます。浴衣はすそが狭く仕立てられているので、オーストラリアにいるときのような大またでは歩けません。",
             look:
               "Once you are in it, walk the length of the room and work out how " +
               "short your steps have to be. Then try sitting down neatly. That " +
-              "is the actual skill."
+              "is the actual skill.",
+            lookJa: "着終わったら、部屋の端から端まで歩いて、どれくらい歩幅を小さくすればいいか確かめてみましょう。そのあと、きれいに座ってみてください。本当に難しいのはそこです。"
           }
         ]
       }

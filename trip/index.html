@@ -363,6 +363,18 @@
   .look .lbl{font-size:12px;font-weight:800;letter-spacing:.12em;
              text-transform:uppercase;color:var(--accent);margin-bottom:6px}
   .look p{font-size:17.5px;line-height:1.6}
+  /* ---------- the Japanese half ----------
+     Soja carries a Japanese version of every paragraph, so a student can hand
+     the phone to their host family and they can read straight on. It sits
+     under the English rather than behind a switch: nothing to find and
+     nothing hidden. Looser leading than the English, because kanji need the
+     air, and the Japanese face first so the digits inside a Japanese sentence
+     do not jump into Calibri halfway through. */
+  .ja2{margin-top:14px;padding-top:13px;border-top:1px solid var(--line);
+       font-family:var(--font-jp),var(--font-en),sans-serif;
+       font-size:16px;line-height:1.95;color:var(--muted)}
+  .hook.ja2{font-size:17px;margin-top:16px}
+  .look .ja2{font-size:16px;margin-top:13px}
   .bigshot{aspect-ratio:16/10;background:var(--paper);border:1px solid var(--line);
            border-radius:14px;margin-top:16px;overflow:hidden;position:relative}
   .bigshot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -1096,11 +1108,20 @@
     $("v-places").innerHTML = h;
   }
 
+  /* The Japanese twin of a paragraph, or nothing at all where a place has
+     not been translated yet. lang="ja" so a phone picks its Japanese face and
+     breaks the lines by Japanese rules rather than English ones. */
+  function ja2(cls, text){
+    if (!text) return "";
+    return '<p class="' + (cls ? cls + " " : "") + 'ja2" lang="ja">' +
+           esc(text) + '</p>';
+  }
+
   // level 2: the sights in a place, as short rows rather than one long page
   function placeHtml(p){
     var q = p.tone === "quiet";
     var h = '<div' + (q ? ' class="quiet"' : '') + '>' + head(p.ja, p.en) +
-            '<p class="lede">' + esc(p.intro) + '</p>' +
+            '<p class="lede">' + esc(p.intro) + '</p>' + ja2("lede", p.introJa) +
             (p.note ? '<div class="tone-note">' + esc(p.note) + '</div>' : '') +
             '<div class="grid" style="margin-top:16px">';
     p.sights.forEach(function(s2, i){
@@ -1123,7 +1144,7 @@
     // page prints a credit for a picture that is not on it.
     var big = s.hero || s.photo;
     var h = '<div' + (q ? ' class="quiet"' : '') + '>' + head(s.ja, s.en) +
-            '<p class="lede">' + esc(s.intro) + '</p>' +
+            '<p class="lede">' + esc(s.intro) + '</p>' + ja2("lede", s.introJa) +
             (big ? '<div class="heroshot"><img src="' + esc(src(big, false)) +
                '" alt=""></div>' : '') +
             (s.credit ? '<p class="credit">' + esc(s.credit) + '</p>' : '') +
@@ -1143,9 +1164,9 @@
            (sp.photo ? '<div class="bigshot' + (sp.fit === "contain" ? " contain" : "") +
               '"><img src="' + esc(src(sp.photo, false)) + '" alt=""></div>' : '') +
            (sp.credit ? '<p class="credit">' + esc(sp.credit) + '</p>' : '') +
-           '<p class="hook">' + esc(sp.hook) + '</p>' +
+           '<p class="hook">' + esc(sp.hook) + '</p>' + ja2("hook", sp.hookJa) +
            '<div class="look"><div class="lbl">' + esc(lbl) + '</div>' +
-           '<p>' + esc(sp.look) + '</p></div>' +
+           '<p>' + esc(sp.look) + '</p>' + ja2("", sp.lookJa) + '</div>' +
            // One https link out, for the few things that have to be looked up
            // on the day. Whatever matters is in the text as well, since this
            // needs signal and the rest of the app does not.
@@ -1541,7 +1562,7 @@
   function closeSheet(){ $("sheet").className = ""; }
 
   /* ================= navigation ================= */
-  var BUILD = "Version 66, 24 September 2026";
+  var BUILD = "Version 67, 26 September 2026";
   var TABS = { home:["りょてい","Itinerary"], places:["ばしょ","Places"],
                phrases:["ことば","Phrases"], manners:["マナー","Etiquette"],
                // The tab says Info because "Travel Information" will not sit on
