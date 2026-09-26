@@ -213,7 +213,13 @@
   /* The journal prompt is a second, quieter block: different job from the
      question, so it should not read as more of the same sentence. */
   .jbox{margin-top:11px;padding-top:11px}
-  .qrow{border-color:var(--deep)}
+  .qlink{margin-top:18px}
+  .qlink button{border:0;background:none;padding:0;font-family:inherit;
+       font-size:16.5px;font-weight:700;color:var(--deep);cursor:pointer;
+       text-align:left}
+  /* Glued on with a non-breaking space, or the chevron wraps to a line of
+     its own on a narrow phone. */
+  .qlink button::after{content:"\00a0\203a";font-weight:800}
   .jrow{margin-top:11px;padding-top:10px;border-top:1px dashed var(--line)}
   .jrow .jl{font-size:12px;font-weight:800;letter-spacing:.07em;
        text-transform:uppercase;color:var(--deep)}
@@ -823,13 +829,6 @@
            ' 20 September 2026, 18:25 from Melbourne</span></div>' +
            '<div class="nt">Open this on the day and it shows where we are up to.</div></div>';
     }
-    h += '<button class="row qrow" data-questions="1">' +
-           '<div class="rja">しつもん と にっき</div>' +
-           '<div class="ren">The question and the journal</div>' +
-           '<div class="rmeta">Something to notice and something to write, ' +
-             'for each of the twelve days. Neither can be done from a ' +
-             'phone.</div></button>';
-
     /* The tab is called Itinerary now, so the page does not repeat itself. */
     h += '<div>';
     TRIP.days.forEach(function(d, k){
@@ -839,6 +838,11 @@
            '<div class="nt">' + esc(d.note) + '</div></div></div>';
     });
     h += '</div>';
+    /* The way through to all twelve, for reading ahead or looking back.
+       Today's pair is already on the card above, so this needs to be
+       findable and nothing more: a line of text, not another card. */
+    h += '<p class="qlink"><button data-questions="1">' +
+         'All twelve questions and journal prompts</button></p>';
     h += '<p class="foot">Meeting points, phone numbers and your emergency details ' +
          'are on your lanyard, not in this app.' +
          // A visible version, so "which one am I looking at" is answerable
@@ -1562,7 +1566,7 @@
   function closeSheet(){ $("sheet").className = ""; }
 
   /* ================= navigation ================= */
-  var BUILD = "Version 67, 26 September 2026";
+  var BUILD = "Version 68, 26 September 2026";
   var TABS = { home:["りょてい","Itinerary"], places:["ばしょ","Places"],
                phrases:["ことば","Phrases"], manners:["マナー","Etiquette"],
                // The tab says Info because "Travel Information" will not sit on
