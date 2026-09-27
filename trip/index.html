@@ -325,6 +325,7 @@
       text-align:left;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.3)}
   #newver[hidden]{display:none}
   #newver span{font-size:14px;font-weight:600;opacity:.85}
+  #newver .nvh{font-size:17px;font-weight:700;opacity:1}
   /* ---------- today ---------- */
   /* A pale yellow wash softens the leaf behind the itinerary, not the text. */
   #v-home{background:var(--itinerary-paper);border:1px solid var(--line);
@@ -721,7 +722,7 @@
 
 <div id="readbub" aria-hidden="true"></div>
 
-<button id="newver" hidden>New version ready<span>Tap to load it</span></button>
+<button id="newver" hidden><span class="nvh" id="nvhead">New version ready</span><span id="nvsub">Tap to load it</span></button>
 
 <button id="kanatab" aria-label="Open the kana charts"><span>か</span><span>な</span></button>
 
@@ -1678,7 +1679,12 @@
   function closeSheet(){ $("sheet").className = ""; }
 
   /* ================= navigation ================= */
-  var BUILD = "Version 75, 27 September 2026";
+  var BUILD = "Version 76, 27 September 2026";
+  /* The number on its own. Students compare these across a table to work out
+     who has not updated, so it has to be somewhere glanceable rather than
+     only at the foot of the itinerary. Derived from BUILD so there is one
+     place to change and the two can never disagree. */
+  var VER = (BUILD.match(/\d+/) || ["?"])[0];
   var TABS = { home:["りょてい","Itinerary"], places:["ばしょ","Places"],
                phrases:["ことば","Phrases"], manners:["マナー","Etiquette"],
                // The tab says Info because "Travel Information" will not sit on
@@ -1727,7 +1733,7 @@
     var c = document.querySelector("nav button.on");
     return c ? c.dataset.go : "places";
   }
-  var APP = ["日本研修旅行", "Japan Study Tour 2026"];
+  var APP = ["日本研修旅行", "Japan Study Tour 2026  \u00b7  v" + VER];
   function showTab(name){
     closeSheet();
     /* The itinerary is the one view that goes stale on its own: an app left
@@ -1956,9 +1962,25 @@
      that fires controllerchange, and we reload once. */
   if ("serviceWorker" in navigator && location.protocol.indexOf("http") === 0){
     navigator.serviceWorker.register("sw.js").then(function(reg){
+      /* The waiting worker knows which version it is; ask it, so the notice
+         can name the number rather than saying "new". If it does not answer,
+         which is what a worker built before this change will do, the line
+         stays generic and the one underneath still names the version the
+         student is on, which is the number they compare with each other. */
+      function onVer(e){
+        var d = e.data, m = d && d.type === "VERSION" &&
+                String(d.version || "").match(/\d+/);
+        var h = $("nvhead");
+        if (m && h) h.textContent = "Version " + m[0] + " is ready";
+      }
       function offer(){
         var bar = $("newver");
         if (!bar || !reg.waiting) return;
+        $("nvsub").textContent = "You are on v" + VER + ". Tap to update.";
+        try {
+          navigator.serviceWorker.addEventListener("message", onVer);
+          reg.waiting.postMessage({ type: "VERSION" });
+        } catch (err){}
         bar.hidden = false;
         bar.onclick = function(){
           bar.hidden = true;

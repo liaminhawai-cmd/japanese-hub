@@ -16,7 +16,7 @@
    Bump CACHE when the app changes, or phones will keep serving the old copy.
    ========================================================================== */
 
-var CACHE = "japan-trip-v75";
+var CACHE = "japan-trip-v76";
 
 var SHELL = [
   "./",
@@ -52,7 +52,14 @@ self.addEventListener("install", function (e) {
 });
 
 self.addEventListener("message", function (e) {
-  if (e.data && e.data.type === "SKIP_WAITING") self.skipWaiting();
+  if (!e.data) return;
+  if (e.data.type === "SKIP_WAITING") self.skipWaiting();
+  // A waiting worker is the only thing that knows what the update is called,
+  // so the page asks and the notice can name the version instead of saying
+  // "new". Answered straight back to whichever page asked.
+  if (e.data.type === "VERSION" && e.source){
+    e.source.postMessage({ type: "VERSION", version: CACHE });
+  }
 });
 
 self.addEventListener("activate", function (e) {
