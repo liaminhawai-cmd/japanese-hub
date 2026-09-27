@@ -88,53 +88,50 @@
   .htitle .en{font-size:14px;color:var(--muted);line-height:1.3;
               white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   /* 44px square, which is the smallest thing a thumb hits reliably. */
-  .barbtns{flex:0 0 auto;display:flex;gap:7px}
+  /* ---------- the drawn icons ----------
+     One weight for the whole set, so the tab row and the yen button read as
+     one family. Round caps and joins keep a 2.4px line from looking chipped
+     where two strokes meet at this size. */
+  .iln{fill:none;stroke:currentColor;stroke-width:2.4;
+      stroke-linecap:round;stroke-linejoin:round}
+  .ifl{fill:currentColor;stroke:none}
+  /* The paper streamer is the one piece of fine detail in the set, so it is
+     drawn a shade lighter than the gate it hangs from. */
+  .ishide{fill:none;stroke:currentColor;stroke-width:2.1;
+      stroke-linecap:round;stroke-linejoin:round}
+  .iyen{stroke-width:3}
+  .ibody{stroke-width:3.4}
+  .iarm{stroke-width:2.4}
+  .cnum{font-family:var(--font-en),sans-serif;font-size:11.5px;
+      font-weight:700;text-anchor:middle;fill:currentColor;stroke:none}
+
   .barbtn{flex:0 0 auto;display:flex;align-items:center;justify-content:center;
        width:46px;height:44px;padding:0;border:1.5px solid var(--deep);
        border-radius:12px;background:#fff;color:var(--deep);cursor:pointer;
        -webkit-appearance:none;appearance:none}
   .barbtn:active{background:#eef2f7}
-  .barbtn svg{display:block;width:30px;height:30px}
-  .todaybtn .cal{fill:none;stroke:currentColor;stroke-width:1.9;
-       stroke-linecap:round}
-  .todaybtn .cnum{font-family:var(--font-en),sans-serif;font-size:12px;
-       font-weight:700;text-anchor:middle;fill:currentColor}
-  /* The two glyphs are set as text so every phone draws the yen sign with its
-     own correct form, and the arrows are stroked so they stay crisp small. */
-  /* The dollar sits behind as a watermark and the yen reads on top of it, so
-     the two need very different weights: same ink, one faded right back. */
-  .ratebtn text{font-family:var(--font-en),sans-serif;font-weight:700;
-       text-anchor:middle;fill:currentColor}
-  .ratebtn .cbg{font-size:25px;opacity:.3}
-  .ratebtn .cfg{font-size:19px}
-  @media (max-width:340px){ .barbtn{width:42px} .barbtn svg{width:27px}
-                            .barbtns{gap:5px} }
+  .barbtn svg{display:block;width:26px;height:26px}
+  @media (max-width:340px){ .barbtn{width:42px} .barbtn svg{width:24px} }
 
-  nav{display:flex;justify-content:center;gap:22px;max-width:680px;margin:0 auto;
-      padding:0 14px;background:var(--paper)}
-  /* Five labels will not sit across a narrow phone at the spacing four had.
-     They must stay on one line each: a label that wraps makes its tab taller
-     than the rest and knocks the Japanese out of line across the bar. */
-  nav button .en,nav button .ja{white-space:nowrap}
-  @media (max-width:520px){
-    nav{gap:9px;padding:0 6px}
-    nav button .en{font-size:14px}
-    nav button .ja{font-size:10.5px}
-  }
-  /* Below about 340px the five will not shrink far enough to fit, so the bar
-     scrolls inside itself rather than dragging the whole page sideways. */
+  /* Five icons, evenly spread, capped so they cluster instead of drifting to
+     the corners of a laptop window. */
+  nav{display:flex;justify-content:space-between;max-width:400px;margin:0 auto;
+      padding:5px 14px 6px;background:var(--paper)}
+  nav button{flex:0 0 auto;display:flex;align-items:center;justify-content:center;
+      width:48px;height:46px;padding:0;border:0;border-radius:13px;
+      background:none;color:var(--deep);cursor:pointer;
+      -webkit-appearance:none;appearance:none}
+  nav button svg{display:block;width:27px;height:27px}
+  /* Where you are: filled in, icon knocked out white. Nothing else on the
+     bar is filled, so there is never a question which one is lit. */
+  nav button.on{background:var(--deep);color:#fff}
+  nav button:active{background:#eef2f7}
+  nav button.on:active{background:var(--deep)}
   @media (max-width:340px){
-    nav{gap:6px;overflow-x:auto;justify-content:flex-start;
-        scrollbar-width:none;-ms-overflow-style:none}
-    nav::-webkit-scrollbar{display:none}
-    nav button{flex:0 0 auto}
-    nav button .en{font-size:12.5px}
+    nav{padding:5px 8px 6px}
+    nav button{width:44px;height:44px}
+    nav button svg{width:25px;height:25px}
   }
-  nav button{border:0;background:none;font-family:inherit;color:var(--muted);
-             padding:9px 1px 8px;cursor:pointer;border-bottom:4px solid transparent}
-  nav button .en{display:block;font-size:16px;font-weight:700;line-height:1.2}
-  nav button .ja{display:block;font-size:12px;opacity:.75;line-height:1.35}
-  nav button.on{color:var(--accent);border-bottom-color:var(--accent)}
 
   main{max-width:680px;margin:0 auto;padding:16px 14px 40px}
   .view{display:none}
@@ -626,37 +623,70 @@
       <div class="crumb" id="hja">日本研修旅行</div>
       <div class="en" id="hen">Japan Study Tour 2026</div>
     </div>
-    <!-- The two things you want from wherever you happen to be. Money is
-         needed in the middle of something else: at a counter, in a shop,
-         halfway through reading about a temple. Today is the day, the
-         question and the journal prompt, which were on the fourth tab under
-         a label that does not say "today". Both drawn rather than emoji: an
-         emoji is a different size, colour and shape on every phone. -->
-    <div class="barbtns">
-    <button class="barbtn todaybtn" data-today="1" aria-label="Today: the day, the question and the journal">
-      <svg viewBox="0 0 30 30" aria-hidden="true" focusable="false">
-        <g class="cal">
-          <path d="M10 3.5v4"/><path d="M20 3.5v4"/>
-          <rect x="4" y="5.5" width="22" height="20.5" rx="3.5"/>
-          <path d="M4 12.6h22"/>
-        </g>
-        <text class="cnum" id="calnum" x="15" y="23.2">1</text>
-      </svg>
-    </button>
+    <!-- Money is the thing you need in the middle of something else: at a
+         counter, in a shop, halfway through reading about a temple. The
+         Today button that used to sit here has gone: the itinerary tab is a
+         dated calendar now and does the same job in the same one tap. The
+         yen is stroked rather than set as text, so it matches the weight of
+         the tab icons instead of whatever the phone's bold happens to be. -->
     <button class="barbtn ratebtn" data-money="1" aria-label="Yen and dollars: the converter and what things cost">
-      <svg viewBox="0 0 30 30" aria-hidden="true" focusable="false">
-        <text class="cbg" x="19" y="21.3">$</text>
-        <text class="cfg" x="11" y="24.7">¥</text>
+      <svg viewBox="0 0 28 28" aria-hidden="true" focusable="false">
+        <g class="iln iyen">
+          <path d="M5.5 5 14 14.8"/><path d="M22.5 5 14 14.8"/>
+          <path d="M14 14.8v9.4"/>
+          <path d="M7 17.2h14"/><path d="M7 21h14"/>
+        </g>
       </svg>
     </button>
-    </div>
   </div>
+  <!-- Icons rather than labels, and the one you are on is filled in. Five
+       words of English and five of Japanese were taking a bar's worth of
+       height to say what a filled square says at a glance, and the header no
+       longer has to repeat the name of the tab you are standing on.
+       Everything is drawn here: no icon font, no emoji, nothing fetched. -->
   <div class="navline"><nav>
-    <button data-go="places" class="on"><span class="en">Places</span><span class="ja">ばしょ</span></button>
-    <button data-go="phrases"><span class="en">Phrases</span><span class="ja">ことば</span></button>
-    <button data-go="manners"><span class="en">Etiquette</span><span class="ja">マナー</span></button>
-    <button data-go="home"><span class="en">Itinerary</span><span class="ja">りょてい</span></button>
-    <button data-go="info"><span class="en">Info</span><span class="ja">あんない</span></button>
+    <button data-go="places" class="on" aria-label="Places">
+      <svg viewBox="0 0 28 28" aria-hidden="true" focusable="false">
+        <g class="iln">
+          <path d="M2.5 6.2h23"/><path d="M5.5 10.8h17"/>
+          <path d="M8 6.2 7 25.6"/><path d="M20 6.2 21 25.6"/>
+        </g>
+        <path class="ishide" d="M14 11v1.8l-3 1.5 3 1.5-3 1.5"/>
+      </svg></button>
+    <button data-go="phrases" aria-label="Phrases">
+      <svg viewBox="0 0 28 28" aria-hidden="true" focusable="false">
+        <g class="iln">
+          <circle cx="10.2" cy="14" r="7.6"/>
+          <path d="M7.2 16.9q3 2.7 6 0"/>
+          <path d="M21.2 10.4a7 7 0 0 1 0 7.2"/>
+          <path d="M24.6 7.6a11.5 11.5 0 0 1 0 12.8"/>
+        </g>
+        <circle class="ifl" cx="7.8" cy="11.7" r="1.35"/>
+        <circle class="ifl" cx="12.6" cy="11.7" r="1.35"/>
+      </svg></button>
+    <button data-go="manners" aria-label="Etiquette">
+      <svg viewBox="0 0 28 28" aria-hidden="true" focusable="false">
+        <circle class="ifl" cx="7.4" cy="7.4" r="4.4"/>
+        <path class="iln ibody" d="M11 11 19.4 16.6 20.2 25.8"/>
+        <path class="iln iarm" d="M12.8 12.2 11.8 18.6"/>
+      </svg></button>
+    <button data-go="home" aria-label="Itinerary and today">
+      <svg viewBox="0 0 28 28" aria-hidden="true" focusable="false">
+        <g class="iln">
+          <path d="M9 2.6v4"/><path d="M19 2.6v4"/>
+          <rect x="3" y="4.6" width="22" height="20.8" rx="3.4"/>
+          <path d="M3 11.6h22"/>
+        </g>
+        <text class="cnum" id="calnum" x="14" y="22.3">1</text>
+      </svg></button>
+    <button data-go="info" aria-label="Travel information">
+      <svg viewBox="0 0 28 28" aria-hidden="true" focusable="false">
+        <g class="iln">
+          <circle cx="14" cy="14" r="11"/>
+          <path d="M14 13.2v7.4"/>
+        </g>
+        <circle class="ifl" cx="14" cy="8.4" r="1.7"/>
+      </svg></button>
   </nav></div>
 </div>
 
@@ -1618,7 +1648,7 @@
   function closeSheet(){ $("sheet").className = ""; }
 
   /* ================= navigation ================= */
-  var BUILD = "Version 72, 27 September 2026";
+  var BUILD = "Version 73, 27 September 2026";
   var TABS = { home:["りょてい","Itinerary"], places:["ばしょ","Places"],
                phrases:["ことば","Phrases"], manners:["マナー","Etiquette"],
                // The tab says Info because "Travel Information" will not sit on
@@ -1667,16 +1697,24 @@
     var c = document.querySelector("nav button.on");
     return c ? c.dataset.go : "places";
   }
+  var APP = ["日本研修旅行", "Japan Study Tour 2026"];
   function showTab(name){
     closeSheet();
     /* The itinerary is the one view that goes stale on its own: an app left
        open overnight would still be showing yesterday's card, yesterday's
        question and yesterday's journal prompt. Rebuild it on the way in. */
     if (name === "home") renderHome();
+    stampToday();
     setQuiet(false); showView(name);
-    setHeader(TABS[name][0], TABS[name][1]);
+    /* The lit icon says which tab you are on, so the header says what the app
+       is instead of saying it a second time. Go one level deeper and the
+       trail replaces it, which is the point at which a name earns its keep. */
+    setHeader(APP[0], APP[1]);
     [].forEach.call(document.querySelectorAll("nav button"), function(b){
-      b.className = b.dataset.go === name ? "on" : "";
+      var on = b.dataset.go === name;
+      b.className = on ? "on" : "";
+      if (on) b.setAttribute("aria-current", "page");
+      else b.removeAttribute("aria-current");
     });
   }
   // Draws whatever is on top of the stack, or the current tab if it is empty,
@@ -1781,7 +1819,6 @@
       return push(function(){ $("v-detail").innerHTML = questionsHtml(); },
                   "しつもん と にっき", "The question and the journal");
     }
-    if (e.target.closest("[data-today]")) return goTab("home");
     if (e.target.closest("[data-money]")){
       // The bar button is on every page, including this one, so guard against
       // pushing a second copy of the page you are already looking at.
