@@ -88,12 +88,17 @@
   .htitle .en{font-size:14px;color:var(--muted);line-height:1.3;
               white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   /* 44px square, which is the smallest thing a thumb hits reliably. */
-  .ratebtn{flex:0 0 auto;display:flex;align-items:center;justify-content:center;
+  .barbtns{flex:0 0 auto;display:flex;gap:7px}
+  .barbtn{flex:0 0 auto;display:flex;align-items:center;justify-content:center;
        width:46px;height:44px;padding:0;border:1.5px solid var(--deep);
        border-radius:12px;background:#fff;color:var(--deep);cursor:pointer;
        -webkit-appearance:none;appearance:none}
-  .ratebtn:active{background:#eef2f7}
-  .ratebtn svg{display:block;width:30px;height:30px}
+  .barbtn:active{background:#eef2f7}
+  .barbtn svg{display:block;width:30px;height:30px}
+  .todaybtn .cal{fill:none;stroke:currentColor;stroke-width:1.9;
+       stroke-linecap:round}
+  .todaybtn .cnum{font-family:var(--font-en),sans-serif;font-size:12px;
+       font-weight:700;text-anchor:middle;fill:currentColor}
   /* The two glyphs are set as text so every phone draws the yen sign with its
      own correct form, and the arrows are stroked so they stay crisp small. */
   /* The dollar sits behind as a watermark and the yen reads on top of it, so
@@ -102,7 +107,8 @@
        text-anchor:middle;fill:currentColor}
   .ratebtn .cbg{font-size:25px;opacity:.3}
   .ratebtn .cfg{font-size:19px}
-  @media (max-width:340px){ .ratebtn{width:42px} .ratebtn svg{width:27px} }
+  @media (max-width:340px){ .barbtn{width:42px} .barbtn svg{width:27px}
+                            .barbtns{gap:5px} }
 
   nav{display:flex;justify-content:center;gap:22px;max-width:680px;margin:0 auto;
       padding:0 14px;background:var(--paper)}
@@ -620,17 +626,30 @@
       <div class="crumb" id="hja">日本研修旅行</div>
       <div class="en" id="hen">Japan Study Tour 2026</div>
     </div>
-    <!-- Money is the thing you need in the middle of something else: at a
-         counter, in a shop, halfway through reading about a temple. It was
-         three taps down inside Info, so it now has the top right corner and
-         is one tap from wherever you are. Drawn rather than an emoji: an
+    <!-- The two things you want from wherever you happen to be. Money is
+         needed in the middle of something else: at a counter, in a shop,
+         halfway through reading about a temple. Today is the day, the
+         question and the journal prompt, which were on the fourth tab under
+         a label that does not say "today". Both drawn rather than emoji: an
          emoji is a different size, colour and shape on every phone. -->
-    <button class="ratebtn" data-money="1" aria-label="Yen and dollars: the converter and what things cost">
+    <div class="barbtns">
+    <button class="barbtn todaybtn" data-today="1" aria-label="Today: the day, the question and the journal">
+      <svg viewBox="0 0 30 30" aria-hidden="true" focusable="false">
+        <g class="cal">
+          <path d="M10 3.5v4"/><path d="M20 3.5v4"/>
+          <rect x="4" y="5.5" width="22" height="20.5" rx="3.5"/>
+          <path d="M4 12.6h22"/>
+        </g>
+        <text class="cnum" id="calnum" x="15" y="23.2">1</text>
+      </svg>
+    </button>
+    <button class="barbtn ratebtn" data-money="1" aria-label="Yen and dollars: the converter and what things cost">
       <svg viewBox="0 0 30 30" aria-hidden="true" focusable="false">
         <text class="cbg" x="19" y="21.3">$</text>
         <text class="cfg" x="11" y="24.7">¥</text>
       </svg>
     </button>
+    </div>
   </div>
   <div class="navline"><nav>
     <button data-go="places" class="on"><span class="en">Places</span><span class="ja">ばしょ</span></button>
@@ -831,7 +850,13 @@
     return short ? name.slice(0, 3) : name;
   }
 
+  function stampToday(){
+    var el = $("calnum");
+    if (el) el.textContent = String(new Date().getDate());
+  }
+
   function renderHome(){
+    stampToday();
     var i = todayIndex(), h = "";
     if (i > -1){
       var d = TRIP.days[i];
@@ -1593,7 +1618,7 @@
   function closeSheet(){ $("sheet").className = ""; }
 
   /* ================= navigation ================= */
-  var BUILD = "Version 71, 27 September 2026";
+  var BUILD = "Version 72, 27 September 2026";
   var TABS = { home:["りょてい","Itinerary"], places:["ばしょ","Places"],
                phrases:["ことば","Phrases"], manners:["マナー","Etiquette"],
                // The tab says Info because "Travel Information" will not sit on
@@ -1605,17 +1630,31 @@
   function setQuiet(on){ document.body.classList[on ? "add":"remove"]("quiet"); }
   // The trail: the tab, then every level above this one, then where you are.
   // Everything but the last is a button that jumps straight to that depth.
-  function setHeader(ja, en){
-    var h = "";
+  function crumbHtml(ja, tight){
+    var h = "", sep = '<span class="sep">\u203a</span>';
     if (stack.length){
-      h += '<button data-depth="0">' + esc(TABS[curTab()][0]) + '</button>' +
-           '<span class="sep">\u203a</span>';
-      for (var i = 0; i < stack.length - 1; i++){
-        h += '<button data-depth="' + (i + 1) + '">' + esc(stack[i].ja) + '</button>' +
-             '<span class="sep">\u203a</span>';
+      h += '<button data-depth="0">' + esc(TABS[curTab()][0]) + '</button>' + sep;
+      if (tight){
+        h += '<span class="sep">\u2026</span>' + sep;
+      } else {
+        for (var i = 0; i < stack.length - 1; i++){
+          h += '<button data-depth="' + (i + 1) + '">' + esc(stack[i].ja) +
+               '</button>' + sep;
+        }
       }
     }
-    $("hja").innerHTML = h + esc(ja);
+    return h + esc(ja);
+  }
+  /* Four levels deep on a narrow phone the trail does not fit, and plain
+     truncation eats it from the right, which is the end that says where you
+     are. So when it overflows we keep the way out and the page you are on
+     and drop the middles instead. */
+  function setHeader(ja, en){
+    var el = $("hja");
+    el.innerHTML = crumbHtml(ja, false);
+    if (stack.length > 1 && el.scrollWidth > el.clientWidth + 1){
+      el.innerHTML = crumbHtml(ja, true);
+    }
     $("hen").textContent = en;
   }
   function showView(id){
@@ -1630,6 +1669,10 @@
   }
   function showTab(name){
     closeSheet();
+    /* The itinerary is the one view that goes stale on its own: an app left
+       open overnight would still be showing yesterday's card, yesterday's
+       question and yesterday's journal prompt. Rebuild it on the way in. */
+    if (name === "home") renderHome();
     setQuiet(false); showView(name);
     setHeader(TABS[name][0], TABS[name][1]);
     [].forEach.call(document.querySelectorAll("nav button"), function(b){
@@ -1738,6 +1781,7 @@
       return push(function(){ $("v-detail").innerHTML = questionsHtml(); },
                   "しつもん と にっき", "The question and the journal");
     }
+    if (e.target.closest("[data-today]")) return goTab("home");
     if (e.target.closest("[data-money]")){
       // The bar button is on every page, including this one, so guard against
       // pushing a second copy of the page you are already looking at.
@@ -1929,6 +1973,10 @@
   });
 
   renderHome(); renderPlaces(); renderPhrases(); renderManners(); renderInfo();
+  /* The date on the Today button's calendar. Restamped whenever the itinerary
+     is redrawn as well as here, so an app left open overnight is not still
+     showing yesterday when somebody picks the phone up in the morning. */
+  stampToday();
   /* The key carries the app version, so after an update the button comes
      back and the new photos get saved too. Keep in step with CACHE in sw.js. */
   try { if (localStorage.getItem(SAVED_KEY)) markSaved("Saved. This app works with no signal."); }
