@@ -463,6 +463,11 @@
        background:var(--paper);color:var(--deep);cursor:pointer;padding:0;
        align-items:center;justify-content:center;box-shadow:var(--shadow)}
   body.hasvoice .say,.say.rec{display:flex}
+  .novoice{background:var(--paper);border:1px solid var(--line);
+       border-left:5px solid var(--deep);border-radius:12px;
+       padding:12px 14px;margin:0 0 16px;font-size:15.5px;line-height:1.55;
+       color:var(--muted)}
+  body.hasvoice .novoice{display:none}
   .say .spk{width:19px;height:19px;background:currentColor;
        -webkit-mask:var(--spk) center/contain no-repeat;mask:var(--spk) center/contain no-repeat}
   .say.on{background:var(--deep);color:var(--paper);border-color:var(--deep)}
@@ -1285,7 +1290,7 @@
             'The \u304b\u306a tab down the side opens the charts if a character has ' +
             'gone out of your head, and tapping a kana anywhere in the app tells ' +
             'you what it says. The last few are set pieces: learn those before ' +
-            'you fly.</p><div class="grid">';
+            'you fly.</p>' + voiceNote() + '<div class="grid">';
     PHRASES.forEach(function(g, i){
       h += tile(g, 'data-group="' + esc(g.id) + '"',
                 g.items.length + " " + (g.unit || "phrases"), i);
@@ -1495,6 +1500,23 @@
     };
   })();
 
+  /* When the phone offers no Japanese voice the play buttons are hidden,
+     which left a student looking at a page that simply had no audio on it
+     and no way to tell whether that was the app, the phone or them. Say so.
+     CSS hides this the moment a voice turns up, including on the later
+     looks, so it never contradicts what is on screen. */
+  function voiceNote(){
+    var ios = navigator.standalone === true;
+    return '<p class="novoice">No play buttons on the phrases? This phone is ' +
+           'not offering the app a Japanese voice, so it cannot read them ' +
+           'aloud. ' +
+           (ios ? 'Opening the app in Safari, rather than from the icon on ' +
+                  'your home screen, usually brings the sound back.'
+                : 'A Japanese voice has to be installed on the device before ' +
+                  'any app can speak Japanese.') +
+           ' Everything else here works as normal.</p>';
+  }
+
   /* Nothing to play, nothing to show: signs are read rather than said, and
      the ceremony speeches wait for a human voice rather than a synthetic one.
      Either still plays a recording the moment one is dropped in. */
@@ -1510,7 +1532,8 @@
       if (PHRASES[i].id === g.id) break;
       base += PHRASES[i].items.length;
     }
-    var h = head(g.ja, g.en) + '<p class="lede">' + esc(g.note) + '</p>';
+    var h = head(g.ja, g.en) + '<p class="lede">' + esc(g.note) + '</p>' +
+            (g.say === false ? "" : voiceNote());
     var anyKana = g.items.some(function(x){ return !!x.kana; });
     if (anyKana){
       h += '<button class="kanaswap' + (kanaOnly ? " on" : "") + '" data-kanaswap="1">' +
@@ -1655,7 +1678,7 @@
   function closeSheet(){ $("sheet").className = ""; }
 
   /* ================= navigation ================= */
-  var BUILD = "Version 74, 27 September 2026";
+  var BUILD = "Version 75, 27 September 2026";
   var TABS = { home:["りょてい","Itinerary"], places:["ばしょ","Places"],
                phrases:["ことば","Phrases"], manners:["マナー","Etiquette"],
                // The tab says Info because "Travel Information" will not sit on
