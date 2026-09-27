@@ -82,10 +82,7 @@ window.PLACES = [
     en: "Kyoto",
     days: "Days 2 and 3",
     intro:
-      "Japan's capital for over a thousand years, and the city that got left off " +
-      "the bombing list in 1945, which is why so much of it is still standing. " +
-      "Our two days here are not locked in, so some of this depends on what the " +
-      "group picks.",
+      "Japan's capital for over a thousand years, and the city that got left off the bombing list in 1945, which is why so much of it is still standing. Fushimi Inari and Nishiki Market are in, because the group asked for them. How much else we fit depends on how the two days go.",
     sights: [
       {
         id: "kiyomizu",
@@ -104,14 +101,7 @@ window.PLACES = [
             photo: "photos/kyoto-butai.webp",
             credit: "Kiyomizu-dera, via World History Encyclopedia.",
             hook:
-              "You are standing on a wooden platform about 13 metres above the " +
-              "hillside, held up by a lattice of huge zelkova pillars, the tallest " +
-              "over 12 metres, and there is not a single nail " +
-              "in the frame holding it together. It is all joinery, cut so the " +
-              "timbers lock into each other. In the Edo period there was a " +
-              "superstition that if you jumped off and survived, your wish would " +
-              "be granted. Records say 234 people tried it. Most of them lived, " +
-              "because of the trees below. It is banned now.",
+              "You are standing on a wooden platform about 13 metres above the hillside, held up by a lattice of huge zelkova pillars, the tallest of them over 12 metres. There is not a single nail in the frame holding it together. It is all joinery, cut so the timbers lock into each other. In the Edo period there was a superstition that if you jumped off and survived, your wish would be granted. Records say 234 people tried it. Most of them lived, because of the trees below. It is banned now.",
             look:
               "Look over the rail and find where the pillars meet. See if you can " +
               "spot a single bolt or bracket."
@@ -123,13 +113,7 @@ window.PLACES = [
             photo: "photos/kyoto-otowa.webp",
             credit: "Otowa waterfall, photo by Angus Kirk via Flickr.",
             hook:
-              "Three streams of water fall into a pool, and you drink from one " +
-              "with a cup on a long pole. Each stream is supposed to give you a " +
-              "different thing: long life, success at school, or luck in love. " +
-              "The catch is that drinking from all three is considered greedy, " +
-              "and picking two is pushing it. The temple has been running on this " +
-              "spring since the year 778, which is what the whole place was built " +
-              "around in the first place.",
+              "Three streams of water fall into a pool, and you drink from one with a cup on a long pole. Each stream is supposed to give you a different thing: long life, success at school, or luck in love. The catch is that drinking from all three is considered greedy, and picking two is pushing it. The temple was built around this spring in 778, and it has not stopped running since.",
             look:
               "Watch which stream the queue goes for. Then decide which one you " +
               "would actually pick, and why."
@@ -160,13 +144,7 @@ window.PLACES = [
             photo: "photos/kyoto-sannenzaka.webp",
             credit: "Sannenzaka in the rain, via Flickr.",
             hook:
-              "The stone lanes below the temple are called Sannenzaka and " +
-              "Ninenzaka, and the buildings along them are protected, which is " +
-              "why there are no tall signs and the vending machines are painted " +
-              "brown. There is an old joke that if you trip on Sannenzaka you " +
-              "have three years bad luck. Mostly it is a warning to watch the " +
-              "steps, because they are worn smooth and people walk them looking " +
-              "at their phones.",
+              "The stone lanes below the temple are called Sannenzaka and Ninenzaka, and the buildings along them are protected, which is why there are no tall signs and the vending machines are painted brown. Sannenzaka means three-year slope, and there is an old joke that tripping on it costs you three years of bad luck. Really it is a warning to watch your feet: the steps are worn smooth and people come down them looking at their phones.",
             look:
               "Find a vending machine or a convenience store sign and notice what " +
               "colour it is here compared with everywhere else in Japan."
@@ -205,11 +183,7 @@ window.PLACES = [
             en: "It burned down in 1950",
             photo: "photos/kyoto-kinkakuji-garden.webp",
             hook:
-              "What you are looking at is not old. In 1950 a young monk who lived " +
-              "at the temple burned it to the ground on purpose, and was caught " +
-              "that evening on the hill behind. The building went up in about " +
-              "an hour. It was rebuilt in 1955 from drawings and photographs. The " +
-              "story became one of the most famous novels in Japan.",
+              "What you are looking at is not old. In 1950 a young monk who lived at the temple set fire to it on purpose, and was caught that evening on the hill behind. The whole building was gone inside an hour. It was rebuilt in 1955 from drawings and photographs, and Mishima turned the story into one of the most famous novels in Japan.",
             look:
               "Everyone photographs the front from the pond. Turn around and look " +
               "at the hill behind instead."
@@ -222,10 +196,7 @@ window.PLACES = [
         en: "Fushimi Inari Taisha",
         photo: "photos/kyoto-fushimi-torii.webp",
         intro:
-          "The shrine with the tunnel of orange gates, and the one the group " +
-          "asked for. It is dedicated to Inari, the kami of rice, and because " +
-          "rice meant wealth, of business ever since. Open all hours, free to " +
-          "walk into, and busier than anywhere else you will go in Kyoto.",
+          "The shrine with the tunnel of orange gates, and the one the group asked for. It is dedicated to Inari, the kami of rice. Rice meant wealth, so Inari became the kami of business as well, and still is. Open all hours, free to walk into, and busier than anywhere else you will go in Kyoto.",
         spots: [
           {
             id: "senbon",
@@ -241,10 +212,7 @@ window.PLACES = [
               "repainted and replaced constantly, so the tunnel you walk through " +
               "is never quite the same one twice.",
             look:
-              "Walk a little way in, then turn around and look at the backs of " +
-              "the gates. The front is plain orange; the back carries the name " +
-              "of whoever paid for it and the date they did. You are walking " +
-              "through a list of people's hopes."
+              "Walk a little way in, then turn around and look at the backs of the gates. The front is plain orange. The back carries the name of whoever paid for it and the date. You are walking through a list of people's hopes."
           },
           {
             id: "kitsune",
@@ -356,13 +324,7 @@ window.PLACES = [
         photo: "photos/kyoto-nijo.webp",
         credit: "Nijo Castle, via Wikimedia Commons.",
         intro:
-          "We are not going here in 2026. The group was asked what it wanted from " +
-          "the two days in Kyoto and chose Fushimi Inari and Nishiki Market " +
-          "instead, which is a fair call: there is only so much you can do in two " +
-          "days. It is left in the app because it is worth knowing about, and " +
-          "because it is a twenty minute walk from Nijo-jo-mae station if a future " +
-          "group wants it. The shogun's residence in Kyoto, built in 1603, and the " +
-          "room where the last shogun handed power back to the Emperor in 1867.",
+          "The shogun's residence in Kyoto, built in 1603, and the room where the last shogun handed power back to the Emperor in 1867. We are not going in 2026: asked what it wanted from the two days, the group picked Fushimi Inari and Nishiki Market instead, which is a fair call. It stays in the app because it is worth knowing about, and because it is a twenty minute walk from Nijo-jo-mae station if a future group wants it.",
         spots: [
           {
             id: "uguisu",
@@ -429,18 +391,9 @@ window.PLACES = [
             en: "The path is a trap",
             photo: "photos/himeji-approach.webp",
             hook:
-              "Walking up to the keep feels like the path is wandering. It is. " +
-              "The approach spirals, doubles back and squeezes through narrow " +
-              "gates, all designed so an attacking army gets strung out, confused " +
-              "and stuck under fire from above. It works so well that visitors " +
-              "still get turned around. Nobody ever fought their way in. When an " +
-              "army finally fired on it, in 1868, the castle gave up before a " +
-              "battle started, so the maze was never really tested.",
+              "The path up to the keep feels like it is wandering. It is. The approach spirals, doubles back and squeezes through narrow gates, all designed so an attacking army gets strung out, confused and stuck under fire from above. It works so well that visitors still get turned around. Nobody ever fought their way in. When an army finally fired on it, in 1868, the castle gave up before a battle started, so the maze was never really tested.",
             look:
-              "As you climb, notice how many times you change direction. Some of " +
-              "the last gates before the keep are under scaffolding for repairs " +
-              "this year, so the squeeze may be tighter, or the route may bend " +
-              "around them. Count the gates you pass through anyway."
+              "As you climb, count the gates you pass through and notice how many times you change direction. Some of the last gates before the keep are under scaffolding this year, so the squeeze may be tighter or the route may bend around them. Count them anyway."
           },
           {
             id: "survived",
@@ -569,8 +522,7 @@ window.PLACES = [
               "world still send folded cranes here, and the glass cases beside " +
               "the statue hold them.",
             look:
-              "Look at the cases and find the cranes that came from somewhere " +
-              "you recognise. Then work out how old Sadako was compared with you."
+              "Look at the cases and find cranes that came from somewhere you recognise. Then put Sadako's age next to your own."
           },
           {
             id: "flame",
@@ -579,13 +531,9 @@ window.PLACES = [
             photo: "photos/hiroshima-flame.webp",
             credit: "The Flame of Peace, with the museum behind it. Via Wikimedia Commons.",
             hook:
-              "It has been alight since 1964 and it is meant to keep burning " +
-              "until every nuclear weapon on earth is gone. That has not " +
-              "happened, so it is still lit. It is not a decoration. It is a " +
-              "condition that has not been met.",
+              "It has been alight since 1964, and it is meant to burn until the last nuclear weapon on earth is gone. That has not happened, so it is still lit.",
             look:
-              "It is a promise nobody has been able to keep yet. Decide what you " +
-              "think about that while you are standing in front of it."
+              "It is a promise nobody has managed to keep yet. Decide what you think about that while you are standing in front of it."
           },
           {
             id: "museum",
@@ -601,9 +549,7 @@ window.PLACES = [
               "showing you one person at a time, which is why it affects people " +
               "so strongly. Take your time and read the small labels.",
             look:
-              "If it gets to be too much, step outside and sit down. It is normal " +
-              "to feel this way. If you need support, please speak with one of " +
-              "your teachers."
+              "If it gets to be too much, step outside and sit down. Plenty of adults do the same. Tell a teacher if you would rather not be on your own."
           },
           {
             id: "after",
@@ -611,16 +557,9 @@ window.PLACES = [
             en: "The city that came back",
             photo: null,
             hook:
-              "It was said at the time that nothing would grow here for seventy " +
-              "years. Trees inside the blast zone budded again the next spring, " +
-              "and some of them are still alive and marked around the city. " +
-              "Hiroshima today is an ordinary, busy, well-liked city of over a " +
-              "million people, famous for its own style of okonomiyaki and for a " +
-              "baseball team people are very serious about. That is part of what " +
-              "the park is saying too.",
+              "It was said at the time that nothing would grow here for seventy years. Trees inside the blast zone budded again the next spring, and some of them are still alive and marked around the city. Hiroshima today is an ordinary, busy, well-liked city of over a million people, famous for its own style of okonomiyaki and for a baseball team people are very serious about.",
             look:
-              "When you leave the park, look at the ordinary city going on around " +
-              "it. That contrast is not an accident, it is the point."
+              "When you leave the park, look at the ordinary city going on around it. The contrast is not an accident. It is the point."
           }
         ]
       }
@@ -753,9 +692,8 @@ window.PLACES = [
         en: "Hofukuji Temple",
         photo: "photos/soja-hofukuji-gate.webp",
         intro:
-          "A Zen temple just outside town. Japan's greatest ink painter grew up " +
-          "here, and he was a local boy.",
-        introJa: "町のすぐ外にある禅寺です。日本を代表する水墨画家がこの寺で育ちました。しかも、地元出身の少年でした。",
+          "A Zen temple just outside town. Japan's greatest ink painter grew up here, and he was born just down the road.",
+        introJa: "町のすぐ外にある禅寺です。日本を代表する水墨画家がこの寺で育ちました。生まれたのも、すぐ近くです。",
         spots: [
           {
             id: "sesshu",
@@ -764,16 +702,7 @@ window.PLACES = [
             photo: "photos/soja-sesshu-hall.webp",
             credit: "The scene in the hall at Hofukuji.",
             hook:
-              "Sesshu was born in 1420 in Akahama, which is now part of Soja, and " +
-              "he was sent to this temple as a small boy. The story is that he kept " +
-              "painting instead of doing his Zen study, so a priest tied him to a " +
-              "pillar as punishment. He cried, and used his toes to draw a mouse " +
-              "on the floor with his own tears. The priest came back, saw the " +
-              "mouse, thought it was real, and let him go. He grew up to be the " +
-              "most famous painter in Japanese history. The picture here is how " +
-              "the temple tells the story, hanging in the hall you will walk " +
-              "into: the boy tied to the pillar, and the mouse on the floor at " +
-              "his feet.",
+              "Sesshu was born in 1420 in Akahama, which is now part of Soja, and he was sent to this temple as a small boy. The story is that he kept painting instead of doing his Zen study, so a priest tied him to a pillar as punishment. He cried, and used his toes to draw a mouse on the floor with his own tears. The priest came back, saw the mouse, thought it was real, and let him go. He grew up to be the most famous painter in Japanese history. The picture here is the temple's own telling of it, hanging in the hall you walk into: the boy tied to the pillar, and the mouse on the floor at his feet.",
             hookJa: "雪舟は1420年、今の総社市赤浜に生まれ、幼いころにこの寺に預けられました。伝えられているのは、禅の修行をせずに絵ばかり描いていたため、和尚に柱へ縛りつけられた、という話です。雪舟は泣き、こぼれた涙を足の指につけて、床にねずみを描きました。戻ってきた和尚はそのねずみを本物だと思い、雪舟を許しました。その少年が、のちに日本美術史でもっとも有名な画家になります。ここにある絵は、この寺がその話を伝えているもので、みなさんが入る本堂に掛かっています。柱に縛られた少年と、その足もとの床のねずみが描かれています。",
             look:
               "Find the statue of the boy and the mouse. Then think about the fact " +
@@ -877,14 +806,7 @@ window.PLACES = [
             en: "The red rice, and your timing is good",
             photo: "photos/soja-red-rice.webp",
             hook:
-              "The rice planted in front of the temple is akagome, red rice. It is " +
-              "an ancient variety, closer to the wild rice Japan started with than " +
-              "the white rice everyone eats now, and it was once offered to the " +
-              "gods. It is rare. Here is the good bit: it turns red as it ripens " +
-              "for about two weeks in the middle of September, and there is a " +
-              "festival for it. We are here from the 24th of September. There is a " +
-              "real chance you will see the field in colour, and most visitors to " +
-              "Japan never do.",
+              "The rice planted in front of the temple is akagome, red rice. It is an ancient variety, closer to the wild rice Japan started with than the white rice everyone eats now, and it was once offered to the gods. It is rare. Here is why the timing matters: it turns red as it ripens for about two weeks in the middle of September, and there is a festival for it. We are here from the 24th of September. There is a real chance you will see the field in colour, and most visitors to Japan never do.",
             hookJa: "寺の前に植えられているのは赤米です。古代米の一種で、いま食べられている白米よりも、日本の稲のもとになった野生の品種に近いお米です。昔は神様へのお供えにされていました。今ではめずらしいお米です。うれしいのはここからです。赤米は九月半ばごろの二週間ほど、実るにつれて赤く色づき、その時期にはお祭りも開かれます。私たちがここに来るのは九月二十四日からです。田んぼが色づいているところを見られる可能性は十分にあります。日本を訪れる人のほとんどは、それを見ることがありません。",
             look:
               "Look at the colour of the field in front of the temple, then " +
@@ -960,11 +882,7 @@ window.PLACES = [
             en: "Shoes off at the door",
             photo: null,
             hook:
-              "You swap into indoor shoes at the entrance, and the shoe lockers " +
-              "near the door are called getabako. It is not just schools. It is " +
-              "houses, some restaurants, and temple buildings. The line between " +
-              "outside and inside is taken seriously, and walking in with outdoor " +
-              "shoes reads roughly the way walking on someone's bed would at home.",
+              "You swap into indoor shoes at the entrance, and the shoe lockers near the door are called getabako. It is not just schools. It is houses, some restaurants, and temple buildings. The line between outside and inside is taken seriously, and walking in with your outdoor shoes on is about as bad as walking across someone's bed at home.",
             hookJa: "玄関で上履きに履き替えます。入口近くにある靴入れは下駄箱といいます。これは学校だけの習慣ではありません。家でも、一部の飲食店でも、お寺の建物でも同じです。外と内の境目は大切に考えられていて、外靴のまま上がるのは、オーストラリアで人のベッドの上を歩くようなものだと思ってください。",
             look:
               "Check your socks before you leave the house each morning. Holes get " +
@@ -974,7 +892,7 @@ window.PLACES = [
           {
             id: "bukatsu",
             ja: "部活動",
-            en: "Club is not optional-ish",
+            en: "Club is not really optional",
             photo: null,
             hook:
               "After school almost everyone does bukatsu, a club, and they do it " +
@@ -1120,16 +1038,7 @@ window.PLACES = [
             en: "Tea ceremony",
             photo: null,
             hook:
-              "Sado is not really about drinking tea. It is about somebody making " +
-              "it for you with their whole attention, and you receiving it the " +
-              "same way. The tea is matcha: powdered green tea whisked with a " +
-              "bamboo whisk until it froths, and it is properly bitter. That is " +
-              "why the sweet comes first. Eat it, then drink. The bowl has a " +
-              "front, the best looking face, and you are not supposed to drink " +
-              "from it, so you turn the bowl a couple of times before you sip and " +
-              "turn it back before you hand it over. Finish with a slurp. It " +
-              "sounds rude and it is the opposite: it tells your host you are done " +
-              "and it was good.",
+              "Sado is not really about drinking tea. It is about somebody making it for you with their whole attention, and you receiving it the same way. The tea is matcha: powdered green tea whisked with a bamboo whisk until it froths, and it is properly bitter. That is why the sweet comes first. Eat it, then drink. The bowl has a front, its best looking face, and you are not supposed to drink from that side. So you turn the bowl a couple of times before you sip, and turn it back before you hand it over. Finish with a slurp. It sounds rude and it is the opposite: it tells your host you are done and it was good.",
             hookJa: "茶道は、お茶を飲むことそのものが目的ではありません。誰かが心を込めて自分のためにお茶を点ててくれ、それを同じ気持ちで受け取る、ということです。使うのは抹茶で、粉にした緑茶を竹の茶筅で泡立てたもので、しっかり苦いお茶です。だから先に和菓子をいただきます。お菓子を食べてから、お茶を飲みます。茶碗には正面があり、いちばん美しい面です。そこに口をつけないように、飲む前に茶碗を二回ほど回し、返すときに戻します。最後は音を立てて吸い切ります。失礼に聞こえるかもしれませんが、逆です。飲み終わったこと、おいしかったことを亭主に伝える作法です。",
             look:
               "The phrase behind the whole thing is ichigo ichie, one time, one " +
