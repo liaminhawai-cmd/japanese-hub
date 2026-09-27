@@ -1458,7 +1458,12 @@
       try {
         if (speechSynthesis.getVoices().length) land();
         speechSynthesis.addEventListener("voiceschanged", land);
-        setTimeout(land, 2000);
+        /* One look after two seconds was too trusting. A phone can hand over
+           its voice list late, and a web app launched from the home screen
+           on iOS often hands it over later still, or not until something has
+           been spoken. Giving up once meant the play buttons stayed hidden
+           for the rest of the session on a phone that could in fact speak. */
+        [600, 2000, 5000, 10000].forEach(function(t){ setTimeout(land, t); });
       } catch (e){ settled = true; }
     }
     var el = null;
@@ -1478,6 +1483,8 @@
           el.play().then(ok, function(){ el = null; done(); });
           return;
         }
+        // Last look before giving up: the list may have arrived since.
+        if (!jaV) land();
         if (!jaV) return done();
         var u = new SpeechSynthesisUtterance(it.ja);
         u.voice = jaV; u.lang = "ja-JP"; u.rate = 0.85;
@@ -1648,7 +1655,7 @@
   function closeSheet(){ $("sheet").className = ""; }
 
   /* ================= navigation ================= */
-  var BUILD = "Version 73, 27 September 2026";
+  var BUILD = "Version 74, 27 September 2026";
   var TABS = { home:["りょてい","Itinerary"], places:["ばしょ","Places"],
                phrases:["ことば","Phrases"], manners:["マナー","Etiquette"],
                // The tab says Info because "Travel Information" will not sit on
