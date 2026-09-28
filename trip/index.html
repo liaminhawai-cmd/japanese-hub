@@ -469,6 +469,13 @@
        padding:12px 14px;margin:0 0 16px;font-size:15.5px;line-height:1.55;
        color:var(--muted)}
   body.hasvoice .novoice{display:none}
+  /* The mirror of .novoice: this one only makes sense when there IS a voice
+     and therefore a button to press. */
+  .silentnote{display:none;background:var(--paper);border:1px solid var(--line);
+       border-left:5px solid var(--accent);border-radius:12px;
+       padding:12px 14px;margin:0 0 16px;font-size:15.5px;line-height:1.55;
+       color:var(--muted)}
+  body.hasvoice .silentnote{display:block}
   .say .spk{width:19px;height:19px;background:currentColor;
        -webkit-mask:var(--spk) center/contain no-repeat;mask:var(--spk) center/contain no-repeat}
   .say.on{background:var(--deep);color:var(--paper);border-color:var(--deep)}
@@ -1518,6 +1525,30 @@
            ' Everything else here works as normal.</p>';
   }
 
+  /* The other way the audio looks broken, and the one that actually caught
+     us: the silent switch on the side of an iPhone mutes speech even with
+     the volume up, and the volume buttons do not release it. Shown only
+     while there is a voice to play, since otherwise the note above is the
+     right explanation, and only until something has been heard. */
+  var HEARD_KEY = "jtHeard-v1";
+  function heard(){
+    try { return !!localStorage.getItem(HEARD_KEY); } catch (e){ return false; }
+  }
+  function markHeard(){
+    try { localStorage.setItem(HEARD_KEY, "1"); } catch (e){}
+    [].forEach.call(document.querySelectorAll(".silentnote"), function(n){
+      n.parentNode && n.parentNode.removeChild(n);
+    });
+  }
+  function silentNote(){
+    if (heard()) return "";
+    return '<p class="silentnote">Press a play button and hear nothing? On an ' +
+           'iPhone the silent switch on the side mutes this, even with the ' +
+           'volume turned up, and the volume buttons will not undo it. Flick ' +
+           'the switch back and try again. This note goes once you have heard ' +
+           'one.</p>';
+  }
+
   /* Nothing to play, nothing to show: signs are read rather than said, and
      the ceremony speeches wait for a human voice rather than a synthetic one.
      Either still plays a recording the moment one is dropped in. */
@@ -1534,7 +1565,7 @@
       base += PHRASES[i].items.length;
     }
     var h = head(g.ja, g.en) + '<p class="lede">' + esc(g.note) + '</p>' +
-            (g.say === false ? "" : voiceNote());
+            (g.say === false ? "" : voiceNote() + silentNote());
     var anyKana = g.items.some(function(x){ return !!x.kana; });
     if (anyKana){
       h += '<button class="kanaswap' + (kanaOnly ? " on" : "") + '" data-kanaswap="1">' +
@@ -1679,7 +1710,7 @@
   function closeSheet(){ $("sheet").className = ""; }
 
   /* ================= navigation ================= */
-  var BUILD = "Version 76, 27 September 2026";
+  var BUILD = "Version 77, 28 September 2026";
   /* The number on its own. Students compare these across a table to work out
      who has not updated, so it has to be somewhere glanceable rather than
      only at the foot of the itinerary. Derived from BUILD so there is one
@@ -1914,7 +1945,8 @@
     if (sayingNow === btn){ SAY.stop(); clearSay(); return; }
     clearSay();
     sayingNow = btn;
-    SAY.play(it, function(){ btn.classList.add("on"); }, clearSay);
+    // Something actually started, so the silent-switch note has done its job.
+    SAY.play(it, function(){ btn.classList.add("on"); markHeard(); }, clearSay);
   }
   function clearSay(){
     if (sayingNow) sayingNow.classList.remove("on");
