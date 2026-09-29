@@ -1465,7 +1465,41 @@ window.PHRASES = [
     ja: "こっか",
     en: "Advance Australia Fair",
     unit: "verses",
-    note: "The Australian national anthem, in the words used now.",
+    note: "The Australian national anthem, in the words used now. Tap the tune " +
+          "to hear the melody.",
+    // The words here are English, so the synthetic Japanese voice has no
+    // business reading them. The tune does that job instead.
+    say: false,
+    /* Transcribed from the score, G major, 4/4, one quarter pickup.
+       NOTE[octave]:eighths, r for a rest, so: quarter 2, eighth 1, dotted
+       quarter 3, half 4, dotted half 6. Every full bar comes to 8, which is
+       what makes a mistake in the rhythm show up rather than hide. */
+    tune: {
+      bpm: 96,
+      label: "Chiptune, the melody line",
+      notes:
+        "D4:2 " +                                        // Aus
+        "G4:2 D4:2 B3:2 D4:2 " +                         // tral-ians all let
+        "G4:3 G4:1 G4:2 B4:2 " +                         // us re-joice, For
+        "A4:2 G4:2 F#4:2 G4:2 " +                        // we are one and
+        "A4:4 r:2 D4:2 " +                               // free.  We've
+        "G4:2 D4:2 B3:2 G3:2 " +                         // gol-den soil and
+        "D4:3 D4:1 D4:2 B4:2 " +                         // wealth for toil, our
+        "A4:2 G4:2 F#4:2 E4:2 " +                        // home is girt by
+        "D4:4 r:2 D4:2 " +                               // sea.  Our
+        "E4:3 F#4:1 G4:2 E4:2 " +                        // land a-bounds in
+        "D4:3 B3:1 B3:2 D4:2 " +                         // nat-ure's gifts, of
+        "E4:2 G4:2 C5:2 B4:2 " +                         // beau-ty rich and
+        "A4:4 r:2 D4:2 " +                               // rare.  In
+        "E4:3 F#4:1 G4:2 E4:2 " +                        // his-try's page then
+        "D4:3 G4:1 G4:2 A4:2 " +                         // let us sing: Ad
+        "B4:3 G4:1 A4:3 F#4:1 " +                        // vance Aus-tra-lia
+        "G4:6 B4:2 " +                                   // Fair.  In
+        "C5:2 B4:2 A4:2 G4:2 " +                         // joy-ful strains then
+        "F#4:2 E4:2 D4:2 G4:2 " +                        // let us sing: Ad
+        "B4:3 G4:1 A4:3 F#4:1 " +                        // vance Aus-tra-lia
+        "G4:6"                                           // Fair.
+    },
     items: [
       { ja: "Australians all let us rejoice,\nFor we are one and free;\n" +
             "We've golden soil and wealth for toil;\nOur home is girt by sea;\n" +
