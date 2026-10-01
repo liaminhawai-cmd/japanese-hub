@@ -1,0 +1,1744 @@
+<!DOCTYPE html>
+<html lang="en-AU" translate="no" class="notranslate">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="google" content="notranslate">
+<meta name="theme-color" content="#16375e">
+<meta name="mobile-web-app-capable" content="yes">
+<!-- Older iOS reads only the apple- spelling. -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Oral Exam">
+<title>オーラルしけん Oral Exam</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%99%3C/text%3E%3C/svg%3E">
+<style>
+  /* A Year 12 student practising on a phone, often standing up, often the
+     night before. Nothing below 15px, body copy at 17, tap targets at 44.
+     The navigation is at the top because that is where a thumb looks first on
+     a page you are reading rather than scrolling through. */
+  :root{
+    --bg:#eef1f5; --paper:#ffffff; --ink:#15191f; --muted:#4a5464;
+    --line:#ccd5e0; --line-soft:#e3e9f0;
+    --deep:#16375e;          /* the navy that carries every control */
+    --accent:#a83232;        /* a correction, a warning, time running out */
+    --ok:#2f6a3e;            /* something right, something done */
+    --tip:#fff8e1;           /* an examiner tip, quoted from a report */
+    --tipline:#e0cf9a;
+    --c1:#d9edf1; --c2:#fbe3e8; --c3:#dcecdc; --c4:#e4e1f0;
+    --c5:#f6d9c8; --c6:#dde9f5;
+    --shadow:0 2px 10px rgba(0,0,0,.07);
+    --font-en:Calibri,Carlito,'Segoe UI',Tahoma,Geneva,Verdana;
+    --font-jp:'UD Digi Kyokasho N-R','UD Digi Kyokasho NP-R','UD デジタル教科書体 N-R','UDデジタル教科書体N-R','HGP教科書体','YuKyokasho Yoko',YuKyokasho,'Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic',YuGothic,Meiryo;
+    --font:var(--font-en),var(--font-jp),sans-serif;
+    --spk:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2316375e' d='M4 9v6h4l5 4V5L8 9H4zm12.5 3c0-1.6-.9-2.9-2.2-3.6v7.2c1.3-.7 2.2-2 2.2-3.6zM14.3 4.4v1.9c2.6.8 4.5 3.2 4.5 6s-1.9 5.2-4.5 6v1.9c3.6-.9 6.3-4.2 6.3-7.9s-2.7-7.1-6.3-7.9z'/%3E%3C/svg%3E");
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html{-webkit-text-size-adjust:100%}
+  body{font-family:var(--font);background:var(--bg);color:var(--ink);
+       line-height:1.6;font-size:17px;overflow-wrap:break-word}
+
+  /* ---------- top bar ---------- */
+  .top{position:sticky;top:0;z-index:40;background:var(--paper);
+       border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top)}
+  .bar{display:flex;align-items:center;gap:10px;padding:9px 14px 8px;
+       min-height:54px;max-width:720px;margin:0 auto}
+  .htitle{min-width:0;flex:1}
+  .crumb{font-size:17.5px;font-weight:700;line-height:1.25;
+         white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .crumb button{border:0;background:none;padding:0;font-family:inherit;
+         font-size:15px;font-weight:600;color:var(--deep);cursor:pointer;
+         -webkit-appearance:none;appearance:none;
+         text-decoration:underline;text-underline-offset:3px}
+  .crumb .sep{color:var(--muted);opacity:.7;margin:0 5px;font-weight:400}
+  .htitle .en{font-size:13.5px;color:var(--muted);line-height:1.3;
+              white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+  /* The two always-on controls, in the same white-on-navy-border style as
+     the trip app so the whole set reads as one family. 44px square. */
+  .tool{flex:none;width:44px;height:44px;border:2px solid var(--deep);
+        border-radius:11px;background:#fff;color:var(--deep);cursor:pointer;
+        font-family:var(--font);font-weight:800;font-size:16px;line-height:1;
+        display:flex;align-items:center;justify-content:center;padding:0}
+  .tool.off{opacity:.45}
+  .tool small{font-size:11px;font-weight:700;display:block}
+
+  /* ---------- the tab row: icons only, the current one filled ---------- */
+  nav{border-top:1px solid var(--line-soft);background:var(--paper)}
+  .navin{display:flex;max-width:720px;margin:0 auto}
+  nav button{flex:1;border:0;background:none;cursor:pointer;padding:7px 0 8px;
+             display:flex;align-items:center;justify-content:center;
+             min-height:50px;color:var(--deep);border-bottom:3px solid transparent}
+  nav button.on{background:var(--deep);border-bottom-color:var(--deep)}
+  nav button svg{width:27px;height:27px;display:block}
+  nav button.on svg{color:#fff}
+  .ic{fill:none;stroke:currentColor;stroke-width:2.4;
+      stroke-linecap:round;stroke-linejoin:round}
+  .icf{fill:currentColor;stroke:none}
+
+  main{max-width:720px;margin:0 auto;padding:14px 14px 70px}
+  h2{font-size:21px;line-height:1.3;margin:2px 0 10px}
+  h2 .en{display:block;font-size:13.5px;font-weight:400;color:var(--muted);
+         margin-top:2px}
+  h3{font-size:17px;margin:18px 0 8px}
+  p{margin:0 0 10px}
+  .lede{color:var(--muted);font-size:15.5px;margin-bottom:14px}
+
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:13px;
+        padding:13px 14px;margin:0 0 11px;box-shadow:var(--shadow)}
+  .card.flat{box-shadow:none}
+  button.card{display:block;width:100%;text-align:left;cursor:pointer;
+              font-family:var(--font);font-size:17px;color:inherit;
+              line-height:1.5}
+  /* A question in the list does two things, so it needs two targets: the
+     card opens it, the play button beside it speaks the question. One tap
+     cannot mean both. */
+  .qrow{position:relative}
+  .qrow>.card{padding-bottom:48px}
+  .playbtn{position:absolute;right:10px;bottom:10px;width:44px;height:44px;
+       border:2px solid var(--deep);border-radius:11px;background:#fff;
+       cursor:pointer;padding:0}
+  .playbtn:after{content:"";display:block;width:21px;height:21px;margin:0 auto;
+       background:var(--spk) center/contain no-repeat}
+  body:not(.hasvoice) .playbtn{display:none}
+  body:not(.hasvoice) .qrow>.card{padding-bottom:13px}
+  .jatext{font-family:var(--font-jp),var(--font-en),sans-serif;font-size:19px;
+       line-height:2.05;display:block}
+
+  .tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+         gap:10px;margin-bottom:12px}
+  .tile{border:1px solid var(--line);border-radius:13px;padding:12px 13px;
+        cursor:pointer;font-family:var(--font);font-size:16.5px;text-align:left;
+        color:inherit;line-height:1.4;box-shadow:var(--shadow)}
+  .tile b{display:block;font-size:17px}
+  .tile i{display:block;font-style:normal;font-size:13px;color:var(--muted);
+          margin-top:3px}
+  .tile:nth-child(6n+1){background:var(--c1)} .tile:nth-child(6n+2){background:var(--c2)}
+  .tile:nth-child(6n+3){background:var(--c3)} .tile:nth-child(6n+4){background:var(--c4)}
+  .tile:nth-child(6n+5){background:var(--c5)} .tile:nth-child(6n){background:var(--c6)}
+
+  /* ---------- Japanese lines, every one of them tappable ---------- */
+  .ja{font-family:var(--font-jp),var(--font-en),sans-serif;font-size:19px;
+      line-height:2.05;cursor:pointer;display:block;position:relative;
+      padding-right:30px}
+  .ja:after{content:"";position:absolute;right:0;top:.45em;width:19px;height:19px;
+            background:var(--spk) center/contain no-repeat;opacity:.5}
+  body:not(.hasvoice) .ja{cursor:default;padding-right:0}
+  body:not(.hasvoice) .ja:after{display:none}
+  .ja.live{background:#fff6cf;border-radius:5px}
+  ruby rt{font-size:.5em;font-weight:400;color:var(--muted);
+          letter-spacing:0}
+  body.nofuri ruby rt{display:none}
+  .en{font-size:15px;color:var(--muted);line-height:1.45}
+  .novoice{display:none;background:var(--tip);border:1px solid var(--tipline);
+           border-radius:10px;padding:9px 11px;font-size:14.5px;margin-bottom:12px}
+  body:not(.hasvoice) .novoice{display:block}
+
+  /* ---------- filters ---------- */
+  .filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+  .chip{border:1.5px solid var(--line);background:var(--paper);border-radius:999px;
+        padding:6px 12px;font-family:var(--font);font-size:14.5px;cursor:pointer;
+        color:var(--muted);min-height:36px}
+  .chip.on{background:var(--deep);border-color:var(--deep);color:#fff;font-weight:600}
+  .fgroup{width:100%;font-size:12.5px;text-transform:uppercase;
+          letter-spacing:.06em;color:var(--muted);margin:4px 0 -2px}
+
+  /* ---------- one question ---------- */
+  .qmeta{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
+  .pill{font-size:12.5px;background:var(--line-soft);border-radius:999px;
+        padding:3px 9px;color:var(--muted)}
+  .pill.ho{background:#ffe4e4;color:#8c2222;font-weight:600}
+  .tip{background:var(--tip);border:1px solid var(--tipline);border-radius:11px;
+       padding:11px 12px;margin:12px 0;font-size:15px}
+  .tip b{display:block;font-size:12.5px;text-transform:uppercase;
+         letter-spacing:.06em;color:#7a6320;margin-bottom:4px}
+  .tip q{font-style:italic}
+  details{border:1px solid var(--line);border-radius:11px;padding:0;
+          margin:0 0 9px;background:var(--paper)}
+  /* Block, not flex. A flex summary makes every <ruby> inside it a flex
+     item, which breaks a word with readings into one piece per character. */
+  details>summary{cursor:pointer;padding:11px 32px 11px 13px;font-weight:600;
+          list-style:none;display:block;position:relative;line-height:1.9}
+  details>summary::-webkit-details-marker{display:none}
+  details>summary:after{content:"\25bc";position:absolute;right:13px;top:13px;
+          font-size:11px;color:var(--muted);transition:transform .15s}
+  details[open]>summary:after{transform:rotate(180deg)}
+  details>summary .tier{margin-left:7px}
+  .dbody{padding:0 13px 12px}
+  .tier{font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;
+        color:var(--muted)}
+  .vocab{list-style:none;font-size:15.5px}
+  .vocab li{padding:4px 0;border-bottom:1px solid var(--line-soft)}
+  .vocab li:last-child{border:0}
+  .vocab b{font-family:var(--font-jp),sans-serif;font-size:17px}
+  .gram{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 0}
+  .gram span{font-size:14px;background:#eaf0f7;border-radius:7px;padding:3px 8px;
+             font-family:var(--font-jp),var(--font-en),sans-serif}
+
+  /* ---------- buttons ---------- */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;
+       border:2px solid var(--deep);background:var(--deep);color:#fff;
+       border-radius:11px;padding:11px 16px;font-family:var(--font);
+       font-size:16px;font-weight:600;cursor:pointer;min-height:46px}
+  .btn.ghost{background:#fff;color:var(--deep)}
+  .btn.warn{border-color:var(--accent);background:var(--accent)}
+  .btn.wide{width:100%}
+  .btn[disabled]{opacity:.45;cursor:default}
+  .row{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+
+  /* ---------- the mock examination ---------- */
+  .clock{position:sticky;top:0;z-index:5;display:flex;align-items:center;
+         gap:10px;background:var(--deep);color:#fff;border-radius:11px;
+         padding:9px 13px;margin-bottom:12px;font-variant-numeric:tabular-nums}
+  .clock b{font-size:25px;font-weight:700;letter-spacing:.02em}
+  .clock span{font-size:13.5px;opacity:.9}
+  .clock.low{background:var(--accent)}
+  .hidden-q{background:#f3f6fa;border:1px dashed var(--line);border-radius:11px;
+            padding:16px 14px;text-align:center;color:var(--muted);font-size:15px}
+  .chain{list-style:none;margin:10px 0 0}
+  .chain li{padding:8px 0;border-top:1px solid var(--line-soft)}
+  .step{font-size:12.5px;color:var(--muted);text-transform:uppercase;
+        letter-spacing:.06em}
+
+  /* ---------- recording ---------- */
+  .rec{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .dot{width:11px;height:11px;border-radius:50%;background:var(--accent);
+       animation:pulse 1.1s infinite}
+  @keyframes pulse{50%{opacity:.25}}
+  audio{width:100%;margin-top:8px}
+  .note{font-size:14px;color:var(--muted);margin-top:6px}
+
+  /* ---------- the discussion image ---------- */
+  .shot{width:100%;border-radius:11px;border:1px solid var(--line);display:block}
+  .shotwrap{position:relative;margin-bottom:10px}
+  .full{position:fixed;inset:0;z-index:60;background:#000;display:none}
+  .full.on{display:flex;align-items:center;justify-content:center}
+  .full img{max-width:100%;max-height:100%;object-fit:contain}
+  .full .x{position:absolute;top:calc(env(safe-area-inset-top) + 10px);right:10px}
+  textarea{width:100%;font-family:var(--font);font-size:16px;line-height:1.6;
+           border:1px solid var(--line);border-radius:10px;padding:10px;
+           min-height:92px;background:var(--paper);color:var(--ink)}
+  input[type=text]{width:100%;font-family:var(--font);font-size:17px;
+           border:1px solid var(--line);border-radius:10px;padding:10px;
+           background:var(--paper);color:var(--ink)}
+  label{display:block;font-size:14px;color:var(--muted);margin:10px 0 4px}
+
+  /* ---------- self assessment ---------- */
+  .bands{display:grid;gap:7px;margin:8px 0 0}
+  .band{display:flex;gap:10px;align-items:flex-start;border:1.5px solid var(--line);
+        border-radius:10px;padding:9px 11px;cursor:pointer;background:var(--paper);
+        font-family:var(--font);font-size:15px;text-align:left;color:inherit;
+        line-height:1.45}
+  .band.on{border-color:var(--deep);background:#eaf0f7}
+  .band b{flex:none;font-size:15px;color:var(--deep);min-width:38px}
+  .mark{font-size:30px;font-weight:700;color:var(--deep)}
+
+  /* ---------- drills ---------- */
+  .drillq{font-size:19px;font-family:var(--font-jp),var(--font-en),sans-serif;
+          line-height:2}
+  .reveal{display:none}
+  .reveal.on{display:block}
+  .wrongline{color:var(--accent);text-decoration:line-through;
+             text-decoration-thickness:1px}
+  .rightline{color:var(--ok)}
+  .score{font-size:14px;color:var(--muted)}
+
+  .updatebar{position:fixed;left:0;right:0;bottom:0;z-index:70;display:none;
+     background:var(--deep);color:#fff;padding:11px 14px;
+     padding-bottom:calc(11px + env(safe-area-inset-bottom));
+     font-size:15px;align-items:center;gap:10px;justify-content:center;
+     flex-wrap:wrap}
+  .updatebar.on{display:flex}
+  .updatebar button{border:2px solid #fff;background:none;color:#fff;
+     border-radius:9px;padding:7px 13px;font-family:var(--font);font-size:15px;
+     font-weight:600;cursor:pointer}
+  .foot{color:var(--muted);font-size:13.5px;margin-top:22px;
+        border-top:1px solid var(--line);padding-top:10px}
+  @media (max-width:360px){
+    .ja{font-size:18px} body{font-size:16.5px}
+    .bar{gap:7px;padding-left:10px;padding-right:10px}
+  }
+</style>
+</head>
+<body class="hasvoice">
+
+<div class="top">
+  <div class="bar">
+    <div class="htitle">
+      <div class="crumb" id="crumb"></div>
+      <div class="en" id="sub"></div>
+    </div>
+    <!-- Furigana on or off, and the speaking speed. Both are here rather than
+         buried in a settings page because both get changed many times in a
+         sitting: readings off is how you check you can still read it, and 0.7
+         is how you catch a question you missed at full speed. -->
+    <button class="tool" id="furiBtn" title="Readings above the kanji">ふ</button>
+    <button class="tool" id="rateBtn" title="How fast the voice speaks">
+      <span id="rateLabel">×1</span></button>
+  </div>
+  <nav><div class="navin" id="nav"></div></nav>
+</div>
+
+<main id="main"></main>
+
+<div class="full" id="full">
+  <img id="fullimg" alt="Your discussion image, full screen">
+  <button class="btn ghost x" id="fullx">Close</button>
+</div>
+
+<div class="updatebar" id="upbar">
+  <span id="upmsg">A newer version is ready.</span>
+  <button id="upnow">Load it</button>
+  <button id="uplater">Later</button>
+</div>
+
+<script src="data/criteria.js"></script>
+<script src="data/report_insights.js"></script>
+<script src="data/questions.js"></script>
+<script src="data/phrases.js"></script>
+<script src="data/errors.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  var BUILD = "Version 1, 1 October 2026";
+
+  var CRIT  = window.ORAL_CRITERIA,
+      REP   = window.ORAL_REPORTS,
+      QD    = window.ORAL_QUESTIONS,
+      PH    = window.ORAL_PHRASES,
+      ER    = window.ORAL_ERRORS;
+
+  var $ = function(id){ return document.getElementById(id); };
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];
+    });
+  }
+
+  /* ---- furigana ------------------------------------------------------
+     The data stores 漢字[かんじ]. ruby() turns it into real ruby so a reading
+     sits above its own kanji instead of after the word, and plain() strips the
+     brackets for anything that has to be spoken or measured. Readings are
+     written into the data by hand; nothing here guesses one. */
+  var KRUN = /([一-龯々〆ヶ]+)\[([^\]]*)\]/g;
+  function ruby(text){
+    var out = "", last = 0, m;
+    KRUN.lastIndex = 0;
+    while ((m = KRUN.exec(text))){
+      out += esc(text.slice(last, m.index));
+      out += "<ruby>" + esc(m[1]) + "<rt>" + esc(m[2]) + "</rt></ruby>";
+      last = m.index + m[0].length;
+    }
+    return out + esc(text.slice(last));
+  }
+  function plain(text){
+    return String(text == null ? "" : text).replace(KRUN, "$1");
+  }
+  /* A Japanese line, tappable, with its own speaker mark. The spoken form
+     goes in data-say so the voice never reads a bracket aloud. */
+  function jaLine(text, say){
+    return '<span class="ja" data-say="' + esc(plain(say || text)) + '">'
+         + ruby(text) + '</span>';
+  }
+  function enLine(text){ return '<span class="en">' + esc(text) + '</span>'; }
+
+  /* ---- store ---------------------------------------------------------
+     localStorage only, as the repo rules require. Everything a student types,
+     ticks or uploads stays in their own browser: no account, no server, no
+     analytics, nothing leaves the phone. */
+  var KEY = "oralExam-v1";
+  var S = { furi:true, rate:1, notes:{}, assess:{}, disc:{}, weak:{}, seen:{} };
+  try {
+    var raw = localStorage.getItem(KEY);
+    if (raw){
+      var got = JSON.parse(raw);
+      for (var k in S) if (got[k] !== undefined) S[k] = got[k];
+    }
+  } catch (e){}
+  var saveTimer = null;
+  function save(){
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function(){
+      try { localStorage.setItem(KEY, JSON.stringify(S)); }
+      catch (e){ flash("Your phone would not save that. The image may be too large."); }
+    }, 250);
+  }
+  function flash(msg){
+    $("upmsg").textContent = msg;
+    $("upbar").classList.add("on");
+    $("upnow").style.display = "none";
+    $("uplater").textContent = "OK";
+  }
+
+  /* ---- the voice -----------------------------------------------------
+     The device reads the Japanese. Where it has no Japanese voice the play
+     marks disappear altogether: a Japanese sentence in an English voice
+     teaches the wrong thing, and silence is honest. Browsers publish the
+     voice list late, and later still in a home-screen app on iOS, so this
+     keeps looking rather than giving up after one try. */
+  var SAY = (function(){
+    var can = "speechSynthesis" in window, jaV = null, settled = false, waiting = [];
+    function find(){
+      try {
+        var vs = speechSynthesis.getVoices() || [];
+        for (var i = 0; i < vs.length; i++)
+          if (/^ja(-|_|$)/i.test(vs[i].lang)) return vs[i];
+      } catch (e){}
+      return null;
+    }
+    function land(){
+      jaV = find(); settled = true;
+      document.body.classList.toggle("hasvoice", !!jaV);
+      waiting.splice(0).forEach(function(f){ f(); });
+    }
+    if (can){
+      try {
+        if (speechSynthesis.getVoices().length) land();
+        speechSynthesis.addEventListener("voiceschanged", land);
+        [600, 2000, 5000, 10000].forEach(function(t){ setTimeout(land, t); });
+      } catch (e){ settled = true; }
+    } else { document.body.classList.remove("hasvoice"); }
+    var liveEl = null;
+    function stop(){
+      if (liveEl){ liveEl.classList.remove("live"); liveEl = null; }
+      try { if (can) speechSynthesis.cancel(); } catch (e){}
+    }
+    return {
+      hasJa: function(){ return !!jaV; },
+      ready: function(f){ if (settled) f(); else waiting.push(f); },
+      /* One line at a time: two sentences over each other is noise. */
+      speak: function(text, el, done){
+        stop();
+        if (!jaV) land();
+        if (!jaV){ if (done) done(); return; }
+        var u = new SpeechSynthesisUtterance(plain(text));
+        u.voice = jaV; u.lang = "ja-JP"; u.rate = 0.85 * S.rate;
+        if (el){ el.classList.add("live"); liveEl = el; }
+        u.onend = u.onerror = function(){
+          if (el) el.classList.remove("live");
+          if (liveEl === el) liveEl = null;
+          if (done) done();
+        };
+        try { speechSynthesis.speak(u); } catch (e){ if (done) done(); }
+      },
+      stop: stop
+    };
+  })();
+
+  /* Every Japanese line in the app speaks when tapped, wherever it is, from
+     one handler. Nothing has to remember to wire itself up. */
+  document.addEventListener("click", function(ev){
+    var el = ev.target.closest ? ev.target.closest(".ja") : null;
+    if (!el || !SAY.hasJa()) return;
+    SAY.speak(el.dataset.say || el.textContent, el);
+  });
+
+  /* ---- the two always-on controls ---- */
+  function paintFuri(){
+    document.body.classList.toggle("nofuri", !S.furi);
+    $("furiBtn").classList.toggle("off", !S.furi);
+    $("furiBtn").setAttribute("aria-pressed", S.furi ? "true" : "false");
+  }
+  $("furiBtn").onclick = function(){ S.furi = !S.furi; paintFuri(); save(); };
+  var RATES = [0.7, 1, 1.2];
+  function paintRate(){
+    $("rateLabel").textContent = "×" + S.rate;
+  }
+  $("rateBtn").onclick = function(){
+    S.rate = RATES[(RATES.indexOf(S.rate) + 1) % RATES.length] || 1;
+    paintRate(); save();
+    SAY.speak("これで どうですか。");
+  };
+
+  /* ================= indexes over the data ================= */
+  var QBYID = {}, CONV = [], DISC = [];
+  QD.questions.forEach(function(q){
+    QBYID[q.id] = q;
+    (q.section === "conversation" ? CONV : DISC).push(q);
+  });
+  var ERBYID = {};
+  ER.errors.forEach(function(e){ ERBYID[e.id] = e; });
+  var CRITBYID = {};
+  CRIT.sections.forEach(function(s){
+    s.criteria.forEach(function(c){ CRITBYID[c.id] = { c: c, section: s }; });
+  });
+  var TOPNAME = {}, STAGENAME = {};
+  QD.conversation_topics.forEach(function(t){ TOPNAME[t.id] = t; });
+  QD.discussion_stages.forEach(function(t){ STAGENAME[t.id] = t; });
+  var TYPENAME = {};
+  QD.question_types.forEach(function(t){ TYPENAME[t.id] = t; });
+
+  /* ================= routing =================
+     One string route, pushed onto the browser's own history, so the phone's
+     back gesture steps back through the app instead of leaving it. */
+  var TABS = [
+    { id:"browse", ja:"しつもん", en:"Questions", icon:"bubble" },
+    { id:"mock",   ja:"もぎしけん", en:"Mock examination", icon:"clock" },
+    { id:"drill",  ja:"ドリル", en:"Drills", icon:"target" },
+    { id:"disc",   ja:"ディスカッション", en:"Discussion builder", icon:"frame" },
+    { id:"phrase", ja:"フレーズ", en:"Phrases", icon:"lines" },
+    { id:"me",     ja:"わたしの きろく", en:"My record", icon:"person" }
+  ];
+  var ICONS = {
+    bubble:'<svg viewBox="0 0 28 28" aria-hidden="true"><path class="ic" d="M3.5 6.5h21v13h-12l-6 5v-5h-3z"/><path class="ic" d="M10.5 11.2c0-1.6 1.3-2.7 2.9-2.7 1.6 0 2.9 1 2.9 2.4 0 2-2.6 2.2-2.6 4"/><circle class="icf" cx="13.7" cy="17.2" r="1.15"/></svg>',
+    clock: '<svg viewBox="0 0 28 28" aria-hidden="true"><circle class="ic" cx="14" cy="15" r="9.5"/><path class="ic" d="M14 9.5v5.5l4 2.5"/><path class="ic" d="M10 3.5h8"/></svg>',
+    target:'<svg viewBox="0 0 28 28" aria-hidden="true"><circle class="ic" cx="14" cy="14" r="10"/><circle class="ic" cx="14" cy="14" r="5.5"/><circle class="icf" cx="14" cy="14" r="2.2"/></svg>',
+    frame: '<svg viewBox="0 0 28 28" aria-hidden="true"><rect class="ic" x="3.5" y="5.5" width="21" height="17" rx="2.5"/><path class="ic" d="M3.5 18l5.5-5 4 3.5 4.5-5 6.5 7"/><circle class="icf" cx="10" cy="10.5" r="1.7"/></svg>',
+    lines: '<svg viewBox="0 0 28 28" aria-hidden="true"><path class="ic" d="M4 8h20M4 14h20M4 20h13"/></svg>',
+    person:'<svg viewBox="0 0 28 28" aria-hidden="true"><circle class="ic" cx="14" cy="9.5" r="4.6"/><path class="ic" d="M5 24c0-5 4-8 9-8s9 3 9 8"/></svg>'
+  };
+
+  var route = "browse", RENDER = {};
+  function go(r, replace){
+    route = r;
+    try {
+      if (replace) history.replaceState({ r:r }, "", "#" + r);
+      else history.pushState({ r:r }, "", "#" + r);
+    } catch (e){}
+    draw();
+  }
+  window.addEventListener("popstate", function(ev){
+    route = (ev.state && ev.state.r) || (location.hash || "#browse").slice(1) || "browse";
+    draw();
+  });
+
+  function tabOf(r){ return r.split(":")[0]; }
+  function paintNav(){
+    $("nav").innerHTML = TABS.map(function(t){
+      return '<button data-tab="' + t.id + '" title="' + esc(t.en) + '"'
+           + ' aria-label="' + esc(t.en) + '"'
+           + (tabOf(route) === t.id ? ' class="on" aria-current="page"' : '')
+           + '>' + ICONS[t.icon] + '</button>';
+    }).join("");
+    Array.prototype.forEach.call($("nav").children, function(b){
+      b.onclick = function(){ SAY.stop(); go(b.dataset.tab); };
+    });
+  }
+
+  /* The trail across the top replaces a back button: every step but the last
+     is tappable, so two levels up is one tap rather than two. */
+  var TRAIL = [];
+  function setHead(trail, sub){
+    TRAIL = trail;
+    $("crumb").innerHTML = trail.map(function(s, i){
+      var last = i === trail.length - 1;
+      /* No ruby in a 15px crumb that is already clipped at both ends: the
+         readings come off and the kanji stay. */
+      var lab = esc(plain(s.ja));
+      return (i ? '<span class="sep">›</span>' : "")
+           + (last ? lab : '<button data-r="' + esc(s.r) + '">' + lab + '</button>');
+    }).join("");
+    Array.prototype.forEach.call($("crumb").querySelectorAll("button"), function(b){
+      b.onclick = function(){ SAY.stop(); go(b.dataset.r); };
+    });
+    $("sub").textContent = sub || "";
+  }
+
+  function draw(){
+    SAY.stop();
+    stopClock();
+    paintNav();
+    var fn = RENDER[tabOf(route)] || RENDER.browse;
+    $("main").innerHTML = "";
+    fn(route.split(":").slice(1));
+    window.scrollTo(0, 0);
+  }
+
+  /* ================= 1. the question browser ================= */
+  var F = { section:"conversation", topic:"", type:"", ho:false };
+
+  RENDER.browse = function(args){
+    if (args[0] === "q") return drawQuestion(args[1]);
+    if (args[0] === "set") return drawTopicSet(args[1]);
+
+    setHead([{ ja:"しつもん", r:"browse" }], "Questions · browse and filter");
+    var m = $("main");
+    var list = (F.section === "conversation" ? CONV : DISC).filter(function(q){
+      if (F.topic && q.topic !== F.topic) return false;
+      if (F.type && q.question_type !== F.type) return false;
+      if (F.ho && !q.higher_order) return false;
+      return true;
+    });
+
+    var topics = F.section === "conversation" ? QD.conversation_topics
+                                              : QD.discussion_stages;
+    var h = '<h2>しつもん<span class="en">Every question, with model answers at three '
+          + 'levels and the examiner tip behind it</span></h2>'
+          + '<div class="novoice">This phone has no Japanese voice installed, so the '
+          + 'play marks are hidden. Everything else works. On iOS, '
+          + 'Settings › Accessibility › Spoken Content › Voices adds one.</div>'
+          + '<div class="filters">'
+          + '<div class="fgroup">Section</div>'
+          + chip("sec", "conversation", "1 Conversation", F.section === "conversation")
+          + chip("sec", "discussion", "2 Discussion", F.section === "discussion")
+          + '<div class="fgroup">'
+          + (F.section === "conversation" ? "Topic" : "Stage of the discussion")
+          + '</div>'
+          + chip("top", "", "All", !F.topic)
+          + topics.map(function(t){
+              return chip("top", t.id, t.en, F.topic === t.id);
+            }).join("")
+          + '<div class="fgroup">Question type</div>'
+          + chip("typ", "", "All", !F.type)
+          + QD.question_types.map(function(t){
+              return chip("typ", t.id, t.en, F.type === t.id);
+            }).join("")
+          + chip("ho", "1", "Higher order only", F.ho)
+          + '</div>';
+
+    h += '<p class="lede">' + list.length + ' question'
+       + (list.length === 1 ? "" : "s")
+       + (F.section === "discussion"
+          ? ". These never name a subtopic, because you bring your own. The model "
+            + "answers all use わがし as a worked example."
+          : ".") + '</p>';
+
+    h += list.map(function(q){
+      var grp = F.section === "conversation" ? TOPNAME[q.topic] : STAGENAME[q.topic];
+      return '<div class="qrow"><button class="card" data-q="' + esc(q.id) + '">'
+           + '<div class="qmeta"><span class="pill">'
+           + esc(grp ? grp.en : q.topic) + '</span>'
+           + '<span class="pill">' + esc(TYPENAME[q.question_type].en) + '</span>'
+           + (q.higher_order ? '<span class="pill ho">higher order</span>' : "")
+           + '</div>'
+           + '<span class="jatext">' + ruby(q.question_ja) + '</span>'
+           + enLine(q.question_en) + '</button>'
+           + '<button class="playbtn" data-play="' + esc(plain(q.question_ja))
+           + '" aria-label="Hear the question"></button></div>';
+    }).join("");
+
+    if (F.section === "discussion"){
+      h += '<h3>Worked subtopics</h3>'
+         + '<p class="lede">Five subtopics answered right through, so you can see '
+         + 'the shape of eight minutes before you build your own.</p>'
+         + '<div class="tiles">'
+         + QD.topic_sets.map(function(t){
+             return '<button class="tile" data-set="' + esc(t.id) + '">'
+                  + '<b>' + ruby(t.topic_ja) + '</b><i>' + esc(t.topic_en) + '</i>'
+                  + '</button>';
+           }).join("") + '</div>';
+    }
+    m.innerHTML = h + foot();
+    wireChips(m);
+    each(m, "[data-q]", function(b){
+      b.onclick = function(){ go("browse:q:" + b.dataset.q); };
+    });
+    each(m, "[data-play]", function(b){
+      b.onclick = function(ev){ ev.stopPropagation(); SAY.speak(b.dataset.play, b); };
+    });
+    each(m, "[data-set]", function(b){
+      b.onclick = function(){ go("browse:set:" + b.dataset.set); };
+    });
+  };
+
+  function chip(g, v, label, on){
+    return '<button class="chip' + (on ? " on" : "") + '" data-g="' + g
+         + '" data-v="' + esc(v) + '">' + esc(label) + '</button>';
+  }
+  function wireChips(scope){
+    each(scope, ".chip", function(b){
+      b.onclick = function(){
+        var g = b.dataset.g, v = b.dataset.v;
+        if (g === "sec"){ F.section = v; F.topic = ""; }
+        else if (g === "top") F.topic = v;
+        else if (g === "typ") F.type = v;
+        else if (g === "ho") F.ho = !F.ho;
+        RENDER.browse([]);
+      };
+    });
+  }
+  function each(scope, sel, fn){
+    Array.prototype.forEach.call(scope.querySelectorAll(sel), fn);
+  }
+
+  function drawQuestion(id){
+    var q = QBYID[id];
+    if (!q) return go("browse", true);
+    var grp = q.section === "conversation" ? TOPNAME[q.topic] : STAGENAME[q.topic];
+    setHead([{ ja:"しつもん", r:"browse" },
+             { ja:(grp ? grp.ja : q.topic), r:"browse" }],
+            (grp ? grp.en : q.topic) + " · " + TYPENAME[q.question_type].en);
+    var m = $("main");
+    var h = '<div class="qmeta">'
+          + '<span class="pill">' + (q.section === "conversation"
+              ? "Section 1" : "Section 2") + '</span>'
+          + '<span class="pill">' + esc(TYPENAME[q.question_type].en) + '</span>'
+          + '<span class="pill">difficulty ' + q.difficulty + ' of 3</span>'
+          + (q.higher_order ? '<span class="pill ho">higher order</span>' : "")
+          + '</div>'
+          + '<div class="card">' + jaLine(q.question_ja) + enLine(q.question_en)
+          + '</div>';
+
+    if (grp && grp.advice)
+      h += '<p class="lede"><b>' + esc(grp.en) + ':</b> ' + esc(grp.advice) + '</p>';
+
+    h += '<h3>If they follow it up</h3><div class="card">'
+       + q.followups.map(function(f, i){
+           return (i ? '<div style="height:9px"></div>' : "")
+                + jaLine(f.ja) + enLine(f.en);
+         }).join("") + '</div>';
+
+    h += '<h3>Three ways to answer it</h3>';
+    if (q.model_topic)
+      h += '<p class="lede">Written for ' + ruby(q.model_topic)
+         + ', because a model answer has to be about something. Swap in your own '
+         + 'subtopic and the shape still holds.</p>';
+    [["basic", "Basic", "Answers the question. A middle band stops here."],
+     ["developed", "Developed", "Two or three pieces of information and a reason."],
+     ["advanced", "Advanced", "Range, an opinion, and something the assessors did not ask for."]
+    ].forEach(function(t){
+      var mr = q.model_responses[t[0]];
+      h += '<details' + (t[0] === "developed" ? " open" : "") + '>'
+         + '<summary>' + t[1] + ' <span class="tier">' + esc(t[2]) + '</span></summary>'
+         + '<div class="dbody">' + jaLine(mr.ja) + enLine(mr.en) + '</div></details>';
+    });
+
+    if (q.report_refs && q.report_refs.length){
+      h += '<div class="tip"><b>Examiner tip</b>'
+         + q.report_refs.map(function(r){
+             var bits = r.split(/:\s/);
+             var yr = bits.shift();
+             return '<div style="margin-bottom:5px"><b style="display:inline;'
+                  + 'text-transform:none;letter-spacing:0;font-size:15px">'
+                  + esc(yr) + '</b> <q>' + esc(bits.join(": ")) + '</q></div>';
+           }).join("") + '</div>';
+    }
+
+    if (q.key_vocab && q.key_vocab.length){
+      h += '<h3>Words you need</h3><ul class="vocab card flat">'
+         + q.key_vocab.map(function(v){
+             return '<li><b>' + esc(v.ja) + '</b> 〈' + esc(v.reading)
+                  + '〉 ' + esc(v.en) + '</li>';
+           }).join("") + '</ul>';
+    }
+    if (q.key_grammar && q.key_grammar.length){
+      h += '<h3>Grammar it is testing</h3><div class="gram">'
+         + q.key_grammar.map(function(g){ return '<span>' + esc(g) + '</span>'; })
+             .join("") + '</div>';
+    }
+    if (q.common_errors && q.common_errors.length){
+      h += '<h3>What goes wrong here</h3>'
+         + q.common_errors.map(function(eid){
+             var e = ERBYID[eid];
+             if (!e) return "";
+             return '<div class="card"><b>' + esc(e.name) + '</b>'
+                  + ' <span class="score">named in ' + e.count + ' of 6 years</span>'
+                  + '<div class="en" style="margin:5px 0 7px">' + esc(e.why) + '</div>'
+                  + '<div class="ja wrongline" data-say="' + esc(plain(e.wrong))
+                  + '">' + ruby(e.wrong) + '</div>'
+                  + '<div class="ja rightline" data-say="' + esc(plain(e.right))
+                  + '">' + ruby(e.right) + '</div></div>';
+           }).join("");
+    }
+
+    h += '<h3>What it is marked against</h3>'
+       + q.criteria_targeted.map(function(cid){
+           var c = CRITBYID[cid];
+           if (!c) return "";
+           return '<div class="card flat"><b>' + esc(c.c.name) + '</b> '
+                + '<span class="score">' + esc(c.section.name_en)
+                + ', ' + c.c.max + ' marks</span>'
+                + '<div class="en" style="margin-top:4px">' + esc(c.c.scope)
+                + '</div></div>';
+         }).join("");
+
+    h += '<h3>Your answer</h3>'
+       + '<p class="lede">Typed here, it stays on this phone. Say it out loud '
+       + 'first, then write what you actually managed to say.</p>'
+       + '<textarea id="mynote" placeholder="…">'
+       + esc(S.notes[q.id] || "") + '</textarea>'
+       + recordBlock("q-" + q.id);
+
+    var sibs = (q.section === "conversation" ? CONV : DISC);
+    var at = sibs.indexOf(q);
+    h += '<div class="row">'
+       + (at > 0 ? '<button class="btn ghost" data-r="browse:q:'
+           + esc(sibs[at-1].id) + '">‹ Previous</button>' : "")
+       + (at < sibs.length - 1 ? '<button class="btn ghost" data-r="browse:q:'
+           + esc(sibs[at+1].id) + '">Next ›</button>' : "")
+       + '</div>' + foot();
+
+    m.innerHTML = h;
+    $("mynote").oninput = function(){ S.notes[q.id] = this.value; save(); };
+    each(m, "[data-r]", function(b){ b.onclick = function(){ go(b.dataset.r); }; });
+    wireRecorder(m);
+  }
+
+  function drawTopicSet(id){
+    var t = null;
+    QD.topic_sets.forEach(function(x){ if (x.id === id) t = x; });
+    if (!t) return go("browse", true);
+    setHead([{ ja:"しつもん", r:"browse" }, { ja:t.topic_ja, r:"browse" }],
+            t.topic_en + " · a worked subtopic");
+    var h = '<h2>' + ruby(t.topic_ja) + '<span class="en">' + esc(t.topic_en)
+          + '</span></h2>'
+          + '<div class="tip"><b>Why this subtopic works</b>' + esc(t.why_it_works)
+          + '</div>'
+          + '<div class="card"><b>The image to look for</b>'
+          + '<div class="en" style="margin-top:4px">' + esc(t.image_advice)
+          + '</div></div>'
+          + '<h3>Words you must be able to explain</h3>'
+          + '<p class="lede">Five of the six reports say the assessors ask what your '
+          + 'own key words mean. These are the ones for this subtopic.</p>'
+          + t.key_words.map(function(k){
+              return '<div class="card"><b>' + esc(k.ja) + '</b> 〈'
+                   + esc(k.reading) + '〉 ' + esc(k.en)
+                   + '<div style="margin-top:6px">' + jaLine(k.explain_ja)
+                   + '</div></div>';
+            }).join("")
+          + '<h3>Right through, stage by stage</h3>';
+    t.stages.forEach(function(s){
+      var st = STAGENAME[s.stage] || { ja:s.stage, en:s.stage };
+      h += '<details><summary>' + ruby(st.ja)
+         + ' <span class="tier">' + esc(st.en) + '</span></summary>'
+         + '<div class="dbody">' + jaLine(s.model.ja) + enLine(s.model.en)
+         + '<div class="tier" style="margin-top:9px">And the line that lifts it</div>'
+         + jaLine(s.stretch.ja) + enLine(s.stretch.en)
+         + '</div></details>';
+    });
+    $("main").innerHTML = h + foot();
+  }
+
+  /* ================= 2. the mock examination =================
+     Real order, real timing, and the question spoken before it is shown,
+     because in the room you only ever hear it. */
+  var MOCK = null, clockTimer = null;
+
+  function buildMock(){
+    /* Section 1: eight questions, easy first, no two from the same topic in a
+       row, at least two higher order, and at least one about the student's own
+       contact with Japanese language and culture, which the format requires. */
+    var pool = CONV.slice();
+    shuffle(pool);
+    var byTopic = {};
+    pool.forEach(function(q){ (byTopic[q.topic] = byTopic[q.topic] || []).push(q); });
+    var s1 = [], used = {};
+    /* the language-and-culture question first, so it cannot be squeezed out */
+    var lc = pool.filter(function(q){
+      return q.topic === "nihongo" || q.topic === "japan-culture";
+    });
+    if (lc.length){ s1.push(lc[0]); used[lc[0].id] = 1; }
+    Object.keys(byTopic).forEach(function(t){
+      for (var i = 0; i < byTopic[t].length; i++){
+        var q = byTopic[t][i];
+        if (!used[q.id] && s1.length < 8){ s1.push(q); used[q.id] = 1; break; }
+      }
+    });
+    while (s1.filter(function(q){ return q.higher_order; }).length < 2){
+      var extra = pool.filter(function(q){ return q.higher_order && !used[q.id]; })[0];
+      if (!extra) break;
+      s1.pop(); s1.push(extra); used[extra.id] = 1;
+    }
+    s1.sort(function(a, b){ return a.difficulty - b.difficulty; });
+
+    /* Section 2: the nine stages in order, which is the order a prepared
+       discussion actually runs in, with the harder question where there is a
+       choice so a hypothetical and an evaluative both land. */
+    var s2 = [];
+    QD.discussion_stages.forEach(function(st){
+      var here = DISC.filter(function(q){ return q.topic === st.id; });
+      if (!here.length) return;
+      here.sort(function(a, b){ return b.difficulty - a.difficulty; });
+      s2.push(s2.length % 2 ? here[here.length - 1] : here[0]);
+    });
+    if (!s2.some(function(q){ return q.question_type === "hypothetical"; })){
+      var hyp = DISC.filter(function(q){ return q.question_type === "hypothetical"; })[0];
+      if (hyp) s2[s2.length - 2] = hyp;
+    }
+    return { s1:s1, s2:s2, sec:0, at:0, shown:false, fu:-1, started:0, left:0 };
+  }
+  function shuffle(a){
+    for (var i = a.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+  }
+
+  function stopClock(){ clearInterval(clockTimer); clockTimer = null; }
+
+  RENDER.mock = function(args){
+    if (args[0] === "run" && MOCK) return drawMockRun();
+    setHead([{ ja:"もぎしけん", r:"mock" }], "Mock examination · 15 minutes");
+    var ex = CRIT.examination, s = CRIT.sections;
+    var h = '<h2>もぎしけん<span class="en">A run through the whole examination, in '
+          + 'order, on the clock</span></h2>'
+          + '<p class="lede">Every question is spoken before it is shown, because in '
+          + 'the room you only ever hear it. Catch it on the first listen if you can; '
+          + 'the readings and the English are there when you cannot.</p>'
+          + '<div class="card"><b>What you are walking into</b>'
+          + '<ul style="margin:7px 0 0 18px;font-size:15.5px">'
+          + '<li>' + esc(ex.total_minutes_wording) + ', ' + ex.total_marks
+          + ' marks, ' + ex.contribution_percent + '% of your study score</li>'
+          + '<li>' + ex.assessors + ' assessors. ' + esc(ex.recorded) + '</li>'
+          + '<li>Section 1 ' + s[0].name_en + ', ' + s[0].minutes
+          + ' minutes, ' + s[0].marks + ' marks</li>'
+          + '<li>Section 2 ' + s[1].name_en + ', ' + s[1].minutes
+          + ' minutes, ' + s[1].marks + ' marks</li>'
+          + '</ul></div>'
+          + '<div class="tip"><b>Before Section 1</b>'
+          + esc(CRIT.entry.wording) + '</div>'
+          + '<div class="tip"><b>No introduction in Section 2</b>'
+          + esc(CRIT.sections[1].no_introduction.wording) + ' '
+          + esc(CRIT.sections[1].no_introduction.also) + '</div>'
+          + '<div class="row"><button class="btn wide" id="startMock">'
+          + 'Start the 15 minutes</button></div>'
+          + '<p class="note">Nothing you say is uploaded. If you record yourself, the '
+          + 'recording stays in this phone’s memory for this sitting only, and you '
+          + 'can save it to the phone yourself.</p>' + foot();
+    $("main").innerHTML = h;
+    $("startMock").onclick = function(){
+      MOCK = buildMock();
+      MOCK.sec = 0; MOCK.at = 0; MOCK.shown = false; MOCK.fu = -1;
+      MOCK.left = CRIT.sections[0].minutes * 60;
+      MOCK.started = Date.now();
+      go("mock:run");
+    };
+  };
+
+  function drawMockRun(){
+    var sec = CRIT.sections[MOCK.sec];
+    var list = MOCK.sec === 0 ? MOCK.s1 : MOCK.s2;
+    var q = list[MOCK.at];
+    setHead([{ ja:"もぎしけん", r:"mock" }, { ja:sec.name_ja, r:"mock:run" }],
+            "Section " + sec.number + " · " + sec.name_en
+            + " · question " + (MOCK.at + 1) + " of " + list.length);
+    var m = $("main");
+    var grp = MOCK.sec === 0 ? TOPNAME[q.topic] : STAGENAME[q.topic];
+
+    var h = '<div class="clock" id="clock"><b id="cnum">--:--</b>'
+          + '<span>left in Section ' + sec.number + ' · ' + esc(sec.name_en)
+          + '</span></div>';
+
+    h += '<div class="step">' + esc(grp ? grp.en : q.topic)
+       + (q.higher_order ? " · higher order" : "") + '</div>';
+
+    if (!MOCK.shown){
+      h += '<div class="hidden-q" id="hq">The assessor has asked you something.'
+         + '<div class="row" style="justify-content:center">'
+         + '<button class="btn" id="again">Hear it again</button>'
+         + '<button class="btn ghost" id="show">Show the question</button></div>'
+         + '</div>';
+    } else {
+      h += '<div class="card">' + jaLine(q.question_ja) + enLine(q.question_en)
+         + '</div>';
+      if (MOCK.fu >= 0){
+        h += '<div class="step">Follow-up ' + (MOCK.fu + 1) + ' of '
+           + q.followups.length + '</div><div class="card">'
+           + jaLine(q.followups[MOCK.fu].ja)
+           + enLine(q.followups[MOCK.fu].en) + '</div>';
+      }
+      h += '<details><summary>A developed answer, if you are stuck</summary>'
+         + '<div class="dbody">' + jaLine(q.model_responses.developed.ja)
+         + enLine(q.model_responses.developed.en) + '</div></details>';
+    }
+
+    h += recordBlock("mock");
+
+    h += '<div class="row">';
+    if (MOCK.shown){
+      if (MOCK.fu < q.followups.length - 1)
+        h += '<button class="btn" id="nextfu">Next follow-up</button>';
+      h += '<button class="btn ghost" id="nextq">'
+         + (MOCK.at < list.length - 1 ? "Next question"
+            : (MOCK.sec === 0 ? "On to Section 2" : "Finish")) + '</button>';
+    }
+    h += '<button class="btn ghost" id="quit">Stop</button></div>';
+    m.innerHTML = h + foot();
+
+    paintClock();
+    stopClock();
+    clockTimer = setInterval(function(){
+      MOCK.left--;
+      paintClock();
+      if (MOCK.left <= 0){ stopClock(); nextSection(); }
+    }, 1000);
+
+    /* The question is spoken as soon as it arrives, the way it happens in the
+       room. A phone that has not been touched yet will refuse, which is why
+       Hear it again is there. */
+    if (!MOCK.shown) SAY.speak(q.question_ja);
+    if ($("again")) $("again").onclick = function(){ SAY.speak(q.question_ja); };
+    if ($("show")) $("show").onclick = function(){ MOCK.shown = true; drawMockRun(); };
+    if ($("nextfu")) $("nextfu").onclick = function(){
+      MOCK.fu++; drawMockRun();
+      SAY.speak(q.followups[MOCK.fu].ja);
+    };
+    if ($("nextq")) $("nextq").onclick = function(){
+      if (MOCK.at < list.length - 1){
+        MOCK.at++; MOCK.shown = false; MOCK.fu = -1; drawMockRun();
+      } else nextSection();
+    };
+    $("quit").onclick = function(){ stopClock(); MOCK = null; go("mock"); };
+    wireRecorder(m);
+  }
+  function nextSection(){
+    if (MOCK.sec === 0){
+      MOCK.sec = 1; MOCK.at = 0; MOCK.shown = false; MOCK.fu = -1;
+      MOCK.left = CRIT.sections[1].minutes * 60;
+      drawMockRun();
+    } else { stopClock(); drawMockDone(); }
+  }
+  function paintClock(){
+    var el = $("cnum"); if (!el) return;
+    var s = Math.max(0, MOCK.left);
+    el.textContent = Math.floor(s / 60) + ":" + ("0" + (s % 60)).slice(-2);
+    $("clock").classList.toggle("low", s <= 60);
+  }
+  function drawMockDone(){
+    setHead([{ ja:"もぎしけん", r:"mock" }, { ja:"おわり", r:"mock:run" }],
+            "Fifteen minutes done");
+    $("main").innerHTML = '<h2>おわりました<span class="en">That is the whole '
+      + 'examination</span></h2>'
+      + '<p>Now mark yourself against the four criteria while it is fresh. The '
+      + 'descriptors are the official ones, word for word.</p>'
+      + '<div class="row"><button class="btn" data-r="me">Mark yourself</button>'
+      + '<button class="btn ghost" data-r="mock">Run it again</button></div>' + foot();
+    each($("main"), "[data-r]", function(b){
+      b.onclick = function(){ MOCK = null; go(b.dataset.r); };
+    });
+  }
+
+  /* ================= 3. the drills ================= */
+  var DSTATE = {};
+
+  RENDER.drill = function(args){
+    if (args[0] === "weak") return drawWeak();
+    if (args[0]) return drawDrill(args[0]);
+    setHead([{ ja:"ドリル", r:"drill" }], "Drills · built from what the reports mark down");
+    var weak = weakList();
+    var h = '<h2>ドリル<span class="en">Five drills, every item from a fault the '
+          + 'assessors named</span></h2>'
+          + '<div class="tiles">'
+          + ER.drills.map(function(d){
+              return '<button class="tile" data-d="' + esc(d.id) + '">'
+                   + '<b>' + esc(d.title) + '</b><i>' + d.items.length
+                   + ' items</i></button>';
+            }).join("")
+          + '<button class="tile" data-d="weak"><b>Weak-spot review</b><i>'
+          + (weak.length ? weak.length + " to come back to" : "nothing yet")
+          + '</i></button>'
+          + '</div>'
+          + '<h3>The nineteen faults</h3>'
+          + '<p class="lede">Every one of these is named in at least one report '
+          + 'between 2020 and 2025, in the order of how many years named it.</p>'
+          + ER.errors.slice().sort(function(a,b){ return b.count - a.count; })
+              .map(function(e){
+                return '<details><summary>' + esc(e.name)
+                     + ' <span class="tier">' + e.count + ' of 6 years</span>'
+                     + '</summary><div class="dbody">'
+                     + '<div class="en" style="margin-bottom:7px">'
+                     + esc(e.what_goes_wrong) + '</div>'
+                     + '<div class="ja wrongline" data-say="' + esc(plain(e.wrong))
+                     + '">' + ruby(e.wrong) + '</div>'
+                     + '<div class="ja rightline" data-say="' + esc(plain(e.right))
+                     + '">' + ruby(e.right) + '</div>'
+                     + '<p class="en" style="margin-top:7px">' + esc(e.why) + '</p>'
+                     + e.report_quotes.map(function(r){
+                         return '<div class="tip"><q>' + esc(r) + '</q></div>';
+                       }).join("")
+                     + '</div></details>';
+              }).join("");
+    $("main").innerHTML = h + foot();
+    each($("main"), "[data-d]", function(b){
+      b.onclick = function(){ go("drill:" + b.dataset.d); };
+    });
+  };
+
+  function weakList(){
+    var out = [];
+    Object.keys(S.weak).forEach(function(k){
+      if (S.weak[k] && S.weak[k].miss > (S.weak[k].hit || 0)) out.push(k);
+    });
+    return out;
+  }
+  function markWeak(eid, hit){
+    if (!eid) return;
+    var w = S.weak[eid] = S.weak[eid] || { hit:0, miss:0 };
+    if (hit) w.hit++; else w.miss++;
+    save();
+  }
+
+  function drawDrill(id, only){
+    var d = null;
+    ER.drills.forEach(function(x){ if (x.id === id) d = x; });
+    if (!d) return go("drill", true);
+    var items = d.items;
+    if (only && only.length)
+      items = items.filter(function(it){ return only.indexOf(it.error_id) >= 0; });
+    if (!items.length) items = d.items;
+    var st = DSTATE[id] = DSTATE[id] || { at:0, open:false, hit:0, miss:0 };
+    if (st.at >= items.length) st.at = 0;
+    var it = items[st.at];
+
+    setHead([{ ja:"ドリル", r:"drill" }, { ja:d.title, r:"drill:" + id }],
+            d.title + " · " + (st.at + 1) + " of " + items.length);
+    var m = $("main");
+    var h = '<p class="lede">' + esc(d.how) + '</p>'
+          + '<div class="step">' + (st.at + 1) + ' of ' + items.length
+          + ' · <span class="score">' + st.hit + ' right, ' + st.miss
+          + ' to come back to</span></div>';
+
+    if (d.type === "spot"){
+      h += '<div class="card"><div class="ja" data-say="' + esc(plain(it.wrong))
+         + '">' + ruby(it.wrong) + '</div></div>'
+         + '<p class="lede">What is wrong with it? Say the corrected sentence out '
+         + 'loud, then check.</p>'
+         + '<div class="reveal' + (st.open ? " on" : "") + '" id="rv">'
+         + '<div class="card"><div class="tier">The fault</div><b>'
+         + esc((ERBYID[it.error_id] || {}).name || "") + '</b>'
+         + '<div class="en" style="margin:5px 0 8px">' + esc(it.fix_en) + '</div>'
+         + '<div class="ja rightline" data-say="' + esc(plain(it.right)) + '">'
+         + ruby(it.right) + '</div></div></div>';
+    } else if (d.type === "extend"){
+      h += '<div class="card">' + jaLine(it.question) + enLine(it.question_en)
+         + '</div>'
+         + '<div class="card" style="border-color:var(--accent)">'
+         + '<div class="tier">A one-sentence answer</div>'
+         + jaLine(it.thin) + enLine(it.thin_en) + '</div>'
+         + '<p class="lede">Add two or three more things: a detail, a reason, an '
+         + 'example, an opinion. Say the long version out loud, then check.</p>'
+         + '<div class="reveal' + (st.open ? " on" : "") + '" id="rv">'
+         + '<div class="card" style="border-color:var(--ok)">'
+         + '<div class="tier">What it should sound like · added: '
+         + esc((it.added || []).join(", ")) + '</div>'
+         + jaLine(it.better) + enLine(it.better_en) + '</div></div>';
+    } else if (d.type === "upgrade"){
+      h += '<div class="card">' + jaLine(it.question) + enLine(it.question_en)
+         + '</div>'
+         + '<div class="card" style="border-color:var(--accent)">'
+         + '<div class="tier">The closed answer that stops the conversation</div>'
+         + jaLine(it.closed) + enLine(it.closed_en) + '</div>'
+         + '<p class="lede">Answer it, then keep going without being asked again.</p>'
+         + '<div class="reveal' + (st.open ? " on" : "") + '" id="rv">'
+         + '<div class="card" style="border-color:var(--ok)">'
+         + '<div class="tier">Open</div>'
+         + jaLine(it.open) + enLine(it.open_en) + '</div></div>';
+    } else if (d.type === "repair"){
+      h += '<div class="card"><b>' + esc(it.situation_en) + '</b></div>'
+         + '<p class="lede">Say it in Japanese before you look.</p>'
+         + '<div class="reveal' + (st.open ? " on" : "") + '" id="rv">'
+         + '<div class="card">' + jaLine(it.say) + enLine(it.say_en) + '</div></div>';
+    } else if (d.type === "shadow"){
+      h += '<div class="card">' + jaLine(it.ja) + enLine(it.en) + '</div>'
+         + '<div class="tip"><b>Listen for</b>' + esc(it.watch_en) + '</div>'
+         + '<p class="lede">Play it, then say it over the top of it. 0.7× first, '
+         + 'then ×1. Match the length of every sound, not just the word.</p>'
+         + '<div class="row"><button class="btn" id="play07">Play at 0.7×</button>'
+         + '<button class="btn ghost" id="play10">Play at ×1</button></div>';
+      st.open = true;
+    }
+
+    h += recordBlock("drill-" + id);
+    h += '<div class="row">';
+    if (!st.open) h += '<button class="btn" id="check">Check</button>';
+    else h += '<button class="btn ghost" id="got">I had it right</button>'
+            + '<button class="btn warn" id="not">Come back to this</button>';
+    h += '</div>'
+       + '<div class="row"><button class="btn ghost" id="skip">Skip ›</button></div>'
+       + foot();
+    m.innerHTML = h;
+
+    if ($("check")) $("check").onclick = function(){
+      st.open = true; drawDrill(id, only);
+    };
+    if ($("got")) $("got").onclick = function(){
+      st.hit++; markWeak(it.error_id, true); advance();
+    };
+    if ($("not")) $("not").onclick = function(){
+      st.miss++; markWeak(it.error_id, false); advance();
+    };
+    if ($("skip")) $("skip").onclick = advance;
+    if ($("play07")) $("play07").onclick = function(){
+      var keep = S.rate; S.rate = 0.7;
+      SAY.speak(it.ja, null, function(){ S.rate = keep; });
+    };
+    if ($("play10")) $("play10").onclick = function(){
+      var keep = S.rate; S.rate = 1;
+      SAY.speak(it.ja, null, function(){ S.rate = keep; });
+    };
+    wireRecorder(m);
+
+    function advance(){
+      st.at++; st.open = d.type === "shadow";
+      if (st.at >= items.length){
+        st.at = 0;
+        setHead([{ ja:"ドリル", r:"drill" }, { ja:d.title, r:"drill" }], d.title);
+        $("main").innerHTML = '<h2>ひとまわり おわり<span class="en">Round '
+          + 'finished</span></h2><p>' + st.hit + ' right, ' + st.miss
+          + ' to come back to. The ones you flagged are waiting in Weak-spot '
+          + 'review.</p><div class="row">'
+          + '<button class="btn" id="again2">Go round again</button>'
+          + '<button class="btn ghost" data-r="drill">Other drills</button></div>'
+          + foot();
+        st.hit = 0; st.miss = 0;
+        $("again2").onclick = function(){ drawDrill(id, only); };
+        each($("main"), "[data-r]", function(b){
+          b.onclick = function(){ go(b.dataset.r); };
+        });
+        return;
+      }
+      drawDrill(id, only);
+    }
+  }
+
+  function drawWeak(){
+    var weak = weakList();
+    setHead([{ ja:"ドリル", r:"drill" }, { ja:"よわい ところ", r:"drill:weak" }],
+            "Weak-spot review");
+    if (!weak.length){
+      $("main").innerHTML = '<h2>よわい ところ<span class="en">Weak-spot '
+        + 'review</span></h2><p>Nothing here yet. Work through a drill and tap '
+        + '<b>Come back to this</b> on anything you did not have, and it will '
+        + 'collect here.</p><div class="row">'
+        + '<button class="btn" data-r="drill">Pick a drill</button></div>' + foot();
+      each($("main"), "[data-r]", function(b){
+        b.onclick = function(){ go(b.dataset.r); };
+      });
+      return;
+    }
+    var h = '<h2>よわい ところ<span class="en">The faults you flagged, with the '
+          + 'items that test them</span></h2>'
+          + '<p class="lede">These are the ones you asked to come back to. Clearing '
+          + 'one takes two right answers in a row.</p>';
+    weak.forEach(function(eid){
+      var e = ERBYID[eid], w = S.weak[eid];
+      if (!e) return;
+      var found = [];
+      ER.drills.forEach(function(d){
+        if (d.error_ids.indexOf(eid) >= 0) found.push(d);
+      });
+      h += '<div class="card"><b>' + esc(e.name) + '</b> <span class="score">'
+         + (w.hit || 0) + ' right, ' + (w.miss || 0) + ' missed</span>'
+         + '<div class="en" style="margin:5px 0 7px">' + esc(e.why) + '</div>'
+         + '<div class="ja rightline" data-say="' + esc(plain(e.right)) + '">'
+         + ruby(e.right) + '</div>'
+         + '<div class="row">'
+         + found.map(function(d){
+             return '<button class="btn ghost" data-go="' + esc(d.id)
+                  + '" data-only="' + esc(eid) + '">' + esc(d.title) + '</button>';
+           }).join("")
+         + '<button class="btn ghost" data-clear="' + esc(eid)
+         + '">Clear it</button></div></div>';
+    });
+    $("main").innerHTML = h + foot();
+    each($("main"), "[data-go]", function(b){
+      b.onclick = function(){ drawDrill(b.dataset.go, [b.dataset.only]); };
+    });
+    each($("main"), "[data-clear]", function(b){
+      b.onclick = function(){ delete S.weak[b.dataset.clear]; save(); drawWeak(); };
+    });
+  }
+
+  /* ================= 4. the discussion builder =================
+     The subtopic and the one image are the student's own. The image is held in
+     this browser as a shrunken copy and goes nowhere else. */
+  RENDER.disc = function(args){
+    if (args[0] === "practice") return drawPractice();
+    setHead([{ ja:"ディスカッション", r:"disc" }],
+            "Discussion builder · your subtopic, your image");
+    var D = S.disc;
+    var m = $("main");
+    var h = '<h2>ディスカッション<span class="en">Eight minutes on one subtopic and '
+          + 'one image you bring in yourself</span></h2>'
+          + '<div class="tip"><b>The rules about the image</b><ul '
+          + 'style="margin:6px 0 0 18px">'
+          + CRIT.visual_material.rules.map(function(r){
+              return '<li>' + esc(r) + '</li>';
+            }).join("") + '</ul></div>'
+          + '<p class="note">Your image is stored in this browser only, on this '
+          + 'phone. It is never uploaded anywhere.</p>'
+          + '<label for="topja">Your subtopic, in Japanese</label>'
+          + '<input type="text" id="topja" placeholder="おまつり" value="'
+          + esc(D.topja || "") + '">'
+          + '<label for="topen">And in English, for your own notes</label>'
+          + '<input type="text" id="topen" placeholder="Japanese festivals" value="'
+          + esc(D.topen || "") + '">'
+          + '<h3>Your image</h3>';
+
+    if (D.img){
+      h += '<div class="shotwrap"><img class="shot" id="shot" src="' + D.img
+         + '" alt="Your chosen image for the discussion"></div>'
+         + '<div class="row"><button class="btn ghost" id="bigger">Full screen'
+         + '</button><button class="btn ghost" id="drop">Remove it</button></div>';
+    } else {
+      h += '<div class="card flat" style="text-align:center;color:var(--muted)">'
+         + 'No image yet.</div>';
+    }
+    h += '<div class="row"><label class="btn ghost" for="pick" '
+       + 'style="margin:0">' + (D.img ? "Choose a different one" : "Choose or take a photo")
+       + '<input type="file" id="pick" accept="image/*" hidden></label></div>';
+
+    h += '<h3>Nine stages, and what to say at each</h3>'
+       + '<p class="lede">Write a couple of lines for each. Three of the six '
+       + 'reports say the thing that fails is not the Japanese but running out of '
+       + 'things to say, so fill all nine before you polish any.</p>';
+
+    QD.discussion_stages.forEach(function(st){
+      var here = DISC.filter(function(q){ return q.topic === st.id; });
+      var txt = (D.stage || {})[st.id] || "";
+      h += '<details' + (txt ? "" : "") + '><summary>' + ruby(st.ja)
+         + ' <span class="tier">' + esc(st.en) + (txt ? " · written" : "")
+         + '</span></summary><div class="dbody">'
+         + '<p class="en">' + esc(st.advice) + '</p>'
+         + here.map(function(q){
+             return '<div class="card flat" style="margin-top:8px">'
+                  + jaLine(q.question_ja) + enLine(q.question_en) + '</div>';
+           }).join("")
+         + '<label for="st-' + esc(st.id) + '">What you will say</label>'
+         + '<textarea id="st-' + esc(st.id) + '" data-stage="' + esc(st.id)
+         + '" placeholder="…">' + esc(txt) + '</textarea>'
+         + '<p class="note">Sentence frames for this are in the Phrases tab.</p>'
+         + '</div></details>';
+    });
+
+    h += '<div class="row"><button class="btn wide" id="practise">'
+       + 'Practise it on the clock</button></div>' + foot();
+    m.innerHTML = h;
+
+    $("topja").oninput = function(){ S.disc.topja = this.value; save(); };
+    $("topen").oninput = function(){ S.disc.topen = this.value; save(); };
+    each(m, "[data-stage]", function(t){
+      t.oninput = function(){
+        S.disc.stage = S.disc.stage || {};
+        S.disc.stage[t.dataset.stage] = t.value;
+        save();
+      };
+    });
+    $("pick").onchange = function(){ takeImage(this.files && this.files[0]); };
+    if ($("bigger")) $("bigger").onclick = function(){ showFull(D.img); };
+    if ($("shot")) $("shot").onclick = function(){ showFull(D.img); };
+    if ($("drop")) $("drop").onclick = function(){
+      if (!confirm("Remove your image from this phone?")) return;
+      delete S.disc.img; save(); RENDER.disc([]);
+    };
+    $("practise").onclick = function(){ go("disc:practice"); };
+  };
+
+  /* Shrunk before it is stored. A phone camera file is several megabytes and
+     localStorage will not hold one; 1200px on the long edge is more than the
+     screen can show anyway, and keeps a typical photo well inside the quota. */
+  function takeImage(file){
+    if (!file) return;
+    var fr = new FileReader();
+    fr.onload = function(){
+      var im = new Image();
+      im.onload = function(){
+        var max = 1200, w = im.width, h = im.height;
+        if (Math.max(w, h) > max){
+          var k = max / Math.max(w, h); w = Math.round(w * k); h = Math.round(h * k);
+        }
+        var cv = document.createElement("canvas");
+        cv.width = w; cv.height = h;
+        cv.getContext("2d").drawImage(im, 0, 0, w, h);
+        try {
+          S.disc.img = cv.toDataURL("image/jpeg", 0.75);
+          localStorage.setItem(KEY, JSON.stringify(S));
+          RENDER.disc([]);
+        } catch (e){
+          flash("This phone would not store that image. Try a smaller one.");
+        }
+      };
+      im.onerror = function(){ flash("That file did not open as an image."); };
+      im.src = fr.result;
+    };
+    fr.readAsDataURL(file);
+  }
+  function showFull(src){
+    if (!src) return;
+    $("fullimg").src = src;
+    $("full").classList.add("on");
+  }
+  $("fullx").onclick = function(){ $("full").classList.remove("on"); };
+
+  var PR = null;
+  function drawPractice(){
+    var D = S.disc;
+    if (!PR){
+      var qs = [];
+      QD.discussion_stages.forEach(function(st){
+        var here = DISC.filter(function(q){ return q.topic === st.id; });
+        if (here.length) qs.push(here[Math.floor(Math.random() * here.length)]);
+      });
+      PR = { qs:qs, at:0, left:CRIT.sections[1].minutes * 60, shown:false };
+    }
+    var q = PR.qs[PR.at];
+    setHead([{ ja:"ディスカッション", r:"disc" }, { ja:"れんしゅう", r:"disc:practice" }],
+            "Eight minutes, your own image");
+    var m = $("main");
+    var st = STAGENAME[q.topic] || { ja:q.topic, en:q.topic };
+    var h = '<div class="clock" id="clock"><b id="cnum">--:--</b>'
+          + '<span>left in the Discussion</span></div>';
+    if (D.img){
+      h += '<div class="shotwrap"><img class="shot" id="shot" src="' + D.img
+         + '" alt="Your chosen image"></div>'
+         + '<p class="note">Tap the image for full screen, the way the assessors '
+         + 'will be looking at it.</p>';
+    } else {
+      h += '<div class="card flat" style="text-align:center;color:var(--muted)">'
+         + 'No image yet. Add one in the builder and practise with it in front of '
+         + 'you.</div>';
+    }
+    h += '<div class="step">' + ruby(st.ja) + ' · ' + esc(st.en) + '</div>';
+    if (!PR.shown){
+      h += '<div class="hidden-q">The assessor has asked you something.'
+         + '<div class="row" style="justify-content:center">'
+         + '<button class="btn" id="again">Hear it again</button>'
+         + '<button class="btn ghost" id="show">Show it</button></div></div>';
+    } else {
+      h += '<div class="card">' + jaLine(q.question_ja) + enLine(q.question_en)
+         + '</div>';
+      var mine = (D.stage || {})[q.topic];
+      if (mine)
+        h += '<details><summary>What you wrote for this stage</summary>'
+           + '<div class="dbody"><p style="white-space:pre-wrap">' + esc(mine)
+           + '</p></div></details>';
+    }
+    h += recordBlock("disc");
+    h += '<div class="row">'
+       + '<button class="btn ghost" id="nextq">'
+       + (PR.at < PR.qs.length - 1 ? "Next question" : "Finish") + '</button>'
+       + '<button class="btn ghost" id="quit">Stop</button></div>' + foot();
+    m.innerHTML = h;
+
+    paintPr();
+    stopClock();
+    clockTimer = setInterval(function(){
+      PR.left--; paintPr();
+      if (PR.left <= 0){ stopClock(); }
+    }, 1000);
+
+    if (!PR.shown) SAY.speak(q.question_ja);
+    if ($("again")) $("again").onclick = function(){ SAY.speak(q.question_ja); };
+    if ($("show")) $("show").onclick = function(){ PR.shown = true; drawPractice(); };
+    if ($("shot")) $("shot").onclick = function(){ showFull(D.img); };
+    $("nextq").onclick = function(){
+      if (PR.at < PR.qs.length - 1){ PR.at++; PR.shown = false; drawPractice(); }
+      else { stopClock(); PR = null; go("me"); }
+    };
+    $("quit").onclick = function(){ stopClock(); PR = null; go("disc"); };
+    wireRecorder(m);
+
+    function paintPr(){
+      var el = $("cnum"); if (!el) return;
+      var s = Math.max(0, PR.left);
+      el.textContent = Math.floor(s / 60) + ":" + ("0" + (s % 60)).slice(-2);
+      $("clock").classList.toggle("low", s <= 60);
+    }
+  }
+
+  /* ================= 5. the phrase bank ================= */
+  RENDER.phrase = function(args){
+    if (args[0]) return drawGroup(args[0]);
+    setHead([{ ja:"フレーズ", r:"phrase" }], "Phrases · six groups");
+    var h = '<h2>フレーズ<span class="en">What to say about the image, and what to '
+          + 'say when the question gets away from you</span></h2>'
+          + '<div class="tiles">'
+          + PH.groups.map(function(g){
+              return '<button class="tile" data-g="' + esc(g.id) + '">'
+                   + '<b>' + ruby(g.name_ja) + '</b><i>' + esc(g.name_en)
+                   + ' · ' + g.phrases.length + '</i></button>';
+            }).join("") + '</div>' + foot();
+    $("main").innerHTML = h;
+    each($("main"), "[data-g]", function(b){
+      b.onclick = function(){ go("phrase:" + b.dataset.g); };
+    });
+  };
+  function drawGroup(id){
+    var g = null;
+    PH.groups.forEach(function(x){ if (x.id === id) g = x; });
+    if (!g) return go("phrase", true);
+    setHead([{ ja:"フレーズ", r:"phrase" }, { ja:g.name_ja, r:"phrase" }], g.name_en);
+    var h = '<h2>' + ruby(g.name_ja) + '<span class="en">' + esc(g.name_en)
+          + '</span></h2><p class="lede">' + esc(g.about) + '</p>'
+          + g.phrases.map(function(p){
+              return '<div class="card">'
+                   + jaLine(p.ja, p.say || p.ja) + enLine(p.en)
+                   + (p.say ? '<div class="tier" style="margin-top:7px">'
+                       + 'With the blank filled</div>' + jaLine(p.say)
+                       + (p.say_en ? enLine(p.say_en) : "") : "")
+                   + '</div>';
+            }).join("")
+          + g.report_refs.map(function(r){
+              return '<div class="tip"><q>' + esc(r) + '</q></div>';
+            }).join("") + foot();
+    $("main").innerHTML = h;
+  }
+
+  /* ================= 6. my record ================= */
+  RENDER.me = function(args){
+    if (args[0] === "crit") return drawCriterion(args[1]);
+    setHead([{ ja:"わたしの きろく", r:"me" }], "My record · stays on this phone");
+    var notes = Object.keys(S.notes).filter(function(k){ return S.notes[k]; });
+    var h = '<h2>わたしの きろく<span class="en">What you have written, how you '
+          + 'marked yourself, and a copy you can keep</span></h2>'
+          + '<h3>Mark yourself against the four criteria</h3>'
+          + '<p class="lede">The band descriptions are the official ones, word for '
+          + 'word, from the assessment criteria and descriptors document '
+          + '(' + esc(CRIT.sources[0].version) + '). Be honest; the point is to find '
+          + 'the band you are actually in.</p>';
+    CRIT.sections.forEach(function(s){
+      h += '<div class="step">Section ' + s.number + ' · ' + esc(s.name_en)
+         + ' · ' + s.marks + ' marks</div>';
+      s.criteria.forEach(function(c){
+        var got = S.assess[c.id];
+        h += '<button class="card" data-crit="' + esc(c.id) + '">'
+           + '<b>' + esc(c.name) + '</b>'
+           + '<div class="en" style="margin-top:4px">' + esc(c.scope) + '</div>'
+           + '<div style="margin-top:7px">'
+           + (got ? '<span class="mark">' + esc(got) + '</span>'
+                    + ' <span class="score">out of ' + c.max + '</span>'
+                  : '<span class="score">not marked yet</span>')
+           + '</div></button>';
+      });
+    });
+    var total = 0, any = false;
+    Object.keys(S.assess).forEach(function(k){
+      var v = String(S.assess[k]).split("–")[0];
+      if (v){ total += parseInt(v, 10) || 0; any = true; }
+    });
+    if (any)
+      h += '<div class="card"><b>Rough total</b> <span class="mark">'
+         + total + '</span> <span class="score">out of ' + CRIT.examination.total_marks
+         + ', using the bottom of each band you picked</span></div>';
+
+    h += '<h3>What you have written</h3>';
+    if (!notes.length){
+      h += '<p class="lede">Nothing yet. Your answers appear here as you type them '
+         + 'under a question.</p>';
+    } else {
+      h += notes.map(function(k){
+        var q = QBYID[k.replace(/^/, "")];
+        return '<button class="card" data-r="browse:q:' + esc(k) + '">'
+             + (q ? '<span class="jatext">' + ruby(q.question_ja) + '</span>'
+                  : '<b>' + esc(k) + '</b>')
+             + '<p style="white-space:pre-wrap;margin-top:6px">'
+             + esc(S.notes[k]) + '</p></button>';
+      }).join("");
+    }
+
+    h += '<h3>Keep a copy</h3>'
+       + '<p class="lede">Everything above lives in this browser only. Clearing your '
+       + 'browsing data would take it with it, so save a copy before an examination '
+       + 'or when you change phones. The file is plain text you can read.</p>'
+       + '<div class="row">'
+       + '<button class="btn" id="exp">Save a copy</button>'
+       + '<label class="btn ghost" for="imp" style="margin:0">Load a copy'
+       + '<input type="file" id="imp" accept=".json,application/json" hidden></label>'
+       + '<button class="btn warn" id="wipe">Clear everything</button></div>'
+       + '<p class="note">A saved copy does not include your image, which can be '
+       + 'large. Keep the photo itself in your own photo library.</p>'
+       + foot();
+    $("main").innerHTML = h;
+    each($("main"), "[data-crit]", function(b){
+      b.onclick = function(){ go("me:crit:" + b.dataset.crit); };
+    });
+    each($("main"), "[data-r]", function(b){
+      b.onclick = function(){ go(b.dataset.r); };
+    });
+    $("exp").onclick = exportCopy;
+    $("imp").onchange = function(){ importCopy(this.files && this.files[0]); };
+    $("wipe").onclick = function(){
+      if (!confirm("Clear everything this app has saved on this phone, including "
+                 + "your image and your notes?")) return;
+      try { localStorage.removeItem(KEY); } catch (e){}
+      S = { furi:true, rate:1, notes:{}, assess:{}, disc:{}, weak:{}, seen:{} };
+      paintFuri(); paintRate(); RENDER.me([]);
+    };
+  };
+
+  function drawCriterion(cid){
+    var got = CRITBYID[cid];
+    if (!got) return go("me", true);
+    var c = got.c, s = got.section;
+    setHead([{ ja:"わたしの きろく", r:"me" }, { ja:c.name, r:"me" }],
+            "Section " + s.number + " · " + c.name + " · " + c.max + " marks");
+    var h = '<h2>' + esc(c.name) + '<span class="en">' + esc(c.scope)
+          + '</span></h2>'
+          + '<div class="card"><b>What is being judged</b><ul '
+          + 'style="margin:6px 0 0 18px;font-size:15.5px">'
+          + c.qualities.map(function(q){ return '<li>' + esc(q) + '</li>'; }).join("")
+          + '</ul></div>'
+          + (c.source_wording ? '<p class="note">The published criteria are written '
+              + 'for every language at once. The original reads: <q>'
+              + esc(c.source_wording) + '</q></p>' : "")
+          + '<h3>Which band were you in?</h3><div class="bands">'
+          + c.descriptors.map(function(d){
+              return '<button class="band' + (S.assess[cid] === d.band ? " on" : "")
+                   + '" data-band="' + esc(d.band) + '"><b>' + esc(d.band) + '</b>'
+                   + '<span>' + d.text.map(esc).join("<br>") + '</span></button>';
+            }).join("")
+          + '</div>'
+          + '<div class="row"><button class="btn ghost" data-r="me">Done</button>'
+          + '</div>' + foot();
+    $("main").innerHTML = h;
+    each($("main"), "[data-band]", function(b){
+      b.onclick = function(){
+        S.assess[cid] = (S.assess[cid] === b.dataset.band) ? "" : b.dataset.band;
+        if (!S.assess[cid]) delete S.assess[cid];
+        save(); drawCriterion(cid);
+      };
+    });
+    each($("main"), "[data-r]", function(b){
+      b.onclick = function(){ go(b.dataset.r); };
+    });
+  }
+
+  function exportCopy(){
+    var out = { app:"oral-exam", build:BUILD, saved:new Date().toISOString(),
+                notes:S.notes, assess:S.assess, weak:S.weak,
+                disc:{ topja:S.disc.topja || "", topen:S.disc.topen || "",
+                       stage:S.disc.stage || {} } };
+    var blob = new Blob([JSON.stringify(out, null, 2)], { type:"application/json" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "oral-exam-notes.json";
+    a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); }, 2000);
+  }
+  function importCopy(file){
+    if (!file) return;
+    var fr = new FileReader();
+    fr.onload = function(){
+      var got;
+      try { got = JSON.parse(fr.result); }
+      catch (e){ return flash("That file is not one of these saved copies."); }
+      if (!got || got.app !== "oral-exam")
+        return flash("That file is not one of these saved copies.");
+      if (!confirm("Replace what is on this phone with the saved copy?")) return;
+      S.notes = got.notes || {};
+      S.assess = got.assess || {};
+      S.weak = got.weak || {};
+      var img = S.disc.img;
+      S.disc = got.disc || {};
+      if (img) S.disc.img = img;      /* the image is not in the file; keep it */
+      save(); RENDER.me([]);
+    };
+    fr.readAsText(file);
+  }
+
+  /* ================= recording =================
+     MediaRecorder, held in this page's memory and nowhere else. It is not
+     written to storage, because an audio file is far larger than a browser
+     will keep and this app has no server to send one to. Save it keeps it in
+     the phone's own files; otherwise it goes when the tab closes, and the UI
+     says so rather than pretending otherwise. */
+  var REC = { on:false, mr:null, chunks:[], url:null, slot:null, stream:null };
+
+  function recordBlock(slot){
+    var mine = REC.url && REC.slot === slot;
+    return '<div class="card" data-rec="' + esc(slot) + '">'
+         + '<div class="rec">'
+         + '<button class="btn' + (REC.on && REC.slot === slot ? " warn" : " ghost")
+         + '" data-recbtn="1">'
+         + (REC.on && REC.slot === slot ? '<span class="dot"></span>Stop'
+                                       : 'Record yourself') + '</button>'
+         + (mine ? '<button class="btn ghost" data-recsave="1">Save it</button>'
+                 : "")
+         + '</div>'
+         + (mine ? '<audio controls src="' + REC.url + '"></audio>' : "")
+         + '<div class="note">Recordings stay in this phone and are never '
+         + 'uploaded. They last until you close the app, so use Save to keep '
+         + 'one.</div></div>';
+  }
+  function wireRecorder(scope){
+    each(scope, "[data-recbtn]", function(b){
+      var slot = b.closest("[data-rec]").dataset.rec;
+      b.onclick = function(){
+        if (REC.on) return stopRec();
+        startRec(slot);
+      };
+    });
+    each(scope, "[data-recsave]", function(b){
+      b.onclick = function(){
+        if (!REC.url) return;
+        var a = document.createElement("a");
+        a.href = REC.url;
+        a.download = "oral-practice-" + new Date().toISOString().slice(0, 16)
+                   .replace(/[:T]/g, "-") + ".webm";
+        a.click();
+      };
+    });
+  }
+  function startRec(slot){
+    if (!navigator.mediaDevices || !window.MediaRecorder)
+      return flash("This browser cannot record. Everything else still works.");
+    SAY.stop();
+    navigator.mediaDevices.getUserMedia({ audio:true }).then(function(stream){
+      REC.stream = stream;
+      REC.chunks = [];
+      try { REC.mr = new MediaRecorder(stream); }
+      catch (e){ return flash("This browser cannot record."); }
+      REC.mr.ondataavailable = function(ev){
+        if (ev.data && ev.data.size) REC.chunks.push(ev.data);
+      };
+      REC.mr.onstop = function(){
+        if (REC.url) URL.revokeObjectURL(REC.url);
+        REC.url = URL.createObjectURL(new Blob(REC.chunks, { type:"audio/webm" }));
+        REC.on = false;
+        stream.getTracks().forEach(function(t){ t.stop(); });
+        draw();
+      };
+      REC.on = true; REC.slot = slot;
+      REC.mr.start();
+      draw();
+    }, function(){
+      flash("Microphone permission was refused, so recording is off.");
+    });
+  }
+  function stopRec(){
+    try { REC.mr.stop(); } catch (e){ REC.on = false; draw(); }
+  }
+
+  function foot(){
+    return '<p class="foot">VCE Japanese Second Language oral examination practice. '
+         + 'Criteria and descriptors from the VCAA assessment criteria document '
+         + esc(CRIT.sources[0].version) + '; examiner tips quoted from the '
+         + 'assessor reports 2020 to 2025. Rough draft, for Andrew to react to. '
+         + esc(BUILD) + '</p>';
+  }
+
+  /* ================= service worker ================= */
+  if ("serviceWorker" in navigator){
+    window.addEventListener("load", function(){
+      navigator.serviceWorker.register("sw.js").then(function(reg){
+        function offer(w){
+          if (!w) return;
+          var bar = $("upbar");
+          bar.classList.add("on");
+          $("upnow").onclick = function(){
+            w.postMessage({ type:"SKIP_WAITING" });
+            setTimeout(function(){ location.reload(); }, 150);
+          };
+          $("uplater").onclick = function(){ bar.classList.remove("on"); };
+          if (w.postMessage){
+            var ch = new MessageChannel();
+            ch.port1.onmessage = function(ev){
+              if (ev.data && ev.data.version)
+                $("upmsg").textContent = ev.data.version + " is ready.";
+            };
+            try { w.postMessage({ type:"VERSION" }, [ch.port2]); } catch (e){}
+          }
+        }
+        if (reg.waiting) offer(reg.waiting);
+        reg.addEventListener("updatefound", function(){
+          var w = reg.installing;
+          if (!w) return;
+          w.addEventListener("statechange", function(){
+            if (w.state === "installed" && navigator.serviceWorker.controller) offer(w);
+          });
+        });
+      }).catch(function(){});
+    });
+  }
+  $("uplater").onclick = function(){ $("upbar").classList.remove("on"); };
+
+  /* ================= start ================= */
+  paintFuri(); paintRate();
+  route = (location.hash || "#browse").slice(1) || "browse";
+  go(route, true);
+})();
+</script>
+</body>
+</html>
