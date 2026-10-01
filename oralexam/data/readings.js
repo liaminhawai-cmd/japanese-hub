@@ -38,6 +38,11 @@ window.ORAL_READINGS = {
       "why": "Heard as なんとし on a phone. 年 is ねん in a counting question."
     },
     {
+      "ja": "一日中",
+      "say": "いちにちじゅう",
+      "why": "Kept beside 一日 so the longer word is matched first; without it the override cut this one in half."
+    },
+    {
       "ja": "一日",
       "say": "いちにち",
       "why": "ついたち is the first of the month, which is not what is meant here."
