@@ -240,9 +240,16 @@
           line-height:2}
   .reveal{display:none}
   .reveal.on{display:block}
-  .wrongline{color:var(--accent);text-decoration:line-through;
-             text-decoration-thickness:1px}
-  .rightline{color:var(--ok)}
+  /* A correction. Labelled in words, with a bar down the side: a colour on
+     its own is no use to a reader who cannot see it, and a line through a
+     whole question-and-answer pair reads as though the question was wrong. */
+  .pair{display:grid;gap:7px;margin:7px 0 0}
+  .side{border-left:4px solid;border-radius:0 9px 9px 0;padding:5px 10px;
+        background:#fafbfd}
+  .side>b{display:block;font-size:12.5px;text-transform:uppercase;
+          letter-spacing:.06em;font-weight:700}
+  .side.no{border-color:var(--accent)} .side.no>b{color:var(--accent)}
+  .side.yes{border-color:var(--ok)} .side.yes>b{color:var(--ok)}
   .score{font-size:14px;color:var(--muted)}
 
   .updatebar{position:fixed;left:0;right:0;bottom:0;z-index:70;display:none;
@@ -295,6 +302,8 @@
 </div>
 
 <script src="data/criteria.js"></script>
+<script src="data/readings.js"></script>
+<script src="data/audio.js"></script>
 <script src="data/report_insights.js"></script>
 <script src="data/questions.js"></script>
 <script src="data/phrases.js"></script>
@@ -337,13 +346,55 @@
   function plain(text){
     return String(text == null ? "" : text).replace(KRUN, "$1");
   }
+  /* What the voice is given.
+
+     Not kana. Handing a Japanese voice kana for everything makes every reading
+     right and the intonation flat, because the engine takes its pitch accent
+     and its phrasing from the kanji. So it gets the ordinary written form.
+
+     Two things are done to it. The spaces come out: they are in the data to
+     make a long kana line readable, and a speech engine treats a space as a
+     pause, which is what made it sound chopped into pieces. Then a reading is
+     swapped in for the few words the engine is known to get wrong, which are
+     listed in readings.js with nothing else beside them. Longest first, so
+     何年生 is matched before 何年. */
+  var OVERRIDE = ((window.ORAL_READINGS || {}).overrides || [])
+    .slice().sort(function(a, b){ return b.ja.length - a.ja.length; });
+  function speakable(text){
+    var out = String(text == null ? "" : text)
+      .replace(KRUN, "$1")
+      .replace(/[ \u3000]+/g, "");
+    for (var i = 0; i < OVERRIDE.length; i++)
+      out = out.split(OVERRIDE[i].ja).join(OVERRIDE[i].say);
+    return out;
+  }
+  /* A recorded file beats any device voice, so if one exists for this line it
+     is played instead. The map is built by tools/make-audio.py and is absent
+     until somebody records them, in which case nothing here does anything. */
+  var CLIPS = (window.ORAL_AUDIO || {}).clips || {};
+  function clipFor(text){ return CLIPS[speakable(text)] || null; }
   /* A Japanese line, tappable, with its own speaker mark. The spoken form
      goes in data-say so the voice never reads a bracket aloud. */
   function jaLine(text, say){
-    return '<span class="ja" data-say="' + esc(plain(say || text)) + '">'
+    return '<span class="ja" data-say="' + esc(speakable(say || text)) + '">'
          + ruby(text) + '</span>';
   }
   function enLine(text){ return '<span class="en">' + esc(text) + '</span>'; }
+
+  /* A correction, shown the same way everywhere. The assessor reports write
+     these as "X instead of Y", and they use that both ways round: a bare one
+     means X was the mistake, but "they should use X instead of Y" means X is
+     the correction. So nothing here relies on reading a quotation, on a colour,
+     or on a line through the middle. Each side is labelled in words, and a
+     line through a whole question-and-answer pair would have said the question
+     was wrong too, so there is none. */
+  function fixPair(wrong, right){
+    return '<div class="pair">'
+         + '<div class="side no"><b>\u2718 not this</b>'
+         + jaLine(wrong) + '</div>'
+         + '<div class="side yes"><b>\u2714 this</b>'
+         + jaLine(right) + '</div></div>';
+  }
 
   /* ---- store ---------------------------------------------------------
      localStorage only, as the repo rules require. Everything a student types,
@@ -401,20 +452,42 @@
         [600, 2000, 5000, 10000].forEach(function(t){ setTimeout(land, t); });
       } catch (e){ settled = true; }
     } else { document.body.classList.remove("hasvoice"); }
-    var liveEl = null;
+    var liveEl = null, audioEl = null;
     function stop(){
       if (liveEl){ liveEl.classList.remove("live"); liveEl = null; }
+      if (audioEl){ try { audioEl.pause(); } catch (e){} audioEl = null; }
       try { if (can) speechSynthesis.cancel(); } catch (e){}
     }
     return {
-      hasJa: function(){ return !!jaV; },
+      /* A recorded clip plays with no voice installed at all, so the play
+         marks stay when there are clips even if the device cannot speak. */
+      hasJa: function(){ return !!jaV || !!Object.keys(CLIPS).length; },
       ready: function(f){ if (settled) f(); else waiting.push(f); },
       /* One line at a time: two sentences over each other is noise. */
       speak: function(text, el, done){
         stop();
+        var clip = clipFor(text);
+        if (clip){
+          audioEl = new Audio("audio/" + clip);
+          audioEl.playbackRate = S.rate;
+          if (el) el.classList.add("live");
+          liveEl = el;
+          audioEl.onended = audioEl.onerror = function(){
+            if (el) el.classList.remove("live");
+            if (liveEl === el) liveEl = null;
+            audioEl = null;
+            if (done) done();
+          };
+          audioEl.play().catch(function(){
+            audioEl = null;
+            if (el) el.classList.remove("live");
+            if (done) done();
+          });
+          return;
+        }
         if (!jaV) land();
         if (!jaV){ if (done) done(); return; }
-        var u = new SpeechSynthesisUtterance(plain(text));
+        var u = new SpeechSynthesisUtterance(speakable(text));
         u.voice = jaV; u.lang = "ja-JP"; u.rate = 0.85 * S.rate;
         if (el){ el.classList.add("live"); liveEl = el; }
         u.onend = u.onerror = function(){
@@ -606,7 +679,7 @@
            + '</div>'
            + '<span class="jatext">' + ruby(q.question_ja) + '</span>'
            + enLine(q.question_en) + '</button>'
-           + '<button class="playbtn" data-play="' + esc(plain(q.question_ja))
+           + '<button class="playbtn" data-play="' + esc(speakable(q.question_ja))
            + '" aria-label="Hear the question"></button></div>';
     }).join("");
 
@@ -697,7 +770,18 @@
     });
 
     if (q.report_refs && q.report_refs.length){
-      h += '<div class="tip"><b>Examiner tip</b>'
+      /* The pair goes above the quotations, not below them. The reports
+         phrase a correction as "X instead of Y" and use it in both directions,
+         so a teacher reading the quotation on its own cannot tell which form
+         is being asked for. Showing the fix first settles it before they
+         reach the quote. */
+      var lead = (q.common_errors || []).map(function(eid){
+        var e = ERBYID[eid];
+        return e ? fixPair(e.wrong, e.right) : "";
+      }).join("");
+      h += '<div class="tip"><b>Examiner tip</b>' + lead
+         + '<div class="tier" style="margin:' + (lead ? "11px" : "0") + ' 0 4px">'
+         + 'What the assessors wrote</div>'
          + q.report_refs.map(function(r){
              var bits = r.split(/:\s/);
              var yr = bits.shift();
@@ -727,10 +811,7 @@
              return '<div class="card"><b>' + esc(e.name) + '</b>'
                   + ' <span class="score">named in ' + e.count + ' of 6 years</span>'
                   + '<div class="en" style="margin:5px 0 7px">' + esc(e.why) + '</div>'
-                  + '<div class="ja wrongline" data-say="' + esc(plain(e.wrong))
-                  + '">' + ruby(e.wrong) + '</div>'
-                  + '<div class="ja rightline" data-say="' + esc(plain(e.right))
-                  + '">' + ruby(e.right) + '</div></div>';
+                  + fixPair(e.wrong, e.right) + '</div>';
            }).join("");
     }
 
@@ -1030,10 +1111,7 @@
                      + '</summary><div class="dbody">'
                      + '<div class="en" style="margin-bottom:7px">'
                      + esc(e.what_goes_wrong) + '</div>'
-                     + '<div class="ja wrongline" data-say="' + esc(plain(e.wrong))
-                     + '">' + ruby(e.wrong) + '</div>'
-                     + '<div class="ja rightline" data-say="' + esc(plain(e.right))
-                     + '">' + ruby(e.right) + '</div>'
+                     + fixPair(e.wrong, e.right)
                      + '<p class="en" style="margin-top:7px">' + esc(e.why) + '</p>'
                      + e.report_quotes.map(function(r){
                          return '<div class="tip"><q>' + esc(r) + '</q></div>';
@@ -1081,7 +1159,7 @@
           + ' to come back to</span></div>';
 
     if (d.type === "spot"){
-      h += '<div class="card"><div class="ja" data-say="' + esc(plain(it.wrong))
+      h += '<div class="card"><div class="ja" data-say="' + esc(speakable(it.wrong))
          + '">' + ruby(it.wrong) + '</div></div>'
          + '<p class="lede">What is wrong with it? Say the corrected sentence out '
          + 'loud, then check.</p>'
@@ -1089,8 +1167,7 @@
          + '<div class="card"><div class="tier">The fault</div><b>'
          + esc((ERBYID[it.error_id] || {}).name || "") + '</b>'
          + '<div class="en" style="margin:5px 0 8px">' + esc(it.fix_en) + '</div>'
-         + '<div class="ja rightline" data-say="' + esc(plain(it.right)) + '">'
-         + ruby(it.right) + '</div></div></div>';
+         + fixPair(it.wrong, it.right) + '</div></div>';
     } else if (d.type === "extend"){
       h += '<div class="card">' + jaLine(it.question) + enLine(it.question_en)
          + '</div>'
@@ -1212,8 +1289,8 @@
       h += '<div class="card"><b>' + esc(e.name) + '</b> <span class="score">'
          + (w.hit || 0) + ' right, ' + (w.miss || 0) + ' missed</span>'
          + '<div class="en" style="margin:5px 0 7px">' + esc(e.why) + '</div>'
-         + '<div class="ja rightline" data-say="' + esc(plain(e.right)) + '">'
-         + ruby(e.right) + '</div>'
+         + '<div class="side yes" style="margin:6px 0"><b>\u2714 this</b>'
+         + jaLine(e.right) + '</div>'
          + '<div class="row">'
          + found.map(function(d){
              return '<button class="btn ghost" data-go="' + esc(d.id)

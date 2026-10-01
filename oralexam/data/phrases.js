@@ -372,8 +372,8 @@ window.ORAL_PHRASES = {
           "en": "Just a moment, please."
         },
         {
-          "ja": "もう 一回[いっかい] 言[い]ってください。",
-          "en": "Could you say that again, please."
+          "ja": "すみません、もう 一回[いっかい] 言[い]ってください。",
+          "en": "Sorry, could you say that again, please."
         },
         {
           "ja": "もう 少[すこ]し ゆっくり 言[い]ってください。",

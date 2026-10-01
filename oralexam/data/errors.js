@@ -454,8 +454,8 @@ window.ORAL_ERRORS = {
           "fix_en": "ことができます takes the plain form, not the potential."
         },
         {
-          "wrong": "先生[せんせい]の 話[はなし]を 聞[き]きて、ノートを 書[か]きました。",
-          "right": "先生[せんせい]の 話[はなし]を 聞[き]いて、ノートを 書[か]きました。",
+          "wrong": "先生[せんせい]の 話[はなし]を 聞[き]きて、ノートを とりました。",
+          "right": "先生[せんせい]の 話[はなし]を 聞[き]いて、ノートを とりました。",
           "error_id": "err-te-form",
           "fix_en": "聞く goes to 聞いて."
         },
@@ -541,8 +541,8 @@ window.ORAL_ERRORS = {
           "question_en": "What are your hobbies?",
           "thin": "サッカーです。",
           "thin_en": "Soccer.",
-          "better": "しゅみは サッカーです。十才[じゅっさい]から 近[ちか]くの チームで して、今[いま]も 週[しゅう]に 三回[さんかい] れんしゅうします。体[からだ]を 動[うご]かすのが 好[す]きだからです。",
-          "better_en": "My hobby is soccer. I have played for a local team since I was ten and still train three times a week, because I like being active.",
+          "better": "しゅみは サッカーです。十才[じゅっさい]の 時[とき]に 近[ちか]くの チームに 入[はい]って、今[いま]も 週[しゅう]に 三回[さんかい] れんしゅうします。体[からだ]を 動[うご]かすのが 好[す]きだからです。",
+          "better_en": "My hobby is soccer. I joined a local team when I was ten and still train three times a week, because I like being active.",
           "added": [
             "how long",
             "how often",
@@ -628,7 +628,7 @@ window.ORAL_ERRORS = {
           ]
         },
         {
-          "question": "学校[がっこう]の 行事[ぎょうじ]で どんな 行事[ぎょうじ]が 好[す]きですか。",
+          "question": "学校[がっこう]の 行事[ぎょうじ]の 中[なか]で、どんな 行事[ぎょうじ]が 好[す]きですか。",
           "question_en": "Which school events do you like?",
           "thin": "スポーツデーです。",
           "thin_en": "Sports day.",

@@ -16,12 +16,14 @@
    Bump CACHE when anything in SHELL changes, or phones keep the old copy.
    ========================================================================== */
 
-var CACHE = "oral-exam-v1";
+var CACHE = "oral-exam-v2";
 
 var SHELL = [
   "./",
   "./index.html",
   "./data/criteria.js",
+  "./data/readings.js",
+  "./data/audio.js",
   "./data/report_insights.js",
   "./data/questions.js",
   "./data/phrases.js",
@@ -72,6 +74,13 @@ function offline() {
   return new Response("", { status: 504, statusText: "offline" });
 }
 
+/* The recorded clips. They are the big files and they never change once
+   generated: a new recording gets a new name, because the name is taken from
+   the line it speaks. So they are served from the cache and only fetched the
+   first time a student plays one, which means the ones they actually use end
+   up on the phone and the ones they never touch cost nothing. */
+function isClip(url){ return url.pathname.indexOf("/audio/") > -1; }
+
 /* The app itself, whichever of the two ways in survived. Deliberately ignores
    the requested URL: for a navigation we always want the app. */
 function navFallback(done) {
@@ -86,6 +95,22 @@ self.addEventListener("fetch", function (e) {
   if (req.method !== "GET") return;
   var url = new URL(req.url);
   if (url.origin !== self.location.origin) return;
+
+  if (isClip(url)) {
+    e.respondWith(
+      caches.match(req).then(function (hit) {
+        if (hit) return hit;
+        return fetch(req).then(function (res) {
+          if (res && res.ok) {
+            var copy = res.clone();
+            caches.open(CACHE).then(function (c) { c.put(req, copy); });
+          }
+          return res;
+        }).catch(offline);
+      })
+    );
+    return;
+  }
 
   e.respondWith(
     // Do not let a stalled connection hold the app up: if the network has not

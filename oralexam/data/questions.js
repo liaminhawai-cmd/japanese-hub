@@ -379,8 +379,8 @@ window.ORAL_QUESTIONS = {
           "en": "Why do you think that?"
         },
         {
-          "ja": "だれが それを できると 思[おも]いますか。",
-          "en": "Who do you think could do that?"
+          "ja": "だれが それを かえられると 思[おも]いますか。",
+          "en": "Who do you think could change it?"
         },
         {
           "ja": "メルボルンの ほかの 町[まち]と くらべて どうですか。",
@@ -599,8 +599,8 @@ window.ORAL_QUESTIONS = {
           "en": "I think I am most like my mother. We both like talking and we laugh a lot."
         },
         "advanced": {
-          "ja": "かおは 父[ちち]に にていますが、せいかくは 母[はは]に にていると 思[おも]います。母[はは]も 私[わたし]も 話[はな]すのが 好[す]きで、はじめて 会[あ]った 人[ひと]とも すぐに なかよく なれます。でも、父[ちち]の ほうが しずかなので、家[いえ]では 父[ちち]が 聞[き]く 人[ひと]に なります。",
-          "en": "My face is like my father's, but I think my personality is like my mother's. My mother and I both like talking, and we can get on with people straight away even when we have just met them. But my father is quieter, so at home he is the one who listens."
+          "ja": "かおは 父[ちち]に にていますが、せいかくは 母[はは]に にていると 思[おも]います。母[はは]も 私[わたし]も 話[はな]すのが 好[す]きで、はじめて 会[あ]った 人[ひと]とも すぐに なかよく なれます。でも、父[ちち]の ほうが しずかなので、家[いえ]では たいてい 父[ちち]が 話[はなし]を 聞[き]いています。",
+          "en": "My face is like my father's, but I think my personality is like my mother's. My mother and I both like talking, and we can get on with people straight away even when we have just met them. But my father is quieter, so at home he is usually the one listening."
         }
       },
       "key_grammar": [
@@ -723,7 +723,7 @@ window.ORAL_QUESTIONS = {
           "en": "I studied English, mathematics and biology."
         },
         "developed": {
-          "ja": "今年[ことし]は 英語[えいご]と すうがくと せいぶつと ちりを 勉強[べんきょう]しました。日本語[にほんご]と いっしょに、ぜんぶで 五[いつ]つです。",
+          "ja": "今年[ことし]は 英語[えいご]と すうがくと せいぶつと ちりを 勉強[べんきょう]しました。日本語[にほんご]も 入[い]れて、ぜんぶで 五[いつ]つです。",
           "en": "This year I studied English, mathematics, biology and geography. With Japanese, that is five subjects altogether."
         },
         "advanced": {
@@ -1040,7 +1040,7 @@ window.ORAL_QUESTIONS = {
       "model_responses": {
         "basic": {
           "ja": "やさしい 人[ひと]だと 思[おも]います。",
-          "en": "I think it is a kind person."
+          "en": "Someone kind, I think."
         },
         "developed": {
           "ja": "話[はな]を よく 聞[き]いてくれる 人[ひと]が いい 友[とも]だちだと 思[おも]います。こまった 時[とき]に たすけてくれるからです。",
@@ -1546,8 +1546,8 @@ window.ORAL_QUESTIONS = {
           "en": "What is the hardest part of the job?"
         },
         {
-          "ja": "勉強[べんきょう]と りょうほう できますか。",
-          "en": "Can you manage it along with your study?"
+          "ja": "アルバイトと 勉強[べんきょう]の りょうほうが できますか。",
+          "en": "Can you manage both the job and your study?"
         }
       ],
       "model_responses": {
@@ -1627,12 +1627,12 @@ window.ORAL_QUESTIONS = {
           "en": "I think they should, because you can earn money."
         },
         "developed": {
-          "ja": "した ほうが いいと 思[おも]います。自分[じぶん]で お金[かね]を もらうと、お金[かね]の つかい方[かた]が わかるからです。でも、週[しゅう]に 三回[さんかい]より 多[おお]いと、勉強[べんきょう]の 時間[じかん]が なくなります。",
+          "ja": "した ほうが いいと 思[おも]います。自分[じぶん]で はたらいて お金[かね]を もらうと、お金[かね]の つかい方[かた]が わかるからです。でも、週[しゅう]に 三回[さんかい]より 多[おお]いと、勉強[べんきょう]の 時間[じかん]が なくなります。",
           "en": "I think they should, because when you earn your own money you learn how to use it. But if it is more than three times a week you lose your study time."
         },
         "advanced": {
           "ja": "いい点[てん]も わるい点[てん]も あると 思[おも]います。いい点[てん]は、しゃかいの 中[なか]で 大人[おとな]と 話[はな]す けいけんが できる ことです。わるい点[てん]は、時間[じかん]が なくなって、ねるのが おそく なる ことです。だから、週[しゅう]に 二回[にかい]までなら した ほうが いいと 思[おも]います。",
-          "en": "I think there are good points and bad points. The good point is that you get experience of talking to adults out in the community. The bad point is that you run out of time and end up going to bed late. So I think twice a week is the limit worth doing."
+          "en": "I think there are good points and bad points. The good point is that you get experience of talking to adults out in the community. The bad point is that you run out of time and end up going to bed late. So I think up to twice a week is worth doing."
         }
       },
       "key_grammar": [
@@ -2514,7 +2514,7 @@ window.ORAL_QUESTIONS = {
           "en": "I would write to my future self, did you forget your dream? Right now I want to be a teacher, but that may change."
         },
         "advanced": {
-          "ja": "十年後[じゅうねんご]の 自分[じぶん]に、「ゆめを わすれませんでしたか」と 書[か]きたいです。今[いま]は 先生[せんせい]に なりたいですが、十年[じゅうねん]の 間[あいだ]に 気[き]が かわるかも しれません。それでも、人[ひと]を たすける 仕事[しごと]を していて ほしいです。それから、「日本語[にほんご]を つづけてください」とも 書[か]きます。じつは、それが 一番[いちばん] しんぱいだからです。",
+          "ja": "十年後[じゅうねんご]の 自分[じぶん]に、「ゆめを わすれませんでしたか」と 書[か]きたいです。今[いま]は 先生[せんせい]に なりたいですが、十年[じゅうねん]の 間[あいだ]に 気[き]が かわるかも しれません。それでも、人[ひと]を たすける 仕事[しごと]を していると いいです。それから、「日本語[にほんご]を つづけてください」とも 書[か]きます。じつは、それが 一番[いちばん] しんぱいだからです。",
           "en": "I would write to my future self, did you forget your dream? Right now I want to be a teacher, but in ten years I may change my mind. Even so, I hope I am doing work that helps people. I would also write, please keep up your Japanese, because in fact that is what I worry about most."
         }
       },
@@ -2647,8 +2647,8 @@ window.ORAL_QUESTIONS = {
           "en": "The good point is that you can talk to friends far away straight away. The bad point is that false news spreads quickly too."
         },
         "advanced": {
-          "ja": "いい点[てん]も わるい点[てん]も あると 思[おも]います。いい点[てん]は、とおい ところに 住[す]んでいる 友[とも]だちと すぐに 話[はな]せる ことです。じっさいに、日本[にほん]の 高校生[こうこうせい]と メッセージを おくったことが あります。わるい点[てん]は、うその ニュースも 早[はや]く 広[ひろ]がって、人[ひと]が しんじてしまう ことです。だから、学校[がっこう]で 「この ニュースは ほんとうか」と 考[かんが]える じゅぎょうが ひつようだと 思[おも]います。",
-          "en": "I think there are good points and bad points. The good point is that you can talk straight away to friends who live far away. I have actually exchanged messages with a Japanese senior student. The bad point is that false news spreads quickly too and people believe it. So I think schools need lessons on asking whether a piece of news is true."
+          "ja": "いい点[てん]も わるい点[てん]も あると 思[おも]います。いい点[てん]は、とおい ところに 住[す]んでいる 友[とも]だちと すぐに 話[はな]せる ことです。じっさいに、日本[にほん]の 高校生[こうこうせい]に メッセージを おくったことが あります。わるい点[てん]は、うその ニュースも 早[はや]く 広[ひろ]がって、人[ひと]が しんじてしまう ことです。だから、学校[がっこう]で 「この ニュースは ほんとうか」と 考[かんが]える じゅぎょうが ひつようだと 思[おも]います。",
+          "en": "I think there are good points and bad points. The good point is that you can talk straight away to friends who live far away. I have actually sent messages to a Japanese senior student. The bad point is that false news spreads quickly too and people believe it. So I think schools need lessons on asking whether a piece of news is true."
         }
       },
       "key_grammar": [
@@ -2775,8 +2775,8 @@ window.ORAL_QUESTIONS = {
           "en": "In this photo five small wagashi are lined up. They are pink and green and shaped like flowers. There is tea on the right as well."
         },
         "advanced": {
-          "ja": "この しゃしんには、小[ちい]さい わがしが 五[いつ]つ ならんでいて、右[みぎ]に おちゃが 一[ひと]つ あります。色[いろ]は ピンクや みどりで、どれも 花[はな]の かたちを しています。春[はる]の わがしだと 思[おも]います。さくらの かたちが あるからです。この しゃしんを えらんだのは、わがしが きせつと かんけいが あることを 見[み]せたかったからです。",
-          "en": "In this photo five small wagashi are lined up, with a cup of tea on the right. They are pink and green and every one is shaped like a flower. I think they are spring wagashi, because one is shaped like a cherry blossom. I chose this photo because I wanted to show that wagashi are connected with the seasons."
+          "ja": "この しゃしんには、小[ちい]さい わがしが 五[いつ]つ ならんでいて、右[みぎ]には おちゃも あります。色[いろ]は ピンクや みどりで、どれも 花[はな]の かたちを しています。春[はる]の わがしだと 思[おも]います。さくらの かたちが あるからです。この しゃしんを えらんだのは、わがしが きせつと かんけいが あることを 見[み]せたかったからです。",
+          "en": "In this photo five small wagashi are lined up, with tea on the right as well. They are pink and green and every one is shaped like a flower. I think they are spring wagashi, because one is shaped like a cherry blossom. I chose this photo because I wanted to show that wagashi are connected with the seasons."
         }
       },
       "key_grammar": [
@@ -3282,11 +3282,11 @@ window.ORAL_QUESTIONS = {
           "en": "Yes, it has changed. There are more new kinds of wagashi."
         },
         "developed": {
-          "ja": "かわったと 思[おも]います。前[まえ]は おちゃの 時[とき]だけ 食[た]べましたが、今[いま]は コンビニでも 買[か]えます。チョコレートの わがしも あります。",
+          "ja": "かわったと 思[おも]います。前[まえ]は おちゃの 時[とき]だけ 食[た]べていましたが、今[いま]は コンビニでも 買[か]えます。チョコレートの わがしも あります。",
           "en": "I think it has changed. In the past they were only eaten with tea, but now you can buy them at convenience stores. There are even chocolate wagashi."
         },
         "advanced": {
-          "ja": "かわったと 思[おも]います。前[まえ]は おちゃの きょうしつや お正月[しょうがつ]の 時[とき]だけ 食[た]べましたが、今[いま]は コンビニでも 買[か]えるように なりました。チョコレートや いちごを 使[つか]った 新[あたら]しい わがしも ふえました。でも、古[ふる]い お店[みせ]は 同[おな]じ 作[つく]り方[かた]を まもっています。新[あたら]しい わがしが あっても いいと 思[おも]いますが、古[ふる]い わがしも のこして ほしいです。",
+          "ja": "かわったと 思[おも]います。前[まえ]は おちゃの きょうしつや お正月[しょうがつ]の 時[とき]だけ 食[た]べていましたが、今[いま]は コンビニでも 買[か]えるように なりました。チョコレートや いちごを 使[つか]った 新[あたら]しい わがしも ふえました。でも、古[ふる]い お店[みせ]は 同[おな]じ 作[つく]り方[かた]を まもっています。新[あたら]しい わがしが あっても いいと 思[おも]いますが、古[ふる]い わがしも のこして ほしいです。",
           "en": "I think it has changed. In the past they were only eaten at tea classes or at New Year, but now you can buy them at convenience stores. New wagashi using chocolate and strawberry have appeared too. But the old shops keep making them the same way. I think it is fine to have new wagashi, but I would like the old ones kept as well."
         }
       },
@@ -3544,7 +3544,7 @@ window.ORAL_QUESTIONS = {
           "en": "I think Australian cake is similar. Both are eaten with tea or coffee. But cake is bigger and sweeter."
         },
         "advanced": {
-          "ja": "オーストラリアの ケーキや ラミントンが にていると 思[おも]います。どちらも おちゃや コーヒーと いっしょに 食[た]べて、おきゃくさんが 来[き]た 時[とき]に 出[だ]します。ちがう ところは 大[おお]きさと あまさです。わがしは 小[ちい]さくて、あまさも 少[すこ]しです。それに、わがしは きせつで かわりますが、ラミントンは 一年中[いちねんじゅう] 同[おな]じです。",
+          "ja": "オーストラリアの ケーキや ラミントンが にていると 思[おも]います。どちらも おちゃや コーヒーと いっしょに 食[た]べて、おきゃくさんが 来[き]た 時[とき]に 出[だ]します。ちがう ところは 大[おお]きさと あまさです。わがしは 小[ちい]さくて、あまさも 少[すこ]しです。それに、わがしは きせつに よって かわりますが、ラミントンは 一年中[いちねんじゅう] 同[おな]じです。",
           "en": "I think Australian cakes and lamingtons are similar. Both are eaten with tea or coffee and served when guests come. The differences are size and sweetness. Wagashi are small and only slightly sweet. On top of that, wagashi change with the season while a lamington is the same all year."
         }
       },
@@ -3612,8 +3612,8 @@ window.ORAL_QUESTIONS = {
           "en": "I think it would be popular, because people in Melbourne like cafes and like trying new food. But if the price is high I do not think it would sell well."
         },
         "advanced": {
-          "ja": "はんぶん 人気[にんき]に なると 思[おも]います。メルボルンの 人[ひと]は カフェが 好[す]きで、しゃしんを とるのも 好[す]きなので、きれいな わがしは すぐに 広[ひろ]がると 思[おも]います。でも、もんだいが 二[ふた]つ あります。一[ひと]つは ねだんで、もう 一[ひと]つは あじです。オーストラリアの 人[ひと]には あんこが あわないかも しれません。だから、はじめは いちごや レモンを 入[い]れた わがしから 始[はじ]めた ほうが いいと 思[おも]います。",
-          "en": "I think it would be half popular. People in Melbourne like cafes and like taking photos, so I think beautiful wagashi would spread quickly. But there are two problems: the price and the taste. Sweet bean paste may not suit Australian palates. So I think it would be better to start with wagashi made with strawberry or lemon."
+          "ja": "ある ていど 人気[にんき]に なると 思[おも]います。メルボルンの 人[ひと]は カフェが 好[す]きで、しゃしんを とるのも 好[す]きなので、きれいな わがしは すぐに 広[ひろ]がると 思[おも]います。でも、もんだいが 二[ふた]つ あります。一[ひと]つは ねだんで、もう 一[ひと]つは あじです。オーストラリアの 人[ひと]には あんこが あわないかも しれません。だから、はじめは いちごや レモンを 入[い]れた わがしから 始[はじ]めた ほうが いいと 思[おも]います。",
+          "en": "I think it would be popular up to a point. People in Melbourne like cafes and like taking photos, so I think beautiful wagashi would spread quickly. But there are two problems: the price and the taste. Sweet bean paste may not suit Australian palates. So I think it would be better to start with wagashi made with strawberry or lemon."
         }
       },
       "key_grammar": [
@@ -3679,7 +3679,7 @@ window.ORAL_QUESTIONS = {
           "en": "Yes, I have. Last year I bought and ate wagashi at a Japanese shop in Melbourne. They were beautiful and just sweet enough."
         },
         "advanced": {
-          "ja": "はい、あります。去年[きょねん]、メルボルンの 日本[にほん]の お店[みせ]で わがしを 三[み]つ 買[か]って、家族[かぞく]と 食[た]べました。見[み]た 時[とき]は 「食[た]べるのが もったいない」と 思[おも]いました。あじは ケーキより あまくなくて、おちゃと よく あいました。でも、父[ちち]は あんこが あまり 好[す]きじゃなかったので、一[ひと]つだけ 食[た]べました。その 時[とき]、ぶんかは 人[ひと]に よって かんじ方[かた]が ちがうと 思[おも]いました。",
+          "ja": "はい、あります。去年[きょねん]、メルボルンの 日本[にほん]の お店[みせ]で わがしを 三[みっ]つ 買[か]って、家族[かぞく]と 食[た]べました。見[み]た 時[とき]は 「食[た]べるのが もったいない」と 思[おも]いました。あじは ケーキより あまくなくて、おちゃと よく あいました。でも、父[ちち]は あんこが あまり 好[す]きじゃなかったので、一[ひと]つだけ 食[た]べました。その 時[とき]、ぶんかは 人[ひと]に よって かんじ方[かた]が ちがうと 思[おも]いました。",
           "en": "Yes, I have. Last year I bought three wagashi at a Japanese shop in Melbourne and ate them with my family. When I saw them I thought it seemed a shame to eat them. They were less sweet than cake and went well with tea. But my father does not much like sweet bean paste, so he only ate one. That made me think people experience a culture differently."
         }
       },
