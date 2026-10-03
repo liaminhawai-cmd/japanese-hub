@@ -171,6 +171,20 @@
        font-size:14.5px;color:var(--muted)}
   .scorebar b{font-size:19px;color:var(--ink)}
 
+  /* The topic the student picked, shown wherever it governs what happens
+     next, with its words one tap away: the mock assessors' first note was
+     that a student without the vocabulary cannot explain their research. */
+  .mytopic{border:2px solid var(--deep);border-radius:13px;padding:10px 13px;
+       margin:2px 0 12px;background:var(--paper)}
+  .mytopic>b{font-size:19px;margin-right:7px}
+  .mytopic>span{display:block;font-size:14px;color:var(--muted);margin-top:2px}
+  .mytopic details{margin-top:8px}
+  .lnk{border:0;background:none;padding:0;font-family:var(--font);
+       font-size:14px;color:var(--deep);font-weight:700;cursor:pointer;
+       text-decoration:underline;text-underline-offset:3px}
+  .vrow{padding:4px 0;border-bottom:1px solid var(--line-soft)}
+  .vrow:last-child{border-bottom:0}
+
   .segs{display:flex;gap:6px;margin:4px 0 6px}
   .seg{flex:1;min-width:0;min-height:44px;padding:6px 4px;border:1.5px solid var(--line);
        border-radius:11px;background:var(--paper);color:var(--muted);cursor:pointer;
@@ -417,7 +431,7 @@
 (function(){
   "use strict";
 
-  var BUILD = "Version 10, 3 October 2026";
+  var BUILD = "Version 11, 3 October 2026";
 
   var CRIT  = window.ORAL_CRITERIA,
       REP   = window.ORAL_REPORTS,
@@ -523,7 +537,7 @@
      line however good the recordings are. Raising this number drops that
      one saved choice, once. Notes, ticks and drafts are untouched. */
   var VOICEPICK = 2;
-  var S = { furi:true, rate:1, voice:"clips", voicePick:VOICEPICK, band:"mixed",
+  var S = { furi:true, rate:1, voice:"clips", voicePick:VOICEPICK, band:"mixed", topic:"",
             notes:{}, assess:{}, disc:{}, weak:{}, seen:{} };
   var saved = null;
   try {
@@ -1417,6 +1431,20 @@
     for (var i = 0; i < TOP.length; i++) if (TOP[i].id === id) return TOP[i];
     return null;
   }
+  /* The run screen was written for examination questions, which carry
+     follow-ups and model answers. A topic question has neither, on purpose:
+     the student researched this and the app did not. `as` decides what the
+     step line above the question says: a SAC run names the topic, Section 2
+     names the stage, which is what the examination itself does. */
+  function topicQ(t, q, as){
+    return { id:q.id, section:as === "s2" ? "discussion" : "sac",
+             topic:as === "s2" ? q.stage : t.id,
+             question_type:q.width, higher_order:q.higher_order,
+             difficulty:q.difficulty, question_ja:q.question_ja,
+             question_en:q.question_en, followups:[], key_grammar:[],
+             key_vocab:[], criteria_targeted:[], report_refs:[],
+             common_errors:[] };
+  }
   function buildTopicSac(id, band){
     var t = topicById(id);
     if (!t) return buildSac(band);
@@ -1438,13 +1466,7 @@
     /* The run screen was written for examination questions, which carry
        follow-ups and model answers. A topic question has neither, on
        purpose: the student researched this and the app did not. */
-    qs = qs.map(function(q){
-      return { id:q.id, section:"sac", topic:t.id, question_type:q.width,
-               higher_order:q.higher_order, difficulty:q.difficulty,
-               question_ja:q.question_ja, question_en:q.question_en,
-               followups:[], key_grammar:[], key_vocab:[],
-               criteria_targeted:[], report_refs:[], common_errors:[] };
-    });
+    qs = qs.map(function(q){ return topicQ(t, q, "sac"); });
     return { kind:"sac", topic:t.id, s1:qs, s2:[], band:band, sec:0, at:0,
              shown:false, fu:-1, started:0, left:0 };
   }
@@ -1494,8 +1516,27 @@
     s1.sort(function(a, b){ return a.difficulty - b.difficulty; });
 
     /* Section 2: the nine stages in order, which is the order a prepared
-       discussion actually runs in, with the harder question where there is a
-       choice so a hypothetical and an evaluative both land. */
+       discussion actually runs in.
+
+       A student who has chosen their topic gets the stages asked about that
+       topic, which is what happens in the room: the assessor has the
+       student's subtopic and works down it. The generic bank below is the
+       fallback for a student who has not chosen one yet, and it was the
+       only thing here until Andrew ran the whole examination and found the
+       discussion neither natural nor adaptive, because it could not be:
+       it did not know what the discussion was about. */
+    var myTopic = S.topic ? topicById(S.topic) : null;
+    if (myTopic){
+      var s2t = [];
+      QD.discussion_stages.forEach(function(st){
+        var here = myTopic.questions.filter(function(q){ return q.stage === st.id; });
+        if (!here.length) return;
+        shuffle(here);
+        s2t.push(topicQ(myTopic, here[0], "s2"));
+      });
+      return { s1:s1, s2:s2t, band:band, topic:myTopic.id, sec:0, at:0,
+               shown:false, fu:-1, started:0, left:0 };
+    }
     var s2 = [];
     QD.discussion_stages.forEach(function(st){
       var here = DISC.filter(function(q){ return q.topic === st.id; });
@@ -1546,6 +1587,23 @@
           + '</div><p class="seghint" id="seghint">'
           + esc((BANDS.filter(function(b){ return b.id === S.band; })[0]
                  || BANDS[0]).hint) + '</p>'
+          + (function(){
+              var t = S.topic ? topicById(S.topic) : null;
+              if (!t) return '<p class="seghint">You have not picked a SAC topic '
+                   + 'yet, so Section 2 will use the general discussion '
+                   + 'questions. Pick one below and Section 2 becomes a '
+                   + 'discussion about your own topic.</p>';
+              return '<div class="mytopic"><b>' + ruby(t.name_ja) + '</b> '
+                   + esc(t.name_en)
+                   + '<span>Section 2 will be about this. '
+                   + '<button class="lnk" id="changeTopic">Change</button></span>'
+                   + '<details><summary>Words for this topic</summary>'
+                   + '<div class="dbody">'
+                   + t.key_vocab.map(function(v){
+                       return '<div class="vrow">' + jaLine(v.ja)
+                            + enLine(v.en) + '</div>';
+                     }).join("") + '</div></details></div>';
+            })()
           + '<div class="row"><button class="btn wide" id="startMock">'
           + 'The whole examination · 15 minutes</button></div>'
           + '<div class="row"><button class="btn ghost wide" id="startSac">'
@@ -1574,6 +1632,7 @@
     each($("main"), "[data-band]", function(b){
       b.onclick = function(){ S.band = b.dataset.band; save(); draw(); };
     });
+    if ($("changeTopic")) $("changeTopic").onclick = function(){ go("mock:sac"); };
     $("startMock").onclick = function(){
       MOCK = buildMock(S.band);
       MOCK.left = CRIT.sections[0].minutes * 60;
@@ -1616,9 +1675,15 @@
       go("mock:run");
     }
     each($("main"), "[data-t]", function(b){
-      b.onclick = function(){ start(buildTopicSac(b.dataset.t, S.band)); };
+      b.onclick = function(){
+        /* Chosen once, remembered: Section 2 of the whole examination is
+           about this topic too, which is the only way it can be a real
+           discussion rather than a generic one. */
+        S.topic = b.dataset.t; save();
+        start(buildTopicSac(b.dataset.t, S.band));
+      };
     });
-    $("noTopic").onclick = function(){ start(buildSac(S.band)); };
+    $("noTopic").onclick = function(){ S.topic = ""; save(); start(buildSac(S.band)); };
   }
 
   function drawMockRun(){
@@ -1634,12 +1699,20 @@
 
     var bandName = (BANDS.filter(function(b){ return b.id === MOCK.band; })[0]
                     || BANDS[0]).lab;
+    /* Section 2 on the student's own topic says so, because that is the
+       thing they are being examined on and the strip is the only place it
+       appears while the clock is running. The band governs Section 1, so a
+       SAC run, which the band does not govern, leaves it off. */
+    var myT = MOCK.topic ? topicById(MOCK.topic) : null;
     var h = '<div class="clock" id="clock"><b id="cnum">--:--</b>'
           + '<span>left in '
-          + (sec.number ? "Section " + sec.number + " · " + esc(sec.name_en)
-             : MOCK.topic ? "four minutes · " + esc(sec.name_en)
+          + (sec.number
+             ? "Section " + sec.number + " · " + esc(sec.name_en)
+               + (sec.number === 2 && myT ? " · " + esc(myT.name_en) : "")
+             : myT ? "four minutes · " + esc(sec.name_en)
              : "your four minutes")
-          + (MOCK.topic ? "" : ' · ' + esc(bandName)) + '</span></div>';
+          + (MOCK.kind === "sac" ? "" : ' · ' + esc(bandName))
+          + '</span></div>';
 
     var step = MOCK.kind === "sac" && MOCK.topic
              ? sec.name_en + " · " + q.question_type
