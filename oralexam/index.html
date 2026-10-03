@@ -431,7 +431,7 @@
 (function(){
   "use strict";
 
-  var BUILD = "Version 12, 3 October 2026";
+  var BUILD = "Version 13, 3 October 2026";
 
   var CRIT  = window.ORAL_CRITERIA,
       REP   = window.ORAL_REPORTS,
@@ -626,7 +626,12 @@
     }
     function land(){
       jaV = find(); settled = true;
-      document.body.classList.toggle("hasvoice", !!jaV);
+      /* A recording plays with no device voice installed at all, so what
+         decides whether the play marks appear is whether anything can
+         speak, not whether this phone can. Keying it to the device voice
+         alone hid every play mark on a machine with no Japanese voice,
+         which is most Windows machines, while 953 recordings sat unused. */
+      document.body.classList.toggle("hasvoice", !!jaV || !!Object.keys(CLIPS).length);
       waiting.splice(0).forEach(function(f){ f(); });
     }
     if (can){
@@ -635,7 +640,9 @@
         speechSynthesis.addEventListener("voiceschanged", land);
         [600, 2000, 5000, 10000].forEach(function(t){ setTimeout(land, t); });
       } catch (e){ settled = true; }
-    } else { document.body.classList.remove("hasvoice"); }
+    } else {
+      document.body.classList.toggle("hasvoice", !!Object.keys(CLIPS).length);
+    }
     var liveEl = null, audioEl = null;
     function playClip(clip, el, done){
       audioEl = new Audio("audio/" + clip);
@@ -956,6 +963,18 @@
     var h = '<div class="scorebar"><b>' + (st.at + 1) + ' / ' + r.items.length
           + '</b><span>' + st.right + ' right so far</span></div>';
 
+    /* Andrew, 3 October 2026: the English under a question-word item gives
+       the answer away. It does. "Where did you go on the weekend?" over a
+       choice of who, what, where and when is not a question any more.
+       So the English waits until the answer is in, on the two rounds that
+       are about catching what was asked.
+
+       The particle rounds keep theirs. There the English is not the answer,
+       it is the thing you need in order to choose: working out that "by
+       train" is で is the skill, and a student who cannot read the sentence
+       is testing their reading rather than their particles. */
+    var showEn = st.picked !== null || r.kind === "choose";
+
     /* the prompt */
     if (r.kind === "choose"){
       h += '<div class="card">'
@@ -963,7 +982,7 @@
          + ruby(it.after) + '</span>' + enLine(it.en) + '</div>';
     } else {
       h += '<div class="qrow"><div class="card">' + jaLine(it.ja)
-         + (it.en ? enLine(it.en) : "")
+         + (it.en && showEn ? enLine(it.en) : "")
          + '</div><button class="playbtn" id="playq" aria-label="Hear it"></button>'
          + '</div>';
     }
@@ -973,7 +992,11 @@
                  return { key:w.id, lab:esc(w.en), sub:esc(w.ja) + " · " + esc(w.forms),
                           ok:w.id === it.answer, why:"" }; })
              : r.kind === "reply"  ? seededShuffle(it.options.map(function(o, i){
-                 return { key:String(i), ja:o.ja, lab:ruby(o.ja), sub:esc(o.en),
+                 /* and the same for the answers: four Japanese sentences
+                    with their English underneath is a reading comprehension
+                    question, not a listening one. */
+                 return { key:String(i), ja:o.ja, lab:ruby(o.ja),
+                          sub:showEn ? esc(o.en) : "",
                           ok:!!o.ok, why:o.why }; }), it.ja)
              : r.kind === "choose" ? seededShuffle(it.options.map(function(o){
                  return { key:o, lab:esc(o), sub:"", ok:o === it.answer, why:"" };
@@ -1122,9 +1145,9 @@
     var h = '<h2>しつもん<span class="en">Every question, with model answers at three '
           + 'levels and the examiner tip behind it</span></h2>'
 
-          + '<div class="novoice">This phone has no Japanese voice installed, so the '
-          + 'play marks are hidden. Everything else works. On iOS, '
-          + 'Settings › Accessibility › Spoken Content › Voices adds one.</div>'
+          + '<div class="novoice">Nothing on this device can read the Japanese, '
+          + 'so the play marks are hidden. Everything else works. On iOS, '
+          + 'Settings › Accessibility › Spoken Content › Voices adds a voice.</div>'
           + '<div class="filters">'
           + '<div class="fgroup">Section</div>'
           + chip("sec", "conversation", "1 Conversation", F.section === "conversation")
