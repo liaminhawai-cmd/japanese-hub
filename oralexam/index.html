@@ -431,7 +431,7 @@
 (function(){
   "use strict";
 
-  var BUILD = "Version 13, 3 October 2026";
+  var BUILD = "Version 14, 3 October 2026";
 
   var CRIT  = window.ORAL_CRITERIA,
       REP   = window.ORAL_REPORTS,
@@ -889,6 +889,70 @@
      practice, and a score a student cannot see tomorrow is a score that
      cannot discourage them either. */
   var RSTATE = {};
+  /* The order a round is met in.
+
+     Written down, a judge round pairs each right sentence with its wrong
+     twin, which is the readable way to author it. Shown in that order the
+     second of every pair is free: the student has just been told the answer
+     to it. So a round is shuffled when it starts, and anything sharing a
+     `pair` is then pushed at least PAIR_GAP apart, so the twin comes back
+     later, when it is a question again.
+
+     This one is a real shuffle rather than a seeded one. The order of a
+     round should differ every sitting, and Start again should mean it. The
+     order is worked out once and kept in the round's state, so moving
+     through the round does not reshuffle under the student. */
+  var PAIR_GAP = 3;
+  function orderFor(r){
+    function pairAt(i){ return r.items[i].pair || ""; }
+    /* Does this order keep every pair apart? Asked of a finished order, so
+       a build that could not manage it is thrown away rather than shipped
+       with the two halves of a pair side by side, which is the whole bug. */
+    function ok(out){
+      for (var i = 1; i < out.length; i++){
+        var p = pairAt(out[i]);
+        if (!p) continue;
+        for (var b = Math.max(0, i - PAIR_GAP); b < i; b++)
+          if (pairAt(out[b]) === p) return false;
+      }
+      return true;
+    }
+    function build(){
+      var pool = r.items.map(function(_, i){ return i; }), i, j, t;
+      for (i = pool.length - 1; i > 0; i--){
+        j = Math.floor(Math.random() * (i + 1));
+        t = pool[i]; pool[i] = pool[j]; pool[j] = t;
+      }
+      var out = [];
+      function recent(p){
+        if (!p) return false;
+        for (var b = Math.max(0, out.length - PAIR_GAP); b < out.length; b++)
+          if (pairAt(out[b]) === p) return true;
+        return false;
+      }
+      /* The pool is already shuffled, so taking the first item that is
+         allowed is a random choice among the allowed ones. */
+      while (pool.length){
+        var k = 0;
+        while (k < pool.length && recent(pairAt(pool[k]))) k++;
+        if (k === pool.length) k = 0;
+        out.push(pool.splice(k, 1)[0]);
+      }
+      return out;
+    }
+    /* Greedy can still paint itself into a corner when the only items left
+       are a pair, so the whole thing is simply tried again. With four pairs
+       in twelve it succeeds almost every time; fifty attempts makes a
+       failure something that does not happen. */
+    for (var n = 0; n < 50; n++){
+      var out = build();
+      if (ok(out)) return out;
+    }
+    return build();
+  }
+  function newRound(r){
+    return { at:0, picked:null, right:0, done:0, order:orderFor(r) };
+  }
   function roundById(id){
     var all = (QW.rounds || []).concat(PT.rounds || []);
     for (var i = 0; i < all.length; i++) if (all[i].id === id) return all[i];
@@ -953,12 +1017,12 @@
   function drawRound(id){
     var r = roundById(id);
     if (!r) return go("browse", true);
-    var st = RSTATE[id] = RSTATE[id] || { at:0, picked:null, right:0, done:0 };
+    var st = RSTATE[id] = RSTATE[id] || newRound(r);
     var home = (QW.rounds || []).indexOf(r) >= 0 ? "drill:qw" : "drill:pt";
     var crumbTop = { ja:"ドリル", r:"drill" };
     setHead([crumbTop, { ja:r.title, r:id }],
             r.title + " · " + (st.at + 1) + " of " + r.items.length);
-    var it = r.items[st.at];
+    var it = r.items[st.order[st.at]];
 
     var h = '<div class="scorebar"><b>' + (st.at + 1) + ' / ' + r.items.length
           + '</b><span>' + st.right + ' right so far</span></div>';
@@ -1083,8 +1147,9 @@
     if ($("nextI")) $("nextI").onclick = function(){
       st.at++; st.picked = null; drawRound(id);
     };
+    /* Start again reshuffles, so a second run is a second run. */
     if ($("againI")) $("againI").onclick = function(){
-      RSTATE[id] = { at:0, picked:null, right:0, done:0 }; drawRound(id);
+      RSTATE[id] = newRound(r); drawRound(id);
     };
     each($("main"), "[data-r]", function(b){
       b.onclick = function(){ SAY.stop(); go(b.dataset.r); };

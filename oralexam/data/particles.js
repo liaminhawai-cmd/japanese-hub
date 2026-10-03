@@ -217,13 +217,15 @@ window.ORAL_PARTICLES = {
           "ja": "わたしは すしが 好[す]きです。",
           "ok": true,
           "right": "",
-          "why": "好きです takes が. This one is right."
+          "why": "好きです takes が. This one is right.",
+          "pair": "suki"
         },
         {
           "ja": "わたしは すしを 好[す]きです。",
           "ok": false,
           "right": "わたしは すしが 好[す]きです。",
-          "why": "好きです takes が, not を."
+          "why": "好きです takes が, not を.",
+          "pair": "suki"
         },
         {
           "ja": "学校[がっこう]に べんきょうします。",
@@ -235,13 +237,15 @@ window.ORAL_PARTICLES = {
           "ja": "友[とも]だちに 会[あ]いました。",
           "ok": true,
           "right": "",
-          "why": "会います takes に. This one is right."
+          "why": "会います takes に. This one is right.",
+          "pair": "au"
         },
         {
           "ja": "友[とも]だちを 会[あ]いました。",
           "ok": false,
           "right": "友[とも]だちに 会[あ]いました。",
-          "why": "会います takes に, even though in English you meet someone."
+          "why": "会います takes に, even though in English you meet someone.",
+          "pair": "au"
         },
         {
           "ja": "日本[にほん]へ 行[い]きたいです。",
@@ -253,13 +257,15 @@ window.ORAL_PARTICLES = {
           "ja": "電車[でんしゃ]に 乗[の]ります。",
           "ok": true,
           "right": "",
-          "why": "乗ります takes に, not を."
+          "why": "乗ります takes に, not を.",
+          "pair": "noru"
         },
         {
           "ja": "電車[でんしゃ]を 乗[の]ります。",
           "ok": false,
           "right": "電車[でんしゃ]に 乗[の]ります。",
-          "why": "乗ります takes に. You get on to something."
+          "why": "乗ります takes に. You get on to something.",
+          "pair": "noru"
         },
         {
           "ja": "毎日[まいにち] 日本語[にほんご]も 勉強[べんきょう]します。",
@@ -271,13 +277,15 @@ window.ORAL_PARTICLES = {
           "ja": "わたしも 日本語[にほんご]が できます。",
           "ok": true,
           "right": "",
-          "why": "できます takes が, and も replaces は."
+          "why": "できます takes が, and も replaces は.",
+          "pair": "dekiru"
         },
         {
           "ja": "わたしは 日本語[にほんご]を できます。",
           "ok": false,
           "right": "わたしは 日本語[にほんご]が できます。",
-          "why": "できます takes が, not を. Same rule as 好きです and 上手です."
+          "why": "できます takes が, not を. Same rule as 好きです and 上手です.",
+          "pair": "dekiru"
         },
         {
           "ja": "ペンで 書[か]いて ください。",
