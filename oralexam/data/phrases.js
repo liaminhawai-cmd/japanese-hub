@@ -342,10 +342,10 @@ window.ORAL_PHRASES = {
           "say_en": "Both are sweet, but cake is sweeter."
         },
         {
-          "ja": "その もんだいを なおすために、＿＿が できると 思[おも]います。",
-          "en": "To fix that problem, I think ＿＿ could be done.",
-          "say": "その もんだいを なおすために、ごみばこを ふやすことが できると 思[おも]います。",
-          "say_en": "To fix that problem, I think more rubbish bins could be put out."
+          "ja": "その もんだいを なくす ために、＿＿が できると 思[おも]います。",
+          "en": "To get rid of that problem, I think ＿＿ could be done.",
+          "say": "その もんだいを なくす ために、ごみばこを ふやすことが できると 思[おも]います。",
+          "say_en": "To get rid of that problem, I think more rubbish bins could be put out."
         },
         {
           "ja": "これからも つづくと 思[おも]います。",
@@ -374,16 +374,16 @@ window.ORAL_PHRASES = {
           "en": "Let me think."
         },
         {
-          "ja": "ちょっと 待[ま]ってください。",
-          "en": "Just a moment, please."
+          "ja": "少[すこ]し 考[かんが]えさせて ください。",
+          "en": "Let me think for a moment."
         },
         {
-          "ja": "すみません、もう 一回[いっかい] 言[い]ってください。",
-          "en": "Sorry, could you say that again, please."
+          "ja": "すみません、もう 一回[いっかい] おねがいします。",
+          "en": "Sorry, once more please."
         },
         {
-          "ja": "もう 少[すこ]し ゆっくり 言[い]ってください。",
-          "en": "Could you say it a little more slowly, please."
+          "ja": "もう 少[すこ]し ゆっくり おねがいします。",
+          "en": "A little more slowly, please."
         },
         {
           "ja": "すみません、「＿＿」は どういう いみですか。",

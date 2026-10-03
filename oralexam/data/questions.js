@@ -438,11 +438,11 @@ window.ORAL_QUESTIONS = {
       "question_type": "factual",
       "higher_order": false,
       "difficulty": 1,
-      "question_ja": "兄弟[きょうだい]が いますか。",
+      "question_ja": "ご兄弟[きょうだい]は いますか。",
       "question_en": "Do you have any brothers or sisters?",
       "followups": [
         {
-          "ja": "兄弟[きょうだい]は 何[なに]を していますか。",
+          "ja": "ご兄弟[きょうだい]は 何[なに]を していますか。",
           "en": "What do your brothers and sisters do?"
         },
         {
@@ -510,11 +510,11 @@ window.ORAL_QUESTIONS = {
       "question_type": "factual",
       "higher_order": false,
       "difficulty": 1,
-      "question_ja": "父[ちち]と 母[はは]の 仕事[しごと]は 何[なん]ですか。",
+      "question_ja": "お父[とう]さんと お母[かあ]さんの お仕事[しごと]は 何[なん]ですか。",
       "question_en": "What are your father's and mother's jobs?",
       "followups": [
         {
-          "ja": "どんな 仕事[しごと]か せつめいしてください。",
+          "ja": "どんな お仕事[しごと]か せつめいして ください。",
           "en": "Please explain what kind of job that is."
         },
         {
@@ -577,7 +577,7 @@ window.ORAL_QUESTIONS = {
       "question_type": "comparison",
       "higher_order": true,
       "difficulty": 2,
-      "question_ja": "家族[かぞく]の 中[なか]で、だれに 一番[いちばん] にていますか。",
+      "question_ja": "ご家族[かぞく]の 中[なか]で、だれに 一番[いちばん] にていますか。",
       "question_en": "Who in your family are you most like?",
       "followups": [
         {
@@ -1279,7 +1279,7 @@ window.ORAL_QUESTIONS = {
       "question_type": "factual",
       "higher_order": false,
       "difficulty": 2,
-      "question_ja": "がっきが できますか。",
+      "question_ja": "何[なに]か がっきが できますか。",
       "question_en": "Can you play a musical instrument?",
       "followups": [
         {
@@ -2053,7 +2053,7 @@ window.ORAL_QUESTIONS = {
           "en": "Where in Japan would you like to go?"
         },
         {
-          "ja": "どうして ですか。",
+          "ja": "どうしてですか。",
           "en": "Why is that?"
         },
         {
@@ -2186,7 +2186,7 @@ window.ORAL_QUESTIONS = {
           "en": "Which school would you rather attend?"
         },
         {
-          "ja": "オーストラリアの 学校[がっこう]に 入[い]れたい 日本[にほん]の しゅうかんは ありますか。",
+          "ja": "オーストラリアの 学校[がっこう]でも やってみたい 日本[にほん]の しゅうかんは ありますか。",
           "en": "Is there a Japanese practice you would bring into Australian schools?"
         }
       ],
@@ -2243,7 +2243,7 @@ window.ORAL_QUESTIONS = {
       "question_en": "If you were to design a mascot character for Melbourne, what would it be?",
       "followups": [
         {
-          "ja": "どうして ですか。",
+          "ja": "どうしてですか。",
           "en": "Why?"
         },
         {
@@ -2371,7 +2371,7 @@ window.ORAL_QUESTIONS = {
       "question_en": "Would you like to continue Japanese at university?",
       "followups": [
         {
-          "ja": "どうして ですか。",
+          "ja": "どうしてですか。",
           "en": "Why?"
         },
         {
@@ -3079,7 +3079,7 @@ window.ORAL_QUESTIONS = {
       "question_en": "Why do you think this grew up in Japan?",
       "followups": [
         {
-          "ja": "ほかの 国[くに]には ありませんか。",
+          "ja": "ほかの 国[くに]にも ありますか。",
           "en": "Is there nothing like it in other countries?"
         },
         {
@@ -3467,7 +3467,7 @@ window.ORAL_QUESTIONS = {
           "en": "Are there problems as well?"
         },
         {
-          "ja": "どうしたら その もんだいが なおりますか。",
+          "ja": "その もんだいは どうしたら いいと 思[おも]いますか。",
           "en": "How could that problem be fixed?"
         }
       ],
@@ -3590,7 +3590,7 @@ window.ORAL_QUESTIONS = {
       "question_en": "If this were brought to Australia, do you think it would be popular?",
       "followups": [
         {
-          "ja": "どうして ですか。",
+          "ja": "どうしてですか。",
           "en": "Why?"
         },
         {
@@ -3657,7 +3657,7 @@ window.ORAL_QUESTIONS = {
       "question_en": "Have you actually experienced this yourself?",
       "followups": [
         {
-          "ja": "どこで ですか。",
+          "ja": "どこで けいけんしましたか。",
           "en": "Where was that?"
         },
         {

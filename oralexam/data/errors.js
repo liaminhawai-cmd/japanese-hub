@@ -550,7 +550,7 @@ window.ORAL_ERRORS = {
           ]
         },
         {
-          "question": "兄弟[きょうだい]が いますか。",
+          "question": "ご兄弟[きょうだい]は いますか。",
           "question_en": "Do you have brothers or sisters?",
           "thin": "はい、います。",
           "thin_en": "Yes, I do.",
@@ -661,7 +661,7 @@ window.ORAL_ERRORS = {
           "open_en": "Yes, I do. I read about two books a month. I like mysteries best, and recently I tried an easy book in Japanese too."
         },
         {
-          "question": "がっきが できますか。",
+          "question": "何[なに]か がっきが できますか。",
           "question_en": "Can you play an instrument?",
           "closed": "はい、できます。",
           "closed_en": "Yes, I can.",
@@ -730,12 +730,12 @@ window.ORAL_ERRORS = {
       "items": [
         {
           "situation_en": "You did not catch the question at all.",
-          "say": "すみません、もう 一回[いっかい] 言[い]ってください。",
+          "say": "すみません、もう 一回[いっかい] おねがいします。",
           "say_en": "Sorry, could you say that again, please."
         },
         {
           "situation_en": "The question was too fast.",
-          "say": "もう 少[すこ]し ゆっくり 言[い]ってください。",
+          "say": "もう 少[すこ]し ゆっくり おねがいします。",
           "say_en": "Could you say it a little more slowly, please."
         },
         {
@@ -750,7 +750,7 @@ window.ORAL_ERRORS = {
         },
         {
           "situation_en": "You need a moment to think.",
-          "say": "そうですね。ちょっと 待[ま]ってください。",
+          "say": "そうですね。少[すこ]し 考[かんが]えさせて ください。",
           "say_en": "Let me think. Just a moment, please."
         },
         {
