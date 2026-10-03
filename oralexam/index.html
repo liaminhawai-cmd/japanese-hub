@@ -69,15 +69,30 @@
             stroke-linecap:round;stroke-linejoin:round}
   .tool .icf{fill:currentColor;stroke:none}
 
-  /* ---------- the tab row: icons only, the current one filled ---------- */
+  /* ---------- the tab row ----------
+     A coloured tile with a word under it, the way a phone labels an app:
+     the colour is what a student navigates by after a week, the word is
+     what tells them on the first day. Each tab hands in its own two
+     colours as --t1/--t2, so no colour is named here. Labels are allowed
+     two lines and the box is two lines tall either way, so the row does
+     not change height between tabs. */
   nav{border-top:1px solid var(--line-soft);background:var(--paper)}
   .navin{display:flex;max-width:720px;margin:0 auto}
-  nav button{flex:1;border:0;background:none;cursor:pointer;padding:7px 0 8px;
+  nav button{flex:1;min-width:0;border:0;background:none;cursor:pointer;
+             padding:7px 2px 5px;display:flex;flex-direction:column;
+             align-items:center;gap:4px;color:var(--muted);
+             font-family:var(--font);border-bottom:3px solid transparent}
+  nav button .tilebox{width:32px;height:32px;border-radius:9px;color:#fff;
              display:flex;align-items:center;justify-content:center;
-             min-height:50px;color:var(--deep);border-bottom:3px solid transparent}
-  nav button.on{background:var(--deep);border-bottom-color:var(--deep)}
-  nav button svg{width:27px;height:27px;display:block}
-  nav button.on svg{color:#fff}
+             background:linear-gradient(160deg,var(--t1),var(--t2));
+             box-shadow:0 1px 3px rgba(0,0,0,.22)}
+  nav button svg{width:21px;height:21px;display:block}
+  nav button .ic{stroke-width:2.6}
+  nav button .lab{font-size:10.5px;line-height:1.15;font-weight:600;
+             height:2.3em;text-align:center;letter-spacing:-.1px}
+  nav button.on{background:var(--line-soft);border-bottom-color:var(--t2)}
+  nav button.on .lab{color:var(--deep);font-weight:800}
+  nav button.on .tilebox{box-shadow:0 0 0 2px var(--paper),0 0 0 4px var(--t2)}
   .ic{fill:none;stroke:currentColor;stroke-width:2.4;
       stroke-linecap:round;stroke-linejoin:round}
   .icf{fill:currentColor;stroke:none}
@@ -332,7 +347,7 @@
 (function(){
   "use strict";
 
-  var BUILD = "Version 3, 3 October 2026";
+  var BUILD = "Version 4, 3 October 2026";
 
   var CRIT  = window.ORAL_CRITERIA,
       REP   = window.ORAL_REPORTS,
@@ -702,19 +717,28 @@
   /* ================= routing =================
      One string route, pushed onto the browser's own history, so the phone's
      back gesture steps back through the app instead of leaving it. */
+  /* en is the full name, read out by a screen reader and shown on hover.
+     lab is the one or two words that fit under the tile. c1/c2 are the
+     tile's gradient, light to deep. */
   var TABS = [
-    { id:"browse", ja:"しつもん", en:"Questions", icon:"bubble" },
-    { id:"mock",   ja:"もぎしけん", en:"Mock examination", icon:"clock" },
-    { id:"drill",  ja:"ドリル", en:"Drills", icon:"target" },
-    { id:"disc",   ja:"ディスカッション", en:"Discussion builder", icon:"frame" },
-    { id:"phrase", ja:"フレーズ", en:"Phrases", icon:"lines" },
-    { id:"me",     ja:"わたしの きろく", en:"My record", icon:"person" }
+    { id:"browse", ja:"しつもん", en:"Questions", lab:"Questions",
+      icon:"bubble", c1:"#5aa9f0", c2:"#2f6fd0" },
+    { id:"mock",   ja:"もぎしけん", en:"Mock examination", lab:"Mock exam",
+      icon:"clock",  c1:"#f28a6e", c2:"#cf4436" },
+    { id:"drill",  ja:"ドリル", en:"Drills", lab:"Drills",
+      icon:"target", c1:"#f2b45b", c2:"#d9822a" },
+    { id:"disc",   ja:"ディスカッション", en:"Discussion builder", lab:"Discussion",
+      icon:"steps",  c1:"#9d91f2", c2:"#6246c9" },
+    { id:"phrase", ja:"フレーズ", en:"Phrases", lab:"Phrases",
+      icon:"lines",  c1:"#5ccfc5", c2:"#11837f" },
+    { id:"me",     ja:"わたしの きろく", en:"My record", lab:"My record",
+      icon:"person", c1:"#74cf8e", c2:"#2f7d4f" }
   ];
   var ICONS = {
     bubble:'<svg viewBox="0 0 28 28" aria-hidden="true"><path class="ic" d="M3.5 6.5h21v13h-12l-6 5v-5h-3z"/><path class="ic" d="M10.5 11.2c0-1.6 1.3-2.7 2.9-2.7 1.6 0 2.9 1 2.9 2.4 0 2-2.6 2.2-2.6 4"/><circle class="icf" cx="13.7" cy="17.2" r="1.15"/></svg>',
     clock: '<svg viewBox="0 0 28 28" aria-hidden="true"><circle class="ic" cx="14" cy="15" r="9.5"/><path class="ic" d="M14 9.5v5.5l4 2.5"/><path class="ic" d="M10 3.5h8"/></svg>',
     target:'<svg viewBox="0 0 28 28" aria-hidden="true"><circle class="ic" cx="14" cy="14" r="10"/><circle class="ic" cx="14" cy="14" r="5.5"/><circle class="icf" cx="14" cy="14" r="2.2"/></svg>',
-    frame: '<svg viewBox="0 0 28 28" aria-hidden="true"><rect class="ic" x="3.5" y="5.5" width="21" height="17" rx="2.5"/><path class="ic" d="M3.5 18l5.5-5 4 3.5 4.5-5 6.5 7"/><circle class="icf" cx="10" cy="10.5" r="1.7"/></svg>',
+    steps: '<svg viewBox="0 0 28 28" aria-hidden="true"><path class="ic" d="M6 22.5v-6M14 22.5V12M22 22.5V5.5"/></svg>',
     lines: '<svg viewBox="0 0 28 28" aria-hidden="true"><path class="ic" d="M4 8h20M4 14h20M4 20h13"/></svg>',
     person:'<svg viewBox="0 0 28 28" aria-hidden="true"><circle class="ic" cx="14" cy="9.5" r="4.6"/><path class="ic" d="M5 24c0-5 4-8 9-8s9 3 9 8"/></svg>'
   };
@@ -738,8 +762,10 @@
     $("nav").innerHTML = TABS.map(function(t){
       return '<button data-tab="' + t.id + '" title="' + esc(t.en) + '"'
            + ' aria-label="' + esc(t.en) + '"'
+           + ' style="--t1:' + t.c1 + ';--t2:' + t.c2 + '"'
            + (tabOf(route) === t.id ? ' class="on" aria-current="page"' : '')
-           + '>' + ICONS[t.icon] + '</button>';
+           + '><span class="tilebox">' + ICONS[t.icon] + '</span>'
+           + '<span class="lab">' + esc(t.lab) + '</span></button>';
     }).join("");
     Array.prototype.forEach.call($("nav").children, function(b){
       b.onclick = function(){ SAY.stop(); go(b.dataset.tab); };
@@ -1098,13 +1124,17 @@
     if (args[0] === "run" && MOCK) return drawMockRun();
     setHead([{ ja:"もぎしけん", r:"mock" }], "Mock examination · 15 minutes");
     var ex = CRIT.examination, s = CRIT.sections;
-    var h = '<h2>もぎしけん<span class="en">A run through the whole examination, in '
-          + 'order, on the clock</span></h2>'
-          + '<p class="lede">Every question is spoken before it is shown, because in '
-          + 'the room you only ever hear it. Catch it on the first listen if you can; '
-          + 'the readings and the English are there when you cannot.</p>'
-          + '<div class="card"><b>What you are walking into</b>'
-          + '<ul style="margin:7px 0 0 18px;font-size:15.5px">'
+    /* Students get the idea in one line. The detail is all still here,
+       folded away, for the sitting where someone wants it. */
+    var h = '<h2>もぎしけん<span class="en">The whole examination, in order, on '
+          + 'the clock</span></h2>'
+          + '<p class="lede">Hit start, then click through the questions and the '
+          + 'follow-ups. You hear each question before you see it, the way it '
+          + 'happens in the room.</p>'
+          + '<div class="row"><button class="btn wide" id="startMock">'
+          + 'Start the 15 minutes</button></div>'
+          + '<details><summary>What you are walking into</summary>'
+          + '<div class="dbody"><ul style="margin:2px 0 0 18px;font-size:15.5px">'
           + '<li>' + esc(ex.total_minutes_wording) + ', ' + ex.total_marks
           + ' marks, ' + ex.contribution_percent + '% of your study score</li>'
           + '<li>' + ex.assessors + ' assessors. ' + esc(ex.recorded) + '</li>'
@@ -1112,17 +1142,14 @@
           + ' minutes, ' + s[0].marks + ' marks</li>'
           + '<li>Section 2 ' + s[1].name_en + ', ' + s[1].minutes
           + ' minutes, ' + s[1].marks + ' marks</li>'
-          + '</ul></div>'
+          + '</ul>'
           + '<div class="tip"><b>Before Section 1</b>'
           + esc(CRIT.entry.wording) + '</div>'
           + '<div class="tip"><b>No introduction in Section 2</b>'
           + esc(CRIT.sections[1].no_introduction.wording) + ' '
-          + esc(CRIT.sections[1].no_introduction.also) + '</div>'
-          + '<div class="row"><button class="btn wide" id="startMock">'
-          + 'Start the 15 minutes</button></div>'
-          + '<p class="note">Nothing you say is uploaded. If you record yourself, the '
-          + 'recording stays in this phone’s memory for this sitting only, and you '
-          + 'can save it to the phone yourself.</p>' + foot();
+          + esc(CRIT.sections[1].no_introduction.also) + '</div></div></details>'
+          + '<p class="note">Nothing is uploaded. A recording you make stays on '
+          + 'this phone.</p>' + foot();
     $("main").innerHTML = h;
     $("startMock").onclick = function(){
       MOCK = buildMock();
