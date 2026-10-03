@@ -332,7 +332,7 @@
 (function(){
   "use strict";
 
-  var BUILD = "Version 2, 3 October 2026";
+  var BUILD = "Version 3, 3 October 2026";
 
   var CRIT  = window.ORAL_CRITERIA,
       REP   = window.ORAL_REPORTS,
@@ -392,8 +392,10 @@
      is played instead. The map is built by tools/make-audio.py and is absent
      until somebody records them, in which case nothing here does anything. */
   var CLIPS = (window.ORAL_AUDIO || {}).clips || {};
-  /* Recordings are used when they are what was asked for, and whenever the
-     device has no Japanese voice of its own to fall back to. */
+  /* The recordings are the default. They are a Google neural voice, which
+     beats what any of the four platforms offers of its own, and they sound
+     the same on all of them. A device voice is used only when one has been
+     asked for by name. */
   function clipFor(text){
     if (S.voice !== "clips" && SAY.hasDeviceJa()) return null;
     return CLIPS[speakable(text)] || null;
@@ -426,7 +428,7 @@
      ticks or uploads stays in their own browser: no account, no server, no
      analytics, nothing leaves the phone. */
   var KEY = "oralExam-v1";
-  var S = { furi:true, rate:1, voice:"auto", notes:{}, assess:{}, disc:{},
+  var S = { furi:true, rate:1, voice:"clips", notes:{}, assess:{}, disc:{},
             weak:{}, seen:{} };
   try {
     var raw = localStorage.getItem(KEY);
@@ -631,10 +633,17 @@
     var vs = SAY.list(), cur = SAY.current(), has = !!Object.keys(CLIPS).length;
     var h = '<div class="sheet-in"><h3 style="margin:0 0 4px">Which voice reads '
           + 'the Japanese</h3>';
+    if (has)
+      h += '<button class="band' + (usingClips() ? " on" : "") + '" data-v="clips">'
+         + '<b>' + (usingClips() ? "\u2713" : "") + '</b><span>'
+         + '<b style="font-weight:700">The recorded voice</b><br>'
+         + 'A Google neural voice, the same on every device, works with no '
+         + 'signal</span></button>';
     if (vs.length){
-      h += '<p class="note" style="margin-bottom:10px">This device has '
-         + vs.length + ' Japanese voice' + (vs.length === 1 ? "" : "s")
-         + '. The app picks the best of them on its own.</p>'
+      h += '<p class="note" style="margin-bottom:10px">The recording is a '
+         + 'Google neural voice and is the same on every device. This one '
+         + 'also has ' + vs.length + ' Japanese voice'
+         + (vs.length === 1 ? "" : "s") + ' of its own, if you prefer one.</p>'
          + '<button class="band' + (S.voice !== "clips" && S.voice.indexOf("v:") !== 0
              ? " on" : "") + '" data-v="auto"><b>\u2713</b><span>'
          + '<b style="font-weight:700">The best this device has</b><br>'
@@ -651,10 +660,6 @@
          + 'Enhanced or Premium one.<br>On Windows: open the app in Edge, '
          + 'which offers Microsoft\u2019s Natural voices.</p>';
     }
-    if (has)
-      h += '<button class="band' + (usingClips() ? " on" : "") + '" data-v="clips">'
-         + '<b></b><span><b style="font-weight:700">The recorded voice</b><br>'
-         + 'Built in, the same on every device, works with no signal</span></button>';
     h += '<div class="row"><button class="btn ghost wide" id="sheetX">Close</button>'
        + '</div></div>';
     $("sheet").innerHTML = h;
@@ -1770,7 +1775,7 @@
       if (!confirm("Clear everything this app has saved on this phone, including "
                  + "your image and your notes?")) return;
       try { localStorage.removeItem(KEY); } catch (e){}
-      S = { furi:true, rate:1, voice:"auto", notes:{}, assess:{}, disc:{},
+      S = { furi:true, rate:1, voice:"clips", notes:{}, assess:{}, disc:{},
             weak:{}, seen:{} };
       paintFuri(); paintRate(); RENDER.me([]);
     };
