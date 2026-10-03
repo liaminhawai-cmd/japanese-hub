@@ -347,7 +347,7 @@
 (function(){
   "use strict";
 
-  var BUILD = "Version 4, 3 October 2026";
+  var BUILD = "Version 5, 3 October 2026";
 
   var CRIT  = window.ORAL_CRITERIA,
       REP   = window.ORAL_REPORTS,
@@ -443,15 +443,25 @@
      ticks or uploads stays in their own browser: no account, no server, no
      analytics, nothing leaves the phone. */
   var KEY = "oralExam-v1";
-  var S = { furi:true, rate:1, voice:"clips", notes:{}, assess:{}, disc:{},
-            weak:{}, seen:{} };
+  /* voicePick marks which generation of the voice setting a saved choice
+     belongs to. The recordings arrived after the first sittings, so a
+     browser that had been used before them was still carrying a choice of
+     the device's own voice, and on a Mac that means Kyoko reading every
+     line however good the recordings are. Raising this number drops that
+     one saved choice, once. Notes, ticks and drafts are untouched. */
+  var VOICEPICK = 2;
+  var S = { furi:true, rate:1, voice:"clips", voicePick:VOICEPICK,
+            notes:{}, assess:{}, disc:{}, weak:{}, seen:{} };
+  var saved = null;
   try {
     var raw = localStorage.getItem(KEY);
-    if (raw){
-      var got = JSON.parse(raw);
-      for (var k in S) if (got[k] !== undefined) S[k] = got[k];
-    }
+    if (raw) saved = JSON.parse(raw);
   } catch (e){}
+  if (saved) for (var k in S) if (saved[k] !== undefined) S[k] = saved[k];
+  /* A store written before the recordings existed carries no voicePick, so
+     its choice of voice is dropped and the recordings take over. */
+  var voiceReset = !!saved && saved.voicePick !== VOICEPICK;
+  if (voiceReset){ S.voice = "clips"; S.voicePick = VOICEPICK; }
   var saveTimer = null;
   function save(){
     clearTimeout(saveTimer);
@@ -460,6 +470,7 @@
       catch (e){ flash("Your phone would not save that. The image may be too large."); }
     }, 250);
   }
+  if (voiceReset) save();
   function flash(msg){
     $("upmsg").textContent = msg;
     $("upbar").classList.add("on");
@@ -658,7 +669,10 @@
       h += '<p class="note" style="margin-bottom:10px">The recording is a '
          + 'Google neural voice and is the same on every device. This one '
          + 'also has ' + vs.length + ' Japanese voice'
-         + (vs.length === 1 ? "" : "s") + ' of its own, if you prefer one.</p>'
+         + (vs.length === 1 ? "" : "s") + ' of its own. They are mostly worse '
+         + '— Kyoko, the one a Mac ships with, and anything marked '
+         + 'Compact especially — so take one only if you want to hear '
+         + 'the difference.</p>'
          + '<button class="band' + (S.voice !== "clips" && S.voice.indexOf("v:") !== 0
              ? " on" : "") + '" data-v="auto"><b>\u2713</b><span>'
          + '<b style="font-weight:700">The best this device has</b><br>'
