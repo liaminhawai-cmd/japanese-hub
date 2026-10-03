@@ -353,17 +353,19 @@
 <script src="data/questions.js"></script>
 <script src="data/phrases.js"></script>
 <script src="data/errors.js"></script>
+<script src="data/topics.js"></script>
 <script>
 (function(){
   "use strict";
 
-  var BUILD = "Version 7, 3 October 2026";
+  var BUILD = "Version 8, 3 October 2026";
 
   var CRIT  = window.ORAL_CRITERIA,
       REP   = window.ORAL_REPORTS,
       QD    = window.ORAL_QUESTIONS,
       PH    = window.ORAL_PHRASES,
-      ER    = window.ORAL_ERRORS;
+      ER    = window.ORAL_ERRORS,
+      TOP   = (window.ORAL_TOPICS || { topics:[] }).topics;
 
   var $ = function(id){ return document.getElementById(id); };
   function esc(s){
@@ -1171,11 +1173,57 @@
     return { kind:"sac", s1:picked, s2:[], band:band, sec:0, at:0,
              shown:false, fu:-1, started:0, left:0 };
   }
+  /* A SAC run on the student's own topic. The assessor has heard the name of
+     the product or practice and nothing else, so the questions are the ones
+     anybody would reach for knowing only that. One opener, which is always
+     a question answerable from the topic itself, then a second open one,
+     two of the shape questions and one that asks for a judgement: general to
+     specific, never back up, shuffled inside each width so two runs are two
+     different assessors rather than two different topics. */
+  function topicById(id){
+    for (var i = 0; i < TOP.length; i++) if (TOP[i].id === id) return TOP[i];
+    return null;
+  }
+  function buildTopicSac(id, band){
+    var t = topicById(id);
+    if (!t) return buildSac(band);
+    function take(w, n, skip){
+      var pool = t.questions.filter(function(q){
+        return q.width === w && q !== skip;
+      });
+      shuffle(pool);
+      return pool.slice(0, n);
+    }
+    /* The first question is never shuffled. An assessor who has heard only
+       the name of your topic opens by asking what it is, every time, and it
+       is the one question on the list you cannot claim not to have
+       prepared. */
+    var first = t.questions.filter(function(q){ return q.width === "open"; })[0];
+    var qs = [first].concat(take("open", 1, first))
+                    .concat(take("shape", 2))
+                    .concat(take("deep", 1));
+    /* The run screen was written for examination questions, which carry
+       follow-ups and model answers. A topic question has neither, on
+       purpose: the student researched this and the app did not. */
+    qs = qs.map(function(q){
+      return { id:q.id, section:"sac", topic:t.id, question_type:q.width,
+               higher_order:q.higher_order, difficulty:q.difficulty,
+               question_ja:q.question_ja, question_en:q.question_en,
+               followups:[], key_grammar:[], key_vocab:[],
+               criteria_targeted:[], report_refs:[], common_errors:[] };
+    });
+    return { kind:"sac", topic:t.id, s1:qs, s2:[], band:band, sec:0, at:0,
+             shown:false, fu:-1, started:0, left:0 };
+  }
+
   /* What the clock is counting down, whichever run is going. */
   function runSec(){
-    if (MOCK.kind === "sac")
-      return { number:0, name_en:"SAC practice", name_ja:"SACれんしゅう",
+    if (MOCK.kind === "sac"){
+      var t = MOCK.topic ? topicById(MOCK.topic) : null;
+      return { number:0, name_en:t ? t.name_en : "SAC practice",
+               name_ja:t ? t.name_ja : "SACれんしゅう",
                minutes:4, marks:CRIT.sections[0].marks };
+    }
     return CRIT.sections[MOCK.sec];
   }
 
@@ -1245,6 +1293,7 @@
 
   RENDER.mock = function(args){
     if (args[0] === "run" && MOCK) return drawMockRun();
+    if (args[0] === "sac") return drawSacPick();
     setHead([{ ja:"タイムれんしゅう", r:"mock" }], "Timed practice · 15 or 4 minutes");
     var ex = CRIT.examination, s = CRIT.sections;
     /* Students get the idea in one line. The detail is all still here,
@@ -1268,10 +1317,9 @@
           + 'The whole examination · 15 minutes</button></div>'
           + '<div class="row"><button class="btn ghost wide" id="startSac">'
           + 'SAC practice · 4 minutes</button></div>'
-          + '<p class="seghint">The short one takes five questions of five '
-          + 'different kinds, so in four minutes you have given an opinion with '
-          + 'a reason, compared two things, and handled something you were not '
-          + 'expecting. That is what the marks are for.</p>'
+          + '<p class="seghint">The short one is for the SAC: pick the product '
+          + 'or practice you researched and be asked about it by someone who has '
+          + 'heard nothing but its name.</p>'
           + '<details><summary>What you are walking into</summary>'
           + '<div class="dbody"><ul style="margin:2px 0 0 18px;font-size:15.5px">'
           + '<li>' + esc(ex.total_minutes_wording) + ', ' + ex.total_marks
@@ -1299,13 +1347,46 @@
       MOCK.started = Date.now();
       go("mock:run");
     };
-    $("startSac").onclick = function(){
-      MOCK = buildSac(S.band);
+    $("startSac").onclick = function(){ go("mock:sac"); };
+  };
+
+  /* Pick the product or practice you researched. The SAC is not the
+     examination: the assessor has your topic and nothing else, which is why
+     this screen exists rather than the run starting straight away. */
+  function drawSacPick(){
+    setHead([{ ja:"タイムれんしゅう", r:"mock" }, { ja:"SAC", r:"mock:sac" }],
+            "SAC practice · 4 minutes · pick your topic");
+    var h = '<h2>どのトピックですか<span class="en">Pick the product or practice '
+          + 'you researched</span></h2>'
+          + '<p class="lede">Four minutes, five questions, and the assessor has '
+          + 'heard nothing but the name of your topic. They start wide and work '
+          + 'down, and they do not know which questions you prepared.</p>'
+          + '<div class="tiles">'
+          + TOP.map(function(t){
+              return '<button class="tile" data-t="' + esc(t.id) + '">'
+                   + '<b>' + ruby(t.name_ja) + '</b>'
+                   + '<i>' + esc(t.name_en) + '</i>'
+                   + '<i class="what">' + esc(t.blurb_en) + '</i></button>';
+            }).join("")
+          + '</div>'
+          + '<button class="card flat" id="noTopic" style="width:100%;text-align:left">'
+          + '<b>No set topic</b><br><span class="en">Five questions about your own '
+          + 'world instead, one of each kind</span></button>'
+          + '<p class="note">The questions are the ones anyone would ask knowing '
+          + 'only your topic. They are deliberately not the ones in your notes.</p>'
+          + foot();
+    $("main").innerHTML = h;
+    function start(build){
+      MOCK = build;
       MOCK.left = 4 * 60;
       MOCK.started = Date.now();
       go("mock:run");
-    };
-  };
+    }
+    each($("main"), "[data-t]", function(b){
+      b.onclick = function(){ start(buildTopicSac(b.dataset.t, S.band)); };
+    });
+    $("noTopic").onclick = function(){ start(buildSac(S.band)); };
+  }
 
   function drawMockRun(){
     var sec = runSec();
@@ -1323,11 +1404,14 @@
     var h = '<div class="clock" id="clock"><b id="cnum">--:--</b>'
           + '<span>left in '
           + (sec.number ? "Section " + sec.number + " · " + esc(sec.name_en)
-                        : "your four minutes")
-          + ' · ' + esc(bandName) + '</span></div>';
+             : MOCK.topic ? "four minutes · " + esc(sec.name_en)
+             : "your four minutes")
+          + (MOCK.topic ? "" : ' · ' + esc(bandName)) + '</span></div>';
 
-    h += '<div class="step">' + esc(grp ? grp.en : q.topic)
-       + (q.higher_order ? " · higher order" : "") + '</div>';
+    var step = MOCK.kind === "sac" && MOCK.topic
+             ? sec.name_en + " · " + q.question_type
+             : (grp ? grp.en : q.topic) + (q.higher_order ? " · higher order" : "");
+    h += '<div class="step">' + esc(step) + '</div>';
 
     if (!MOCK.shown){
       h += '<div class="hidden-q" id="hq">The assessor has asked you something.'
@@ -1344,9 +1428,17 @@
            + jaLine(q.followups[MOCK.fu].ja)
            + enLine(q.followups[MOCK.fu].en) + '</div>';
       }
-      h += '<details><summary>A developed answer, if you are stuck</summary>'
-         + '<div class="dbody">' + jaLine(q.model_responses.developed.ja)
-         + enLine(q.model_responses.developed.en) + '</div></details>';
+      /* A topic question carries no model answer, because the student
+         researched the topic and this app did not. Inventing one would be
+         putting words in their mouth. */
+      if (q.model_responses)
+        h += '<details><summary>A developed answer, if you are stuck</summary>'
+           + '<div class="dbody">' + jaLine(q.model_responses.developed.ja)
+           + enLine(q.model_responses.developed.en) + '</div></details>';
+      else
+        h += '<p class="note">No model answer here: this one is yours. If the '
+           + 'question is not one you prepared, say so in Japanese and keep '
+           + 'going.</p>';
     }
 
     h += recordBlock("mock");
