@@ -180,12 +180,12 @@ window.ORAL_QUESTIONS = {
       "question_en": "What year level are you in now?",
       "followups": [
         {
-          "ja": "どこの 学校[がっこう]に 行[い]っていますか。",
-          "en": "Which school do you go to?"
+          "ja": "どんな 学校[がっこう]ですか。",
+          "en": "What kind of school is it?"
         },
         {
-          "ja": "その 学校[がっこう]は どんな 学校[がっこう]ですか。",
-          "en": "What kind of school is it?"
+          "ja": "クラスは 何人[なんにん]ぐらい いますか。",
+          "en": "About how many people are in your class?"
         },
         {
           "ja": "学校[がっこう]まで どうやって 行[い]きますか。",
@@ -245,30 +245,30 @@ window.ORAL_QUESTIONS = {
       "question_type": "personal",
       "higher_order": false,
       "difficulty": 1,
-      "question_ja": "どこに 住[す]んでいますか。",
-      "question_en": "Where do you live?",
+      "question_ja": "メルボルンは どんな 町[まち]ですか。",
+      "question_en": "What kind of city is Melbourne?",
       "followups": [
         {
-          "ja": "そこに 何年[なんねん] 住[す]んでいますか。",
-          "en": "How many years have you lived there?"
+          "ja": "メルボルンの 一番[いちばん] いい点[てん]は 何[なん]ですか。",
+          "en": "What is the best thing about Melbourne?"
         },
         {
-          "ja": "その 町[まち]の 一番[いちばん] いい点[てん]は 何[なん]ですか。",
-          "en": "What is the best thing about that suburb?"
+          "ja": "メルボルンは 住[す]みやすいですか。",
+          "en": "Is Melbourne an easy place to live?"
         }
       ],
       "model_responses": {
         "basic": {
-          "ja": "メルボルンに 住[す]んでいます。",
-          "en": "I live in Melbourne."
+          "ja": "メルボルンは 大[おお]きい 町[まち]です。",
+          "en": "Melbourne is a big city."
         },
         "developed": {
-          "ja": "メルボルンの 東[ひがし]に 住[す]んでいます。駅[えき]が 近[ちか]いので、とても べんりです。",
-          "en": "I live in the east of Melbourne. The station is close, so it is very convenient."
+          "ja": "メルボルンは 大[おお]きくて、にぎやかな 町[まち]です。電車[でんしゃ]や トラムが あるので、とても べんりです。",
+          "en": "Melbourne is a big, lively city. There are trains and trams, so it is very convenient."
         },
         "advanced": {
-          "ja": "生[う]まれた 時[とき]から メルボルンの 東[ひがし]に 住[す]んでいます。駅[えき]が 近[ちか]くて、こうえんも 広[ひろ]いので、家族[かぞく]には 住[す]みやすい 町[まち]だと 思[おも]います。",
-          "en": "I have lived in the east of Melbourne since I was born. The station is close and the parks are large, so I think it is an easy suburb for a family to live in."
+          "ja": "メルボルンは 大[おお]きくて、こうえんも 広[ひろ]いので、住[す]みやすい 町[まち]だと 思[おも]います。でも、天気[てんき]が よく かわるので、少[すこ]し こまります。",
+          "en": "Melbourne is big and the parks are large, so I think it is an easy city to live in. But the weather changes often, which is a bit of a nuisance."
         }
       },
       "key_grammar": [

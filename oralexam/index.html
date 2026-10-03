@@ -126,6 +126,15 @@
   .jatext{font-family:var(--font-jp),var(--font-en),sans-serif;font-size:19px;
        line-height:2.05;display:block}
 
+  /* How hard to pitch a run. Four choices in one row, so the whole decision
+     is one tap and the page does not grow a paragraph to explain it. */
+  .segs{display:flex;gap:6px;margin:4px 0 6px}
+  .seg{flex:1;min-width:0;min-height:44px;padding:6px 4px;border:1.5px solid var(--line);
+       border-radius:11px;background:var(--paper);color:var(--muted);cursor:pointer;
+       font-family:var(--font);font-size:14px;font-weight:600;line-height:1.2}
+  .seg.on{background:var(--deep);border-color:var(--deep);color:#fff;font-weight:700}
+  .seghint{font-size:14.5px;color:var(--muted);margin:0 0 12px}
+
   .tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
          gap:10px;margin-bottom:12px}
   .tile{border:1px solid var(--line);border-radius:13px;padding:12px 13px;
@@ -347,7 +356,7 @@
 (function(){
   "use strict";
 
-  var BUILD = "Version 5, 3 October 2026";
+  var BUILD = "Version 6, 3 October 2026";
 
   var CRIT  = window.ORAL_CRITERIA,
       REP   = window.ORAL_REPORTS,
@@ -450,7 +459,7 @@
      line however good the recordings are. Raising this number drops that
      one saved choice, once. Notes, ticks and drafts are untouched. */
   var VOICEPICK = 2;
-  var S = { furi:true, rate:1, voice:"clips", voicePick:VOICEPICK,
+  var S = { furi:true, rate:1, voice:"clips", voicePick:VOICEPICK, band:"mixed",
             notes:{}, assess:{}, disc:{}, weak:{}, seen:{} };
   var saved = null;
   try {
@@ -1083,12 +1092,54 @@
      because in the room you only ever hear it. */
   var MOCK = null, clockTimer = null;
 
-  function buildMock(){
+  /* How hard a run is pitched. An assessor pitches to what they are hearing,
+     so a run that mixes every level at once is only one of the two honest
+     shapes. The other is a run held at one level the whole way, follow-ups
+     included, which is what a student practising for a particular result
+     actually wants. The bank already carries difficulty 1-3 and a higher
+     order flag on every question, so this reads them rather than re-tagging
+     anything: what it cannot do is band each follow-up separately, so a band
+     takes the first n of them, which works because they are written in
+     order from the obvious one to the one that pushes. */
+  var BANDS = [
+    { id:"mixed", lab:"As it comes",
+      hint:"Every level, easiest first, and you open the follow-ups yourself" },
+    { id:"low",   lab:"Low",
+      hint:"The straightforward questions only, one follow-up each" },
+    { id:"mid",   lab:"Medium",
+      hint:"The middle of the bank, two follow-ups each" },
+    { id:"high",  lab:"High",
+      hint:"The demanding and higher order questions, every follow-up" }
+  ];
+  var FUS = { mixed:9, low:1, mid:2, high:9 };
+  function inBand(q, band){
+    if (band === "low")  return q.difficulty <= 1 && !q.higher_order;
+    if (band === "mid")  return q.difficulty === 2;
+    if (band === "high") return q.difficulty >= 3 || q.higher_order;
+    return true;
+  }
+  /* A band must never leave a run short, so anything it cannot fill comes
+     from the rest of the bank, nearest difficulty first. */
+  function bandPool(list, band){
+    var inb = list.filter(function(q){ return inBand(q, band); });
+    var rest = list.filter(function(q){ return !inBand(q, band); });
+    var aim = band === "low" ? 1 : band === "mid" ? 2 : 3;
+    rest.sort(function(a, b){
+      return Math.abs(a.difficulty - aim) - Math.abs(b.difficulty - aim);
+    });
+    return inb.concat(rest);
+  }
+  function followupsFor(q){
+    return q.followups.slice(0, FUS[MOCK && MOCK.band ? MOCK.band : S.band] || 9);
+  }
+
+  function buildMock(band){
     /* Section 1: eight questions, easy first, no two from the same topic in a
        row, at least two higher order, and at least one about the student's own
        contact with Japanese language and culture, which the format requires. */
-    var pool = CONV.slice();
+    var pool = bandPool(CONV.slice(), band);
     shuffle(pool);
+    pool = bandPool(pool, band);
     var byTopic = {};
     pool.forEach(function(q){ (byTopic[q.topic] = byTopic[q.topic] || []).push(q); });
     var s1 = [], used = {};
@@ -1103,10 +1154,15 @@
         if (!used[q.id] && s1.length < 8){ s1.push(q); used[q.id] = 1; break; }
       }
     });
-    while (s1.filter(function(q){ return q.higher_order; }).length < 2){
-      var extra = pool.filter(function(q){ return q.higher_order && !used[q.id]; })[0];
-      if (!extra) break;
-      s1.pop(); s1.push(extra); used[extra.id] = 1;
+    /* Two higher order questions are forced into a mixed run, because that is
+       the shape of a real conversation that goes well. A banded run is already
+       pitched, so forcing them would break the band. */
+    if (band === "mixed"){
+      while (s1.filter(function(q){ return q.higher_order; }).length < 2){
+        var extra = pool.filter(function(q){ return q.higher_order && !used[q.id]; })[0];
+        if (!extra) break;
+        s1.pop(); s1.push(extra); used[extra.id] = 1;
+      }
     }
     s1.sort(function(a, b){ return a.difficulty - b.difficulty; });
 
@@ -1117,6 +1173,12 @@
     QD.discussion_stages.forEach(function(st){
       var here = DISC.filter(function(q){ return q.topic === st.id; });
       if (!here.length) return;
+      /* A stage has one or two questions, so a band picks within the stage
+         rather than dropping it: every stage still runs. */
+      if (band !== "mixed"){
+        var want = here.filter(function(q){ return inBand(q, band); });
+        if (want.length){ s2.push(want[0]); return; }
+      }
       here.sort(function(a, b){ return b.difficulty - a.difficulty; });
       s2.push(s2.length % 2 ? here[here.length - 1] : here[0]);
     });
@@ -1124,7 +1186,8 @@
       var hyp = DISC.filter(function(q){ return q.question_type === "hypothetical"; })[0];
       if (hyp) s2[s2.length - 2] = hyp;
     }
-    return { s1:s1, s2:s2, sec:0, at:0, shown:false, fu:-1, started:0, left:0 };
+    return { s1:s1, s2:s2, band:band, sec:0, at:0, shown:false, fu:-1,
+             started:0, left:0 };
   }
   function shuffle(a){
     for (var i = a.length - 1; i > 0; i--){
@@ -1145,6 +1208,16 @@
           + '<p class="lede">Hit start, then click through the questions and the '
           + 'follow-ups. You hear each question before you see it, the way it '
           + 'happens in the room.</p>'
+          + '<div class="segs" role="group" aria-label="How hard to pitch the run">'
+          + BANDS.map(function(b){
+              return '<button class="seg' + (S.band === b.id ? " on" : "") + '"'
+                   + ' data-band="' + b.id + '"'
+                   + ' aria-pressed="' + (S.band === b.id ? "true" : "false") + '">'
+                   + esc(b.lab) + '</button>';
+            }).join("")
+          + '</div><p class="seghint" id="seghint">'
+          + esc((BANDS.filter(function(b){ return b.id === S.band; })[0]
+                 || BANDS[0]).hint) + '</p>'
           + '<div class="row"><button class="btn wide" id="startMock">'
           + 'Start the 15 minutes</button></div>'
           + '<details><summary>What you are walking into</summary>'
@@ -1165,8 +1238,11 @@
           + '<p class="note">Nothing is uploaded. A recording you make stays on '
           + 'this phone.</p>' + foot();
     $("main").innerHTML = h;
+    each($("main"), "[data-band]", function(b){
+      b.onclick = function(){ S.band = b.dataset.band; save(); draw(); };
+    });
     $("startMock").onclick = function(){
-      MOCK = buildMock();
+      MOCK = buildMock(S.band);
       MOCK.sec = 0; MOCK.at = 0; MOCK.shown = false; MOCK.fu = -1;
       MOCK.left = CRIT.sections[0].minutes * 60;
       MOCK.started = Date.now();
@@ -1184,9 +1260,11 @@
     var m = $("main");
     var grp = MOCK.sec === 0 ? TOPNAME[q.topic] : STAGENAME[q.topic];
 
+    var bandName = (BANDS.filter(function(b){ return b.id === MOCK.band; })[0]
+                    || BANDS[0]).lab;
     var h = '<div class="clock" id="clock"><b id="cnum">--:--</b>'
           + '<span>left in Section ' + sec.number + ' · ' + esc(sec.name_en)
-          + '</span></div>';
+          + ' · ' + esc(bandName) + '</span></div>';
 
     h += '<div class="step">' + esc(grp ? grp.en : q.topic)
        + (q.higher_order ? " · higher order" : "") + '</div>';
@@ -1202,7 +1280,7 @@
          + '</div>';
       if (MOCK.fu >= 0){
         h += '<div class="step">Follow-up ' + (MOCK.fu + 1) + ' of '
-           + q.followups.length + '</div><div class="card">'
+           + followupsFor(q).length + '</div><div class="card">'
            + jaLine(q.followups[MOCK.fu].ja)
            + enLine(q.followups[MOCK.fu].en) + '</div>';
       }
@@ -1215,7 +1293,7 @@
 
     h += '<div class="row">';
     if (MOCK.shown){
-      if (MOCK.fu < q.followups.length - 1)
+      if (MOCK.fu < followupsFor(q).length - 1)
         h += '<button class="btn" id="nextfu">Next follow-up</button>';
       h += '<button class="btn ghost" id="nextq">'
          + (MOCK.at < list.length - 1 ? "Next question"
