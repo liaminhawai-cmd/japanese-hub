@@ -64,6 +64,10 @@
         display:flex;align-items:center;justify-content:center;padding:0}
   .tool.off{opacity:.45}
   .tool small{font-size:11px;font-weight:700;display:block}
+  .tool svg{width:23px;height:23px}
+  .tool .ic{fill:none;stroke:currentColor;stroke-width:2.2;
+            stroke-linecap:round;stroke-linejoin:round}
+  .tool .icf{fill:currentColor;stroke:none}
 
   /* ---------- the tab row: icons only, the current one filled ---------- */
   nav{border-top:1px solid var(--line-soft);background:var(--paper)}
@@ -284,6 +288,10 @@
     <button class="tool" id="furiBtn" title="Readings above the kanji">ふ</button>
     <button class="tool" id="rateBtn" title="How fast the voice speaks">
       <span id="rateLabel">×1</span></button>
+    <!-- Which voice reads the Japanese. The recordings are the same on every
+         phone; a modern phone's own Japanese voice usually sounds better. -->
+    <button class="tool" id="voiceBtn" title="Which voice reads the Japanese">
+      <svg viewBox="0 0 24 24" aria-hidden="true" id="voiceIcon"></svg></button>
   </div>
   <nav><div class="navin" id="nav"></div></nav>
 </div>
@@ -372,7 +380,12 @@
      is played instead. The map is built by tools/make-audio.py and is absent
      until somebody records them, in which case nothing here does anything. */
   var CLIPS = (window.ORAL_AUDIO || {}).clips || {};
-  function clipFor(text){ return CLIPS[speakable(text)] || null; }
+  /* Recordings are used when they are what was asked for, and whenever the
+     device has no Japanese voice of its own to fall back to. */
+  function clipFor(text){
+    if (S.voice === "device" && SAY.hasDeviceJa()) return null;
+    return CLIPS[speakable(text)] || null;
+  }
   /* A Japanese line, tappable, with its own speaker mark. The spoken form
      goes in data-say so the voice never reads a bracket aloud. */
   function jaLine(text, say){
@@ -401,7 +414,8 @@
      ticks or uploads stays in their own browser: no account, no server, no
      analytics, nothing leaves the phone. */
   var KEY = "oralExam-v1";
-  var S = { furi:true, rate:1, notes:{}, assess:{}, disc:{}, weak:{}, seen:{} };
+  var S = { furi:true, rate:1, voice:"device", notes:{}, assess:{}, disc:{},
+            weak:{}, seen:{} };
   try {
     var raw = localStorage.getItem(KEY);
     if (raw){
@@ -453,6 +467,23 @@
       } catch (e){ settled = true; }
     } else { document.body.classList.remove("hasvoice"); }
     var liveEl = null, audioEl = null;
+    function playClip(clip, el, done){
+      audioEl = new Audio("audio/" + clip);
+      audioEl.playbackRate = S.rate;
+      if (el) el.classList.add("live");
+      liveEl = el;
+      audioEl.onended = audioEl.onerror = function(){
+        if (el) el.classList.remove("live");
+        if (liveEl === el) liveEl = null;
+        audioEl = null;
+        if (done) done();
+      };
+      audioEl.play().catch(function(){
+        audioEl = null;
+        if (el) el.classList.remove("live");
+        if (done) done();
+      });
+    }
     function stop(){
       if (liveEl){ liveEl.classList.remove("live"); liveEl = null; }
       if (audioEl){ try { audioEl.pause(); } catch (e){} audioEl = null; }
@@ -462,31 +493,22 @@
       /* A recorded clip plays with no voice installed at all, so the play
          marks stay when there are clips even if the device cannot speak. */
       hasJa: function(){ return !!jaV || !!Object.keys(CLIPS).length; },
+      hasDeviceJa: function(){ return !!jaV; },
       ready: function(f){ if (settled) f(); else waiting.push(f); },
       /* One line at a time: two sentences over each other is noise. */
       speak: function(text, el, done){
         stop();
         var clip = clipFor(text);
-        if (clip){
-          audioEl = new Audio("audio/" + clip);
-          audioEl.playbackRate = S.rate;
-          if (el) el.classList.add("live");
-          liveEl = el;
-          audioEl.onended = audioEl.onerror = function(){
-            if (el) el.classList.remove("live");
-            if (liveEl === el) liveEl = null;
-            audioEl = null;
-            if (done) done();
-          };
-          audioEl.play().catch(function(){
-            audioEl = null;
-            if (el) el.classList.remove("live");
-            if (done) done();
-          });
+        if (clip) return playClip(clip, el, done);
+        if (!jaV) land();
+        if (!jaV){
+          /* Asked for the device voice, and there is not one. Rather than
+             say nothing, play the recording if there is one. */
+          var fallback = CLIPS[speakable(text)];
+          if (fallback) return playClip(fallback, el, done);
+          if (done) done();
           return;
         }
-        if (!jaV) land();
-        if (!jaV){ if (done) done(); return; }
         var u = new SpeechSynthesisUtterance(speakable(text));
         u.voice = jaV; u.lang = "ja-JP"; u.rate = 0.85 * S.rate;
         if (el){ el.classList.add("live"); liveEl = el; }
@@ -520,6 +542,43 @@
   function paintRate(){
     $("rateLabel").textContent = "×" + S.rate;
   }
+  /* Two states, drawn rather than labelled: a phone for the device's own
+     voice, a cassette for the recordings. The flash line underneath says
+     which in words, because an icon on its own is a guess. */
+  var VICON = {
+    device: '<rect class="ic" x="6.5" y="2.5" width="11" height="19" rx="2.5"/>'
+          + '<path class="ic" d="M10.5 18.6h3"/>',
+    clips:  '<rect class="ic" x="2.5" y="5.5" width="19" height="13" rx="2.5"/>'
+          + '<circle class="ic" cx="8" cy="12" r="2.2"/>'
+          + '<circle class="ic" cx="16" cy="12" r="2.2"/>'
+          + '<path class="ic" d="M10.2 12h3.6"/>'
+  };
+  function paintVoice(){
+    var b = $("voiceBtn"), using = usingClips() ? "clips" : "device";
+    $("voiceIcon").innerHTML = VICON[using];
+    b.title = using === "clips" ? "Recorded voice. Tap for this phone's voice."
+                                : "This phone's voice. Tap for the recorded voice.";
+    b.setAttribute("aria-label", b.title);
+    b.classList.toggle("off", !Object.keys(CLIPS).length && using === "clips");
+  }
+  function usingClips(){
+    if (!Object.keys(CLIPS).length) return false;
+    return S.voice === "clips" || !SAY.hasDeviceJa();
+  }
+  $("voiceBtn").onclick = function(){
+    if (!Object.keys(CLIPS).length)
+      return flash("There are no recordings installed, so this phone's own "
+                 + "voice is the only one.");
+    if (!SAY.hasDeviceJa())
+      return flash("This phone has no Japanese voice of its own, so the "
+                 + "recordings are the only one. On iOS, Settings, "
+                 + "Accessibility, Spoken Content, Voices adds one.");
+    S.voice = S.voice === "clips" ? "device" : "clips";
+    paintVoice(); save();
+    flash(usingClips() ? "Now using the recorded voice."
+                       : "Now using this phone's own voice.");
+    SAY.speak("今[いま]、何年生[なんねんせい]ですか。");
+  };
   $("rateBtn").onclick = function(){
     S.rate = RATES[(RATES.indexOf(S.rate) + 1) % RATES.length] || 1;
     paintRate(); save();
@@ -1620,7 +1679,8 @@
       if (!confirm("Clear everything this app has saved on this phone, including "
                  + "your image and your notes?")) return;
       try { localStorage.removeItem(KEY); } catch (e){}
-      S = { furi:true, rate:1, notes:{}, assess:{}, disc:{}, weak:{}, seen:{} };
+      S = { furi:true, rate:1, voice:"device", notes:{}, assess:{}, disc:{},
+            weak:{}, seen:{} };
       paintFuri(); paintRate(); RENDER.me([]);
     };
   };
@@ -1812,7 +1872,10 @@
   $("uplater").onclick = function(){ $("upbar").classList.remove("on"); };
 
   /* ================= start ================= */
-  paintFuri(); paintRate();
+  paintFuri(); paintRate(); paintVoice();
+  /* The voice list lands late on a phone, and whether there is one decides
+     which icon is right, so paint it again once it has settled. */
+  SAY.ready(paintVoice);
   route = (location.hash || "#browse").slice(1) || "browse";
   go(route, true);
 })();

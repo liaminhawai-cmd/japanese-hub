@@ -18,7 +18,7 @@
 
 window.ORAL_AUDIO = {
   "schema_version": 1,
-  "voice": "Open JTalk mei_normal, 24 kHz mono mp3",
+  "voice": "Open JTalk mei_normal, 48 kHz mono mp3",
   "clips": {
     "今、なんねんせいですか。": "6df37f497c80784a.mp3",
     "どこの学校に行っていますか。": "f7cb89255df5dda0.mp3",
