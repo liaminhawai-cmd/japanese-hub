@@ -431,7 +431,7 @@
 (function(){
   "use strict";
 
-  var BUILD = "Version 11, 3 October 2026";
+  var BUILD = "Version 12, 3 October 2026";
 
   var CRIT  = window.ORAL_CRITERIA,
       REP   = window.ORAL_REPORTS,
@@ -892,29 +892,63 @@
       if (QW.words[i].id === id) return QW.words[i];
     return { id:id, ja:id, en:id };
   }
-  /* The options a word round offers: the right one plus three others, the
-     same four every time this item comes round so a student is not learning
-     the shape of the screen instead of the Japanese. */
-  function wordOptions(item){
-    var right = wordById(item.answer), out = [right];
-    var pool = QW.words.filter(function(w){ return w.id !== item.answer; });
-    var seed = 0, i;
-    for (i = 0; i < item.ja.length; i++) seed = (seed * 31 + item.ja.charCodeAt(i)) % 9973;
-    for (i = 0; i < 3 && pool.length; i++)
-      out.push(pool.splice((seed + i * 7) % pool.length, 1)[0]);
-    for (i = out.length - 1; i > 0; i--){
-      var j = (seed + i * 13) % (i + 1), t = out[i]; out[i] = out[j]; out[j] = t;
+  /* The data is authored with the right answer first, because that is the
+     readable way to write it, and for one release that is also how it was
+     shown: every answer in the particle round was option a, which makes a
+     round of multiple choice worthless. So nothing renders options in the
+     order they are written.
+
+     The shuffle is seeded from the item's own text rather than from
+     Math.random, so the order is the same every time that item comes round.
+     A student who gets it wrong and comes back to it meets the same four in
+     the same places, and the options do not jump under their thumb when the
+     screen redraws to show the answer. */
+  /* FNV-1a and xorshift32, both of which stay inside 32 bits. The obvious
+     n * 1103515245 + 12345 does not: with n near two billion the product
+     passes what a double can hold exactly, the low bits are lost, and every
+     draw comes back zero. A shuffle driven by that puts the right answer in
+     the same place every time, which is the bug this code exists to fix. */
+  function seed32(text){
+    var n = 2166136261;
+    for (var i = 0; i < text.length; i++){
+      n ^= text.charCodeAt(i);
+      n = Math.imul(n, 16777619);
+    }
+    return (n >>> 0) || 1;
+  }
+  function nextRand(n){
+    n ^= n << 13; n >>>= 0;
+    n ^= n >>> 17;
+    n ^= n << 5;  n >>>= 0;
+    return n || 1;
+  }
+  function seededShuffle(arr, key){
+    var out = arr.slice(), n = seed32(key);
+    for (var i = out.length - 1; i > 0; i--){
+      n = nextRand(n);
+      var j = n % (i + 1), t = out[i]; out[i] = out[j]; out[j] = t;
     }
     return out;
+  }
+  /* The options a word round offers: the right one plus three others,
+     shuffled the same way. */
+  function wordOptions(item){
+    var out = [wordById(item.answer)];
+    var pool = QW.words.filter(function(w){ return w.id !== item.answer; });
+    var n = seed32(item.ja);
+    for (var i = 0; i < 3 && pool.length; i++){
+      n = nextRand(n);
+      out.push(pool.splice(n % pool.length, 1)[0]);
+    }
+    return seededShuffle(out, item.ja + "|w");
   }
 
   function drawRound(id){
     var r = roundById(id);
     if (!r) return go("browse", true);
     var st = RSTATE[id] = RSTATE[id] || { at:0, picked:null, right:0, done:0 };
-    var home = (QW.rounds || []).indexOf(r) >= 0 ? "browse:qw" : "drill:pt";
-    var crumbTop = home === "browse:qw"
-      ? { ja:"しつもん", r:"browse" } : { ja:"ドリル", r:"drill" };
+    var home = (QW.rounds || []).indexOf(r) >= 0 ? "drill:qw" : "drill:pt";
+    var crumbTop = { ja:"ドリル", r:"drill" };
     setHead([crumbTop, { ja:r.title, r:id }],
             r.title + " · " + (st.at + 1) + " of " + r.items.length);
     var it = r.items[st.at];
@@ -938,11 +972,12 @@
     var opts = r.kind === "word"   ? wordOptions(it).map(function(w){
                  return { key:w.id, lab:esc(w.en), sub:esc(w.ja) + " · " + esc(w.forms),
                           ok:w.id === it.answer, why:"" }; })
-             : r.kind === "reply"  ? it.options.map(function(o, i){
+             : r.kind === "reply"  ? seededShuffle(it.options.map(function(o, i){
                  return { key:String(i), ja:o.ja, lab:ruby(o.ja), sub:esc(o.en),
-                          ok:!!o.ok, why:o.why }; })
-             : r.kind === "choose" ? it.options.map(function(o){
-                 return { key:o, lab:esc(o), sub:"", ok:o === it.answer, why:"" }; })
+                          ok:!!o.ok, why:o.why }; }), it.ja)
+             : r.kind === "choose" ? seededShuffle(it.options.map(function(o){
+                 return { key:o, lab:esc(o), sub:"", ok:o === it.answer, why:"" };
+               }), it.before + it.after)
              : [{ key:"y", lab:"Right as it is", sub:"", ok:it.ok === true },
                 { key:"n", lab:"Something is wrong", sub:"", ok:it.ok === false }];
 
@@ -1037,7 +1072,7 @@
      pedagogy that justifies them: the reports name mismatched answers in
      every year, and the cause is the question word, not the Japanese. */
   function drawQwords(){
-    setHead([{ ja:"しつもん", r:"browse" }, { ja:"しつもんの ことば", r:"browse:qw" }],
+    setHead([{ ja:"ドリル", r:"drill" }, { ja:"しつもんの ことば", r:"drill:qw" }],
             "Question words");
     var h = '<h2>しつもんの ことば<span class="en">Question words</span></h2>'
           + '<p class="lede">The fault named in all six VCAA oral exam reports is '
@@ -1046,7 +1081,7 @@
           + 'aloud first, the way you meet it in the room.</p>'
           + '<div class="tiles">'
           + QW.rounds.map(function(r){
-              return '<button class="tile" data-r="browse:r:' + esc(r.id) + '">'
+              return '<button class="tile" data-r="drill:r:' + esc(r.id) + '">'
                    + '<b>' + esc(r.title) + '</b>'
                    + '<i>' + r.items.length + ' items</i>'
                    + '<i class="what">' + esc(r.about) + '</i></button>';
@@ -1072,8 +1107,6 @@
   RENDER.browse = function(args){
     if (args[0] === "q") return drawQuestion(args[1]);
     if (args[0] === "set") return drawTopicSet(args[1]);
-    if (args[0] === "qw") return drawQwords();
-    if (args[0] === "r") return drawRound(args[1]);
 
     setHead([{ ja:"しつもん", r:"browse" }], "Questions · browse and filter");
     var m = $("main");
@@ -1088,12 +1121,7 @@
                                               : QD.discussion_stages;
     var h = '<h2>しつもん<span class="en">Every question, with model answers at three '
           + 'levels and the examiner tip behind it</span></h2>'
-          + '<button class="tile wide-tile" data-r="browse:qw" '
-          + 'style="--t1:#5aa9f0;--t2:#2f6fd0">'
-          + '<b>Question words</b>'
-          + '<i>Catch what is being asked, and answer that</i>'
-          + '<i class="what">' + QW.rounds.reduce(function(n, r){
-              return n + r.items.length; }, 0) + ' items in 2 rounds</i></button>'
+
           + '<div class="novoice">This phone has no Japanese voice installed, so the '
           + 'play marks are hidden. Everything else works. On iOS, '
           + 'Settings › Accessibility › Spoken Content › Voices adds one.</div>'
@@ -1854,12 +1882,13 @@
   RENDER.drill = function(args){
     if (args[0] === "weak") return drawWeak();
     if (args[0] === "pt") return drawParticles();
+    if (args[0] === "qw") return drawQwords();
     if (args[0] === "r") return drawRound(args[1]);
     if (args[0]) return drawDrill(args[0]);
     setHead([{ ja:"ドリル", r:"drill" }], "Drills · built from what the VCAA oral exam reports mark down");
     var weak = weakList();
-    var h = '<h2>ドリル<span class="en">Five drills, every item from a fault the '
-          + 'assessors named</span></h2>'
+    var h = '<h2>ドリル<span class="en">Short rounds, every item from a fault '
+          + 'the VCAA oral exam reports named</span></h2>'
           + '<div class="tiles">'
           + ER.drills.map(function(d){
               return '<button class="tile" data-d="' + esc(d.id) + '">'
@@ -1869,6 +1898,10 @@
           + '<button class="tile" data-d="weak"><b>Weak-spot review</b><i>'
           + (weak.length ? weak.length + " to come back to" : "nothing yet")
           + '</i></button>'
+          + '<button class="tile" data-d="qw"><b>Question words</b><i>'
+          + QW.rounds.reduce(function(n, r){ return n + r.items.length; }, 0)
+          + ' items</i><i class="what">Catch what is being asked, and answer '
+          + 'that</i></button>'
           + '<button class="tile" data-d="pt"><b>Particles</b><i>'
           + PT.rounds.reduce(function(n, r){ return n + r.items.length; }, 0)
           + ' items</i><i class="what">Spot the wrong one, in somebody '
