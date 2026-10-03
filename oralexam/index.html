@@ -217,6 +217,16 @@
   /* ---------- the discussion image ---------- */
   .shot{width:100%;border-radius:11px;border:1px solid var(--line);display:block}
   .shotwrap{position:relative;margin-bottom:10px}
+  /* The voice list. A sheet rather than a screen: it is a setting, and you
+     want to be back where you were straight afterwards. */
+  .sheet{position:fixed;inset:0;z-index:65;background:rgba(10,15,22,.45);
+         display:none;align-items:flex-end;justify-content:center}
+  .sheet.on{display:flex}
+  .sheet-in{background:var(--paper);width:100%;max-width:560px;
+            border-radius:16px 16px 0 0;padding:16px 16px 20px;
+            padding-bottom:calc(20px + env(safe-area-inset-bottom));
+            max-height:82vh;overflow:auto}
+  .sheet .band{width:100%;margin-bottom:7px}
   .full{position:fixed;inset:0;z-index:60;background:#000;display:none}
   .full.on{display:flex;align-items:center;justify-content:center}
   .full img{max-width:100%;max-height:100%;object-fit:contain}
@@ -298,6 +308,8 @@
 
 <main id="main"></main>
 
+<div class="sheet" id="sheet"></div>
+
 <div class="full" id="full">
   <img id="fullimg" alt="Your discussion image, full screen">
   <button class="btn ghost x" id="fullx">Close</button>
@@ -320,7 +332,7 @@
 (function(){
   "use strict";
 
-  var BUILD = "Version 1, 1 October 2026";
+  var BUILD = "Version 2, 3 October 2026";
 
   var CRIT  = window.ORAL_CRITERIA,
       REP   = window.ORAL_REPORTS,
@@ -383,7 +395,7 @@
   /* Recordings are used when they are what was asked for, and whenever the
      device has no Japanese voice of its own to fall back to. */
   function clipFor(text){
-    if (S.voice === "device" && SAY.hasDeviceJa()) return null;
+    if (S.voice !== "clips" && SAY.hasDeviceJa()) return null;
     return CLIPS[speakable(text)] || null;
   }
   /* A Japanese line, tappable, with its own speaker mark. The spoken form
@@ -414,7 +426,7 @@
      ticks or uploads stays in their own browser: no account, no server, no
      analytics, nothing leaves the phone. */
   var KEY = "oralExam-v1";
-  var S = { furi:true, rate:1, voice:"device", notes:{}, assess:{}, disc:{},
+  var S = { furi:true, rate:1, voice:"auto", notes:{}, assess:{}, disc:{},
             weak:{}, seen:{} };
   try {
     var raw = localStorage.getItem(KEY);
@@ -446,13 +458,56 @@
      keeps looking rather than giving up after one try. */
   var SAY = (function(){
     var can = "speechSynthesis" in window, jaV = null, settled = false, waiting = [];
-    function find(){
+    /* How good a Japanese voice is likely to be, from its name. Taking the
+       first one in the list was taking the worst one on some machines.
+
+         Natural, Neural, Nanami, Keita   Microsoft's online voices in Edge,
+                                          which are the best thing available
+                                          free on Windows and macOS
+         Premium, Enhanced                Apple's downloadable voices, far
+                                          better than the one iOS ships with
+         Kyoko, Otoya, Hattori, O-ren     Apple's standard Japanese voices
+         Google                           Android's neural Japanese voice
+         Haruka, Ichiro, Ayumi            Microsoft's old local voices
+         Grandma, Bubbles, Jester and     Apple's novelty voices. They exist
+         the rest of that row             in Japanese too, and one of them
+                                          reading an examination question
+                                          would be a disaster. */
+    var NOVELTY = /eddy|flo|grandma|grandpa|reed|rocko|sandy|shelley|jester|bells|bubbles|organ|superstar|trinoids|whisper|wobble|boing|bahh|albert|zarvox|cellos|good news|bad news/i;
+    function score(v){
+      var n = v.name || "", pts = 0;
+      if (NOVELTY.test(n)) return -1000;
+      if (/natural|neural/i.test(n)) pts += 100;
+      if (/nanami|keita/i.test(n)) pts += 80;
+      if (/premium|enhanced/i.test(n)) pts += 60;
+      if (/google/i.test(n)) pts += 50;
+      if (/kyoko|otoya|hattori|o-?ren|siri/i.test(n)) pts += 45;
+      if (/haruka|ichiro|ayumi/i.test(n)) pts -= 70;
+      if (/compact/i.test(n)) pts -= 40;
+      if (v.localService === false) pts += 10;   /* cloud voices tend to be the neural ones */
+      if (v.default) pts += 5;
+      return pts;
+    }
+    function jaVoices(){
+      var out = [];
       try {
-        var vs = speechSynthesis.getVoices() || [];
-        for (var i = 0; i < vs.length; i++)
-          if (/^ja(-|_|$)/i.test(vs[i].lang)) return vs[i];
+        (speechSynthesis.getVoices() || []).forEach(function(v){
+          if (/^ja(-|_|$)/i.test(v.lang || "")) out.push(v);
+        });
       } catch (e){}
-      return null;
+      out.sort(function(a, b){ return score(b) - score(a); });
+      return out;
+    }
+    function find(){
+      var vs = jaVoices();
+      if (!vs.length) return null;
+      /* A voice chosen by hand wins, as long as it is still there. */
+      if (S.voice && S.voice.indexOf("v:") === 0){
+        var want = S.voice.slice(2);
+        for (var i = 0; i < vs.length; i++)
+          if (vs[i].voiceURI === want || vs[i].name === want) return vs[i];
+      }
+      return vs[0];
     }
     function land(){
       jaV = find(); settled = true;
@@ -494,6 +549,9 @@
          marks stay when there are clips even if the device cannot speak. */
       hasJa: function(){ return !!jaV || !!Object.keys(CLIPS).length; },
       hasDeviceJa: function(){ return !!jaV; },
+      list: jaVoices,
+      current: function(){ return jaV; },
+      repick: function(){ jaV = find(); },
       ready: function(f){ if (settled) f(); else waiting.push(f); },
       /* One line at a time: two sentences over each other is noise. */
       speak: function(text, el, done){
@@ -565,19 +623,52 @@
     if (!Object.keys(CLIPS).length) return false;
     return S.voice === "clips" || !SAY.hasDeviceJa();
   }
+  /* The list of voices, opened from the top bar. It names what this device
+     actually has, because that is the one thing no amount of guessing here
+     can tell a student, and it says which one the app picked and why the
+     list might be short. */
   $("voiceBtn").onclick = function(){
-    if (!Object.keys(CLIPS).length)
-      return flash("There are no recordings installed, so this phone's own "
-                 + "voice is the only one.");
-    if (!SAY.hasDeviceJa())
-      return flash("This phone has no Japanese voice of its own, so the "
-                 + "recordings are the only one. On iOS, Settings, "
-                 + "Accessibility, Spoken Content, Voices adds one.");
-    S.voice = S.voice === "clips" ? "device" : "clips";
-    paintVoice(); save();
-    flash(usingClips() ? "Now using the recorded voice."
-                       : "Now using this phone's own voice.");
-    SAY.speak("今[いま]、何年生[なんねんせい]ですか。");
+    var vs = SAY.list(), cur = SAY.current(), has = !!Object.keys(CLIPS).length;
+    var h = '<div class="sheet-in"><h3 style="margin:0 0 4px">Which voice reads '
+          + 'the Japanese</h3>';
+    if (vs.length){
+      h += '<p class="note" style="margin-bottom:10px">This device has '
+         + vs.length + ' Japanese voice' + (vs.length === 1 ? "" : "s")
+         + '. The app picks the best of them on its own.</p>'
+         + '<button class="band' + (S.voice !== "clips" && S.voice.indexOf("v:") !== 0
+             ? " on" : "") + '" data-v="auto"><b>\u2713</b><span>'
+         + '<b style="font-weight:700">The best this device has</b><br>'
+         + esc(cur ? cur.name : "none") + '</span></button>'
+         + vs.map(function(v){
+             return '<button class="band' + (S.voice === "v:" + v.voiceURI ? " on" : "")
+                  + '" data-v="' + esc(v.voiceURI) + '"><b></b><span>'
+                  + esc(v.name) + '</span></button>';
+           }).join("");
+    } else {
+      h += '<p class="note" style="margin-bottom:10px">This device has no '
+         + 'Japanese voice of its own.<br>On an iPhone or a Mac: Settings, '
+         + 'Accessibility, Spoken Content, Voices, Japanese, and take an '
+         + 'Enhanced or Premium one.<br>On Windows: open the app in Edge, '
+         + 'which offers Microsoft\u2019s Natural voices.</p>';
+    }
+    if (has)
+      h += '<button class="band' + (usingClips() ? " on" : "") + '" data-v="clips">'
+         + '<b></b><span><b style="font-weight:700">The recorded voice</b><br>'
+         + 'Built in, the same on every device, works with no signal</span></button>';
+    h += '<div class="row"><button class="btn ghost wide" id="sheetX">Close</button>'
+       + '</div></div>';
+    $("sheet").innerHTML = h;
+    $("sheet").classList.add("on");
+    $("sheetX").onclick = function(){ $("sheet").classList.remove("on"); };
+    each($("sheet"), "[data-v]", function(b){
+      b.onclick = function(){
+        var v = b.dataset.v;
+        S.voice = v === "auto" ? "auto" : (v === "clips" ? "clips" : "v:" + v);
+        SAY.repick(); paintVoice(); save();
+        $("sheet").classList.remove("on");
+        SAY.speak("今[いま]、何年生[なんねんせい]ですか。メルボルンの 高校[こうこう]に 行[い]っています。");
+      };
+    });
   };
   $("rateBtn").onclick = function(){
     S.rate = RATES[(RATES.indexOf(S.rate) + 1) % RATES.length] || 1;
@@ -1679,7 +1770,7 @@
       if (!confirm("Clear everything this app has saved on this phone, including "
                  + "your image and your notes?")) return;
       try { localStorage.removeItem(KEY); } catch (e){}
-      S = { furi:true, rate:1, voice:"device", notes:{}, assess:{}, disc:{},
+      S = { furi:true, rate:1, voice:"auto", notes:{}, assess:{}, disc:{},
             weak:{}, seen:{} };
       paintFuri(); paintRate(); RENDER.me([]);
     };
