@@ -63,6 +63,8 @@
         font-family:var(--font);font-weight:800;font-size:16px;line-height:1;
         display:flex;align-items:center;justify-content:center;padding:0}
   .tool.off{opacity:.45}
+  /* kana is a word, not a letter, so its button is wider than square. */
+  .tool.wide{width:auto;min-width:54px;padding:0 9px;font-size:14px}
   .tool small{font-size:11px;font-weight:700;display:block}
   .tool svg{width:23px;height:23px}
   .tool .ic{fill:none;stroke:currentColor;stroke-width:2.2;
@@ -78,21 +80,20 @@
      not change height between tabs. */
   nav{border-top:1px solid var(--line-soft);background:var(--paper)}
   .navin{display:flex;max-width:720px;margin:0 auto}
-  nav button{flex:1;min-width:0;border:0;background:none;cursor:pointer;
-             padding:7px 2px 5px;display:flex;flex-direction:column;
-             align-items:center;gap:4px;color:var(--muted);
-             font-family:var(--font);border-bottom:3px solid transparent}
-  nav button .tilebox{width:32px;height:32px;border-radius:9px;color:#fff;
-             display:flex;align-items:center;justify-content:center;
-             background:linear-gradient(160deg,var(--t1),var(--t2));
-             box-shadow:0 1px 3px rgba(0,0,0,.22)}
-  nav button svg{width:21px;height:21px;display:block}
+  nav button{flex:1;min-width:0;border:0;cursor:pointer;
+             padding:7px 2px 6px;display:flex;flex-direction:column;
+             align-items:center;gap:3px;font-family:var(--font);
+             background:var(--t2);color:#fff;opacity:.52;
+             border-right:1px solid rgba(255,255,255,.35)}
+  nav button:last-child{border-right:0}
+  nav button svg{width:22px;height:22px;display:block}
   nav button .ic{stroke-width:2.6}
-  nav button .lab{font-size:10.5px;line-height:1.15;font-weight:600;
+  nav button .lab{font-size:10.5px;line-height:1.15;font-weight:700;
              height:2.3em;text-align:center;letter-spacing:-.1px}
-  nav button.on{background:var(--line-soft);border-bottom-color:var(--t2)}
-  nav button.on .lab{color:var(--deep);font-weight:800}
-  nav button.on .tilebox{box-shadow:0 0 0 2px var(--paper),0 0 0 4px var(--t2)}
+  /* The one you are on is the one at full strength. Every other block keeps
+     its colour, dimmed, so the row stays a row of six places rather than one
+     button and five gaps. */
+  nav button.on{opacity:1}
   .ic{fill:none;stroke:currentColor;stroke-width:2.4;
       stroke-linecap:round;stroke-linejoin:round}
   .icf{fill:currentColor;stroke:none}
@@ -128,6 +129,48 @@
 
   /* How hard to pitch a run. Four choices in one row, so the whole decision
      is one tap and the page does not grow a paragraph to explain it. */
+  /* The home page: the same six colours as the tab row, as full blocks, so
+     a student learns the colour once and navigates by it afterwards. */
+  .blocks{display:grid;grid-template-columns:1fr;gap:9px;margin:4px 0 14px}
+  @media (min-width:520px){ .blocks{grid-template-columns:1fr 1fr} }
+  .block{display:grid;grid-template-columns:40px 1fr;gap:3px 13px;
+         align-items:center;text-align:left;border:0;border-radius:14px;
+         padding:14px 15px;cursor:pointer;font-family:var(--font);
+         background:var(--t2);color:#fff;box-shadow:var(--shadow)}
+  .block .bi{grid-row:1 / span 2;display:flex;align-items:center;
+             justify-content:center}
+  .block svg{width:31px;height:31px}
+  .block .ic{stroke-width:2.4}
+  .block .bt{font-size:19px;font-weight:800;line-height:1.2}
+  .block .bd{font-size:14px;line-height:1.35;opacity:.92}
+
+  /* One screen does all four recognition rounds: a prompt, a column of
+     options, and the reason you were wrong. The options are full width
+     because half of them carry a Japanese sentence and a play button. */
+  .opt{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;
+       width:100%;text-align:left;background:var(--paper);color:inherit;
+       border:2px solid var(--line);border-radius:12px;padding:11px 12px;
+       margin-bottom:8px;font-family:var(--font);font-size:16.5px;
+       line-height:1.4;cursor:pointer;min-height:52px}
+  .opt .oen{display:block;font-size:13.5px;color:var(--muted);margin-top:2px}
+  .opt.pick{border-color:var(--deep)}
+  .opt.yes{border-color:var(--ok);background:#f1f8f2}
+  .opt.no{border-color:var(--accent);background:#fdf2f2}
+  .opt.dim{opacity:.55}
+  .opt .mark{font-size:20px;font-weight:800;line-height:1}
+  .opt.yes .mark{color:var(--ok)} .opt.no .mark{color:var(--accent)}
+  .opt .spk{flex:none;width:40px;height:40px;border:2px solid var(--deep);
+       border-radius:10px;background:#fff;cursor:pointer;padding:0}
+  .opt .spk:after{content:"";display:block;width:19px;height:19px;margin:0 auto;
+       background:var(--spk) center/contain no-repeat}
+  body:not(.hasvoice) .opt .spk{display:none}
+  .why{border-left:4px solid var(--line);padding:6px 11px;margin:2px 0 12px;
+       font-size:15px;color:var(--muted)}
+  .why.yes{border-color:var(--ok)} .why.no{border-color:var(--accent)}
+  .scorebar{display:flex;align-items:baseline;gap:9px;margin:0 0 12px;
+       font-size:14.5px;color:var(--muted)}
+  .scorebar b{font-size:19px;color:var(--ink)}
+
   .segs{display:flex;gap:6px;margin:4px 0 6px}
   .seg{flex:1;min-width:0;min-height:44px;padding:6px 4px;border:1.5px solid var(--line);
        border-radius:11px;background:var(--paper);color:var(--muted);cursor:pointer;
@@ -142,6 +185,11 @@
         color:inherit;line-height:1.4;box-shadow:var(--shadow)}
   .tile b{display:block;font-size:17px}
   .tile i.what{margin-top:4px;color:var(--ink);opacity:.8;font-size:13.5px}
+  /* A tile that is the only thing on its row, in its section's colour. */
+  .wide-tile{display:block;width:100%;margin:0 0 12px;border:0;color:#fff;
+       background:var(--t2)}
+  .wide-tile i{color:rgba(255,255,255,.9)}
+  .wide-tile i.what{color:#fff;opacity:.85}
   .tile i{display:block;font-style:normal;font-size:13px;color:var(--muted);
           margin-top:3px}
   .tile:nth-child(6n+1){background:var(--c1)} .tile:nth-child(6n+2){background:var(--c2)}
@@ -312,6 +360,13 @@
 
 <div class="top">
   <div class="bar">
+    <!-- Home. Every other way back is a breadcrumb, which only goes up one
+         branch; this goes to the front door from anywhere. -->
+    <button class="tool" id="homeBtn" title="Home" aria-label="Home">
+      <svg viewBox="0 0 28 28" aria-hidden="true">
+        <path class="ic" d="M4 13.2 14 5l10 8.2"/>
+        <path class="ic" d="M6.6 11.8V23h14.8V11.8"/>
+        <path class="ic" d="M11.3 23v-6.2h5.4V23"/></svg></button>
     <div class="htitle">
       <div class="crumb" id="crumb"></div>
       <div class="en" id="sub"></div>
@@ -320,13 +375,15 @@
          buried in a settings page because both get changed many times in a
          sitting: readings off is how you check you can still read it, and 0.7
          is how you catch a question you missed at full speed. -->
-    <button class="tool" id="furiBtn" title="Readings above the kanji">ふ</button>
+    <!-- Readings on or off, and the speaking speed. A single ふ said nothing
+         to a student who had not been told what it meant; the word kana
+         does. The voice picker is gone: the recordings are better than every
+         device voice, they are the same everywhere, and leaving the choice
+         there only invited somebody to make the app worse by accident. -->
+    <button class="tool wide" id="furiBtn" title="Readings above the kanji">
+      <span>kana</span></button>
     <button class="tool" id="rateBtn" title="How fast the voice speaks">
       <span id="rateLabel">×1</span></button>
-    <!-- Which voice reads the Japanese. The recordings are the same on every
-         phone; a modern phone's own Japanese voice usually sounds better. -->
-    <button class="tool" id="voiceBtn" title="Which voice reads the Japanese">
-      <svg viewBox="0 0 24 24" aria-hidden="true" id="voiceIcon"></svg></button>
   </div>
   <nav><div class="navin" id="nav"></div></nav>
 </div>
@@ -354,18 +411,22 @@
 <script src="data/phrases.js"></script>
 <script src="data/errors.js"></script>
 <script src="data/topics.js"></script>
+<script src="data/qwords.js"></script>
+<script src="data/particles.js"></script>
 <script>
 (function(){
   "use strict";
 
-  var BUILD = "Version 8, 3 October 2026";
+  var BUILD = "Version 10, 3 October 2026";
 
   var CRIT  = window.ORAL_CRITERIA,
       REP   = window.ORAL_REPORTS,
       QD    = window.ORAL_QUESTIONS,
       PH    = window.ORAL_PHRASES,
       ER    = window.ORAL_ERRORS,
-      TOP   = (window.ORAL_TOPICS || { topics:[] }).topics;
+      TOP   = (window.ORAL_TOPICS || { topics:[] }).topics,
+      QW    = window.ORAL_QWORDS || { words:[], rounds:[] },
+      PT    = window.ORAL_PARTICLES || { rounds:[] };
 
   var $ = function(id){ return document.getElementById(id); };
   function esc(s){
@@ -640,82 +701,12 @@
   function paintRate(){
     $("rateLabel").textContent = "×" + S.rate;
   }
-  /* Two states, drawn rather than labelled: a phone for the device's own
-     voice, a cassette for the recordings. The flash line underneath says
-     which in words, because an icon on its own is a guess. */
-  var VICON = {
-    device: '<rect class="ic" x="6.5" y="2.5" width="11" height="19" rx="2.5"/>'
-          + '<path class="ic" d="M10.5 18.6h3"/>',
-    clips:  '<rect class="ic" x="2.5" y="5.5" width="19" height="13" rx="2.5"/>'
-          + '<circle class="ic" cx="8" cy="12" r="2.2"/>'
-          + '<circle class="ic" cx="16" cy="12" r="2.2"/>'
-          + '<path class="ic" d="M10.2 12h3.6"/>'
-  };
-  function paintVoice(){
-    var b = $("voiceBtn"), using = usingClips() ? "clips" : "device";
-    $("voiceIcon").innerHTML = VICON[using];
-    b.title = using === "clips" ? "Recorded voice. Tap for this phone's voice."
-                                : "This phone's voice. Tap for the recorded voice.";
-    b.setAttribute("aria-label", b.title);
-    b.classList.toggle("off", !Object.keys(CLIPS).length && using === "clips");
-  }
-  function usingClips(){
-    if (!Object.keys(CLIPS).length) return false;
-    return S.voice === "clips" || !SAY.hasDeviceJa();
-  }
-  /* The list of voices, opened from the top bar. It names what this device
-     actually has, because that is the one thing no amount of guessing here
-     can tell a student, and it says which one the app picked and why the
-     list might be short. */
-  $("voiceBtn").onclick = function(){
-    var vs = SAY.list(), cur = SAY.current(), has = !!Object.keys(CLIPS).length;
-    var h = '<div class="sheet-in"><h3 style="margin:0 0 4px">Which voice reads '
-          + 'the Japanese</h3>';
-    if (has)
-      h += '<button class="band' + (usingClips() ? " on" : "") + '" data-v="clips">'
-         + '<b>' + (usingClips() ? "\u2713" : "") + '</b><span>'
-         + '<b style="font-weight:700">The recorded voice</b><br>'
-         + 'A Google neural voice, the same on every device, works with no '
-         + 'signal</span></button>';
-    if (vs.length){
-      h += '<p class="note" style="margin-bottom:10px">The recording is a '
-         + 'Google neural voice and is the same on every device. This one '
-         + 'also has ' + vs.length + ' Japanese voice'
-         + (vs.length === 1 ? "" : "s") + ' of its own. They are mostly worse '
-         + '— Kyoko, the one a Mac ships with, and anything marked '
-         + 'Compact especially — so take one only if you want to hear '
-         + 'the difference.</p>'
-         + '<button class="band' + (S.voice !== "clips" && S.voice.indexOf("v:") !== 0
-             ? " on" : "") + '" data-v="auto"><b>\u2713</b><span>'
-         + '<b style="font-weight:700">The best this device has</b><br>'
-         + esc(cur ? cur.name : "none") + '</span></button>'
-         + vs.map(function(v){
-             return '<button class="band' + (S.voice === "v:" + v.voiceURI ? " on" : "")
-                  + '" data-v="' + esc(v.voiceURI) + '"><b></b><span>'
-                  + esc(v.name) + '</span></button>';
-           }).join("");
-    } else {
-      h += '<p class="note" style="margin-bottom:10px">This device has no '
-         + 'Japanese voice of its own.<br>On an iPhone or a Mac: Settings, '
-         + 'Accessibility, Spoken Content, Voices, Japanese, and take an '
-         + 'Enhanced or Premium one.<br>On Windows: open the app in Edge, '
-         + 'which offers Microsoft\u2019s Natural voices.</p>';
-    }
-    h += '<div class="row"><button class="btn ghost wide" id="sheetX">Close</button>'
-       + '</div></div>';
-    $("sheet").innerHTML = h;
-    $("sheet").classList.add("on");
-    $("sheetX").onclick = function(){ $("sheet").classList.remove("on"); };
-    each($("sheet"), "[data-v]", function(b){
-      b.onclick = function(){
-        var v = b.dataset.v;
-        S.voice = v === "auto" ? "auto" : (v === "clips" ? "clips" : "v:" + v);
-        SAY.repick(); paintVoice(); save();
-        $("sheet").classList.remove("on");
-        SAY.speak("今[いま]、何年生[なんねんせい]ですか。メルボルンの 高校[こうこう]に 行[い]っています。");
-      };
-    });
-  };
+  /* The recordings are the only voice now. They are a Google neural voice,
+     they are the same on every device, and they beat what any of the four
+     platforms offers of its own, so there is nothing left to choose between
+     and the picker that used to sit in the top bar has gone. A device voice
+     is still read if a line somehow has no recording, which is the one case
+     where having it matters. */
   $("rateBtn").onclick = function(){
     S.rate = RATES[(RATES.indexOf(S.rate) + 1) % RATES.length] || 1;
     paintRate(); save();
@@ -748,16 +739,22 @@
      tile's gradient, light to deep. */
   var TABS = [
     { id:"browse", ja:"しつもん", en:"Questions", lab:"Questions",
+      home:"Every question an assessor could ask, with answers at three levels",
       icon:"bubble", c1:"#5aa9f0", c2:"#2f6fd0" },
     { id:"mock",   ja:"タイムれんしゅう", en:"Timed practice", lab:"Timed practice",
+      home:"The whole examination in 15 minutes, or your SAC topic in 4",
       icon:"clock",  c1:"#f28a6e", c2:"#cf4436" },
     { id:"drill",  ja:"ドリル", en:"Drills", lab:"Drills",
+      home:"Short rounds on the mistakes the VCAA reports name every year",
       icon:"target", c1:"#f2b45b", c2:"#d9822a" },
     { id:"disc",   ja:"ディスカッション", en:"Discussion builder", lab:"Discussion",
+      home:"Build your Section 2 answer stage by stage, in your own words",
       icon:"steps",  c1:"#9d91f2", c2:"#6246c9" },
     { id:"phrase", ja:"フレーズ", en:"Phrases", lab:"Phrases",
+      home:"Lines worth knowing by heart, for when a question gets away",
       icon:"lines",  c1:"#5ccfc5", c2:"#11837f" },
     { id:"me",     ja:"じぶんで さいてん", en:"Self-grade", lab:"Self-grade",
+      home:"Mark yourself against the official criteria and keep a copy",
       icon:"person", c1:"#74cf8e", c2:"#2f7d4f" }
   ];
   var ICONS = {
@@ -769,7 +766,7 @@
     person:'<svg viewBox="0 0 28 28" aria-hidden="true"><circle class="ic" cx="14" cy="9.5" r="4.6"/><path class="ic" d="M5 24c0-5 4-8 9-8s9 3 9 8"/></svg>'
   };
 
-  var route = "browse", RENDER = {};
+  var route = "home", RENDER = {};
   function go(r, replace){
     route = r;
     try {
@@ -779,7 +776,7 @@
     draw();
   }
   window.addEventListener("popstate", function(ev){
-    route = (ev.state && ev.state.r) || (location.hash || "#browse").slice(1) || "browse";
+    route = (ev.state && ev.state.r) || (location.hash || "#home").slice(1) || "home";
     draw();
   });
 
@@ -790,7 +787,7 @@
            + ' aria-label="' + esc(t.en) + '"'
            + ' style="--t1:' + t.c1 + ';--t2:' + t.c2 + '"'
            + (tabOf(route) === t.id ? ' class="on" aria-current="page"' : '')
-           + '><span class="tilebox">' + ICONS[t.icon] + '</span>'
+           + '>' + ICONS[t.icon]
            + '<span class="lab">' + esc(t.lab) + '</span></button>';
     }).join("");
     Array.prototype.forEach.call($("nav").children, function(b){
@@ -821,10 +818,238 @@
     SAY.stop();
     stopClock();
     paintNav();
-    var fn = RENDER[tabOf(route)] || RENDER.browse;
+    var fn = RENDER[tabOf(route)] || RENDER.home;
     $("main").innerHTML = "";
     fn(route.split(":").slice(1));
     window.scrollTo(0, 0);
+  }
+
+  /* ================= 0. home =================
+     The app used to open inside the question browser, which meant the first
+     thing a student read was a paragraph about one tab rather than a way in
+     to any of them. Home is where the descriptions live now: every other
+     screen gets on with its job. */
+  RENDER.home = function(){
+    setHead([{ ja:"オーラルしけん", r:"home" }], "VCE Japanese oral examination practice");
+    var h = '<h2>オーラルしけん<span class="en">Practice for the VCE Japanese '
+          + 'Second Language oral examination</span></h2>'
+          + '<div class="blocks">'
+          + TABS.map(function(t){
+              return '<button class="block" data-go="' + t.id + '"'
+                   + ' style="--t1:' + t.c1 + ';--t2:' + t.c2 + '">'
+                   + '<span class="bi">' + ICONS[t.icon] + '</span>'
+                   + '<span class="bt">' + esc(t.lab) + '</span>'
+                   + '<span class="bd">' + esc(t.home) + '</span></button>';
+            }).join("")
+          + '</div>'
+          + '<p class="note">Everything here stays on this phone. Nothing is '
+          + 'uploaded, there is no account, and it works with no signal once '
+          + 'it has loaded.</p>' + foot();
+    $("main").innerHTML = h;
+    each($("main"), "[data-go]", function(b){
+      b.onclick = function(){ go(b.dataset.go); };
+    });
+  };
+
+  /* ================= the recognition rounds =================
+     Four kinds of round, one screen. They are all the same shape underneath:
+     something to read or hear, a column of options, and, once you have
+     chosen, the reason. The reason is the whole point. A wrong answer with
+     no explanation teaches a student only that they were wrong, which they
+     already knew, so the data carries one on every distractor and the
+     validator refuses a round without them.
+
+       word    a question; which question word is it asking with
+       reply   a question; which of four real sentences answers it
+       choose  a sentence with a gap; which particle
+       judge   a whole sentence; right or wrong, and the fix
+
+     Nothing here is marked out of anything or kept. It is recognition
+     practice, and a score a student cannot see tomorrow is a score that
+     cannot discourage them either. */
+  var RSTATE = {};
+  function roundById(id){
+    var all = (QW.rounds || []).concat(PT.rounds || []);
+    for (var i = 0; i < all.length; i++) if (all[i].id === id) return all[i];
+    return null;
+  }
+  function wordById(id){
+    for (var i = 0; i < QW.words.length; i++)
+      if (QW.words[i].id === id) return QW.words[i];
+    return { id:id, ja:id, en:id };
+  }
+  /* The options a word round offers: the right one plus three others, the
+     same four every time this item comes round so a student is not learning
+     the shape of the screen instead of the Japanese. */
+  function wordOptions(item){
+    var right = wordById(item.answer), out = [right];
+    var pool = QW.words.filter(function(w){ return w.id !== item.answer; });
+    var seed = 0, i;
+    for (i = 0; i < item.ja.length; i++) seed = (seed * 31 + item.ja.charCodeAt(i)) % 9973;
+    for (i = 0; i < 3 && pool.length; i++)
+      out.push(pool.splice((seed + i * 7) % pool.length, 1)[0]);
+    for (i = out.length - 1; i > 0; i--){
+      var j = (seed + i * 13) % (i + 1), t = out[i]; out[i] = out[j]; out[j] = t;
+    }
+    return out;
+  }
+
+  function drawRound(id){
+    var r = roundById(id);
+    if (!r) return go("browse", true);
+    var st = RSTATE[id] = RSTATE[id] || { at:0, picked:null, right:0, done:0 };
+    var home = (QW.rounds || []).indexOf(r) >= 0 ? "browse:qw" : "drill:pt";
+    var crumbTop = home === "browse:qw"
+      ? { ja:"しつもん", r:"browse" } : { ja:"ドリル", r:"drill" };
+    setHead([crumbTop, { ja:r.title, r:id }],
+            r.title + " · " + (st.at + 1) + " of " + r.items.length);
+    var it = r.items[st.at];
+
+    var h = '<div class="scorebar"><b>' + (st.at + 1) + ' / ' + r.items.length
+          + '</b><span>' + st.right + ' right so far</span></div>';
+
+    /* the prompt */
+    if (r.kind === "choose"){
+      h += '<div class="card">'
+         + '<span class="jatext">' + ruby(it.before) + ' <b>＿＿</b> '
+         + ruby(it.after) + '</span>' + enLine(it.en) + '</div>';
+    } else {
+      h += '<div class="qrow"><div class="card">' + jaLine(it.ja)
+         + (it.en ? enLine(it.en) : "")
+         + '</div><button class="playbtn" id="playq" aria-label="Hear it"></button>'
+         + '</div>';
+    }
+
+    /* the options */
+    var opts = r.kind === "word"   ? wordOptions(it).map(function(w){
+                 return { key:w.id, lab:esc(w.en), sub:esc(w.ja) + " · " + esc(w.forms),
+                          ok:w.id === it.answer, why:"" }; })
+             : r.kind === "reply"  ? it.options.map(function(o, i){
+                 return { key:String(i), ja:o.ja, lab:ruby(o.ja), sub:esc(o.en),
+                          ok:!!o.ok, why:o.why }; })
+             : r.kind === "choose" ? it.options.map(function(o){
+                 return { key:o, lab:esc(o), sub:"", ok:o === it.answer, why:"" }; })
+             : [{ key:"y", lab:"Right as it is", sub:"", ok:it.ok === true },
+                { key:"n", lab:"Something is wrong", sub:"", ok:it.ok === false }];
+
+    opts.forEach(function(o){
+      var cls = "opt";
+      if (st.picked !== null){
+        if (o.ok) cls += " yes";
+        else if (o.key === st.picked) cls += " no";
+        else cls += " dim";
+      }
+      h += '<button class="' + cls + '" data-o="' + esc(o.key) + '">'
+         + '<span>' + (r.kind === "reply" ? '<span class="jatext">' + o.lab
+                       + '</span>' : '<b>' + o.lab + '</b>')
+         + (o.sub ? '<span class="oen">' + o.sub + '</span>' : "") + '</span>'
+         + (st.picked !== null ? '<span class="mark">'
+              + (o.ok ? "\u2714" : (o.key === st.picked ? "\u2718" : "")) + '</span>'
+            : (o.ja ? '<span class="spk" data-say="' + esc(speakable(o.ja))
+                    + '" role="button" aria-label="Hear it"></span>' : '<span></span>'))
+         + '</button>';
+    });
+
+    /* the reason */
+    if (st.picked !== null){
+      var chosen = null;
+      opts.forEach(function(o){ if (o.key === st.picked) chosen = o; });
+      var won = chosen && chosen.ok;
+      var why = it.why || (chosen && chosen.why) || "";
+      /* plain() already ends the corrected sentence with 。, so no full
+         stop goes after it. */
+      if (r.kind === "judge" && !it.ok)
+        why = "Should be " + plain(it.right) + " " + it.why;
+      if (r.kind === "word" && !won)
+        why = "It asks with " + plain(wordById(it.answer).ja) + ", which is "
+            + wordById(it.answer).en + ".";
+      h += '<div class="why ' + (won ? "yes" : "no") + '">'
+         + (won ? "\u2714 " : "\u2718 ") + esc(why || (won ? "Right." : "Not this one."))
+         + '</div>';
+      if (r.kind === "judge" && !it.ok)
+        h += fixPair(it.ja, it.right);
+      /* The gap is the hard part; the whole sentence is the thing worth
+         carrying away, so it arrives complete and speakable. */
+      if (r.kind === "choose")
+        h += '<div class="qrow"><div class="card">'
+           + jaLine(it.before + it.answer + it.after) + enLine(it.en)
+           + '</div><button class="playbtn" id="playw" aria-label="Hear it">'
+           + '</button></div>';
+      h += '<div class="row">'
+         + (st.at < r.items.length - 1
+            ? '<button class="btn wide" id="nextI">Next</button>'
+            : '<button class="btn wide" id="againI">Start again</button>')
+         + '</div>';
+    }
+    h += '<div class="row"><button class="btn ghost" data-r="' + home
+       + '">Back</button></div>';
+    $("main").innerHTML = h + foot();
+
+    if ($("playq")) $("playq").onclick = function(){ SAY.speak(it.ja); };
+    if ($("playw")) $("playw").onclick = function(){
+      SAY.speak(it.before + it.answer + it.after);
+    };
+    /* A question is read out as it arrives, which is the whole point of a
+       recognition round: in the room you hear it before you see it. A judge
+       item is not read out, because half of them are wrong on purpose and
+       playing a wrong sentence into a student's ear unasked is the opposite
+       of helpful. The play button is there if they want it. */
+    if (st.picked === null && it.ja && r.kind !== "judge") SAY.speak(it.ja);
+    each($("main"), "[data-o]", function(b){
+      b.onclick = function(ev){
+        if (ev.target.classList.contains("spk")){
+          SAY.speak(ev.target.dataset.say);
+          return;
+        }
+        if (st.picked !== null) return;
+        st.picked = b.dataset.o;
+        st.done++;
+        opts.forEach(function(o){ if (o.key === st.picked && o.ok) st.right++; });
+        drawRound(id);
+      };
+    });
+    if ($("nextI")) $("nextI").onclick = function(){
+      st.at++; st.picked = null; drawRound(id);
+    };
+    if ($("againI")) $("againI").onclick = function(){
+      RSTATE[id] = { at:0, picked:null, right:0, done:0 }; drawRound(id);
+    };
+    each($("main"), "[data-r]", function(b){
+      b.onclick = function(){ SAY.stop(); go(b.dataset.r); };
+    });
+  }
+
+  /* The way in to the two question-word rounds, with the one line of
+     pedagogy that justifies them: the reports name mismatched answers in
+     every year, and the cause is the question word, not the Japanese. */
+  function drawQwords(){
+    setHead([{ ja:"しつもん", r:"browse" }, { ja:"しつもんの ことば", r:"browse:qw" }],
+            "Question words");
+    var h = '<h2>しつもんの ことば<span class="en">Question words</span></h2>'
+          + '<p class="lede">The fault named in all six VCAA oral exam reports is '
+          + 'the answer not matching the question, and it comes from missing the '
+          + 'question word rather than from weak Japanese. Each question is read '
+          + 'aloud first, the way you meet it in the room.</p>'
+          + '<div class="tiles">'
+          + QW.rounds.map(function(r){
+              return '<button class="tile" data-r="browse:r:' + esc(r.id) + '">'
+                   + '<b>' + esc(r.title) + '</b>'
+                   + '<i>' + r.items.length + ' items</i>'
+                   + '<i class="what">' + esc(r.about) + '</i></button>';
+            }).join("")
+          + '</div>'
+          + '<h3>The question words themselves</h3>'
+          + '<div class="tiles">'
+          + QW.words.map(function(w){
+              return '<div class="tile" style="cursor:default">'
+                   + '<b>' + ruby(w.ja) + '</b><i>' + esc(w.en) + '</i>'
+                   + '<i class="what">' + ruby(w.forms) + '</i></div>';
+            }).join("")
+          + '</div>' + foot();
+    $("main").innerHTML = h;
+    each($("main"), "[data-r]", function(b){
+      b.onclick = function(){ go(b.dataset.r); };
+    });
   }
 
   /* ================= 1. the question browser ================= */
@@ -833,6 +1058,8 @@
   RENDER.browse = function(args){
     if (args[0] === "q") return drawQuestion(args[1]);
     if (args[0] === "set") return drawTopicSet(args[1]);
+    if (args[0] === "qw") return drawQwords();
+    if (args[0] === "r") return drawRound(args[1]);
 
     setHead([{ ja:"しつもん", r:"browse" }], "Questions · browse and filter");
     var m = $("main");
@@ -847,6 +1074,12 @@
                                               : QD.discussion_stages;
     var h = '<h2>しつもん<span class="en">Every question, with model answers at three '
           + 'levels and the examiner tip behind it</span></h2>'
+          + '<button class="tile wide-tile" data-r="browse:qw" '
+          + 'style="--t1:#5aa9f0;--t2:#2f6fd0">'
+          + '<b>Question words</b>'
+          + '<i>Catch what is being asked, and answer that</i>'
+          + '<i class="what">' + QW.rounds.reduce(function(n, r){
+              return n + r.items.length; }, 0) + ' items in 2 rounds</i></button>'
           + '<div class="novoice">This phone has no Japanese voice installed, so the '
           + 'play marks are hidden. Everything else works. On iOS, '
           + 'Settings › Accessibility › Spoken Content › Voices adds one.</div>'
@@ -1511,11 +1744,44 @@
     });
   }
 
+  /* Particles, by recognition. The Grammar Hub drills them by typing one
+     in; this drills spotting the wrong one, which is the half you have to
+     do to your own sentence while you are still speaking it. */
+  function drawParticles(){
+    setHead([{ ja:"ドリル", r:"drill" }, { ja:"じょし", r:"drill:pt" }], "Particles");
+    var h = '<h2>じょし<span class="en">Particles</span></h2>'
+          + '<p class="lede">Reading a wrong particle in somebody else\u2019s '
+          + 'sentence is how you start catching it in your own. The explanation '
+          + 'comes up whichever way you answer.</p>'
+          + '<div class="tiles">'
+          + PT.rounds.map(function(r){
+              return '<button class="tile" data-r="drill:r:' + esc(r.id) + '">'
+                   + '<b>' + esc(r.title) + '</b>'
+                   + '<i>' + r.items.length + ' items</i>'
+                   + '<i class="what">' + esc(r.about) + '</i></button>';
+            }).join("")
+          + '</div>'
+          + '<h3>Writing them, not just spotting them</h3>'
+          + '<p class="lede">The Grammar Hub has the other half of this: the same '
+          + 'particles, typed into the gap rather than chosen from four. Worth a '
+          + 'turn once these feel easy.</p>'
+          + '<a class="tile" style="display:block;text-decoration:none" '
+          + 'href="https://liaminhawai-cmd.github.io/japanese-hub/grammar/" '
+          + 'target="_blank" rel="noopener"><b>Grammar Hub \u203a Particles</b>'
+          + '<i>Opens in a new tab, needs a connection</i></a>' + foot();
+    $("main").innerHTML = h;
+    each($("main"), "[data-r]", function(b){
+      b.onclick = function(){ go(b.dataset.r); };
+    });
+  }
+
   /* ================= 3. the drills ================= */
   var DSTATE = {};
 
   RENDER.drill = function(args){
     if (args[0] === "weak") return drawWeak();
+    if (args[0] === "pt") return drawParticles();
+    if (args[0] === "r") return drawRound(args[1]);
     if (args[0]) return drawDrill(args[0]);
     setHead([{ ja:"ドリル", r:"drill" }], "Drills · built from what the VCAA oral exam reports mark down");
     var weak = weakList();
@@ -1530,6 +1796,10 @@
           + '<button class="tile" data-d="weak"><b>Weak-spot review</b><i>'
           + (weak.length ? weak.length + " to come back to" : "nothing yet")
           + '</i></button>'
+          + '<button class="tile" data-d="pt"><b>Particles</b><i>'
+          + PT.rounds.reduce(function(n, r){ return n + r.items.length; }, 0)
+          + ' items</i><i class="what">Spot the wrong one, in somebody '
+          + 'else\u2019s sentence first</i></button>'
           + '</div>'
           + '<h3>The nineteen faults</h3>'
           + '<p class="lede">Every one of these is named in at least one of the '
@@ -2249,11 +2519,9 @@
   $("uplater").onclick = function(){ $("upbar").classList.remove("on"); };
 
   /* ================= start ================= */
-  paintFuri(); paintRate(); paintVoice();
-  /* The voice list lands late on a phone, and whether there is one decides
-     which icon is right, so paint it again once it has settled. */
-  SAY.ready(paintVoice);
-  route = (location.hash || "#browse").slice(1) || "browse";
+  paintFuri(); paintRate();
+  $("homeBtn").onclick = function(){ SAY.stop(); go("home"); };
+  route = (location.hash || "#home").slice(1) || "home";
   go(route, true);
 })();
 </script>
