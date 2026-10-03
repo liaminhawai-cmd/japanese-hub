@@ -141,6 +141,7 @@
         cursor:pointer;font-family:var(--font);font-size:16.5px;text-align:left;
         color:inherit;line-height:1.4;box-shadow:var(--shadow)}
   .tile b{display:block;font-size:17px}
+  .tile i.what{margin-top:4px;color:var(--ink);opacity:.8;font-size:13.5px}
   .tile i{display:block;font-style:normal;font-size:13px;color:var(--muted);
           margin-top:3px}
   .tile:nth-child(6n+1){background:var(--c1)} .tile:nth-child(6n+2){background:var(--c2)}
@@ -356,7 +357,7 @@
 (function(){
   "use strict";
 
-  var BUILD = "Version 6, 3 October 2026";
+  var BUILD = "Version 7, 3 October 2026";
 
   var CRIT  = window.ORAL_CRITERIA,
       REP   = window.ORAL_REPORTS,
@@ -746,7 +747,7 @@
   var TABS = [
     { id:"browse", ja:"しつもん", en:"Questions", lab:"Questions",
       icon:"bubble", c1:"#5aa9f0", c2:"#2f6fd0" },
-    { id:"mock",   ja:"もぎしけん", en:"Mock examination", lab:"Mock exam",
+    { id:"mock",   ja:"タイムれんしゅう", en:"Timed practice", lab:"Timed practice",
       icon:"clock",  c1:"#f28a6e", c2:"#cf4436" },
     { id:"drill",  ja:"ドリル", en:"Drills", lab:"Drills",
       icon:"target", c1:"#f2b45b", c2:"#d9822a" },
@@ -754,7 +755,7 @@
       icon:"steps",  c1:"#9d91f2", c2:"#6246c9" },
     { id:"phrase", ja:"フレーズ", en:"Phrases", lab:"Phrases",
       icon:"lines",  c1:"#5ccfc5", c2:"#11837f" },
-    { id:"me",     ja:"わたしの きろく", en:"My record", lab:"My record",
+    { id:"me",     ja:"じぶんで さいてん", en:"Self-grade", lab:"Self-grade",
       icon:"person", c1:"#74cf8e", c2:"#2f7d4f" }
   ];
   var ICONS = {
@@ -1066,7 +1067,7 @@
           + '<div class="en" style="margin-top:4px">' + esc(t.image_advice)
           + '</div></div>'
           + '<h3>Words you must be able to explain</h3>'
-          + '<p class="lede">Five of the six reports say the assessors ask what your '
+          + '<p class="lede">Five of the six VCAA oral exam reports say the assessors ask what your '
           + 'own key words mean. These are the ones for this subtopic.</p>'
           + t.key_words.map(function(k){
               return '<div class="card"><b>' + esc(k.ja) + '</b> 〈'
@@ -1131,6 +1132,51 @@
   }
   function followupsFor(q){
     return q.followups.slice(0, FUS[MOCK && MOCK.band ? MOCK.band : S.band] || 9);
+  }
+
+  /* The four minute SAC run. A school assessed task is short, so a student
+     cannot wait to be asked the right question: everything they can do has
+     to be shown inside five questions. Criterion 1 is marked on the range
+     and depth of what is said, on elaborating and reflecting, and on
+     interacting rather than reciting, so the run takes one question of each
+     kind the bank holds, from different topics, easiest first. A student who
+     answers all five has given an opinion with a reason, compared two
+     things, handled something hypothetical and talked about themselves,
+     which is the whole of what the descriptors ask for. */
+  var SAC_ORDER = ["personal", "factual", "opinion", "comparison",
+                   "evaluative", "hypothetical"];
+  var SAC_N = 5;
+  function buildSac(band){
+    var pool = bandPool(CONV.slice(), band);
+    shuffle(pool);
+    pool = bandPool(pool, band);
+    var picked = [], usedType = {}, usedTopic = {};
+    SAC_ORDER.forEach(function(t){
+      if (picked.length >= SAC_N) return;
+      for (var i = 0; i < pool.length; i++){
+        var q = pool[i];
+        if (q.question_type === t && !usedTopic[q.topic]){
+          picked.push(q); usedType[t] = 1; usedTopic[q.topic] = 1; return;
+        }
+      }
+    });
+    /* A band may not hold every kind. Top up from anywhere rather than run
+       a student short of their four minutes. */
+    for (var i = 0; i < pool.length && picked.length < SAC_N; i++){
+      if (!usedTopic[pool[i].topic]){
+        picked.push(pool[i]); usedTopic[pool[i].topic] = 1;
+      }
+    }
+    picked.sort(function(a, b){ return a.difficulty - b.difficulty; });
+    return { kind:"sac", s1:picked, s2:[], band:band, sec:0, at:0,
+             shown:false, fu:-1, started:0, left:0 };
+  }
+  /* What the clock is counting down, whichever run is going. */
+  function runSec(){
+    if (MOCK.kind === "sac")
+      return { number:0, name_en:"SAC practice", name_ja:"SACれんしゅう",
+               minutes:4, marks:CRIT.sections[0].marks };
+    return CRIT.sections[MOCK.sec];
   }
 
   function buildMock(band){
@@ -1199,12 +1245,12 @@
 
   RENDER.mock = function(args){
     if (args[0] === "run" && MOCK) return drawMockRun();
-    setHead([{ ja:"もぎしけん", r:"mock" }], "Mock examination · 15 minutes");
+    setHead([{ ja:"タイムれんしゅう", r:"mock" }], "Timed practice · 15 or 4 minutes");
     var ex = CRIT.examination, s = CRIT.sections;
     /* Students get the idea in one line. The detail is all still here,
        folded away, for the sitting where someone wants it. */
-    var h = '<h2>もぎしけん<span class="en">The whole examination, in order, on '
-          + 'the clock</span></h2>'
+    var h = '<h2>タイムれんしゅう<span class="en">Practise on the clock, the whole '
+          + 'examination or a short SAC</span></h2>'
           + '<p class="lede">Hit start, then click through the questions and the '
           + 'follow-ups. You hear each question before you see it, the way it '
           + 'happens in the room.</p>'
@@ -1219,7 +1265,13 @@
           + esc((BANDS.filter(function(b){ return b.id === S.band; })[0]
                  || BANDS[0]).hint) + '</p>'
           + '<div class="row"><button class="btn wide" id="startMock">'
-          + 'Start the 15 minutes</button></div>'
+          + 'The whole examination · 15 minutes</button></div>'
+          + '<div class="row"><button class="btn ghost wide" id="startSac">'
+          + 'SAC practice · 4 minutes</button></div>'
+          + '<p class="seghint">The short one takes five questions of five '
+          + 'different kinds, so in four minutes you have given an opinion with '
+          + 'a reason, compared two things, and handled something you were not '
+          + 'expecting. That is what the marks are for.</p>'
           + '<details><summary>What you are walking into</summary>'
           + '<div class="dbody"><ul style="margin:2px 0 0 18px;font-size:15.5px">'
           + '<li>' + esc(ex.total_minutes_wording) + ', ' + ex.total_marks
@@ -1243,19 +1295,25 @@
     });
     $("startMock").onclick = function(){
       MOCK = buildMock(S.band);
-      MOCK.sec = 0; MOCK.at = 0; MOCK.shown = false; MOCK.fu = -1;
       MOCK.left = CRIT.sections[0].minutes * 60;
+      MOCK.started = Date.now();
+      go("mock:run");
+    };
+    $("startSac").onclick = function(){
+      MOCK = buildSac(S.band);
+      MOCK.left = 4 * 60;
       MOCK.started = Date.now();
       go("mock:run");
     };
   };
 
   function drawMockRun(){
-    var sec = CRIT.sections[MOCK.sec];
+    var sec = runSec();
     var list = MOCK.sec === 0 ? MOCK.s1 : MOCK.s2;
     var q = list[MOCK.at];
-    setHead([{ ja:"もぎしけん", r:"mock" }, { ja:sec.name_ja, r:"mock:run" }],
-            "Section " + sec.number + " · " + sec.name_en
+    setHead([{ ja:"タイムれんしゅう", r:"mock" }, { ja:sec.name_ja, r:"mock:run" }],
+            (sec.number ? "Section " + sec.number + " · " : "")
+            + sec.name_en
             + " · question " + (MOCK.at + 1) + " of " + list.length);
     var m = $("main");
     var grp = MOCK.sec === 0 ? TOPNAME[q.topic] : STAGENAME[q.topic];
@@ -1263,7 +1321,9 @@
     var bandName = (BANDS.filter(function(b){ return b.id === MOCK.band; })[0]
                     || BANDS[0]).lab;
     var h = '<div class="clock" id="clock"><b id="cnum">--:--</b>'
-          + '<span>left in Section ' + sec.number + ' · ' + esc(sec.name_en)
+          + '<span>left in '
+          + (sec.number ? "Section " + sec.number + " · " + esc(sec.name_en)
+                        : "your four minutes")
           + ' · ' + esc(bandName) + '</span></div>';
 
     h += '<div class="step">' + esc(grp ? grp.en : q.topic)
@@ -1297,7 +1357,8 @@
         h += '<button class="btn" id="nextfu">Next follow-up</button>';
       h += '<button class="btn ghost" id="nextq">'
          + (MOCK.at < list.length - 1 ? "Next question"
-            : (MOCK.sec === 0 ? "On to Section 2" : "Finish")) + '</button>';
+            : (MOCK.kind === "sac" || MOCK.sec === 1 ? "Finish"
+               : "On to Section 2")) + '</button>';
     }
     h += '<button class="btn ghost" id="quit">Stop</button></div>';
     m.innerHTML = h + foot();
@@ -1329,6 +1390,7 @@
     wireRecorder(m);
   }
   function nextSection(){
+    if (MOCK.kind === "sac"){ stopClock(); return drawMockDone(); }
     if (MOCK.sec === 0){
       MOCK.sec = 1; MOCK.at = 0; MOCK.shown = false; MOCK.fu = -1;
       MOCK.left = CRIT.sections[1].minutes * 60;
@@ -1342,10 +1404,12 @@
     $("clock").classList.toggle("low", s <= 60);
   }
   function drawMockDone(){
-    setHead([{ ja:"もぎしけん", r:"mock" }, { ja:"おわり", r:"mock:run" }],
-            "Fifteen minutes done");
-    $("main").innerHTML = '<h2>おわりました<span class="en">That is the whole '
-      + 'examination</span></h2>'
+    var sac = MOCK && MOCK.kind === "sac";
+    setHead([{ ja:"タイムれんしゅう", r:"mock" }, { ja:"おわり", r:"mock:run" }],
+            sac ? "Four minutes done" : "Fifteen minutes done");
+    $("main").innerHTML = '<h2>おわりました<span class="en">'
+      + (sac ? 'That is the four minutes'
+             : 'That is the whole examination') + '</span></h2>'
       + '<p>Now mark yourself against the four criteria while it is fresh. The '
       + 'descriptors are the official ones, word for word.</p>'
       + '<div class="row"><button class="btn" data-r="me">Mark yourself</button>'
@@ -1361,7 +1425,7 @@
   RENDER.drill = function(args){
     if (args[0] === "weak") return drawWeak();
     if (args[0]) return drawDrill(args[0]);
-    setHead([{ ja:"ドリル", r:"drill" }], "Drills · built from what the reports mark down");
+    setHead([{ ja:"ドリル", r:"drill" }], "Drills · built from what the VCAA oral exam reports mark down");
     var weak = weakList();
     var h = '<h2>ドリル<span class="en">Five drills, every item from a fault the '
           + 'assessors named</span></h2>'
@@ -1376,12 +1440,13 @@
           + '</i></button>'
           + '</div>'
           + '<h3>The nineteen faults</h3>'
-          + '<p class="lede">Every one of these is named in at least one report '
-          + 'between 2020 and 2025, in the order of how many years named it.</p>'
+          + '<p class="lede">Every one of these is named in at least one of the '
+          + 'VCAA oral exam reports from 2020 to 2025, commonest first.</p>'
           + ER.errors.slice().sort(function(a,b){ return b.count - a.count; })
               .map(function(e){
                 return '<details><summary>' + esc(e.name)
-                     + ' <span class="tier">' + e.count + ' of 6 years</span>'
+                     + ' <span class="tier">' + e.count
+                     + ' of the 6 VCAA reports</span>'
                      + '</summary><div class="dbody">'
                      + '<div class="en" style="margin-bottom:7px">'
                      + esc(e.what_goes_wrong) + '</div>'
@@ -1623,7 +1688,7 @@
 
     h += '<h3>Nine stages, and what to say at each</h3>'
        + '<p class="lede">Write a couple of lines for each. Three of the six '
-       + 'reports say the thing that fails is not the Japanese but running out of '
+       + 'VCAA oral exam reports say the thing that fails is not the Japanese but running out of '
        + 'things to say, so fill all nine before you polish any.</p>';
 
     QD.discussion_stages.forEach(function(st){
@@ -1783,13 +1848,18 @@
   RENDER.phrase = function(args){
     if (args[0]) return drawGroup(args[0]);
     setHead([{ ja:"フレーズ", r:"phrase" }], "Phrases · six groups");
-    var h = '<h2>フレーズ<span class="en">What to say about the image, and what to '
-          + 'say when the question gets away from you</span></h2>'
+    /* The front page used to describe the groups in one sentence about the
+       image, which only fitted two of the six and left a student guessing
+       which tile held what. Each tile now says what is inside it instead. */
+    var h = '<h2>フレーズ<span class="en">Lines worth knowing by heart, in six '
+          + 'groups</span></h2>'
           + '<div class="tiles">'
           + PH.groups.map(function(g){
               return '<button class="tile" data-g="' + esc(g.id) + '">'
-                   + '<b>' + ruby(g.name_ja) + '</b><i>' + esc(g.name_en)
-                   + ' · ' + g.phrases.length + '</i></button>';
+                   + '<b>' + ruby(g.name_ja) + '</b>'
+                   + '<i>' + esc(g.name_en) + ' · ' + g.phrases.length
+                   + ' lines</i>'
+                   + '<i class="what">' + esc(g.tile_en) + '</i></button>';
             }).join("") + '</div>' + foot();
     $("main").innerHTML = h;
     each($("main"), "[data-g]", function(b){
@@ -1820,9 +1890,9 @@
   /* ================= 6. my record ================= */
   RENDER.me = function(args){
     if (args[0] === "crit") return drawCriterion(args[1]);
-    setHead([{ ja:"わたしの きろく", r:"me" }], "My record · stays on this phone");
+    setHead([{ ja:"じぶんで さいてん", r:"me" }], "Self-grade · stays on this phone");
     var notes = Object.keys(S.notes).filter(function(k){ return S.notes[k]; });
-    var h = '<h2>わたしの きろく<span class="en">What you have written, how you '
+    var h = '<h2>じぶんで さいてん<span class="en">What you have written, how you '
           + 'marked yourself, and a copy you can keep</span></h2>'
           + '<h3>Mark yourself against the four criteria</h3>'
           + '<p class="lede">The band descriptions are the official ones, word for '
@@ -1904,7 +1974,7 @@
     var got = CRITBYID[cid];
     if (!got) return go("me", true);
     var c = got.c, s = got.section;
-    setHead([{ ja:"わたしの きろく", r:"me" }, { ja:c.name, r:"me" }],
+    setHead([{ ja:"じぶんで さいてん", r:"me" }, { ja:c.name, r:"me" }],
             "Section " + s.number + " · " + c.name + " · " + c.max + " marks");
     var h = '<h2>' + esc(c.name) + '<span class="en">' + esc(c.scope)
           + '</span></h2>'
@@ -2047,7 +2117,7 @@
     return '<p class="foot">VCE Japanese Second Language oral examination practice. '
          + 'Criteria and descriptors from the VCAA assessment criteria document '
          + esc(CRIT.sources[0].version) + '; examiner tips quoted from the '
-         + 'assessor reports 2020 to 2025. Rough draft, for Andrew to react to. '
+         + 'VCAA oral exam reports 2020 to 2025. Rough draft, for Andrew to react to. '
          + esc(BUILD) + '</p>';
   }
 

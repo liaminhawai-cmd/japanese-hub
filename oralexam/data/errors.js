@@ -26,7 +26,7 @@ window.ORAL_ERRORS = {
       "id": "err-question-words",
       "name": "Question words",
       "section": "conversation",
-      "what_goes_wrong": "The answer does not match the question. The reports are clear that this comes from not catching the question word, not from weak Japanese. Named in all six years, more than any other single fault.",
+      "what_goes_wrong": "The answer does not match the question. The VCAA oral exam reports are clear that this comes from not catching the question word, not from weak Japanese. Named in all six VCAA oral exam reports, more than any other single fault.",
       "wrong": "Q: 週[しゅう]に 何回[なんかい] アルバイトを しますか。 A: スーパーで します。",
       "right": "Q: 週[しゅう]に 何回[なんかい] アルバイトを しますか。 A: 週[しゅう]に 二回[にかい] します。",
       "why": "何回 asks how many times, not where. Listen for the question word first and answer that, even if you then add more.",
@@ -48,7 +48,7 @@ window.ORAL_ERRORS = {
       "id": "err-vocab-gap",
       "name": "Vocabulary gaps",
       "section": "conversation",
-      "what_goes_wrong": "The conversation stops because one word is missing. The reports name the same words again and again: がっき、きょく、読書、作家、じきゅう、なかがいい、お客さん、料理、兄弟.",
+      "what_goes_wrong": "The conversation stops because one word is missing. The VCAA oral exam reports name the same words again and again: がっき、きょく、読書、作家、じきゅう、なかがいい、お客さん、料理、兄弟.",
       "wrong": "Q: がっきが できますか。 A: ……すみません、わかりません。",
       "right": "Q: がっきが できますか。 A: はい、ピアノが できます。",
       "why": "These are ordinary words about an ordinary teenager's life. Build the list for your own world and your own subtopic, and learn them as words you can say, not words you can recognise.",
@@ -70,7 +70,7 @@ window.ORAL_ERRORS = {
       "id": "err-omou",
       "name": "と思います after a plain form",
       "section": "both",
-      "what_goes_wrong": "だ is inserted before と思います after an adjective. The single most quoted grammar slip in the reports.",
+      "what_goes_wrong": "だ is inserted before と思います after an adjective. The single most quoted grammar slip in the VCAA oral exam reports.",
       "wrong": "むずかしいだと 思[おも]います。",
       "right": "むずかしいと 思[おも]います。",
       "why": "An い-adjective and a plain verb take と思います directly. Only a noun and a な-adjective take だ: 先生だと思います、きれいだと思います.",
@@ -324,7 +324,7 @@ window.ORAL_ERRORS = {
       "id": "err-katakana",
       "name": "Katakana pronunciation",
       "section": "both",
-      "what_goes_wrong": "Katakana words said as English, or with the sounds swapped. オーストラリア is named in five of the six years.",
+      "what_goes_wrong": "Katakana words said as English, or with the sounds swapped. オーストラリア is named in five of the six VCAA oral exam reports.",
       "wrong": "アリバイト",
       "right": "アルバイト",
       "why": "Say katakana as Japanese: every mora the same length, and the long marks held. オーストラリア is six beats before the リア.",
@@ -386,7 +386,7 @@ window.ORAL_ERRORS = {
       "id": "dr-spot",
       "type": "spot",
       "title": "Error spotter",
-      "how": "One sentence, one fault. Say what is wrong before you look, then say the corrected sentence aloud. These are the exact faults the reports name.",
+      "how": "One sentence, one fault. Say what is wrong before you look, then say the corrected sentence aloud. These are the exact faults the VCAA oral exam reports name.",
       "error_ids": [
         "err-omou",
         "err-adj-conj",
@@ -523,7 +523,7 @@ window.ORAL_ERRORS = {
           "wrong": "Q: アルバイトの お金[かね]で 何[なに]を しますか。 A: 一時間[いちじかん] 十五[じゅうご]ドルです。",
           "right": "Q: アルバイトの お金[かね]で 何[なに]を しますか。 A: 本[ほん]を 買[か]って、少[すこ]し ためています。",
           "error_id": "err-question-words",
-          "fix_en": "This asks what you spend it on. Both the 2022 and the 2025 report name students answering with the hourly rate."
+          "fix_en": "This asks what you spend it on. Both the 2022 and the 2025 VCAA oral exam reports name students answering with the hourly rate."
         }
       ]
     },
@@ -646,7 +646,7 @@ window.ORAL_ERRORS = {
       "id": "dr-upgrade",
       "type": "upgrade",
       "title": "Open-ended upgrade",
-      "how": "A closed question still deserves an open answer. Answer it, then keep going without being asked again. This is what the reports mean by carrying the conversation forward.",
+      "how": "A closed question still deserves an open answer. Answer it, then keep going without being asked again. This is what the VCAA oral exam reports mean by carrying the conversation forward.",
       "error_ids": [
         "err-narrow-range",
         "err-question-words"
@@ -722,7 +722,7 @@ window.ORAL_ERRORS = {
       "id": "dr-repair",
       "type": "repair",
       "title": "Repair drill",
-      "how": "Four of the six reports name repair strategies. The point is to name the one word you missed and ask, quickly, in Japanese. Read the situation, then say the line without looking.",
+      "how": "Four of the six VCAA oral exam reports name repair strategies. The point is to name the one word you missed and ask, quickly, in Japanese. Read the situation, then say the line without looking.",
       "error_ids": [
         "err-question-words",
         "err-vocab-gap"
@@ -779,7 +779,7 @@ window.ORAL_ERRORS = {
       "id": "dr-shadow",
       "type": "shadow",
       "title": "Shadowing",
-      "how": "Play the line, then say it back over the top of it, matching the length of every sound. These lines carry the long vowels, the double consonants and the katakana words the reports name every year.",
+      "how": "Play the line, then say it back over the top of it, matching the length of every sound. These lines carry the long vowels, the double consonants and the katakana words the VCAA oral exam reports name every year.",
       "error_ids": [
         "err-katakana",
         "err-long-vowel"
@@ -788,7 +788,7 @@ window.ORAL_ERRORS = {
         {
           "ja": "オーストラリアの メルボルンに 住[す]んでいます。",
           "en": "I live in Melbourne, Australia.",
-          "watch_en": "オーストラリア is six beats before リア. Named in five of six years."
+          "watch_en": "オーストラリア is six beats before リア. Named in five of the six VCAA oral exam reports."
         },
         {
           "ja": "学校[がっこう]まで 電車[でんしゃ]で 行[い]きます。",

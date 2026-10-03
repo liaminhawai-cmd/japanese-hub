@@ -24,6 +24,7 @@ window.ORAL_PHRASES = {
   "groups": [
     {
       "id": "entry",
+      "tile_en": "Greeting the assessors, giving your name and number, and leaving",
       "name_ja": "はじめと おわり",
       "name_en": "Walking in and walking out",
       "about": "The specifications require this and say in the same sentence that it is not assessed. It still has to be done, so learn it as a doorway script and get it out of the way. Your student number is the only English in the whole examination.",
@@ -62,9 +63,10 @@ window.ORAL_PHRASES = {
     },
     {
       "id": "show",
+      "tile_en": "Where things are in your picture and what people are doing",
       "name_ja": "しゃしんに あるものを 言[い]う",
       "name_en": "Saying what the picture shows",
-      "about": "Where things are, what they look like, and who is doing what. Get through this quickly: the reports are clear that describing the image is a middle-band answer, so it is the opening, not the discussion.",
+      "about": "Where things are, what they look like, and who is doing what. Get through this quickly: the VCAA oral exam reports are clear that describing the image is a middle-band answer, so it is the opening, not the discussion.",
       "report_refs": [
         "2021: They referred to the image appropriately throughout the discussion, rather than simply describing it.",
         "2020: Some students were able to effectively integrate their chosen image to support their subtopic, rather than just describe the image."
@@ -142,6 +144,7 @@ window.ORAL_PHRASES = {
     },
     {
       "id": "conclude",
+      "tile_en": "Saying what the picture tells you, and why you think so",
       "name_ja": "しゃしんから 考[かんが]える",
       "name_en": "Drawing conclusions",
       "about": "This is where the marks start. Do not stop at what is in the picture: say what it tells you, and say why you think so. Every one of these lines can be followed by から or ので and a reason.",
@@ -202,9 +205,10 @@ window.ORAL_PHRASES = {
     },
     {
       "id": "link",
+      "tile_en": "Joining sentences, giving reasons, and adding a second point",
       "name_ja": "せつめいする、つなげる",
       "name_en": "Explaining and linking",
-      "about": "Connectives are what the 2025 report names in higher-scoring responses. They also buy you thinking time without any dead air, and they let you come back to the image instead of waiting to be asked about it.",
+      "about": "Connectives are what the 2025 VCAA oral exam report names in higher-scoring responses. They also buy you thinking time without any dead air, and they let you come back to the image instead of waiting to be asked about it.",
       "report_refs": [
         "2025: Higher-scoring responses used connectives effectively, including まず、つまり and じつは.",
         "2021: They provided sufficient information, but this information was not always sequenced well."
@@ -286,9 +290,10 @@ window.ORAL_PHRASES = {
     },
     {
       "id": "judge",
+      "tile_en": "Good points, bad points, and what should be done about them",
       "name_ja": "いけんと ひょうか",
       "name_en": "Opinion and evaluation",
-      "about": "Good points, bad points, and a solution for the bad ones. The 2025 report says most students manage いい点 and わるい点; it is the solution that separates the prepared ones.",
+      "about": "Good points, bad points, and a solution for the bad ones. The 2025 VCAA oral exam report says most students manage いい点 and わるい点; it is the solution that separates the prepared ones.",
       "report_refs": [
         "2025: Most students were able to respond to いい点 and わるい点. The students who were more prepared were able to provide solutions for the わるい点.",
         "2022: Students who scored highly were able to share their opinions by using と思います and their reasons by using から or ので."
@@ -354,9 +359,10 @@ window.ORAL_PHRASES = {
     },
     {
       "id": "repair",
+      "tile_en": "Asking for a repeat, checking a word, and buying thinking time",
       "name_ja": "時間[じかん]を かせぐ、聞[き]きなおす",
       "name_en": "Buying time and repair",
-      "about": "Four of the six reports name repair strategies. Do not freeze and do not guess: name the one word you missed and ask. Asking in Japanese costs you nothing and keeps the eight minutes working for you.",
+      "about": "Four of the six VCAA oral exam reports name repair strategies. Do not freeze and do not guess: name the one word you missed and ask. Asking in Japanese costs you nothing and keeps the eight minutes working for you.",
       "report_refs": [
         "2024: Students should pick out the specific word or words they did not understand and ask the assessors the meaning of those words.",
         "2025: If students do not know a word or question, they can ask for clarification or say they do not understand.",
