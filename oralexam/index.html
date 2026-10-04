@@ -406,10 +406,14 @@
   .qmark:hover,.qmark:focus{border-color:var(--deep);color:var(--deep);
        outline:none}
   h2 .qmark,h3 .qmark{margin-left:7px}
+  /* A newline in the text becomes a line break, so a list of rules reads
+     as a list rather than a paragraph. Tall ones scroll rather than running
+     off the top of a phone. */
   .tip-pop{position:fixed;z-index:120;display:none;background:var(--deep);
        color:#fff;border-radius:11px;padding:10px 13px;font-size:14.5px;
        line-height:1.45;box-shadow:0 6px 22px rgba(0,0,0,.3);
-       font-family:var(--font)}
+       font-family:var(--font);white-space:pre-line;
+       max-height:70vh;overflow-y:auto;overscroll-behavior:contain}
   .tip-pop.on{display:block}
 
   /* ---------- recording ----------
@@ -499,7 +503,7 @@
 (function(){
   "use strict";
 
-  var BUILD = "Version 18, 4 October 2026";
+  var BUILD = "Version 19, 4 October 2026";
 
   var CRIT  = window.ORAL_CRITERIA,
       REP   = window.ORAL_REPORTS,
@@ -2515,20 +2519,16 @@
     var m = $("main");
     var h = '<h2>ディスカッション<span class="en">Eight minutes on one subtopic and '
           + 'one image you bring in yourself</span></h2>'
-          + '<div class="tip"><b>The rules about the image</b><ul '
-          + 'style="margin:6px 0 0 18px">'
-          + CRIT.visual_material.rules.map(function(r){
-              return '<li>' + esc(r) + '</li>';
-            }).join("") + '</ul></div>'
-          + '<p class="note">Your image is stored in this browser only, on this '
-          + 'phone. It is never uploaded anywhere.</p>'
           + '<label for="topja">Your subtopic, in Japanese</label>'
           + '<input type="text" id="topja" placeholder="おまつり" value="'
           + esc(D.topja || "") + '">'
           + '<label for="topen">And in English, for your own notes</label>'
           + '<input type="text" id="topen" placeholder="Japanese festivals" value="'
           + esc(D.topen || "") + '">'
-          + '<h3>Your image</h3>';
+          + '<h3>Your image'
+       + qmark(CRIT.visual_material.rules.join("\n")
+             + "\nYour copy here stays in this browser, on this phone, and is "
+             + "never uploaded anywhere.") + '</h3>';
 
     if (D.img){
       h += '<div class="shotwrap"><img class="shot" id="shot" src="' + D.img
@@ -2543,10 +2543,12 @@
        + 'style="margin:0">' + (D.img ? "Choose a different one" : "Choose or take a photo")
        + '<input type="file" id="pick" accept="image/*" hidden></label></div>';
 
-    h += '<h3>Nine stages, and what to say at each</h3>'
-       + '<p class="lede">Write a couple of lines for each. Three of the six '
-       + 'VCAA oral exam reports say the thing that fails is not the Japanese but running out of '
-       + 'things to say, so fill all nine before you polish any.</p>';
+    h += '<h3>Nine stages'
+       + qmark('Write a couple of lines for each. Three of the six VCAA oral '
+             + 'exam reports say the thing that fails is not the Japanese but '
+             + 'running out of things to say, so fill all nine before you '
+             + 'polish any. Sentence frames for all of them are in the '
+             + 'Phrases tab.') + '</h3>';
 
     QD.discussion_stages.forEach(function(st){
       var here = DISC.filter(function(q){ return q.topic === st.id; });
@@ -2562,7 +2564,6 @@
          + '<label for="st-' + esc(st.id) + '">What you will say</label>'
          + '<textarea id="st-' + esc(st.id) + '" data-stage="' + esc(st.id)
          + '" placeholder="…">' + esc(txt) + '</textarea>'
-         + '<p class="note">Sentence frames for this are in the Phrases tab.</p>'
          + '</div></details>';
     });
 
