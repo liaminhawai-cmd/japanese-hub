@@ -30,6 +30,10 @@
     --c1:#d9edf1; --c2:#fbe3e8; --c3:#dcecdc; --c4:#e4e1f0;
     --c5:#f6d9c8; --c6:#dde9f5;
     --shadow:0 2px 10px rgba(0,0,0,.07);
+    /* The six section colours are traditional Japanese ones, pastel so that
+       the ink on them is dark: 空色, 一斤染, 玉子色, 藤色, 青磁色, 若緑.
+       Each tab hands in its own pair as --c (the pane) and --ci (the ink on
+       it), so no colour is named anywhere but in TABS. */
     --font-en:Calibri,Carlito,'Segoe UI',Tahoma,Geneva,Verdana;
     --font-jp:'UD Digi Kyokasho N-R','UD Digi Kyokasho NP-R','UD デジタル教科書体 N-R','UDデジタル教科書体N-R','HGP教科書体','YuKyokasho Yoko',YuKyokasho,'Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic',YuGothic,Meiryo;
     --font:var(--font-en),var(--font-jp),sans-serif;
@@ -37,8 +41,16 @@
   }
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html{-webkit-text-size-adjust:100%}
-  body{font-family:var(--font);background:var(--bg);color:var(--ink);
-       line-height:1.6;font-size:17px;overflow-wrap:break-word}
+  /* Two soft washes under everything, so a translucent tile has something
+     behind it worth blurring. Fixed, so they do not slide as the page
+     scrolls and make the glass look painted on. */
+  body{font-family:var(--font);color:var(--ink);
+       line-height:1.6;font-size:17px;overflow-wrap:break-word;
+       background:
+         radial-gradient(900px 520px at 12% -12%, #e2ecf7 0%, transparent 62%),
+         radial-gradient(760px 420px at 96% 6%, #f6e9ec 0%, transparent 58%),
+         var(--bg);
+       background-attachment:fixed}
 
   /* ---------- top bar ---------- */
   .top{position:sticky;top:0;z-index:40;background:var(--paper);
@@ -77,7 +89,7 @@
      A coloured tile with a word under it, the way a phone labels an app:
      the colour is what a student navigates by after a week, the word is
      what tells them on the first day. Each tab hands in its own two
-     colours as --t1/--t2, so no colour is named here. Labels are allowed
+     colours as --c/--ci, so no colour is named here. Labels are allowed
      two lines and the box is two lines tall either way, so the row does
      not change height between tabs. */
   nav{border-top:1px solid var(--line-soft);background:var(--paper)}
@@ -85,17 +97,23 @@
   nav button{flex:1;min-width:0;border:0;cursor:pointer;
              padding:7px 2px 6px;display:flex;flex-direction:column;
              align-items:center;gap:3px;font-family:var(--font);
-             background:var(--t2);color:#fff;opacity:.52;
-             border-right:1px solid rgba(255,255,255,.35)}
-  nav button:last-child{border-right:0}
+             color:var(--ci);
+             background:linear-gradient(170deg,rgba(255,255,255,.62),
+                        rgba(255,255,255,0) 58%),var(--c);
+             box-shadow:inset 0 1px 0 rgba(255,255,255,.75),
+                        inset -1px 0 0 rgba(255,255,255,.5);
+             opacity:.58;transition:opacity .14s}
+  nav button:last-child{box-shadow:inset 0 1px 0 rgba(255,255,255,.75)}
   nav button svg{width:22px;height:22px;display:block}
   nav button .ic{stroke-width:2.6}
   nav button .lab{font-size:10.5px;line-height:1.15;font-weight:700;
              height:2.3em;text-align:center;letter-spacing:-.1px}
-  /* The one you are on is the one at full strength. Every other block keeps
+  /* The one you are on is the one at full strength. Every other pane keeps
      its colour, dimmed, so the row stays a row of six places rather than one
      button and five gaps. */
-  nav button.on{opacity:1}
+  nav button.on{opacity:1;box-shadow:inset 0 2px 0 var(--ci),
+             inset 0 3px 0 rgba(255,255,255,.55)}
+  nav button:active{filter:brightness(.94)}
   .ic{fill:none;stroke:currentColor;stroke-width:2.4;
       stroke-linecap:round;stroke-linejoin:round}
   .icf{fill:currentColor;stroke:none}
@@ -133,18 +151,33 @@
      is one tap and the page does not grow a paragraph to explain it. */
   /* The home page: the same six colours as the tab row, as full blocks, so
      a student learns the colour once and navigates by it afterwards. */
-  .blocks{display:grid;grid-template-columns:1fr;gap:9px;margin:4px 0 14px}
-  @media (min-width:520px){ .blocks{grid-template-columns:1fr 1fr} }
-  .block{display:grid;grid-template-columns:40px 1fr;gap:3px 13px;
-         align-items:center;text-align:left;border:0;border-radius:14px;
-         padding:14px 15px;cursor:pointer;font-family:var(--font);
-         background:var(--t2);color:#fff;box-shadow:var(--shadow)}
-  .block .bi{grid-row:1 / span 2;display:flex;align-items:center;
-             justify-content:center}
-  .block svg{width:31px;height:31px}
-  .block .ic{stroke-width:2.4}
-  .block .bt{font-size:19px;font-weight:800;line-height:1.2}
-  .block .bd{font-size:14px;line-height:1.35;opacity:.92}
+  /* Six squares that join, as one sheet of glass divided into panes
+     rather than six separate buttons. The seams are white hairlines, not
+     gaps: a gap makes six objects, a seam makes one. */
+  .blocks{display:grid;grid-template-columns:1fr 1fr;gap:0;margin:4px 0 16px;
+          border-radius:20px;overflow:hidden;box-shadow:0 8px 26px rgba(0,0,0,.13)}
+  @media (min-width:560px){ .blocks{grid-template-columns:1fr 1fr 1fr} }
+  .block{aspect-ratio:1;display:flex;flex-direction:column;
+         align-items:center;justify-content:center;text-align:center;
+         gap:7px;border:0;border-radius:0;padding:12px 13px;cursor:pointer;
+         font-family:var(--font);color:var(--ci);
+         background:linear-gradient(165deg,rgba(255,255,255,.72),
+                    rgba(255,255,255,.08) 52%,rgba(255,255,255,0) 70%),var(--c);
+         box-shadow:inset 0 1px 0 rgba(255,255,255,.85),
+                    inset 1px 0 0 rgba(255,255,255,.45),
+                    inset -1px 0 0 rgba(255,255,255,.45),
+                    inset 0 -1px 0 rgba(255,255,255,.35);
+         transition:filter .13s}
+  .block:active{filter:brightness(.93) saturate(1.1)}
+  .block .bi{display:flex;align-items:center;justify-content:center}
+  .block svg{width:34px;height:34px}
+  .block .ic{stroke-width:2.3}
+  .block .bt{font-size:17px;font-weight:800;line-height:1.15}
+  .block .bd{font-size:12.5px;line-height:1.3;opacity:.95}
+  @media (max-width:340px){
+    .block .bt{font-size:15.5px} .block .bd{font-size:11.5px}
+    .block svg{width:29px;height:29px}
+  }
 
   /* One screen does all four recognition rounds: a prompt, a column of
      options, and the reason you were wrong. The options are full width
@@ -223,11 +256,6 @@
         color:inherit;line-height:1.4;box-shadow:var(--shadow)}
   .tile b{display:block;font-size:17px}
   .tile i.what{margin-top:4px;color:var(--ink);opacity:.8;font-size:13.5px}
-  /* A tile that is the only thing on its row, in its section's colour. */
-  .wide-tile{display:block;width:100%;margin:0 0 12px;border:0;color:#fff;
-       background:var(--t2)}
-  .wide-tile i{color:rgba(255,255,255,.9)}
-  .wide-tile i.what{color:#fff;opacity:.85}
   .tile i{display:block;font-style:normal;font-size:13px;color:var(--muted);
           margin-top:3px}
   .tile:nth-child(6n+1){background:var(--c1)} .tile:nth-child(6n+2){background:var(--c2)}
@@ -469,6 +497,15 @@
       <span>ふりがな</span></button>
     <button class="tool" id="rateBtn" title="How fast the voice speaks">
       <span id="rateLabel">×1</span></button>
+    <!-- The clack a tile makes when it is pressed, and the way to stop it.
+         A room of twenty-five phones is a good reason for this to be one
+         tap away rather than buried. -->
+    <button class="tool" id="clickBtn" title="Tile sound">
+      <svg viewBox="0 0 28 28" aria-hidden="true">
+        <circle class="icf" cx="10" cy="14" r="3.2"/>
+        <path class="ic" d="M16 9.5a6.5 6.5 0 0 1 0 9"/>
+        <path class="ic" id="clickWave" d="M19.6 6a11 11 0 0 1 0 16"/></svg>
+      </button>
   </div>
   <nav><div class="navin" id="nav"></div></nav>
 </div>
@@ -503,7 +540,7 @@
 (function(){
   "use strict";
 
-  var BUILD = "Version 19, 4 October 2026";
+  var BUILD = "Version 20, 4 October 2026";
 
   var CRIT  = window.ORAL_CRITERIA,
       REP   = window.ORAL_REPORTS,
@@ -610,7 +647,8 @@
      line however good the recordings are. Raising this number drops that
      one saved choice, once. Notes, ticks and drafts are untouched. */
   var VOICEPICK = 2;
-  var S = { furi:true, rate:1, voice:"clips", voicePick:VOICEPICK, band:"mixed", topic:"",
+  var S = { furi:true, rate:1, voice:"clips", voicePick:VOICEPICK, band:"mixed",
+            topic:"", click:true,
             notes:{}, assess:{}, disc:{}, weak:{}, seen:{} };
   var saved = null;
   try {
@@ -784,6 +822,58 @@
     SAY.speak(el.dataset.say || el.textContent, el);
   });
 
+  /* ---- the click ----
+     A wooden clack when a tile is pressed, synthesised rather than
+     downloaded: a short burst of noise through a narrow band-pass, which is
+     most of what a 拍子木 is. It exists because the tiles now look like
+     something you could press, and a surface that looks pressable and
+     answers with nothing feels broken.
+
+     It is off until the first tap on the page, because a browser will not
+     let a page make a noise before it has been touched, and it is one
+     button away from off for good. */
+  var CLICK = (function(){
+    var ctx = null, noise = null;
+    function build(){
+      if (ctx) return ctx;
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return null;
+      ctx = new AC();
+      var n = Math.floor(ctx.sampleRate * 0.06);
+      noise = ctx.createBuffer(1, n, ctx.sampleRate);
+      var d = noise.getChannelData(0);
+      for (var i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / n);
+      return ctx;
+    }
+    function play(){
+      if (!S.click) return;
+      try {
+        var c = build();
+        if (!c) return;
+        if (c.state === "suspended") c.resume();
+        var t = c.currentTime;
+        var src = c.createBufferSource(); src.buffer = noise;
+        var bp = c.createBiquadFilter();
+        bp.type = "bandpass"; bp.frequency.value = 1750; bp.Q.value = 7;
+        var g = c.createGain();
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.exponentialRampToValueAtTime(0.26, t + 0.003);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + 0.055);
+        src.connect(bp); bp.connect(g); g.connect(c.destination);
+        src.start(t); src.stop(t + 0.07);
+      } catch (e){}
+    }
+    return { play: play };
+  })();
+  /* The things that look pressable: the home panes, the tab row, and the
+     tiles and move buttons inside a section. Not every button in the app:
+     a clack on Next twenty times in a drill is a different thing. */
+  var CLICKY = ".block, nav button, .tile, .movebtn";
+  document.addEventListener("click", function(ev){
+    if (!ev.target.closest) return;
+    if (ev.target.closest(CLICKY)) CLICK.play();
+  }, true);
+
   /* ---- the ? popup ----
      One floating node, moved to whichever ? asked for it. Hover shows it on
      a mouse and tap shows it on a phone, which is the only way a hover-only
@@ -879,6 +969,19 @@
      and the picker that used to sit in the top bar has gone. A device voice
      is still read if a line somehow has no recording, which is the one case
      where having it matters. */
+  function paintClick(){
+    var b = $("clickBtn");
+    b.classList.toggle("off", !S.click);
+    $("clickWave").style.display = S.click ? "" : "none";
+    b.title = S.click ? "Tiles click when you press them. Tap to silence."
+                      : "Tiles are silent. Tap for the click.";
+    b.setAttribute("aria-label", b.title);
+    b.setAttribute("aria-pressed", S.click ? "true" : "false");
+  }
+  $("clickBtn").onclick = function(){
+    S.click = !S.click; paintClick(); save();
+    if (S.click) CLICK.play();
+  };
   $("rateBtn").onclick = function(){
     S.rate = RATES[(RATES.indexOf(S.rate) + 1) % RATES.length] || 1;
     paintRate(); save();
@@ -907,27 +1010,29 @@
      One string route, pushed onto the browser's own history, so the phone's
      back gesture steps back through the app instead of leaving it. */
   /* en is the full name, read out by a screen reader and shown on hover.
-     lab is the one or two words that fit under the tile. c1/c2 are the
-     tile's gradient, light to deep. */
+     lab is the one or two words that fit under the tile. c is the pane's
+     colour and ci the ink on it: a traditional Japanese colour, pastel
+     enough that dark ink sits on it, with a deeper shade of the same hue
+     for the glyph and the label. */
   var TABS = [
     { id:"browse", ja:"しつもん", en:"Questions", lab:"Questions",
       home:"Every question an assessor could ask, with answers at three levels",
-      icon:"bubble", c1:"#5aa9f0", c2:"#2f6fd0" },
+      icon:"bubble", c:"#a0d8ef", ci:"#1f5f82" },   /* 空色 */
     { id:"mock",   ja:"タイムれんしゅう", en:"Timed practice", lab:"Timed practice",
       home:"The whole examination in 15 minutes, or your SAC topic in 4",
-      icon:"clock",  c1:"#f28a6e", c2:"#cf4436" },
+      icon:"clock",  c:"#f5b1aa", ci:"#8e3f38" },   /* 一斤染 */
     { id:"drill",  ja:"ドリル", en:"Drills", lab:"Drills",
       home:"Short rounds on the mistakes the VCAA reports name every year",
-      icon:"target", c1:"#f2b45b", c2:"#d9822a" },
+      icon:"target", c:"#fcd575", ci:"#6a4806" },   /* 玉子色 */
     { id:"disc",   ja:"ディスカッション", en:"Discussion builder", lab:"Discussion",
       home:"Build your Section 2 answer stage by stage, in your own words",
-      icon:"steps",  c1:"#9d91f2", c2:"#6246c9" },
+      icon:"steps",  c:"#bbbcde", ci:"#434489" },   /* 藤色 */
     { id:"phrase", ja:"フレーズ", en:"Phrases", lab:"Phrases",
       home:"Lines worth knowing by heart, for when a question gets away",
-      icon:"lines",  c1:"#5ccfc5", c2:"#11837f" },
+      icon:"lines",  c:"#a8d8ce", ci:"#2d6b60" },   /* 青磁色 */
     { id:"me",     ja:"じぶんで さいてん", en:"Self-grade", lab:"Self-grade",
       home:"Mark yourself against the official criteria and keep a copy",
-      icon:"person", c1:"#74cf8e", c2:"#2f7d4f" }
+      icon:"person", c:"#b5d5a0", ci:"#426b2c" }   /* 若緑 */
   ];
   var ICONS = {
     bubble:'<svg viewBox="0 0 28 28" aria-hidden="true"><path class="ic" d="M3.5 6.5h21v13h-12l-6 5v-5h-3z"/><path class="ic" d="M10.5 11.2c0-1.6 1.3-2.7 2.9-2.7 1.6 0 2.9 1 2.9 2.4 0 2-2.6 2.2-2.6 4"/><circle class="icf" cx="13.7" cy="17.2" r="1.15"/></svg>',
@@ -957,7 +1062,7 @@
     $("nav").innerHTML = TABS.map(function(t){
       return '<button data-tab="' + t.id + '" title="' + esc(t.en) + '"'
            + ' aria-label="' + esc(t.en) + '"'
-           + ' style="--t1:' + t.c1 + ';--t2:' + t.c2 + '"'
+           + ' style="--c:' + t.c + ';--ci:' + t.ci + '"'
            + (tabOf(route) === t.id ? ' class="on" aria-current="page"' : '')
            + '>' + ICONS[t.icon]
            + '<span class="lab">' + esc(t.lab) + '</span></button>';
@@ -1008,7 +1113,7 @@
           + '<div class="blocks">'
           + TABS.map(function(t){
               return '<button class="block" data-go="' + t.id + '"'
-                   + ' style="--t1:' + t.c1 + ';--t2:' + t.c2 + '">'
+                   + ' style="--c:' + t.c + ';--ci:' + t.ci + '">'
                    + '<span class="bi">' + ICONS[t.icon] + '</span>'
                    + '<span class="bt">' + esc(t.lab) + '</span>'
                    + '<span class="bd">' + esc(t.home) + '</span></button>';
@@ -3020,7 +3125,7 @@
   $("uplater").onclick = function(){ $("upbar").classList.remove("on"); };
 
   /* ================= start ================= */
-  paintFuri(); paintRate();
+  paintFuri(); paintRate(); paintClick();
   $("homeBtn").onclick = function(){ SAY.stop(); go("home"); };
   route = (location.hash || "#home").slice(1) || "home";
   go(route, true);
