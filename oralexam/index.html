@@ -454,7 +454,7 @@
 (function(){
   "use strict";
 
-  var BUILD = "Version 15, 4 October 2026";
+  var BUILD = "Version 16, 4 October 2026";
 
   var CRIT  = window.ORAL_CRITERIA,
       REP   = window.ORAL_REPORTS,
@@ -755,7 +755,7 @@
   $("rateBtn").onclick = function(){
     S.rate = RATES[(RATES.indexOf(S.rate) + 1) % RATES.length] || 1;
     paintRate(); save();
-    SAY.speak("これで どうですか。");
+    SAY.speak(FL.ui.rate.ja);
   };
 
   /* ================= indexes over the data ================= */

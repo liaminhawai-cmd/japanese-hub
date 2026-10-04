@@ -27,6 +27,12 @@
    also the skill — steering the questioning towards what you researched is
    something the flow sheet teaches explicitly.
 
+   `ui` holds the lines the app itself speaks rather than quotes: at the
+   moment just the one the speed button plays. It lives here so that the
+   recorder records it. It used to be written into index.html, which meant
+   nothing recorded it and it was the one line in the whole app still read
+   by the device's own voice.
+
    One window. line, then pure JSON. No comments inside the object.       */
 
 window.ORAL_FLOW = {
@@ -230,5 +236,12 @@ window.ORAL_FLOW = {
         "note": "As you leave. Close the door quietly behind you."
       }
     ]
+  },
+  "ui": {
+    "rate": {
+      "ja": "この スピードは どうですか。",
+      "en": "How is this speed?",
+      "note": "Spoken when the speed button is pressed, so the student hears the new speed on a line that says what it is."
+    }
   }
 };
