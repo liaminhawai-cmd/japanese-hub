@@ -730,12 +730,12 @@ window.ORAL_ERRORS = {
       "items": [
         {
           "situation_en": "You did not catch the question at all.",
-          "say": "すみません、もう 一回[いっかい] おねがいします。",
+          "say": "すみません、もう 一回[いっかい] 言[い]って ください。",
           "say_en": "Sorry, could you say that again, please."
         },
         {
           "situation_en": "The question was too fast.",
-          "say": "もう 少[すこ]し ゆっくり おねがいします。",
+          "say": "もう 少[すこ]し ゆっくり 言[い]って ください。",
           "say_en": "Could you say it a little more slowly, please."
         },
         {

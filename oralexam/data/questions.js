@@ -172,6 +172,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-self-01",
       "section": "conversation",
+      "phase": "personal",
       "topic": "self",
       "question_type": "factual",
       "higher_order": false,
@@ -241,6 +242,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-self-02",
       "section": "conversation",
+      "phase": "personal",
       "topic": "self",
       "question_type": "personal",
       "higher_order": false,
@@ -302,6 +304,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-self-03",
       "section": "conversation",
+      "phase": "personal",
       "topic": "self",
       "question_type": "factual",
       "higher_order": false,
@@ -367,6 +370,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-self-04",
       "section": "conversation",
+      "phase": "personal",
       "topic": "self",
       "question_type": "opinion",
       "higher_order": true,
@@ -434,6 +438,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-fam-01",
       "section": "conversation",
+      "phase": "opener",
       "topic": "family",
       "question_type": "factual",
       "higher_order": false,
@@ -506,6 +511,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-fam-02",
       "section": "conversation",
+      "phase": "personal",
       "topic": "family",
       "question_type": "factual",
       "higher_order": false,
@@ -573,6 +579,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-fam-03",
       "section": "conversation",
+      "phase": "personal",
       "topic": "family",
       "question_type": "comparison",
       "higher_order": true,
@@ -634,6 +641,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-fam-04",
       "section": "conversation",
+      "phase": "personal",
       "topic": "family",
       "question_type": "hypothetical",
       "higher_order": true,
@@ -697,6 +705,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-sch-01",
       "section": "conversation",
+      "phase": "personal",
       "topic": "school",
       "question_type": "factual",
       "higher_order": false,
@@ -762,6 +771,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-sch-02",
       "section": "conversation",
+      "phase": "opener",
       "topic": "school",
       "question_type": "evaluative",
       "higher_order": true,
@@ -831,6 +841,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-sch-03",
       "section": "conversation",
+      "phase": "personal",
       "topic": "school",
       "question_type": "personal",
       "higher_order": false,
@@ -893,6 +904,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-sch-04",
       "section": "conversation",
+      "phase": "personal",
       "topic": "school",
       "question_type": "opinion",
       "higher_order": true,
@@ -960,6 +972,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-fri-01",
       "section": "conversation",
+      "phase": "personal",
       "topic": "friends",
       "question_type": "factual",
       "higher_order": false,
@@ -1021,6 +1034,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-fri-02",
       "section": "conversation",
+      "phase": "personal",
       "topic": "friends",
       "question_type": "opinion",
       "higher_order": true,
@@ -1082,6 +1096,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-fri-03",
       "section": "conversation",
+      "phase": "personal",
       "topic": "friends",
       "question_type": "personal",
       "higher_order": false,
@@ -1146,6 +1161,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-fri-04",
       "section": "conversation",
+      "phase": "personal",
       "topic": "friends",
       "question_type": "hypothetical",
       "higher_order": true,
@@ -1209,6 +1225,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-hob-01",
       "section": "conversation",
+      "phase": "opener",
       "topic": "hobbies",
       "question_type": "factual",
       "higher_order": false,
@@ -1275,6 +1292,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-hob-02",
       "section": "conversation",
+      "phase": "personal",
       "topic": "hobbies",
       "question_type": "factual",
       "higher_order": false,
@@ -1342,6 +1360,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-hob-03",
       "section": "conversation",
+      "phase": "personal",
       "topic": "hobbies",
       "question_type": "personal",
       "higher_order": false,
@@ -1405,6 +1424,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-hob-04",
       "section": "conversation",
+      "phase": "personal",
       "topic": "hobbies",
       "question_type": "evaluative",
       "higher_order": true,
@@ -1468,6 +1488,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-day-01",
       "section": "conversation",
+      "phase": "opener",
       "topic": "daily-work",
       "question_type": "factual",
       "higher_order": false,
@@ -1530,6 +1551,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-day-02",
       "section": "conversation",
+      "phase": "opener",
       "topic": "daily-work",
       "question_type": "factual",
       "higher_order": false,
@@ -1605,6 +1627,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-day-03",
       "section": "conversation",
+      "phase": "personal",
       "topic": "daily-work",
       "question_type": "opinion",
       "higher_order": true,
@@ -1666,6 +1689,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-day-04",
       "section": "conversation",
+      "phase": "personal",
       "topic": "daily-work",
       "question_type": "comparison",
       "higher_order": true,
@@ -1728,6 +1752,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-jpn-01",
       "section": "conversation",
+      "phase": "nihongo",
       "topic": "nihongo",
       "question_type": "factual",
       "higher_order": false,
@@ -1789,6 +1814,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-jpn-02",
       "section": "conversation",
+      "phase": "nihongo",
       "topic": "nihongo",
       "question_type": "personal",
       "higher_order": false,
@@ -1851,6 +1877,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-jpn-03",
       "section": "conversation",
+      "phase": "culture",
       "topic": "nihongo",
       "question_type": "personal",
       "higher_order": false,
@@ -1916,6 +1943,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-jpn-04",
       "section": "conversation",
+      "phase": "nihongo",
       "topic": "nihongo",
       "question_type": "evaluative",
       "higher_order": true,
@@ -1979,6 +2007,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-jpn-05",
       "section": "conversation",
+      "phase": "nihongo",
       "topic": "nihongo",
       "question_type": "opinion",
       "higher_order": true,
@@ -2041,6 +2070,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-cul-01",
       "section": "conversation",
+      "phase": "culture",
       "topic": "japan-culture",
       "question_type": "factual",
       "higher_order": false,
@@ -2112,6 +2142,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-cul-02",
       "section": "conversation",
+      "phase": "culture",
       "topic": "japan-culture",
       "question_type": "factual",
       "higher_order": false,
@@ -2174,6 +2205,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-cul-03",
       "section": "conversation",
+      "phase": "culture",
       "topic": "japan-culture",
       "question_type": "comparison",
       "higher_order": true,
@@ -2235,6 +2267,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-cul-04",
       "section": "conversation",
+      "phase": "culture",
       "topic": "japan-culture",
       "question_type": "hypothetical",
       "higher_order": true,
@@ -2302,6 +2335,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-fut-01",
       "section": "conversation",
+      "phase": "opener",
       "topic": "future",
       "question_type": "factual",
       "higher_order": false,
@@ -2363,6 +2397,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-fut-02",
       "section": "conversation",
+      "phase": "personal",
       "topic": "future",
       "question_type": "personal",
       "higher_order": false,
@@ -2425,6 +2460,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-fut-03",
       "section": "conversation",
+      "phase": "personal",
       "topic": "future",
       "question_type": "opinion",
       "higher_order": true,
@@ -2488,6 +2524,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-fut-04",
       "section": "conversation",
+      "phase": "personal",
       "topic": "future",
       "question_type": "hypothetical",
       "higher_order": true,
@@ -2550,6 +2587,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-wor-01",
       "section": "conversation",
+      "phase": "personal",
       "topic": "world",
       "question_type": "opinion",
       "higher_order": true,
@@ -2617,6 +2655,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-wor-02",
       "section": "conversation",
+      "phase": "personal",
       "topic": "world",
       "question_type": "evaluative",
       "higher_order": true,
@@ -2683,6 +2722,7 @@ window.ORAL_QUESTIONS = {
     {
       "id": "c-wor-03",
       "section": "conversation",
+      "phase": "personal",
       "topic": "world",
       "question_type": "evaluative",
       "higher_order": true,

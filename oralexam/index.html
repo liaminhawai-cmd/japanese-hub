@@ -185,6 +185,28 @@
   .vrow{padding:4px 0;border-bottom:1px solid var(--line-soft)}
   .vrow:last-child{border-bottom:0}
 
+  /* A script card: who says the line matters more than anything else on
+     the entry and exit screens, so it is a label rather than a colour. */
+  .card .who{font-size:11.5px;font-weight:800;letter-spacing:.06em;
+       text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+  .card.mine{border-left:4px solid var(--deep)}
+  .card.mine .who{color:var(--deep)}
+
+  /* The eight directions an assessor can go, as buttons the student picks
+     from while the clock runs. Two columns on anything but the narrowest
+     phone: eight choices in one column is a scroll, and scrolling is time. */
+  .moves{display:grid;grid-template-columns:1fr;gap:8px;margin:6px 0 14px}
+  @media (min-width:360px){ .moves{grid-template-columns:1fr 1fr} }
+  .movebtn{text-align:left;border:2px solid var(--line);border-radius:12px;
+       background:var(--paper);color:inherit;padding:10px 11px;cursor:pointer;
+       font-family:var(--font);min-height:62px}
+  .movebtn b{display:block;font-size:15.5px;line-height:1.2}
+  .movebtn i{display:block;font-style:normal;font-size:14px;color:var(--deep);
+       margin-top:1px}
+  .movebtn span{display:block;font-size:12.5px;color:var(--muted);
+       line-height:1.3;margin-top:3px}
+  .movebtn[disabled]{opacity:.38;cursor:default}
+
   .segs{display:flex;gap:6px;margin:4px 0 6px}
   .seg{flex:1;min-width:0;min-height:44px;padding:6px 4px;border:1.5px solid var(--line);
        border-radius:11px;background:var(--paper);color:var(--muted);cursor:pointer;
@@ -425,13 +447,14 @@
 <script src="data/phrases.js"></script>
 <script src="data/errors.js"></script>
 <script src="data/topics.js"></script>
+<script src="data/flow.js"></script>
 <script src="data/qwords.js"></script>
 <script src="data/particles.js"></script>
 <script>
 (function(){
   "use strict";
 
-  var BUILD = "Version 14, 3 October 2026";
+  var BUILD = "Version 15, 4 October 2026";
 
   var CRIT  = window.ORAL_CRITERIA,
       REP   = window.ORAL_REPORTS,
@@ -439,6 +462,7 @@
       PH    = window.ORAL_PHRASES,
       ER    = window.ORAL_ERRORS,
       TOP   = (window.ORAL_TOPICS || { topics:[] }).topics,
+      FL    = window.ORAL_FLOW,
       QW    = window.ORAL_QWORDS || { words:[], rounds:[] },
       PT    = window.ORAL_PARTICLES || { rounds:[] };
 
@@ -1599,79 +1623,42 @@
   }
 
   function buildMock(band){
-    /* Section 1: eight questions, easy first, no two from the same topic in a
-       row, at least two higher order, and at least one about the student's own
-       contact with Japanese language and culture, which the format requires. */
-    var pool = bandPool(CONV.slice(), band);
-    shuffle(pool);
-    pool = bandPool(pool, band);
-    var byTopic = {};
-    pool.forEach(function(q){ (byTopic[q.topic] = byTopic[q.topic] || []).push(q); });
-    var s1 = [], used = {};
-    /* the language-and-culture question first, so it cannot be squeezed out */
-    var lc = pool.filter(function(q){
-      return q.topic === "nihongo" || q.topic === "japan-culture";
-    });
-    if (lc.length){ s1.push(lc[0]); used[lc[0].id] = 1; }
-    Object.keys(byTopic).forEach(function(t){
-      for (var i = 0; i < byTopic[t].length; i++){
-        var q = byTopic[t][i];
-        if (!used[q.id] && s1.length < 8){ s1.push(q); used[q.id] = 1; break; }
-      }
-    });
-    /* Two higher order questions are forced into a mixed run, because that is
-       the shape of a real conversation that goes well. A banded run is already
-       pitched, so forcing them would break the band. */
-    if (band === "mixed"){
-      while (s1.filter(function(q){ return q.higher_order; }).length < 2){
-        var extra = pool.filter(function(q){ return q.higher_order && !used[q.id]; })[0];
-        if (!extra) break;
-        s1.pop(); s1.push(extra); used[extra.id] = 1;
-      }
-    }
-    s1.sort(function(a, b){ return a.difficulty - b.difficulty; });
+    /* Section 1, in the order the examination actually runs.
 
-    /* Section 2: the nine stages in order, which is the order a prepared
-       discussion actually runs in.
-
-       A student who has chosen their topic gets the stages asked about that
-       topic, which is what happens in the room: the assessor has the
-       student's subtopic and works down it. The generic bank below is the
-       fallback for a student who has not chosen one yet, and it was the
-       only thing here until Andrew ran the whole examination and found the
-       discussion neither natural nor adaptive, because it could not be:
-       it did not know what the discussion was about. */
-    var myTopic = S.topic ? topicById(S.topic) : null;
-    if (myTopic){
-      var s2t = [];
-      QD.discussion_stages.forEach(function(st){
-        var here = myTopic.questions.filter(function(q){ return q.stage === st.id; });
-        if (!here.length) return;
-        shuffle(here);
-        s2t.push(topicQ(myTopic, here[0], "s2"));
-      });
-      return { s1:s1, s2:s2t, band:band, topic:myTopic.id, sec:0, at:0,
-               shown:false, fu:-1, started:0, left:0 };
-    }
-    var s2 = [];
-    QD.discussion_stages.forEach(function(st){
-      var here = DISC.filter(function(q){ return q.topic === st.id; });
-      if (!here.length) return;
-      /* A stage has one or two questions, so a band picks within the stage
-         rather than dropping it: every stage still runs. */
-      if (band !== "mixed"){
-        var want = here.filter(function(q){ return inBand(q, band); });
-        if (want.length){ s2.push(want[0]); return; }
+       It used to be one question per topic, shuffled, with the language and
+       culture one forced in somewhere. Andrew, 4 October 2026: some parts of
+       the exam have to go in a particular order. They do. It opens on one of
+       six predictable questions, works through the student's own world, then
+       Japanese study, then their contact with Japanese culture. So the run is
+       built phase by phase from flow.js, and the shuffling happens inside a
+       phase and never across them. */
+    var s1 = [], used = {}, usedTopic = {};
+    FL.section1.phases.forEach(function(ph){
+      var pool = bandPool(CONV.filter(function(q){
+        return q.phase === ph.id && !used[q.id];
+      }), band);
+      shuffle(pool);
+      pool = bandPool(pool, band);
+      var took = 0;
+      /* no two from the same topic while there is still a choice */
+      for (var pass = 0; pass < 2 && took < ph.n; pass++){
+        for (var i = 0; i < pool.length && took < ph.n; i++){
+          var q = pool[i];
+          if (used[q.id]) continue;
+          if (pass === 0 && usedTopic[q.topic]) continue;
+          s1.push(q); used[q.id] = 1; usedTopic[q.topic] = 1; took++;
+        }
       }
-      here.sort(function(a, b){ return b.difficulty - a.difficulty; });
-      s2.push(s2.length % 2 ? here[here.length - 1] : here[0]);
     });
-    if (!s2.some(function(q){ return q.question_type === "hypothetical"; })){
-      var hyp = DISC.filter(function(q){ return q.question_type === "hypothetical"; })[0];
-      if (hyp) s2[s2.length - 2] = hyp;
-    }
-    return { s1:s1, s2:s2, band:band, sec:0, at:0, shown:false, fu:-1,
-             started:0, left:0 };
+
+    /* Section 2 is not built ahead of time any more. No app without AI can
+       work out what an assessor would ask next, so the student says: they
+       pick the next move while the clock runs, which is also the skill the
+       flow sheet teaches, steering the questioning towards what they
+       actually researched. See drawDisc2. */
+    return { kind:"full", part:"entry", s1:s1, s2:[], band:band,
+             topic:S.topic, sec:0, at:0, shown:false, fu:-1,
+             asked:{}, q2:null, started:0, left:0 };
   }
   function shuffle(a){
     for (var i = a.length - 1; i > 0; i--){
@@ -1682,7 +1669,13 @@
   function stopClock(){ clearInterval(clockTimer); clockTimer = null; }
 
   RENDER.mock = function(args){
-    if (args[0] === "run" && MOCK) return drawMockRun();
+    if (args[0] === "run" && MOCK){
+      if (MOCK.part === "entry") return drawEntry();
+      if (MOCK.part === "trans") return drawTrans();
+      if (MOCK.part === "s2")    return drawDisc2();
+      if (MOCK.part === "exit")  return drawExit();
+      return drawMockRun();
+    }
     if (args[0] === "sac") return drawSacPick();
     setHead([{ ja:"タイムれんしゅう", r:"mock" }], "Timed practice · 15 or 4 minutes");
     var ex = CRIT.examination, s = CRIT.sections;
@@ -1705,10 +1698,11 @@
                  || BANDS[0]).hint) + '</p>'
           + (function(){
               var t = S.topic ? topicById(S.topic) : null;
-              if (!t) return '<p class="seghint">You have not picked a SAC topic '
-                   + 'yet, so Section 2 will use the general discussion '
-                   + 'questions. Pick one below and Section 2 becomes a '
-                   + 'discussion about your own topic.</p>';
+              if (!t) return '<p class="seghint">Pick your topic first. You '
+                   + 'name it on the way into the real examination, which is '
+                   + 'why Section 1 never touches it and Section 2 is entirely '
+                   + 'about it, so a run without one would be the wrong '
+                   + 'examination.</p>';
               return '<div class="mytopic"><b>' + ruby(t.name_ja) + '</b> '
                    + esc(t.name_en)
                    + '<span>Section 2 will be about this. '
@@ -1750,9 +1744,8 @@
     });
     if ($("changeTopic")) $("changeTopic").onclick = function(){ go("mock:sac"); };
     $("startMock").onclick = function(){
+      if (!S.topic || !topicById(S.topic)) return go("mock:sac");
       MOCK = buildMock(S.band);
-      MOCK.left = CRIT.sections[0].minutes * 60;
-      MOCK.started = Date.now();
       go("mock:run");
     };
     $("startSac").onclick = function(){ go("mock:sac"); };
@@ -1766,9 +1759,10 @@
             "SAC practice · 4 minutes · pick your topic");
     var h = '<h2>どのトピックですか<span class="en">Pick the product or practice '
           + 'you researched</span></h2>'
-          + '<p class="lede">Four minutes, five questions, and the assessor has '
-          + 'heard nothing but the name of your topic. They start wide and work '
-          + 'down, and they do not know which questions you prepared.</p>'
+          + '<p class="lede">The assessor has heard nothing but the name of '
+          + 'your topic. They start wide and work down, and they do not know '
+          + 'which questions you prepared. The same choice sets Section 2 of '
+          + 'the whole examination.</p>'
           + '<div class="tiles">'
           + TOP.map(function(t){
               return '<button class="tile" data-t="' + esc(t.id) + '">'
@@ -1800,6 +1794,191 @@
       };
     });
     $("noTopic").onclick = function(){ S.topic = ""; save(); start(buildSac(S.band)); };
+  }
+
+  /* ---- the parts of the examination that are not questions ----
+     Walking in, the line that ends the conversation, and walking out. None
+     of it is assessed and all of it has to be done, and an app that drills
+     eight minutes of discussion but skips しつれいします is teaching the
+     wrong examination. These are scripts to read aloud, so each line is a
+     card you can hear, not a question to answer. */
+  function scriptCards(steps){
+    return steps.map(function(st){
+      return '<div class="qrow"><div class="card' + (st.who === "you" ? " mine" : "")
+           + '"><div class="who">' + (st.who === "you" ? "You" : "Assessor")
+           + '</div>' + jaLine(st.ja) + enLine(st.en)
+           + (st.note ? '<p class="note" style="margin:6px 0 0">'
+                      + esc(st.note) + '</p>' : "")
+           + '</div><button class="playbtn" data-play="'
+           + esc(speakable(st.ja)) + '" aria-label="Hear it"></button></div>';
+    }).join("");
+  }
+  function wireScript(){
+    each($("main"), "[data-play]", function(b){
+      b.onclick = function(ev){ ev.stopPropagation(); SAY.speak(b.dataset.play, b); };
+    });
+  }
+  function drawEntry(){
+    var t = topicById(MOCK.topic);
+    setHead([{ ja:"タイムれんしゅう", r:"mock" }, { ja:FL.entry.name_ja, r:"mock:run" }],
+            FL.entry.name_en + " · not assessed, not optional");
+    $("main").innerHTML = '<h2>' + ruby(FL.entry.name_ja)
+      + '<span class="en">' + esc(FL.entry.name_en) + '</span></h2>'
+      + '<p class="lede">' + esc(FL.entry.about) + '</p>'
+      + (t ? '<div class="mytopic"><b>' + ruby(t.name_ja) + '</b> '
+             + esc(t.name_en) + '<span>This is what you name on the way in, '
+             + 'and it is why Section 1 never touches it.</span></div>' : "")
+      + scriptCards(FL.entry.steps)
+      + '<div class="row"><button class="btn wide" id="startS1">'
+      + 'Done. Start the ' + CRIT.sections[0].minutes + ' minutes</button></div>'
+      + '<div class="row"><button class="btn ghost" id="quitE">Stop</button></div>'
+      + foot();
+    wireScript();
+    $("startS1").onclick = function(){
+      SAY.stop();
+      MOCK.part = "s1"; MOCK.sec = 0; MOCK.at = 0;
+      MOCK.shown = false; MOCK.fu = -1;
+      MOCK.left = CRIT.sections[0].minutes * 60;
+      MOCK.started = Date.now();
+      draw();
+    };
+    $("quitE").onclick = function(){ MOCK = null; go("mock"); };
+  }
+  function drawTrans(){
+    setHead([{ ja:"タイムれんしゅう", r:"mock" }, { ja:"ディスカッション", r:"mock:run" }],
+            "Section 2 · " + CRIT.sections[1].minutes + " minutes");
+    var t = topicById(MOCK.topic);
+    $("main").innerHTML = '<h2>' + ruby("ディスカッション")
+      + '<span class="en">The assessor hands over</span></h2>'
+      + scriptCards([{ who:"assessor", ja:FL.section2.transition.ja,
+                       en:FL.section2.transition.en }])
+      + '<p class="lede">' + esc(FL.section2.about) + '</p>'
+      + (t ? '<div class="mytopic"><b>' + ruby(t.name_ja) + '</b> '
+             + esc(t.name_en) + '</div>' : "")
+      + '<div class="row"><button class="btn wide" id="startS2">Start the '
+      + CRIT.sections[1].minutes + ' minutes</button></div>'
+      + '<div class="row"><button class="btn ghost" id="quitT">Stop</button></div>'
+      + foot();
+    wireScript();
+    $("startS2").onclick = function(){
+      SAY.stop();
+      MOCK.part = "s2";
+      MOCK.left = CRIT.sections[1].minutes * 60;
+      MOCK.q2 = pickMove("define");
+      draw();
+    };
+    $("quitT").onclick = function(){ MOCK = null; go("mock"); };
+  }
+  function drawExit(){
+    stopClock();
+    setHead([{ ja:"タイムれんしゅう", r:"mock" }, { ja:FL.exit.name_ja, r:"mock:run" }],
+            FL.exit.name_en);
+    $("main").innerHTML = '<h2>' + ruby(FL.exit.name_ja)
+      + '<span class="en">' + esc(FL.exit.name_en) + '</span></h2>'
+      + scriptCards(FL.exit.steps)
+      + '<p>Now mark yourself against the four criteria while it is fresh. '
+      + 'The descriptors are the official ones, word for word.</p>'
+      + '<div class="row"><button class="btn" data-r="me">Mark yourself</button>'
+      + '<button class="btn ghost" data-r="mock">Run it again</button></div>'
+      + foot();
+    wireScript();
+    each($("main"), "[data-r]", function(b){
+      b.onclick = function(){ MOCK = null; go(b.dataset.r); };
+    });
+  }
+
+  /* ---- Section 2, steered by the student ----
+     An app with no AI cannot work out what an assessor would ask next. So
+     it does not pretend to: the student picks the direction, from the eight
+     an assessor actually goes in, while the clock runs. That is closer to
+     the room than a fixed list, and steering the questioning towards your
+     own research is something the flow sheet teaches outright. */
+  function pickMove(mv){
+    var t = topicById(MOCK.topic);
+    if (!t) return null;
+    var pool = t.questions.filter(function(q){
+      return q.move === mv && !MOCK.asked[q.id];
+    });
+    if (!pool.length){
+      pool = t.questions.filter(function(q){ return q.move === mv; });
+      if (!pool.length) return null;
+    }
+    var q = pool[Math.floor(Math.random() * pool.length)];
+    MOCK.asked[q.id] = 1;
+    return topicQ(t, q, "s2");
+  }
+  function drawDisc2(){
+    var t = topicById(MOCK.topic);
+    var q = MOCK.q2;
+    setHead([{ ja:"タイムれんしゅう", r:"mock" },
+             { ja:t ? t.name_ja : "ディスカッション", r:"mock:run" }],
+            "Section 2 · " + (t ? t.name_en : "Discussion"));
+    var left = {};
+    FL.section2.moves.forEach(function(mv){
+      left[mv.id] = t ? t.questions.filter(function(x){
+        return x.move === mv.id && !MOCK.asked[x.id];
+      }).length : 0;
+    });
+    var h = '<div class="clock" id="clock"><b id="cnum">--:--</b>'
+          + '<span>left in Section 2 · ' + esc(t ? t.name_en : "Discussion")
+          + '</span></div>';
+    if (q){
+      var mvDef = FL.section2.moves.filter(function(m){
+        return m.id === MOCK.lastMove; })[0];
+      h += '<div class="step">' + esc(mvDef ? mvDef.label_en : "Opening question")
+         + '</div>'
+         + '<div class="qrow"><div class="card">' + jaLine(q.question_ja)
+         + enLine(q.question_en) + '</div>'
+         + '<button class="playbtn" id="playq2" aria-label="Hear it"></button></div>'
+         + '<p class="note">No model answer: this one is yours. If it is not a '
+         + 'question you prepared, steer them back rather than going quiet.</p>';
+    }
+    h += recordBlock("disc2");
+    h += '<h3>What do they ask next?</h3>'
+       + '<p class="lede">You decide, because no app without AI can. Picking '
+       + 'the direction is the same skill as steering a real assessor towards '
+       + 'what you researched.</p>'
+       + '<div class="moves">'
+       + FL.section2.moves.map(function(mv){
+           return '<button class="movebtn" data-m="' + esc(mv.id) + '"'
+                + (left[mv.id] ? "" : " disabled")
+                + '><b>' + esc(mv.label_en) + '</b>'
+                + '<i>' + ruby(mv.label_ja) + '</i>'
+                + '<span>' + esc(mv.about) + '</span></button>';
+         }).join("")
+       + '</div>'
+       + '<details><summary>If it is going the wrong way</summary>'
+       + '<div class="dbody">'
+       + FL.section2.strategies.map(function(x){
+           return '<div class="card flat">' + jaLine(x.ja) + enLine(x.en)
+                + (x.note ? '<p class="note" style="margin:6px 0 0">'
+                          + esc(x.note) + '</p>' : "") + '</div>';
+         }).join("") + '</div></details>'
+       + '<div class="row"><button class="btn ghost" id="endS2">Finish</button>'
+       + '</div>';
+    $("main").innerHTML = h + foot();
+
+    if ($("playq2") && q) $("playq2").onclick = function(){ SAY.speak(q.question_ja); };
+    if (q && !MOCK.heard){ MOCK.heard = 1; SAY.speak(q.question_ja); }
+    each($("main"), "[data-m]", function(b){
+      b.onclick = function(){
+        SAY.stop();
+        var got = pickMove(b.dataset.m);
+        if (!got) return;
+        MOCK.q2 = got; MOCK.lastMove = b.dataset.m; MOCK.heard = 0;
+        draw();
+      };
+    });
+    $("endS2").onclick = function(){ stopClock(); MOCK.part = "exit"; draw(); };
+    wireRecorder($("main"));
+
+    paintClock();
+    stopClock();
+    clockTimer = setInterval(function(){
+      MOCK.left--;
+      paintClock();
+      if (MOCK.left <= 0){ stopClock(); MOCK.part = "exit"; draw(); }
+    }, 1000);
   }
 
   function drawMockRun(){
@@ -1905,11 +2084,9 @@
   }
   function nextSection(){
     if (MOCK.kind === "sac"){ stopClock(); return drawMockDone(); }
-    if (MOCK.sec === 0){
-      MOCK.sec = 1; MOCK.at = 0; MOCK.shown = false; MOCK.fu = -1;
-      MOCK.left = CRIT.sections[1].minutes * 60;
-      drawMockRun();
-    } else { stopClock(); drawMockDone(); }
+    stopClock();
+    MOCK.part = "trans";
+    draw();
   }
   function paintClock(){
     var el = $("cnum"); if (!el) return;
