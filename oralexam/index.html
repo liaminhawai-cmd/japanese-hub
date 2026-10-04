@@ -386,8 +386,49 @@
   .updatebar button{border:2px solid #fff;background:none;color:#fff;
      border-radius:9px;padding:7px 13px;font-family:var(--font);font-size:15px;
      font-weight:600;cursor:pointer}
-  .foot{color:var(--muted);font-size:13.5px;margin-top:22px;
-        border-top:1px solid var(--line);padding-top:10px}
+  /* The credits are a footnote, not a paragraph. Small enough to stop
+     competing with the work on the page, still large enough to read if
+     somebody goes looking for where the content came from. */
+  .foot{color:var(--muted);font-size:10.5px;line-height:1.45;margin-top:26px;
+        border-top:1px solid var(--line-soft);padding-top:8px;opacity:.75}
+
+  /* ---------- the ? and its popup ----------
+     Pages were carrying a paragraph of instructions that most students read
+     once and then scrolled past every time after. The instructions are now
+     behind this: hover on a mouse, tap on a phone, and the same popup
+     either way. Nothing is hidden that a student needs in order to start,
+     only the explanation of something already in front of them. */
+  .qmark{flex:none;width:24px;height:24px;border-radius:50%;cursor:pointer;
+       border:1.5px solid var(--line);background:var(--paper);
+       color:var(--muted);font-family:var(--font);font-size:14px;
+       font-weight:800;line-height:1;padding:0;display:inline-flex;
+       align-items:center;justify-content:center;vertical-align:middle}
+  .qmark:hover,.qmark:focus{border-color:var(--deep);color:var(--deep);
+       outline:none}
+  h2 .qmark,h3 .qmark{margin-left:7px}
+  .tip-pop{position:fixed;z-index:120;display:none;background:var(--deep);
+       color:#fff;border-radius:11px;padding:10px 13px;font-size:14.5px;
+       line-height:1.45;box-shadow:0 6px 22px rgba(0,0,0,.3);
+       font-family:var(--font)}
+  .tip-pop.on{display:block}
+
+  /* ---------- recording ----------
+     At the top of the page, because it is the thing a student does before
+     answering rather than after reading. Red and round, so it reads as a
+     record button and not as another navigation choice. */
+  .recbar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;
+       margin:0 0 12px}
+  .recbtn{display:inline-flex;align-items:center;gap:8px;cursor:pointer;
+       border:2px solid var(--accent);background:#fff;color:var(--accent);
+       border-radius:11px;padding:0 14px;min-height:44px;
+       font-family:var(--font);font-size:15.5px;font-weight:700}
+  .recbtn .rdot{width:13px;height:13px;border-radius:50%;
+       background:var(--accent);flex:none}
+  .recbtn.on{background:var(--accent);color:#fff}
+  .recbtn.on .rdot{background:#fff;animation:pulse 1.1s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+  .recbar audio{height:38px;max-width:100%}
+  .btn.sm{min-height:44px;padding:0 13px;font-size:15px}
   @media (max-width:360px){
     .ja{font-size:18px} body{font-size:16.5px}
     .bar{gap:7px;padding-left:10px;padding-right:10px}
@@ -458,7 +499,7 @@
 (function(){
   "use strict";
 
-  var BUILD = "Version 17, 4 October 2026";
+  var BUILD = "Version 18, 4 October 2026";
 
   var CRIT  = window.ORAL_CRITERIA,
       REP   = window.ORAL_REPORTS,
@@ -738,6 +779,76 @@
     if (!el || !SAY.hasJa()) return;
     SAY.speak(el.dataset.say || el.textContent, el);
   });
+
+  /* ---- the ? popup ----
+     One floating node, moved to whichever ? asked for it. Hover shows it on
+     a mouse and tap shows it on a phone, which is the only way a hover-only
+     tooltip is any use to a student holding the thing. */
+  var TIP = (function(){
+    var el = null, from = null;
+    function node(){
+      if (!el){
+        el = document.createElement("div");
+        el.className = "tip-pop";
+        el.setAttribute("role", "tooltip");
+        document.body.appendChild(el);
+      }
+      return el;
+    }
+    function show(btn){
+      var text = btn.getAttribute("data-tip");
+      if (!text) return;
+      var n = node();
+      n.textContent = text;
+      n.style.width = Math.min(290, window.innerWidth - 24) + "px";
+      n.classList.add("on");
+      from = btn;
+      var r = btn.getBoundingClientRect(), w = n.offsetWidth, h = n.offsetHeight;
+      var left = r.left + r.width / 2 - w / 2;
+      left = Math.max(12, Math.min(left, window.innerWidth - w - 12));
+      var top = r.bottom + 8;
+      if (top + h > window.innerHeight - 8) top = Math.max(8, r.top - h - 8);
+      n.style.left = left + "px";
+      n.style.top = top + "px";
+    }
+    function hide(){ if (el) el.classList.remove("on"); from = null; }
+    /* Hover is for a mouse only. On a touch screen the browser fires a
+       synthetic hover immediately before the tap, so a handler that opens on
+       hover and toggles on click opens the popup and then closes it again in
+       one press, which is how this behaved for exactly one build. Checking
+       the pointer type keeps the two apart. */
+    document.addEventListener("pointerover", function(ev){
+      if (ev.pointerType && ev.pointerType !== "mouse") return;
+      var b = ev.target.closest && ev.target.closest("[data-tip]");
+      if (b) show(b);
+    });
+    document.addEventListener("pointerout", function(ev){
+      if (ev.pointerType && ev.pointerType !== "mouse") return;
+      var b = ev.target.closest && ev.target.closest("[data-tip]");
+      if (b && b === from) hide();
+    });
+    document.addEventListener("click", function(ev){
+      var b = ev.target.closest && ev.target.closest("[data-tip]");
+      if (b){
+        ev.preventDefault();
+        ev.stopPropagation();
+        if (b === from && el && el.classList.contains("on")) hide();
+        else show(b);
+        return;
+      }
+      hide();
+    }, true);
+    document.addEventListener("keydown", function(ev){
+      if (ev.key === "Escape") hide();
+    });
+    window.addEventListener("scroll", hide, true);
+    return { hide: hide };
+  })();
+  /* A ? that explains whatever it sits beside. */
+  function qmark(text){
+    return '<button type="button" class="qmark" data-tip="' + esc(text)
+         + '" aria-label="What is this?">?</button>';
+  }
 
   /* ---- the two always-on controls ---- */
   function paintFuri(){
@@ -1199,10 +1310,11 @@
     setHead([{ ja:"ドリル", r:"drill" }, { ja:"しつもんの ことば", r:"drill:qw" }],
             "Question words");
     var h = '<h2>しつもんの ことば<span class="en">Question words</span></h2>'
-          + '<p class="lede">The fault named in all six VCAA oral exam reports is '
-          + 'the answer not matching the question, and it comes from missing the '
-          + 'question word rather than from weak Japanese. Each question is read '
-          + 'aloud first, the way you meet it in the room.</p>'
+          + qmark('The fault named in all six VCAA oral exam reports is the '
+                + 'answer not matching the question, and it comes from missing '
+                + 'the question word rather than from weak Japanese. Each '
+                + 'question is read aloud first, the way you meet it in the '
+                + 'room.')
           + '<div class="tiles">'
           + QW.rounds.map(function(r){
               return '<button class="tile" data-r="drill:r:' + esc(r.id) + '">'
@@ -1341,7 +1453,8 @@
              { ja:(grp ? grp.ja : q.topic), r:"browse" }],
             (grp ? grp.en : q.topic) + " · " + TYPENAME[q.question_type].en);
     var m = $("main");
-    var h = '<div class="qmeta">'
+    var h = recordBlock("q-" + q.id)
+          + '<div class="qmeta">'
           + '<span class="pill">' + (q.section === "conversation"
               ? "Section 1" : "Section 2") + '</span>'
           + '<span class="pill">' + esc(TYPENAME[q.question_type].en) + '</span>'
@@ -1436,8 +1549,7 @@
        + '<p class="lede">Typed here, it stays on this phone. Say it out loud '
        + 'first, then write what you actually managed to say.</p>'
        + '<textarea id="mynote" placeholder="…">'
-       + esc(S.notes[q.id] || "") + '</textarea>'
-       + recordBlock("q-" + q.id);
+       + esc(S.notes[q.id] || "") + '</textarea>';
 
     var sibs = (q.section === "conversation" ? CONV : DISC);
     var at = sibs.indexOf(q);
@@ -1694,10 +1806,12 @@
     /* Students get the idea in one line. The detail is all still here,
        folded away, for the sitting where someone wants it. */
     var h = '<h2>タイムれんしゅう<span class="en">Practise on the clock, the whole '
-          + 'examination or a short SAC</span></h2>'
-          + '<p class="lede">Hit start, then click through the questions and the '
-          + 'follow-ups. You hear each question before you see it, the way it '
-          + 'happens in the room.</p>'
+          + 'examination or a short SAC</span>'
+          + qmark('Hit start, then click through the questions and the '
+                + 'follow-ups. You hear each question before you see it, the '
+                + 'way it happens in the room. The whole examination walks '
+                + 'you in, runs both sections on the clock, and walks you '
+                + 'out.') + '</h2>'
           + '<div class="segs" role="group" aria-label="How hard to pitch the run">'
           + BANDS.map(function(b){
               return '<button class="seg' + (S.band === b.id ? " on" : "") + '"'
@@ -1770,11 +1884,11 @@
     setHead([{ ja:"タイムれんしゅう", r:"mock" }, { ja:"SAC", r:"mock:sac" }],
             "SAC practice · 4 minutes · pick your topic");
     var h = '<h2>どのトピックですか<span class="en">Pick the product or practice '
-          + 'you researched</span></h2>'
-          + '<p class="lede">The assessor has heard nothing but the name of '
-          + 'your topic. They start wide and work down, and they do not know '
-          + 'which questions you prepared. The same choice sets Section 2 of '
-          + 'the whole examination.</p>'
+          + 'you researched</span>'
+          + qmark('The assessor has heard nothing but the name of your topic. '
+                + 'They start wide and work down, and they do not know which '
+                + 'questions you prepared. The same choice sets Section 2 of '
+                + 'the whole examination.') + '</h2>'
           + '<div class="tiles">'
           + TOP.map(function(t){
               return '<button class="tile" data-t="' + esc(t.id) + '">'
@@ -1933,7 +2047,7 @@
     });
     var h = '<div class="clock" id="clock"><b id="cnum">--:--</b>'
           + '<span>left in Section 2 · ' + esc(t ? t.name_en : "Discussion")
-          + '</span></div>';
+          + '</span></div>' + recordBlock("disc2");
     if (q){
       var mvDef = FL.section2.moves.filter(function(m){
         return m.id === MOCK.lastMove; })[0];
@@ -1945,11 +2059,11 @@
          + '<p class="note">No model answer: this one is yours. If it is not a '
          + 'question you prepared, steer them back rather than going quiet.</p>';
     }
-    h += recordBlock("disc2");
-    h += '<h3>What do they ask next?</h3>'
-       + '<p class="lede">You decide, because no app without AI can. Picking '
-       + 'the direction is the same skill as steering a real assessor towards '
-       + 'what you researched.</p>'
+    h += '<h3>What do they ask next?'
+       + qmark('You decide, because no app without AI can work out what an '
+             + 'assessor would ask next. Picking the direction is the same '
+             + 'skill as steering a real assessor towards what you '
+             + 'researched.') + '</h3>'
        + '<div class="moves">'
        + FL.section2.moves.map(function(mv){
            return '<button class="movebtn" data-m="' + esc(mv.id) + '"'
@@ -2019,7 +2133,7 @@
              : myT ? "four minutes · " + esc(sec.name_en)
              : "your four minutes")
           + (MOCK.kind === "sac" ? "" : ' · ' + esc(bandName))
-          + '</span></div>';
+          + '</span></div>' + recordBlock("mock");
 
     var step = MOCK.kind === "sac" && MOCK.topic
              ? sec.name_en + " · " + q.question_type
@@ -2053,8 +2167,6 @@
            + 'question is not one you prepared, say so in Japanese and keep '
            + 'going.</p>';
     }
-
-    h += recordBlock("mock");
 
     h += '<div class="row">';
     if (MOCK.shown){
@@ -2128,9 +2240,9 @@
   function drawParticles(){
     setHead([{ ja:"ドリル", r:"drill" }, { ja:"じょし", r:"drill:pt" }], "Particles");
     var h = '<h2>じょし<span class="en">Particles</span></h2>'
-          + '<p class="lede">Reading a wrong particle in somebody else\u2019s '
-          + 'sentence is how you start catching it in your own. The explanation '
-          + 'comes up whichever way you answer.</p>'
+          + qmark('Reading a wrong particle in somebody else\u2019s sentence '
+                + 'is how you start catching it in your own. The explanation '
+                + 'comes up whichever way you answer.')
           + '<div class="tiles">'
           + PT.rounds.map(function(r){
               return '<button class="tile" data-r="drill:r:' + esc(r.id) + '">'
@@ -2237,16 +2349,17 @@
     setHead([{ ja:"ドリル", r:"drill" }, { ja:d.title, r:"drill:" + id }],
             d.title + " · " + (st.at + 1) + " of " + items.length);
     var m = $("main");
-    var h = '<p class="lede">' + esc(d.how) + '</p>'
-          + '<div class="step">' + (st.at + 1) + ' of ' + items.length
-          + ' · <span class="score">' + st.hit + ' right, ' + st.miss
-          + ' to come back to</span></div>';
+    /* The instruction used to sit across the top of every item, read once
+       and scrolled past a hundred times after. It is behind the ? now. */
+    var h = recordBlock("drill-" + id)
+          + '<div class="step">' + (st.at + 1) + ' / ' + items.length
+          + ' · <span class="score">' + st.hit + ' right'
+          + (st.miss ? ", " + st.miss + " to revisit" : "") + '</span>'
+          + qmark(d.how) + '</div>';
 
     if (d.type === "spot"){
       h += '<div class="card"><div class="ja" data-say="' + esc(speakable(it.wrong))
          + '">' + ruby(it.wrong) + '</div></div>'
-         + '<p class="lede">What is wrong with it? Say the corrected sentence out '
-         + 'loud, then check.</p>'
          + '<div class="reveal' + (st.open ? " on" : "") + '" id="rv">'
          + '<div class="card"><div class="tier">The fault</div><b>'
          + esc((ERBYID[it.error_id] || {}).name || "") + '</b>'
@@ -2291,7 +2404,6 @@
       st.open = true;
     }
 
-    h += recordBlock("drill-" + id);
     h += '<div class="row">';
     if (!st.open) h += '<button class="btn" id="check">Check</button>';
     else h += '<button class="btn ghost" id="got">I had it right</button>'
@@ -2530,7 +2642,8 @@
     var m = $("main");
     var st = STAGENAME[q.topic] || { ja:q.topic, en:q.topic };
     var h = '<div class="clock" id="clock"><b id="cnum">--:--</b>'
-          + '<span>left in the Discussion</span></div>';
+          + '<span>left in the Discussion</span></div>'
+          + recordBlock("disc");
     if (D.img){
       h += '<div class="shotwrap"><img class="shot" id="shot" src="' + D.img
          + '" alt="Your chosen image"></div>'
@@ -2556,7 +2669,6 @@
            + '<div class="dbody"><p style="white-space:pre-wrap">' + esc(mine)
            + '</p></div></details>';
     }
-    h += recordBlock("disc");
     h += '<div class="row">'
        + '<button class="btn ghost" id="nextq">'
        + (PR.at < PR.qs.length - 1 ? "Next question" : "Finish") + '</button>'
@@ -2793,21 +2905,26 @@
      says so rather than pretending otherwise. */
   var REC = { on:false, mr:null, chunks:[], url:null, slot:null, stream:null };
 
+  /* The record button, at the top of the page rather than below the answer.
+     A student presses it before they speak, not after they read. The
+     paragraph that used to sit under it is behind the ? instead: it is
+     reassurance, and a wall of reassurance under a button is its own reason
+     not to press the button. */
+  var RECTIP = "Nothing is uploaded. The recording stays on this phone, "
+             + "and it lasts until you close the app, so press Save to keep "
+             + "it. Your phone will ask for the microphone the first time.";
   function recordBlock(slot){
+    var on = REC.on && REC.slot === slot;
     var mine = REC.url && REC.slot === slot;
-    return '<div class="card" data-rec="' + esc(slot) + '">'
-         + '<div class="rec">'
-         + '<button class="btn' + (REC.on && REC.slot === slot ? " warn" : " ghost")
-         + '" data-recbtn="1">'
-         + (REC.on && REC.slot === slot ? '<span class="dot"></span>Stop'
-                                       : 'Record yourself') + '</button>'
-         + (mine ? '<button class="btn ghost" data-recsave="1">Save it</button>'
+    return '<div class="recbar" data-rec="' + esc(slot) + '">'
+         + '<button type="button" class="recbtn' + (on ? " on" : "")
+         + '" data-recbtn="1"><span class="rdot"></span>'
+         + (on ? "Stop" : "Record") + '</button>'
+         + (mine ? '<button class="btn ghost sm" data-recsave="1">Save</button>'
                  : "")
-         + '</div>'
+         + qmark(RECTIP)
          + (mine ? '<audio controls src="' + REC.url + '"></audio>' : "")
-         + '<div class="note">Recordings stay in this phone and are never '
-         + 'uploaded. They last until you close the app, so use Save to keep '
-         + 'one.</div></div>';
+         + '</div>';
   }
   function wireRecorder(scope){
     each(scope, "[data-recbtn]", function(b){
@@ -2862,7 +2979,7 @@
     return '<p class="foot">VCE Japanese Second Language oral examination practice. '
          + 'Criteria and descriptors from the VCAA assessment criteria document '
          + esc(CRIT.sources[0].version) + '; examiner tips quoted from the '
-         + 'VCAA oral exam reports 2020 to 2025. Rough draft, for Andrew to react to. '
+         + 'VCAA oral exam reports 2020 to 2025. Draft, still being corrected. '
          + esc(BUILD) + '</p>';
   }
 
