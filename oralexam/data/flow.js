@@ -242,6 +242,16 @@ window.ORAL_FLOW = {
       "ja": "この スピードは どうですか。",
       "en": "How is this speed?",
       "note": "Spoken when the speed button is pressed, so the student hears the new speed on a line that says what it is."
+    },
+    "furiOn": {
+      "ja": "ふりがなオン",
+      "en": "Furigana on",
+      "note": "Spoken when the readings are turned on."
+    },
+    "furiOff": {
+      "ja": "ふりがなオフ",
+      "en": "Furigana off",
+      "note": "Spoken when the readings are turned off."
     }
   }
 };

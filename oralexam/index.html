@@ -64,7 +64,9 @@
         display:flex;align-items:center;justify-content:center;padding:0}
   .tool.off{opacity:.45}
   /* kana is a word, not a letter, so its button is wider than square. */
-  .tool.wide{width:auto;min-width:54px;padding:0 9px;font-size:14px}
+  .tool.wide{width:auto;min-width:54px;padding:0 8px;font-size:13px;
+        font-family:var(--font-jp),var(--font-en),sans-serif;line-height:1.1}
+  @media (max-width:360px){ .tool.wide{font-size:11.5px;padding:0 5px} }
   .tool small{font-size:11px;font-weight:700;display:block}
   .tool svg{width:23px;height:23px}
   .tool .ic{fill:none;stroke:currentColor;stroke-width:2.2;
@@ -412,12 +414,14 @@
          sitting: readings off is how you check you can still read it, and 0.7
          is how you catch a question you missed at full speed. -->
     <!-- Readings on or off, and the speaking speed. A single ふ said nothing
-         to a student who had not been told what it meant; the word kana
-         does. The voice picker is gone: the recordings are better than every
-         device voice, they are the same everywhere, and leaving the choice
-         there only invited somebody to make the app worse by accident. -->
+         to a student who had not been told what it meant; the whole word
+         does. It says out loud which way it has just gone, because on a
+         page of kana-only sentences the change is not always visible. The
+         voice picker is gone: the recordings are better than every device
+         voice, they are the same everywhere, and leaving the choice there
+         only invited somebody to make the app worse by accident. -->
     <button class="tool wide" id="furiBtn" title="Readings above the kanji">
-      <span>kana</span></button>
+      <span>ふりがな</span></button>
     <button class="tool" id="rateBtn" title="How fast the voice speaks">
       <span id="rateLabel">×1</span></button>
   </div>
@@ -454,7 +458,7 @@
 (function(){
   "use strict";
 
-  var BUILD = "Version 16, 4 October 2026";
+  var BUILD = "Version 17, 4 October 2026";
 
   var CRIT  = window.ORAL_CRITERIA,
       REP   = window.ORAL_REPORTS,
@@ -740,8 +744,16 @@
     document.body.classList.toggle("nofuri", !S.furi);
     $("furiBtn").classList.toggle("off", !S.furi);
     $("furiBtn").setAttribute("aria-pressed", S.furi ? "true" : "false");
+    $("furiBtn").title = S.furi ? "Readings are on. Tap to turn them off."
+                                : "Readings are off. Tap to turn them on.";
+    $("furiBtn").setAttribute("aria-label", $("furiBtn").title);
   }
-  $("furiBtn").onclick = function(){ S.furi = !S.furi; paintFuri(); save(); };
+  /* It says which way it has just gone. A student looking at a sentence
+     with no kanji in it cannot see the difference the button made. */
+  $("furiBtn").onclick = function(){
+    S.furi = !S.furi; paintFuri(); save();
+    SAY.speak(S.furi ? FL.ui.furiOn.ja : FL.ui.furiOff.ja);
+  };
   var RATES = [0.7, 1, 1.2];
   function paintRate(){
     $("rateLabel").textContent = "×" + S.rate;
