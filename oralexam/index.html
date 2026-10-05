@@ -36,6 +36,7 @@
        it), so no colour is named anywhere but in TABS. */
     --font-en:Calibri,Carlito,'Segoe UI',Tahoma,Geneva,Verdana;
     --font-jp:'UD Digi Kyokasho N-R','UD Digi Kyokasho NP-R','UD デジタル教科書体 N-R','UDデジタル教科書体N-R','HGP教科書体','YuKyokasho Yoko',YuKyokasho,'Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic',YuGothic,Meiryo;
+    --display:var(--font-jp);
     --font:var(--font-en),var(--font-jp),sans-serif;
     --spk:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2316375e' d='M4 9v6h4l5 4V5L8 9H4zm12.5 3c0-1.6-.9-2.9-2.2-3.6v7.2c1.3-.7 2.2-2 2.2-3.6zM14.3 4.4v1.9c2.6.8 4.5 3.2 4.5 6s-1.9 5.2-4.5 6v1.9c3.6-.9 6.3-4.2 6.3-7.9s-2.7-7.1-6.3-7.9z'/%3E%3C/svg%3E");
   }
@@ -358,7 +359,8 @@
      the top and bottom faded so the drum reads as continuing past the
      window rather than ending at it. touch-action is the important line:
      without it a flick scrolls the page instead of turning the drum. */
-  .rwin{position:relative;height:192px;overflow:hidden;background:var(--paper);
+  .rwin{position:relative;flex:1;min-width:0;height:192px;overflow:hidden;
+        background:var(--paper);
         border:1px solid var(--line);border-radius:4px;
         touch-action:none;cursor:grab;
         -webkit-user-select:none;user-select:none;
@@ -371,15 +373,31 @@
   .rstrip{will-change:transform}
   .ritem{height:64px;display:flex;flex-direction:column;align-items:center;
          justify-content:center;gap:1px;text-align:center;padding:0 10px}
-  .ritem b{font-family:var(--display);font-size:22px;font-weight:600;
+  .ritem b{font-family:var(--display,inherit);
+           font-size:clamp(17px,5.4vw,22px);font-weight:600;
            line-height:1.15;white-space:nowrap;overflow:hidden;
            text-overflow:ellipsis;max-width:100%}
   .ritem i{font-style:normal;font-size:12px;color:var(--muted);
            letter-spacing:.04em}
   .rmark{position:absolute;left:0;right:0;top:64px;height:64px;
          pointer-events:none;border-top:2px solid var(--deep);
-         border-bottom:2px solid var(--deep);background:rgba(39,49,138,.05)}
-  .reel{margin:4px 0 12px}
+         border-bottom:2px solid var(--deep);background:rgba(0,0,0,.035)}
+  .reel{display:flex;align-items:center;gap:9px;margin:4px 0 12px}
+  /* Dragging a cursor is a poor way to throw a drum, so there is a quiet
+     button beside it as well. Beside rather than on top: the longest topic
+     name needs the whole width of the window on a small phone, and a
+     button over the top of it would either cover the name or squeeze it
+     until it had to be cut off. */
+  .rspin{flex:none;width:44px;height:44px;border-radius:50%;
+         cursor:pointer;padding:0;
+         border:1px solid var(--line);background:var(--paper);
+         color:var(--deep);display:flex;align-items:center;
+         justify-content:center;opacity:.72;
+         box-shadow:0 1px 4px rgba(28,33,41,.12);transition:opacity .13s}
+  .rspin:hover,.rspin:focus{opacity:1;border-color:var(--deep);outline:none}
+  .rspin svg{width:21px;height:21px}
+  .rspin .ic{stroke-width:2}
+  .reel.spinning .rspin{opacity:.3;pointer-events:none}
 
   /* ---------- the discussion image ---------- */
   .shot{width:100%;border-radius:11px;border:1px solid var(--line);display:block}
@@ -568,7 +586,7 @@
 (function(){
   "use strict";
 
-  var BUILD = "Version 20, 4 October 2026";
+  var BUILD = "Version 21, 5 October 2026";
 
   var CRIT  = window.ORAL_CRITERIA,
       REP   = window.ORAL_REPORTS,
@@ -995,9 +1013,21 @@
         target = null; v = v0; last = 0;
         spinning = true;
         box.classList.add("spinning");
+        /* A device asking for reduced motion gets a short plain glide
+           rather than a jump: landing with no movement at all reads as
+           broken, and three slots of travel is not what that setting is
+           protecting anybody from. */
         if (reduced()){
-          pos = Math.round((pos + v0 * 0.35) / H) * H;
-          paint(); done(); return;
+          var from = pos, to = Math.round((pos + 3 * H) / H) * H, t0 = 0;
+          (function ease(now){
+            if (!t0) t0 = now;
+            var k = Math.min(1, (now - t0) / 480);
+            pos = from + (to - from) * (1 - Math.pow(1 - k, 3));
+            paint();
+            if (k < 1) raf = requestAnimationFrame(ease);
+            else { pos = to; paint(); done(); }
+          })(performance.now());
+          return;
         }
         raf = requestAnimationFrame(frame);
       }
@@ -1020,17 +1050,24 @@
         pos = grab.pos - (ev.clientY - grab.y);
         grab.moved += Math.abs(ev.clientY - grab.ly);
         var now = performance.now(), dt = now - grab.lt;
-        if (dt > 6){
+        if (dt > 4){
           grab.v = -(ev.clientY - grab.ly) / dt * 1000;
           grab.ly = ev.clientY; grab.lt = now;
+          grab.mouse = ev.pointerType === "mouse";
         }
         paint(); ticks(now);
       });
       function release(){
         if (!grab) return;
-        var fling = grab.v, stale = performance.now() - grab.lt > 90;
+        /* A hand can flick; a mouse cannot. The same gesture drags a
+           cursor at perhaps a third the speed of a thumb, so a mouse
+           throw is scaled up to land in the same range. The button on the
+           rim is there because even scaled, dragging a mouse is a poor way
+           to throw anything. */
+        var fling = grab.v * (grab.mouse ? 2.2 : 1);
+        var stale = performance.now() - grab.lt > 130;
         grab = null;
-        if (stale || Math.abs(fling) < 200){ launch(0); return; }
+        if (stale || Math.abs(fling) < 130){ launch(0); return; }
         launch(Math.max(-7000, Math.min(7000, fling)));
       }
       win.addEventListener("pointerup", release);
@@ -1744,6 +1781,9 @@
     }
     m.innerHTML = h + foot();
     wireChips(m);
+    each(m, "[data-r]", function(b){
+      b.onclick = function(){ SAY.stop(); go(b.dataset.r); };
+    });
     each(m, "[data-q]", function(b){
       b.onclick = function(){ go("browse:q:" + b.dataset.q); };
     });
@@ -1792,7 +1832,12 @@
         + "will not be the wording you practised. This is the cheapest way "
         + "to practise being asked something you did not pick.") + '</h2>'
       + '<div class="reel" id="reel"><div class="rwin">'
-      + '<div class="rstrip"></div><div class="rmark"></div></div></div>'
+      + '<div class="rstrip"></div><div class="rmark"></div></div>'
+      + '<button type="button" class="rspin" id="rspin" title="Spin"'
+      + ' aria-label="Spin the drum">'
+      + '<svg viewBox="0 0 24 24" aria-hidden="true">'
+      + '<path class="ic" d="M20 12a8 8 0 1 1-2.6-5.9"/>'
+      + '<path class="ic" d="M20 3.6V8h-4.4"/></svg></button></div>'
       + '<div class="row"><button class="btn wide" id="spinBtn">'
       + 'まわす<span class="en">Spin</span></button></div>'
       + '<div id="spinOut"></div>'
@@ -1800,12 +1845,14 @@
     var R = REEL.mount($("reel"), CT.map(function(t){
       return { html: ruby(t.ja), sub: esc(t.en), id: t.id };
     }), function(item){ spun = item.id; showSpun(item); });
-    $("spinBtn").onclick = function(){
+    function go1(){
       if (R.spinning()) return;
       SAY.stop();
       $("spinOut").innerHTML = "";
       R.spin();
-    };
+    }
+    $("spinBtn").onclick = go1;
+    $("rspin").onclick = go1;
     if (spun) showSpun(null);
     wireSpin();
   }
