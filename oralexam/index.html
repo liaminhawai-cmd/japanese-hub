@@ -754,27 +754,66 @@
     } else {
       document.body.classList.toggle("hasvoice", !!Object.keys(CLIPS).length);
     }
-    var liveEl = null, audioEl = null;
+    /* ---- one sound element, unlocked once ----
+       A question in the mock examination speaks itself, the way it does in
+       the room, and that is a sound starting without anybody tapping
+       anything. Safari on an iPhone refuses that for a sound element it has
+       never seen played inside a real tap, and a fresh element was being
+       made for every clip, so each one was new to it again. On a laptop
+       that is invisible; on a phone a run can go quiet partway through.
+
+       So: one element for the whole app, woken by the first touch anywhere
+       on the page with a moment of silence, and every clip after that is
+       the same element with a new src. Nothing is fetched for the silence;
+       it is forty-four bytes of WAV header inline. */
+    var SILENCE = "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAIlYA"
+                + "AESsAAACABAAZGF0YQAAAAA=";
+    var liveEl = null, el0 = null, woken = false;
+    function sound(){
+      if (!el0){ el0 = new Audio(); el0.preload = "auto"; }
+      return el0;
+    }
+    function wake(){
+      if (woken) return;
+      woken = true;
+      var a = sound();
+      try {
+        a.src = SILENCE;
+        a.muted = true;
+        var r = a.play();
+        if (r && r.then) r.then(function(){
+          try { a.pause(); } catch (e){}
+          a.muted = false;
+        }).catch(function(){ a.muted = false; });
+        else { try { a.pause(); } catch (e){} a.muted = false; }
+      } catch (e){ a.muted = false; }
+    }
+    ["pointerdown", "touchstart", "keydown"].forEach(function(ev){
+      document.addEventListener(ev, wake, { capture:true, once:true });
+    });
     function playClip(clip, el, done){
-      audioEl = new Audio("audio/" + clip);
-      audioEl.playbackRate = S.rate;
+      var a = sound();
+      a.onended = a.onerror = null;
+      try { a.pause(); } catch (e){}
+      a.src = "audio/" + clip;
+      a.playbackRate = S.rate;
       if (el) el.classList.add("live");
       liveEl = el;
-      audioEl.onended = audioEl.onerror = function(){
+      a.onended = a.onerror = function(){
         if (el) el.classList.remove("live");
         if (liveEl === el) liveEl = null;
-        audioEl = null;
         if (done) done();
       };
-      audioEl.play().catch(function(){
-        audioEl = null;
+      var r = a.play();
+      if (r && r.catch) r.catch(function(){
         if (el) el.classList.remove("live");
+        if (liveEl === el) liveEl = null;
         if (done) done();
       });
     }
     function stop(){
       if (liveEl){ liveEl.classList.remove("live"); liveEl = null; }
-      if (audioEl){ try { audioEl.pause(); } catch (e){} audioEl = null; }
+      if (el0){ try { el0.pause(); } catch (e){} }
       try { if (can) speechSynthesis.cancel(); } catch (e){}
     }
     return {
