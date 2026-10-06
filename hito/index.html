@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en-AU" translate="no" class="notranslate">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="google" content="notranslate">
+<meta name="theme-color" content="#16375e">
+<title>ひと · describing people</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23eef1f5'/%3E%3Ccircle cx='32' cy='24' r='11' fill='%2316375e'/%3E%3Cpath d='M13 56c0-11 8-18 19-18s19 7 19 18z' fill='%2316375e'/%3E%3C/svg%3E">
+<style>
+  /* Built to a school laptop: 1366 by 768 before the browser takes its
+     cut. One step fills the screen, the page itself never scrolls, and
+     exactly one region inside each step takes up the slack. Laptops are
+     wide and short, so width buys back height wherever it can. */
+  :root{
+    --bg:#eef1f5; --paper:#fff; --ink:#15191f; --muted:#4a5464;
+    --line:#ccd5e0; --line-soft:#e3e9f0;
+    --deep:#16375e; --accent:#a83232; --ok:#2f6a3e;
+    --i:#2b5f8c;            /* い adjectives, everywhere, always */
+    --na:#7a4a86;           /* な adjectives, everywhere, always */
+    --noun:#5a6470;         /* the things you describe */
+    --font:Calibri,Carlito,'Segoe UI',Tahoma,Verdana,sans-serif;
+    --jp:'Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic Medium',
+         YuGothic,'Noto Sans JP','IPAGothic',Meiryo,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{background:var(--bg);color:var(--ink);font-family:var(--font);
+       font-size:16px;line-height:1.5;display:flex;flex-direction:column;
+       overflow:hidden}
+
+  .bar{flex:none;display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+       background:var(--paper);
+       border-bottom:1px solid var(--line);padding:7px 14px;
+       padding-top:calc(7px + env(safe-area-inset-top))}
+  .bar h1{font-family:var(--jp);font-size:20px;font-weight:700;line-height:1.1}
+  .bar h1 span{display:block;font-family:var(--font);font-size:11px;
+       font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+       color:var(--muted)}
+  .bar .sp{flex:1}
+  .tool{min-height:38px;padding:0 11px;border:2px solid var(--deep);
+        border-radius:9px;background:#fff;color:var(--deep);cursor:pointer;
+        font-family:var(--font);font-size:13px;font-weight:700}
+  .tool.off{border-color:var(--line);color:var(--muted)}
+
+  /* The step bar is a map, not a gate: every step is reachable from the
+     first second, and the mark only reports what has been done. */
+  .steps{flex:none;display:flex;background:var(--paper);
+         border-bottom:1px solid var(--line);overflow-x:auto}
+  .steps button{flex:1;min-width:92px;border:0;background:none;cursor:pointer;
+       padding:7px 6px 6px;font-family:var(--font);color:var(--muted);
+       border-bottom:3px solid transparent;text-align:center}
+  .steps b{display:block;font-family:var(--jp);font-size:15px;color:var(--ink);
+       font-weight:700;line-height:1.2}
+  .steps i{display:block;font-style:normal;font-size:10.5px;
+       letter-spacing:.05em;text-transform:uppercase}
+  .steps .done{color:var(--ok);font-weight:700}
+  .steps button[aria-current]{border-bottom-color:var(--deep)}
+  .steps button[aria-current] i{color:var(--deep)}
+
+  main{flex:1;min-height:0;display:flex;flex-direction:column;
+       padding:10px 14px 12px;max-width:1180px;width:100%;margin:0 auto}
+  .rule{flex:none;background:#fffbe9;border:1px solid #e0cf9a;border-radius:9px;
+        padding:8px 11px;margin-bottom:9px;font-size:14px;line-height:1.45}
+  .rule b{font-size:11px;letter-spacing:.09em;text-transform:uppercase;
+        color:#7a6320;display:block;margin-bottom:2px}
+  .rule .eg{font-family:var(--jp);font-size:15.5px;margin-top:4px}
+  .rule .eg em{font-style:normal;font-family:var(--font);font-size:13px;
+        color:var(--muted);margin-left:7px}
+  .work{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain}
+  .foot{flex:none;display:flex;align-items:center;gap:10px;margin-top:9px;
+        font-size:13px;color:var(--muted)}
+  .foot .sp{flex:1}
+
+  .btn{border:2px solid var(--deep);background:var(--deep);color:#fff;
+       border-radius:9px;min-height:42px;padding:0 15px;cursor:pointer;
+       font-family:var(--font);font-size:15px;font-weight:700}
+  .btn.ghost{background:#fff;color:var(--deep)}
+  .btn.sm{min-height:36px;font-size:13.5px;padding:0 11px}
+  .btn[disabled]{opacity:.4;cursor:default}
+
+  /* Colour is a taxonomy: い is always this blue, な always this purple,
+     and a noun always grey, on every screen. Right and wrong are a tick
+     or a cross and a word, never a colour on its own. */
+  .k-i{color:var(--i)} .k-na{color:var(--na)} .k-noun{color:var(--noun)}
+  .legend{flex:none;display:flex;gap:16px;font-size:12px;color:var(--muted);
+       background:var(--paper);border-bottom:1px solid var(--line);
+       padding:4px 14px}
+  .legend s{text-decoration:none;display:inline-flex;align-items:center;gap:5px}
+  .legend s:before{content:"";width:11px;height:11px;border-radius:3px;
+       background:currentColor}
+  .legend .k-i:before{background:var(--i)}
+  .legend .k-na:before{background:var(--na)}
+  .legend .k-noun:before{background:var(--noun)}
+
+  .grid{display:grid;gap:8px}
+  .cards{grid-template-columns:repeat(auto-fill,minmax(148px,1fr));
+         align-content:start}
+  .card{border:2px solid var(--line);border-radius:9px;background:var(--paper);
+        padding:9px 10px;cursor:pointer;font-family:var(--font);font-size:14px;
+        text-align:left;color:inherit;min-height:52px}
+  .card .ja{font-family:var(--jp);font-size:18px;display:block;line-height:1.5}
+  /* A word card is the word and its play button side by side, not the
+     button wrapping onto a line of its own. */
+  #ja .card{display:flex;align-items:center;gap:9px}
+  #ja .card .ja{flex:1;min-width:0}
+  #six .card{display:flex;flex-direction:column;align-items:center;gap:4px}
+  .card.pick{border-color:var(--deep);background:#eef3f9}
+  .card.yes{border-color:var(--ok);background:#f1f8f2}
+  .card.no{border-color:var(--accent);background:#fdf2f2}
+  .card.gone{opacity:.25;pointer-events:none}
+  ruby rt{font-size:.5em;font-weight:400;color:var(--muted)}
+  body.nofuri ruby rt{visibility:hidden}
+  body.noen .en{display:none}
+  .en{font-size:12.5px;color:var(--muted);display:block}
+
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:10px;height:100%}
+  .col{border:2px dashed var(--line);border-radius:9px;padding:8px;
+       display:flex;flex-direction:column;min-height:0}
+  .col h4{font-family:var(--jp);font-size:17px;margin-bottom:6px;flex:none}
+  .col .in{flex:1;min-height:0;overflow:auto;display:flex;flex-wrap:wrap;
+       gap:6px;align-content:flex-start}
+  .col.i{border-color:var(--i)} .col.i h4{color:var(--i)}
+  .col.na{border-color:var(--na)} .col.na h4{color:var(--na)}
+  .chip{border:2px solid var(--line);border-radius:8px;background:var(--paper);
+        padding:6px 10px;font-family:var(--jp);font-size:17px;cursor:pointer;
+        color:inherit;min-height:40px}
+  .chip.yes{border-color:var(--ok)} .chip.no{border-color:var(--accent)}
+  .chip.pick{border-color:var(--deep);background:#eef3f9}
+  .col{cursor:pointer} .col:focus{outline:2px solid var(--deep);outline-offset:2px}
+  .chip.gone{opacity:.3;pointer-events:none}
+
+  .fig{display:block;margin:0 auto;height:100%;max-height:260px}
+  .who{display:flex;gap:16px;align-items:flex-start;height:100%}
+  .who .q{display:flex;flex-direction:column;min-height:0}
+  #ta{flex:none}
+  .who .pic{flex:none;width:150px}
+  .who .q{flex:1;min-width:0}
+  .jp{font-family:var(--jp);font-size:21px;line-height:1.7}
+  .say{border:2px solid var(--deep);background:#fff;border-radius:8px;
+       width:36px;height:36px;cursor:pointer;padding:0;color:var(--deep);
+       font-size:15px;vertical-align:middle}
+  body:not(.hasvoice) .say{display:none}
+
+  .tiles{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:9px}
+  .slot{min-height:52px;border:2px dashed var(--line);border-radius:9px;
+        padding:7px;display:flex;flex-wrap:wrap;gap:7px;align-content:flex-start}
+
+  textarea{width:100%;font-family:var(--jp);font-size:19px;line-height:1.7;
+       border:2px solid var(--line);border-radius:9px;padding:9px 11px;
+       resize:none;background:var(--paper);color:inherit}
+  textarea:focus{border-color:var(--deep);outline:none}
+  .mark{border-left:4px solid var(--line);padding:5px 10px;margin:6px 0;
+        font-size:14px}
+  .mark.yes{border-color:var(--ok)} .mark.no{border-color:var(--accent)}
+  .mark.hm{border-color:#b8860b}
+  .mark b{display:block;font-size:11px;letter-spacing:.08em;
+        text-transform:uppercase;color:var(--muted)}
+  .score{font-size:13px;color:var(--muted)}
+  .score b{color:var(--ink);font-size:16px}
+  @media (max-width:760px){
+    .bar{padding:6px 10px} .tool{padding:0 8px;font-size:12px}
+    .legend{padding:4px 10px;gap:12px}
+    .steps button{min-width:78px} .steps b{font-size:13.5px}
+  }
+  @media (max-width:700px){
+    .who{flex-direction:column} .who .pic{width:120px;margin:0 auto}
+    .cols{grid-template-columns:1fr}
+    main{padding:8px 10px 10px}
+  }
+</style>
+</head>
+<body class="">
+<div class="bar">
+  <h1>ひと<span>Describing people</span></h1>
+  <div class="sp"></div>
+  <button class="tool" id="furiBtn">ふりがな</button>
+  <button class="tool" id="enBtn">EN</button>
+  <button class="tool" id="resetBtn">Reset</button>
+</div>
+<nav class="steps" id="steps"></nav>
+<div class="legend" id="legend"></div>
+<main id="main"></main>
+<script src="data/words.js"></script>
+<script src="data/people.js"></script>
+<script src="data/audio.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
