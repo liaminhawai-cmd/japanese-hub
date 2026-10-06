@@ -360,53 +360,141 @@
   $("legend").innerHTML =
     '<s class="k-i">い</s><s class="k-na">な</s><s class="k-noun">noun</s>';
 
-  /* ---- 1. ことば ---- */
+  /* ---- ことば ----
+     The chip does not say what it is. It plays. A student has to listen,
+     decide, and put it somewhere, which is a different job from reading
+     あかい and finding "red" in the next column: that one can be finished
+     by elimination without knowing a word.
+
+     Drag it, or tap the chip and then tap a meaning. Both work, because a
+     trackpad and a thumb are not the same thing and neither is an excuse.
+
+     The spelling is withheld until the chip lands, then shown: the written
+     form is the reward for getting it right, not the clue. If the device
+     has no recordings at all the chip shows the word instead, because a
+     silent chip is not a question. */
   var mRound = 0, mOrder = null;
+  var SPK = '<svg viewBox="0 0 24 24" aria-hidden="true">'
+    + '<path fill="currentColor" d="M4 9v6h4l5 4V5L8 9H4z"/>'
+    + '<path fill="none" stroke="currentColor" stroke-width="2"'
+    + ' stroke-linecap="round" d="M16.5 8.8a4.5 4.5 0 0 1 0 6.4"/></svg>';
   DRAW.match = function(){
     var per = 6, rounds = Math.ceil(W.words.length / per);
     mRound = mRound % rounds;
-    /* Shuffled once per visit, so a set is a mix of nouns and both kinds
-       of adjective rather than the order they happen to sit in the file. */
     if (!mOrder) mOrder = shuffle(W.words);
     var set = mOrder.slice(mRound * per, mRound * per + per);
-    var left = shuffle(set), right = shuffle(set);
-    var pick = null, got = 0;
+    var silent = !Object.keys(CLIPS).length;
+    var chips = shuffle(set), slots = shuffle(set);
+    var left = set.length, miss = {}, pick = null;
+
     $("main").innerHTML = ruleFor("match")
-      + '<div class="work"><div class="grid" style="grid-template-columns:1fr 1fr">'
-      + '<div class="grid cards" id="ja"></div>'
-      + '<div class="grid cards" id="en"></div></div></div>'
-      + '<div class="foot"><span class="score">Set ' + (mRound + 1) + ' of '
-      + rounds + '</span><span class="sp"></span>'
+      + '<div class="work"><div class="wslots" id="slots"></div></div>'
+      + '<div class="foot"><span class="score" id="sc"></span>'
+      + '<div class="wtray" id="tray"></div><span class="sp"></span>'
+      + '<span class="hint">' + (silent
+          ? 'Drag a word onto its meaning.'
+          : 'Listen, then drag it onto its meaning.') + '</span>'
       + '<button class="btn ghost sm" id="next">Next six</button></div>';
-    $("ja").innerHTML = left.map(function(x){
-      /* A card that holds a play button cannot itself be a button: the
-         parser throws the inner one straight back out of the outer one. */
-      return '<div class="card" role="button" tabindex="0" data-w="'
-        + esc(x.kana) + '">'
-        + '<span class="ja k-' + x.kind + '">' + ruby(x.ja) + '</span>'
-        + saybtn(x.ja) + '</div>';
+    $("slots").innerHTML = slots.map(function(x){
+      return '<div class="wslot" data-m="' + esc(x.kana) + '">'
+        + '<span class="mean">' + esc(x.en) + '</span>'
+        + '<span class="got"></span></div>';
     }).join("");
-    $("en").innerHTML = right.map(function(x){
-      return '<button class="card" data-m="' + esc(x.kana) + '">'
-        + esc(x.en) + '</button>';
+    $("tray").innerHTML = chips.map(function(x, i){
+      return '<div class="wchip" data-w="' + esc(x.kana) + '" tabindex="0"'
+        + ' role="button" aria-label="Word ' + (i + 1) + ', listen">'
+        + '<span class="num">' + (i + 1) + '</span>'
+        + (silent ? '<span class="jp" style="font-size:17px">' + ruby(x.ja)
+                    + '</span>' : SPK) + '</div>';
     }).join("");
-    function reset(){ each($("main"), ".card.pick", function(c){ c.classList.remove("pick"); }); }
-    each($("main"), "[data-w]", function(b){
-      b.onclick = function(){ reset(); pick = b; b.classList.add("pick"); };
-    });
-    each($("main"), "[data-m]", function(b){
-      b.onclick = function(){
-        if (!pick) return;
-        var ok = pick.dataset.w === b.dataset.m;
-        if (ok){
-          pick.classList.add("gone"); b.classList.add("gone");
-          pick.classList.remove("pick"); pick = null; got++;
-          if (got === set.length) done("match");
-        } else {
-          b.classList.add("no");
-          setTimeout(function(){ b.classList.remove("no"); }, 600);
-          reset(); pick = null;
+    function score(){
+      $("sc").innerHTML = '<b>' + (set.length - left) + '</b> of ' + set.length
+        + ' · set ' + (mRound + 1) + ' of ' + rounds;
+    }
+    score();
+    function wordOf(kana){
+      var f = null;
+      set.forEach(function(x){ if (x.kana === kana) f = x; });
+      return f;
+    }
+    function land(chip, slot){
+      var kana = chip.dataset.w, ok = slot.dataset.m === kana, x = wordOf(kana);
+      if (ok){
+        slot.classList.add("yes");
+        slot.querySelector(".got").innerHTML = ruby(x.ja) + ' '
+          + saybtn(x.ja);
+        chip.remove();
+        left--; score();
+        wireSay();
+        if (!left) done("match");
+      } else {
+        slot.classList.add("no");
+        setTimeout(function(){ slot.classList.remove("no"); }, 700);
+        miss[kana] = (miss[kana] || 0) + 1;
+        /* Stuck twice on the same word: show the spelling. The rung is
+           generous early and it comes off as soon as it is not needed. */
+        if (miss[kana] >= 2 && !silent && !chip.dataset.shown){
+          chip.dataset.shown = "1";
+          chip.innerHTML = '<span class="num">' + chip.querySelector(".num").textContent
+            + '</span><span class="jp" style="font-size:16px">' + ruby(x.ja)
+            + '</span>';
         }
+      }
+    }
+    function clearPick(){
+      each($("main"), ".wchip.pick", function(c){ c.classList.remove("pick"); });
+      pick = null;
+    }
+    each($("main"), ".wchip", function(chip){
+      var drag = null;
+      chip.addEventListener("pointerdown", function(ev){
+        say(wordOf(chip.dataset.w).ja);
+        var r = chip.getBoundingClientRect();
+        drag = { x:ev.clientX, y:ev.clientY, dx:ev.clientX - r.left,
+                 dy:ev.clientY - r.top, w:r.width, h:r.height, moved:0 };
+        try { chip.setPointerCapture(ev.pointerId); } catch (e){}
+      });
+      chip.addEventListener("pointermove", function(ev){
+        if (!drag) return;
+        drag.moved = Math.max(drag.moved,
+          Math.abs(ev.clientX - drag.x) + Math.abs(ev.clientY - drag.y));
+        if (drag.moved < 7) return;
+        ev.preventDefault();
+        chip.classList.add("dragging");
+        chip.style.width = drag.w + "px";
+        chip.style.height = drag.h + "px";
+        chip.style.left = (ev.clientX - drag.dx) + "px";
+        chip.style.top = (ev.clientY - drag.dy) + "px";
+        var over = document.elementFromPoint(ev.clientX, ev.clientY);
+        over = over && over.closest ? over.closest(".wslot") : null;
+        each($("main"), ".wslot.over", function(sx){ sx.classList.remove("over"); });
+        if (over) over.classList.add("over");
+      });
+      function drop(ev){
+        if (!drag) return;
+        var moved = drag.moved;
+        drag = null;
+        each($("main"), ".wslot.over", function(sx){ sx.classList.remove("over"); });
+        if (moved < 7){
+          /* a tap: choose this chip, then tap a meaning */
+          var was = chip.classList.contains("pick");
+          clearPick();
+          if (!was){ chip.classList.add("pick"); pick = chip; }
+          return;
+        }
+        chip.classList.remove("dragging");
+        chip.style.cssText = "";
+        var el = document.elementFromPoint(ev.clientX, ev.clientY);
+        var slot = el && el.closest ? el.closest(".wslot") : null;
+        if (slot && !slot.classList.contains("yes")) land(chip, slot);
+      }
+      chip.addEventListener("pointerup", drop);
+      chip.addEventListener("pointercancel", drop);
+    });
+    each($("main"), ".wslot", function(slot){
+      slot.onclick = function(){
+        if (!pick || slot.classList.contains("yes")) return;
+        var c = pick; clearPick(); land(c, slot);
       };
     });
     $("next").onclick = function(){ mRound++; draw(); };

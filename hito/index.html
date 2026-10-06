@@ -71,6 +71,7 @@
   .foot{flex:none;display:flex;align-items:center;gap:10px;margin-top:9px;
         font-size:13px;color:var(--muted)}
   .foot .sp{flex:1}
+  .hint{font-size:12.5px;color:var(--muted)}
 
   .btn{border:2px solid var(--deep);background:var(--deep);color:#fff;
        border-radius:9px;min-height:42px;padding:0 15px;cursor:pointer;
@@ -129,6 +130,38 @@
   .chip.pick{border-color:var(--deep);background:#eef3f9}
   .col{cursor:pointer} .col:focus{outline:2px solid var(--deep);outline-offset:2px}
   .chip.gone{opacity:.3;pointer-events:none}
+
+  /* ---------- ことば: listen, then drag ----------
+     touch-action is what lets a thumb drag a chip instead of scrolling
+     the page out from under it. */
+  .wslots{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));
+          gap:9px;align-content:start}
+  .wslot{border:2px dashed var(--line);border-radius:10px;padding:8px 11px;
+         min-height:64px;display:flex;align-items:center;gap:10px;
+         background:var(--paper)}
+  .wslot .mean{flex:1;font-size:15px}
+  .wslot .got{font-family:var(--jp);font-size:19px;display:flex;
+              align-items:center;gap:7px}
+  .wslot.over{border-color:var(--deep);border-style:solid;background:#eef3f9}
+  .wslot.yes{border-style:solid;border-color:var(--ok);background:#f1f8f2}
+  .wslot.no{border-color:var(--accent);background:#fdf2f2}
+  .wtray{display:flex;flex-wrap:wrap;gap:9px;flex:1}
+  .wchip{width:76px;height:58px;border:2px solid var(--deep);border-radius:10px;
+         background:var(--paper);color:var(--deep);display:flex;
+         align-items:center;justify-content:center;cursor:grab;
+         position:relative;touch-action:none;-webkit-user-select:none;
+         user-select:none}
+  .wchip .num{position:absolute;top:2px;left:6px;font-size:11px;
+              font-weight:700;color:var(--muted)}
+  .wchip svg{width:24px;height:24px}
+  .wchip .jp{color:var(--ink)}
+  .wchip.pick{background:#eef3f9;box-shadow:0 0 0 3px rgba(22,55,94,.18)}
+  .wchip.dragging{position:fixed;z-index:60;pointer-events:none;cursor:grabbing;
+         box-shadow:0 8px 20px rgba(0,0,0,.25);margin:0}
+  @media (max-width:760px){
+    .wslots{grid-template-columns:1fr 1fr}
+    .wchip{width:62px;height:52px}
+  }
 
   .fig{display:block;margin:0 auto;height:100%;max-height:260px}
   .who{display:flex;gap:16px;align-items:flex-start;height:100%}

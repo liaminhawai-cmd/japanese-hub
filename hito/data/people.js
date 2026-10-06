@@ -263,13 +263,6 @@ window.HITO_PEOPLE = {
   },
   "rules": [
     {
-      "step": "match",
-      "title": "ことば",
-      "title_en": "Words",
-      "rule": "Japanese adjectives come in two kinds, and they behave differently later. Learn each word with its kind attached.",
-      "eg": []
-    },
-    {
       "step": "sort",
       "title": "い か な",
       "title_en": "い or な",
