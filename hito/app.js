@@ -311,12 +311,15 @@
   }
 
   /* ================= the steps ================= */
+  /* だれですか opens, because the problem should arrive before the method:
+     a student meets the six and tries to tell them apart before anybody
+     has taught them a word. The writing step stays last. */
   var STEPS = [
+    { id:"who",   ja:"だれですか", en:"Who is it?" },
     { id:"match", ja:"ことば",     en:"Words" },
     { id:"sort",  ja:"い か な",   en:"い or な" },
     { id:"part",  ja:"〜が 〜です", en:"Part by part" },
     { id:"join",  ja:"〜くて",     en:"Joining" },
-    { id:"who",   ja:"だれですか", en:"Who is it?" },
     { id:"colour",ja:"いろ",       en:"Colours" },
     { id:"wear",  ja:"きています", en:"Wearing" },
     { id:"write", ja:"かいて",     en:"Write it" }
