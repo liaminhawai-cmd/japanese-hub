@@ -189,6 +189,31 @@
   .mark.hm{border-color:#b8860b}
   .mark b{display:block;font-size:11px;letter-spacing:.08em;
         text-transform:uppercase;color:var(--muted)}
+  /* the two sorting steps: the phrase the answer builds, right or wrong */
+  .ph{font-family:var(--jp);font-size:18px;line-height:1.45;margin:2px 0}
+  .ph i{font-style:normal;font-family:var(--font);font-size:11px;
+        letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+        margin-right:8px}
+  .ph.bad{color:var(--accent)}
+  .mark .ph b{display:inline;font-size:inherit;letter-spacing:0;
+        text-transform:none;color:var(--ok)}
+  .ph .add{color:var(--ok)}
+  .ph .sw,.chip .sw{display:inline-block;width:14px;height:14px;border-radius:3px;
+        border:1px solid rgba(20,25,32,.35);vertical-align:-1px;margin-right:6px}
+  .mark p{font-size:12.5px;line-height:1.4;color:var(--muted);margin-top:3px}
+  .mark .jp-in{font-family:var(--jp)}
+  .mark .btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:9px}
+  .fbslot{flex:none;max-height:40vh;overflow:auto}
+  .work.fit{flex:0 1 auto}
+  /* A short screen (an older phone, or a laptop with a toolbar open)
+     gives the rule box a scroll of its own rather than pushing the
+     exercise off the bottom of the page. */
+  @media (max-height:640px){
+    .rule{max-height:72px;overflow:auto}
+    .slot#pool{max-height:56px;overflow:auto}
+    .col h4{font-size:15px;margin-bottom:4px}
+  }
+  .fbslot .mark{margin:8px 0 0}
   .score{font-size:13px;color:var(--muted)}
   .score b{color:var(--ink);font-size:16px}
   @media (max-width:760px){
@@ -198,7 +223,6 @@
   }
   @media (max-width:700px){
     .who{flex-direction:column} .who .pic{width:120px;margin:0 auto}
-    .cols{grid-template-columns:1fr}
     main{padding:8px 10px 10px}
   }
 </style>

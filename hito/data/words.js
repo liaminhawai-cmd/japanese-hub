@@ -31,6 +31,13 @@
    The sanity check now refuses a handful of place-only adjectives as
    personality words; extend that list as you meet more.
 
+   EACH SORTABLE ADJECTIVE CARRIES THE NOUN IT GOES IN FRONT OF, because
+   the い/な step pays off by building the phrase: やさしい 人 but 親切な 人.
+   長い belongs with かみ and 大きい with 目, not with 人, so the pairing is
+   recorded word by word rather than guessed. 高い has no noun of its own
+   here: 高い人 means an expensive person, so it carries a frame sentence
+   instead and the step shows せが 高いです。
+
    DESCRIPTORS. Hair, eyes, height, glasses, age and personality. No body
    size and no skin colour: a Year 8 room is the wrong place to hand out
    vocabulary that can be aimed at the person at the next desk.
@@ -77,20 +84,6 @@ window.HITO_WORDS = {
       "group": "face"
     },
     {
-      "ja": "かお",
-      "kana": "かお",
-      "en": "face",
-      "kind": "noun",
-      "group": "face"
-    },
-    {
-      "ja": "手[て]",
-      "kana": "て",
-      "en": "hands",
-      "kind": "noun",
-      "group": "face"
-    },
-    {
       "ja": "せ",
       "kana": "せ",
       "en": "height",
@@ -111,35 +104,40 @@ window.HITO_WORDS = {
       "kana": "ながい",
       "en": "long",
       "kind": "i",
-      "group": "look"
+      "group": "look",
+      "with": "かみ"
     },
     {
       "ja": "短[みじか]い",
       "kana": "みじかい",
       "en": "short (length)",
       "kind": "i",
-      "group": "look"
+      "group": "look",
+      "with": "かみ"
     },
     {
       "ja": "大[おお]きい",
       "kana": "おおきい",
       "en": "big",
       "kind": "i",
-      "group": "look"
+      "group": "look",
+      "with": "目[め]"
     },
     {
       "ja": "小[ちい]さい",
       "kana": "ちいさい",
       "en": "small",
       "kind": "i",
-      "group": "look"
+      "group": "look",
+      "with": "目[め]"
     },
     {
       "ja": "高[たか]い",
       "kana": "たかい",
       "en": "tall, high",
       "kind": "i",
-      "group": "body"
+      "group": "body",
+      "frame": "せが 高[たか]いです。"
     },
     {
       "ja": "くろい",
@@ -156,74 +154,60 @@ window.HITO_WORDS = {
       "group": "colour"
     },
     {
-      "ja": "わかい",
-      "kana": "わかい",
-      "en": "young",
-      "kind": "i",
-      "group": "body"
-    },
-    {
       "ja": "やさしい",
       "kana": "やさしい",
       "en": "kind, gentle",
       "kind": "i",
-      "group": "person"
+      "group": "person",
+      "with": "人[ひと]"
     },
     {
       "ja": "おもしろい",
       "kana": "おもしろい",
       "en": "funny, interesting",
       "kind": "i",
-      "group": "person"
+      "group": "person",
+      "with": "人[ひと]"
     },
     {
       "ja": "あかるい",
       "kana": "あかるい",
       "en": "cheerful, bright",
       "kind": "i",
-      "group": "person"
+      "group": "person",
+      "with": "人[ひと]"
     },
     {
       "ja": "親切[しんせつ]",
       "kana": "しんせつ",
       "en": "kind, helpful",
       "kind": "na",
-      "group": "person"
+      "group": "person",
+      "with": "人[ひと]"
     },
     {
       "ja": "元気[げんき]",
       "kana": "げんき",
       "en": "full of energy",
       "kind": "na",
-      "group": "person"
+      "group": "person",
+      "with": "人[ひと]"
     },
     {
       "ja": "まじめ",
       "kana": "まじめ",
       "en": "serious, hard-working",
       "kind": "na",
-      "group": "person"
+      "group": "person",
+      "with": "人[ひと]"
     },
     {
       "ja": "しずか",
       "kana": "しずか",
       "en": "quiet",
       "kind": "na",
-      "group": "person"
-    },
-    {
-      "ja": "ゆうめい",
-      "kana": "ゆうめい",
-      "en": "famous",
-      "kind": "na",
-      "group": "person"
-    },
-    {
-      "ja": "ハンサム",
-      "kana": "ハンサム",
-      "en": "handsome",
-      "kind": "na",
-      "group": "person"
+      "group": "person",
+      "with": "人[ひと]"
     },
     {
       "ja": "あかい",
@@ -268,14 +252,6 @@ window.HITO_WORDS = {
       "kind": "noun",
       "group": "colour",
       "note": "A noun, so it needs の: ピンクの シャツ."
-    },
-    {
-      "ja": "オレンジ",
-      "kana": "オレンジ",
-      "en": "orange",
-      "kind": "noun",
-      "group": "colour",
-      "note": "A noun, so it needs の."
     },
     {
       "ja": "むらさき",
@@ -431,7 +407,6 @@ window.HITO_WORDS = {
     "ちゃいろい": "#8a5a2b",
     "みどり": "#3f8f5a",
     "ピンク": "#e2869f",
-    "オレンジ": "#d9772c",
     "むらさき": "#7a4a9e"
   }
 };

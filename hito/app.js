@@ -500,61 +500,178 @@
     $("next").onclick = function(){ mRound++; draw(); };
   };
 
-  /* ---- 2. い か な ----
-     Pick a word, then say which kind it is. The chip goes wherever it is
-     sent and is then told whether that was right: a wrong answer is
-     marked and handed back, never refused. */
-  DRAW.sort = function(){
-    var adj = shuffle(W.words.filter(function(x){
-      return (x.kind === "i" || x.kind === "na") && x.group !== "colour";
-    }));
-    var left = adj.length, pick = null;
-    $("main").innerHTML = ruleFor("sort")
-      + '<div class="work">'
+  /* ---- sorting, used by step 3 and step 6 ----
+     Two columns, a pool of chips, and a rule that decides which side a
+     word belongs on. What the first version did not do: it said nothing
+     visible when the answer was wrong (it set a title attribute, which no
+     thumb will ever hover over), and it stopped dead when the last chip
+     landed, with no way on and nothing further to do.
+
+     Both are fixed here. A right answer builds the phrase the word is
+     actually for, so the payoff is the grammar and not a tick. A wrong one
+     puts the phrase the student just asked for beside the one they meant,
+     and hands the chip back. The end of a round names the words that
+     needed a second go, and offers another round or the next step. */
+  /* A round with only one kind in it is not a sort, so the deal takes as
+     near to half of each as the lists allow instead of trusting a shuffle. */
+  function deal(list, n, kindOf){
+    var by = {}, keys = [];
+    list.forEach(function(w){
+      var k = kindOf(w);
+      if (!by[k]){ by[k] = []; keys.push(k); }
+      by[k].push(w);
+    });
+    keys.forEach(function(k){ by[k] = shuffle(by[k]); });
+    var out = [], i = 0;
+    while (out.length < n){
+      var moved = false;
+      for (var j = 0; j < keys.length; j++){
+        var pool = by[keys[j]];
+        if (i < pool.length && out.length < n){ out.push(pool[i]); moved = true; }
+      }
+      if (!moved) break;
+      i++;
+    }
+    return shuffle(out);
+  }
+
+  function sortGame(cfg){
+    var items = cfg.items, left = items.length, pick = null, again = {};
+    var nxt = STEPS[at + 1];
+    $("main").innerHTML = ruleFor(cfg.id)
+      /* fit, not fill: on a laptop the columns sit under the pool and the
+         feedback sits under them, instead of the two being driven to
+         opposite ends of a half-empty screen. */
+      + '<div class="work fit">'
       + '<div class="slot" id="pool" style="margin-bottom:10px"></div>'
-      + '<div class="cols" style="height:auto;min-height:150px">'
-      + '<div class="col i" id="ci" role="button" tabindex="0">'
-      + '<h4 class="k-i">\u3044</h4><div class="in"></div></div>'
-      + '<div class="col na" id="cn" role="button" tabindex="0">'
-      + '<h4 class="k-na">\u306a</h4><div class="in"></div></div></div></div>'
+      + '<div class="cols" style="height:auto;min-height:76px">'
+      + cfg.cols.map(function(c){
+          return '<div class="col ' + c.cls + '" data-c="' + c.key + '"'
+            + ' role="button" tabindex="0"><h4>' + c.head + '</h4>'
+            + '<div class="in"></div></div>';
+        }).join("")
+      + '</div></div>'
+      /* The feedback sits outside the scrolling area, under it. Put
+         it above the columns and every answer pushes the columns off
+         the bottom of a phone, so the student has to go looking for
+         the thing they were just tapping. */
+      + '<div id="fb" class="fbslot"></div>'
       + '<div class="foot"><span class="score" id="sc"></span>'
-      + '<span class="sp"></span><span>Tap a word, then tap \u3044 or \u306a.</span></div>';
-    $("pool").innerHTML = adj.map(function(x, i){
-      return '<button class="chip" data-i="' + i + '" data-k="' + x.kind
-        + '" data-w="' + esc(x.kana) + '">' + ruby(x.ja) + '</button>';
+      + '<span class="sp"></span><span id="tip"></span></div>';
+    $("pool").innerHTML = items.map(function(w, i){
+      return '<button class="chip" data-i="' + i + '">'
+        + (cfg.chip ? cfg.chip(w) : ruby(w.ja)) + '</button>';
     }).join("");
     function score(){
-      $("sc").innerHTML = '<b>' + (adj.length - left) + '</b> of ' + adj.length;
+      $("sc").innerHTML = '<b>' + (items.length - left) + '</b> of ' + items.length;
     }
-    score();
-    each($("main"), "[data-i]", function(c){
+    function tip(t){ $("tip").textContent = t; }
+    score(); tip(cfg.hint);
+
+    each($("main"), ".chip[data-i]", function(c){
       c.onclick = function(){
         each($("main"), ".chip.pick", function(x){ x.classList.remove("pick"); });
-        pick = c; c.classList.add("pick");
+        pick = c; c.classList.add("pick"); tip(cfg.then);
       };
     });
-    [["ci", "i"], ["cn", "na"]].forEach(function(pair){
-      $(pair[0]).onclick = function(ev){
-        if (ev.target.closest(".chip")) return;
-        if (!pick) return;
-        var c = pick, want = c.dataset.k, ok = want === pair[1];
-        pick = null;
-        c.classList.remove("pick");
-        c.classList.add(ok ? "yes" : "no");
-        if (ok){
-          $(pair[0]).querySelector(".in").appendChild(c);
-          c.classList.add("gone");
-          left--; score();
-          if (!left) done("sort");
-        } else {
-          /* Named, with the rule, not just reddened. */
-          c.title = c.dataset.w + " is a " + want
-            + " adjective: " + (want === "i"
-              ? "it ends in \u3044 and changes its own ending."
-              : "it needs \u306a before a noun.");
-          setTimeout(function(){ c.classList.remove("no"); }, 1400);
-        }
+
+    function finish(){
+      done(cfg.id);
+      var list = Object.keys(again);
+      $("fb").innerHTML = '<div class="mark yes"><b>Round finished</b>'
+        + 'All ' + items.length + ' sorted.'
+        + (list.length ? ' Worth another look: <span class="jp-in">'
+            + list.map(esc).join("\u3001") + '</span>.' : "")
+        + '<p>' + esc(cfg.closing) + '</p>'
+        + '<div class="btns">'
+        + '<button class="btn sm ghost" id="again">Another round</button>'
+        + (nxt ? '<button class="btn sm" id="onwards">Next: ' + esc(nxt.en)
+                 + ' \u2192</button>' : "")
+        + '</div></div>';
+      tip("");
+      $("again").onclick = function(){ if (cfg.next) cfg.next(); draw(); };
+      if ($("onwards")) $("onwards").onclick = function(){ at++; draw(); };
+    }
+
+    function land(key, col){
+      if (!pick) return;
+      var c = pick, w = items[+c.dataset.i], ok = cfg.kindOf(w) === key;
+      pick = null; c.classList.remove("pick");
+      if (ok){
+        c.classList.add("yes", "gone");
+        col.querySelector(".in").appendChild(c);
+        left--; score();
+        $("fb").innerHTML = '<div class="mark yes"><b>Yes</b>'
+          + '<div class="ph">' + cfg.right(w) + '</div></div>';
+        /* an empty dashed box is not worth the room it takes */
+        if (!left){ $("pool").style.display = "none"; return finish(); }
+        tip(cfg.hint);
+      } else {
+        c.classList.add("no");
+        again[w.kana] = 1;
+        var asked = cfg.wrong(w, key);
+        /* No heading line: the red edge and the two labels already say it,
+           and on a 320px phone every line costs a column header. */
+        $("fb").innerHTML = '<div class="mark no">'
+          + (asked ? '<div class="ph bad"><i>not</i>' + asked + '</div>' : "")
+          + '<div class="ph"><i>yes</i>' + cfg.right(w) + '</div>'
+          + '<p>' + esc(cfg.why(w)) + '</p></div>';
+        setTimeout(function(){ c.classList.remove("no"); }, 1400);
+        tip(cfg.hint);
+      }
+    }
+
+    each($("main"), "[data-c]", function(col){
+      function go(ev){
+        if (ev && ev.target.closest(".chip")) return;
+        land(col.dataset.c, col);
+      }
+      col.onclick = go;
+      col.onkeydown = function(ev){
+        if (ev.key === "Enter" || ev.key === " "){ ev.preventDefault(); go(null); }
       };
+    });
+  }
+
+  /* ---- 2. \u3044 \u304b \u306a ----
+     Six at a time, drawn fresh each round, so "another round" is another
+     exercise and not the same twelve reshuffled. Each adjective carries
+     the noun it belongs in front of, because \u9577\u3044 goes with \u304b\u307f and not with
+     \u4eba, and a step that built \u9577\u3044 \u4eba would be teaching the wrong thing. */
+  DRAW.sort = function(){
+    var all = W.words.filter(function(x){
+      return (x.kind === "i" || x.kind === "na") && x.group !== "colour";
+    });
+    sortGame({
+      id: "sort",
+      items: deal(all, 6, function(w){ return w.kind; }),
+      hint: "Tap a word, then tap \u3044 or \u306a.",
+      then: "Now tap \u3044 or \u306a.",
+      closing: "An \u3044 adjective goes straight in front of the noun. A \u306a "
+        + "adjective needs \u306a first.",
+      cols: [{ key:"i",  cls:"i",  head:"\u3044" },
+             { key:"na", cls:"na", head:"\u306a" }],
+      kindOf: function(w){ return w.kind; },
+      right: function(w){
+        if (w.frame) return ruby(w.frame);
+        return ruby(w.ja) + (w.kind === "na" ? '<b class="add">\u306a</b>' : "")
+          + " " + ruby(w["with"]);
+      },
+      wrong: function(w){
+        if (w.frame) return "";
+        return w.kind === "na"
+          ? ruby(w.ja) + " " + ruby(w["with"])
+          : ruby(w.ja) + '<b class="add">\u306a</b> ' + ruby(w["with"]);
+      },
+      why: function(w){
+        if (w.frame)
+          return w.kana + " is an \u3044 adjective, but for a person it goes "
+            + "with \u305b\u304c, not in front of a noun.";
+        return w.kind === "na"
+          ? w.kana + " is a \u306a adjective: it needs \u306a before a noun."
+          : w.kana + " ends in \u3044 and goes straight in front of a noun, "
+            + "with nothing added.";
+      }
     });
   };
 
@@ -709,59 +826,54 @@
     $("next").onclick = function(){ wIdx++; draw(); };
   };
 
-  /* ---- 7. いろ ----
-     い colour or の colour. Same move as step 2, on the half of the
-     vocabulary where getting it wrong produces a phrase rather than just
-     a wrong word. */
+  /* ---- 7. \u3044\u308d ----
+     \u3044 colour or \u306e colour, on a garment that changes every round, so
+     the phrase built is a different phrase each time. The chip carries
+     the colour as a swatch: that tells a student which colour it is
+     without telling them which kind it is, which is the only thing the
+     step is asking. */
+  var cIdx = 0;
+  function swatch(k){
+    var hex = (W.colour_hex || {})[k];
+    return hex ? '<span class="sw" style="background:' + esc(hex) + '"></span>' : "";
+  }
   DRAW.colour = function(){
-    var cols = shuffle(W.words.filter(function(x){ return x.group === "colour"; }));
-    var left = cols.length, pick = null;
-    $("main").innerHTML = ruleFor("colour")
-      + '<div class="work">'
-      + '<div class="slot" id="pool" style="margin-bottom:10px"></div>'
-      + '<div class="cols" style="height:auto;min-height:150px">'
-      + '<div class="col i" id="ci" role="button" tabindex="0">'
-      + '<h4 class="k-i">\u3042\u304b\u3044 \u30b7\u30e3\u30c4</h4>'
-      + '<div class="in"></div></div>'
-      + '<div class="col na" id="cn" role="button" tabindex="0">'
-      + '<h4 class="k-na">\u307f\u3069\u308a<b>\u306e</b> \u30b7\u30e3\u30c4</h4>'
-      + '<div class="in"></div></div></div></div>'
-      + '<div class="foot"><span class="score" id="sc"></span>'
-      + '<span class="sp"></span><span>Tap a colour, then tap the side it '
-      + 'belongs on.</span></div>';
-    $("pool").innerHTML = cols.map(function(x, i){
-      return '<button class="chip" data-i="' + i + '" data-k="'
-        + (x.kind === "i" ? "i" : "na") + '" data-w="' + esc(x.kana) + '">'
-        + ruby(x.ja) + '</button>';
-    }).join("");
-    function score(){
-      $("sc").innerHTML = '<b>' + (cols.length - left) + '</b> of ' + cols.length;
-    }
-    score();
-    each($("main"), "[data-i]", function(c){
-      c.onclick = function(){
-        each($("main"), ".chip.pick", function(x){ x.classList.remove("pick"); });
-        pick = c; c.classList.add("pick");
-      };
-    });
-    [["ci", "i"], ["cn", "na"]].forEach(function(pair){
-      $(pair[0]).onclick = function(ev){
-        if (ev.target.closest(".chip")) return;
-        if (!pick) return;
-        var c = pick, ok = c.dataset.k === pair[1];
-        pick = null; c.classList.remove("pick");
-        c.classList.add(ok ? "yes" : "no");
-        if (ok){
-          $(pair[0]).querySelector(".in").appendChild(c);
-          c.classList.add("gone"); left--; score();
-          if (!left) done("colour");
-        } else {
-          c.title = c.dataset.w + (c.dataset.k === "i"
-            ? " is an \u3044 adjective: it goes straight in front of the garment."
-            : " is a noun: it needs \u306e in front of the garment.");
-          setTimeout(function(){ c.classList.remove("no"); }, 1400);
-        }
-      };
+    /* めがね sits first in the word list and is the one garment a
+       colour reads oddly on, so it goes last rather than opening the step. */
+    var all = W.words.filter(function(x){ return x.kind === "garment"; });
+    var wear = all.filter(function(x){ return x.kana !== "めがね"; })
+      .concat(all.filter(function(x){ return x.kana === "めがね"; }));
+    var g = wear[cIdx % wear.length];
+    sortGame({
+      id: "colour",
+      items: deal(W.words.filter(function(x){ return x.group === "colour"; }),
+                  9, function(w){ return w.kind === "i" ? "i" : "na"; }),
+      hint: "Tap a colour, then tap the side it belongs on.",
+      then: "Now tap a side.",
+      closing: "There is no rule for telling which colour is which kind. It "
+        + "comes with the word, the same way \u3044 and \u306a do.",
+      cols: [{ key:"i",  cls:"i",
+               head:'\u3042\u304b\u3044 ' + ruby(g.ja) },
+             { key:"na", cls:"na",
+               head:'\u307f\u3069\u308a<b>\u306e</b> ' + ruby(g.ja) }],
+      kindOf: function(w){ return w.kind === "i" ? "i" : "na"; },
+      next: function(){ cIdx++; },
+      chip: function(w){ return swatch(w.kana) + ruby(w.ja); },
+      right: function(w){
+        return swatch(w.kana) + ruby(w.ja)
+          + (w.kind === "i" ? "" : '<b class="add">\u306e</b>')
+          + " " + ruby(g.ja);
+      },
+      wrong: function(w){
+        return ruby(w.ja) + (w.kind === "i" ? '<b class="add">\u306e</b>' : "")
+          + " " + ruby(g.ja);
+      },
+      why: function(w){
+        return w.kind === "i"
+          ? w.kana + " is an \u3044 adjective: nothing goes between it and "
+            + kana(g.ja) + "."
+          : w.kana + " is a noun: it needs \u306e before " + kana(g.ja) + ".";
+      }
     });
   };
 
