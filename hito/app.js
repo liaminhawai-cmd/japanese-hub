@@ -106,48 +106,95 @@
 
   /* ---- the figures ----
      Drawn from the facts, so the picture and the answer key cannot drift
-     apart. Nothing here is a photograph of anybody. */
+     apart. Nothing here is a photograph of anybody.
+
+     A whole person: head, arms, hands, legs, shoes. The hair is a cap that
+     sits on top of the skull and stops above the eyes, with long hair
+     falling behind the shoulders in two masses drawn before the head so
+     they pass behind it. Hair that wraps under the chin reads as a beard,
+     which is how the first attempt went wrong.
+
+     One drawing, scaled about the feet, so "tall" and "not tall" are the
+     same person at two sizes rather than two different builds. The clothing
+     slots take a colour each and default to plain grey. */
+  var SKIN = "#f2d9c0", SKINL = "#d9b89a";
   function figure(p, h){
     var f = p.facts;
-    var hair = f.colour === "black" ? "#2b2b2b" : "#6b4a2b";
-    var tall = f.tall;
-    var topY = tall ? 16 : 34;
-    var headR = 26, headCX = 70, headCY = topY + headR;
-    var shoulder = headCY + headR + 10;
-    var footY = 196;
-    var eyeR = f.eyes === "big" ? 5.2 : 2.8;
-    var g = [];
-    g.push('<rect x="0" y="0" width="140" height="210" fill="none"/>');
-    /* body */
-    g.push('<path d="M' + (headCX - 26) + ' ' + footY + ' L' + (headCX - 20) + ' '
-      + shoulder + ' Q' + headCX + ' ' + (shoulder - 9) + ' ' + (headCX + 20) + ' '
-      + shoulder + ' L' + (headCX + 26) + ' ' + footY + ' Z" fill="#9fb3c8"/>');
-    /* long hair falls behind the shoulders */
-    if (f.hair === "long")
-      g.push('<path d="M' + (headCX - 30) + ' ' + headCY + ' q0 ' + (headR + 44)
-        + ' 11 ' + (headR + 50) + ' l38 0 q11 -6 11 -' + (headR + 50) + ' z"'
-        + ' fill="' + hair + '" opacity=".92"/>');
-    g.push('<circle cx="' + headCX + '" cy="' + headCY + '" r="' + headR
-      + '" fill="#f3ddc8" stroke="#d8bda4" stroke-width="1.5"/>');
-    /* the fringe */
-    g.push('<path d="M' + (headCX - headR) + ' ' + headCY + ' a' + headR + ' '
-      + headR + ' 0 0 1 ' + (headR * 2) + ' 0 q-' + headR + ' -13 -'
-      + (headR * 2) + ' 0 z" fill="' + hair + '"/>');
-    g.push('<circle cx="' + (headCX - 10) + '" cy="' + (headCY + 2) + '" r="'
-      + eyeR + '" fill="#23313d"/>');
-    g.push('<circle cx="' + (headCX + 10) + '" cy="' + (headCY + 2) + '" r="'
-      + eyeR + '" fill="#23313d"/>');
-    g.push('<path d="M' + (headCX - 7) + ' ' + (headCY + 14) + ' q7 5 14 0"'
-      + ' fill="none" stroke="#9c6b57" stroke-width="2" stroke-linecap="round"/>');
+    var hair = f.colour === "black" ? "#2d2a28" : "#7a5230";
+    var c = f.clothes || {};
+    var top = c.top || "#9aa9b8", legs = c.bottom || "#55606e",
+        shoe = c.shoes || "#363d47";
+    var cx = 60, foot = 232, g = [];
+
+    /* behind everything: long hair down past the shoulders */
+    if (f.hair === "long"){
+      g.push('<path d="M36 44 q-9 60 -4 104 q14 7 18 -2 q-7 -48 -2 -98 z"'
+        + ' fill="' + hair + '"/>');
+      g.push('<path d="M84 44 q9 60 4 104 q-14 7 -18 -2 q7 -48 2 -98 z"'
+        + ' fill="' + hair + '"/>');
+    }
+    /* legs, then shoes */
+    g.push('<rect x="45" y="138" width="12" height="86" rx="6" fill="' + legs + '"/>');
+    g.push('<rect x="63" y="138" width="12" height="86" rx="6" fill="' + legs + '"/>');
+    g.push('<ellipse cx="49" cy="' + foot + '" rx="11" ry="6" fill="' + shoe + '"/>');
+    g.push('<ellipse cx="71" cy="' + foot + '" rx="11" ry="6" fill="' + shoe + '"/>');
+    /* arms outside the body, not behind it, or all you see is hands */
+    g.push('<rect x="24" y="84" width="11" height="60" rx="5.5" fill="' + top + '"/>');
+    g.push('<rect x="85" y="84" width="11" height="60" rx="5.5" fill="' + top + '"/>');
+    g.push('<circle cx="29.5" cy="148" r="6" fill="' + SKIN + '" stroke="'
+      + SKINL + '" stroke-width="1"/>');
+    g.push('<circle cx="90.5" cy="148" r="6" fill="' + SKIN + '" stroke="'
+      + SKINL + '" stroke-width="1"/>');
+    /* neck and body */
+    g.push('<rect x="54" y="63" width="12" height="20" fill="' + SKIN
+      + '" stroke="' + SKINL + '" stroke-width="1"/>');
+    g.push('<path d="M37 142 q-1 -48 5 -55 q9 -5 18 -5 q9 0 18 5 q6 7 5 55 z"'
+      + ' fill="' + top + '"/>');
+    /* head */
+    g.push('<circle cx="' + cx + '" cy="44" r="25" fill="' + SKIN
+      + '" stroke="' + SKINL + '" stroke-width="1.5"/>');
+    /* ears */
+    g.push('<circle cx="35.5" cy="46" r="5" fill="' + SKIN + '" stroke="'
+      + SKINL + '" stroke-width="1"/>');
+    g.push('<circle cx="84.5" cy="46" r="5" fill="' + SKIN + '" stroke="'
+      + SKINL + '" stroke-width="1"/>');
+    /* the hair cap: over the skull, stopping above the eyes */
+    g.push('<path d="M35 44 a25 25 0 0 1 50 0 q-4 -6 -11 -7 q-14 5 -28 2'
+      + ' q-7 1 -11 5 z" fill="' + hair + '"/>');
+    if (f.hair === "short")
+      g.push('<path d="M35 44 q0 8 2 12 q-5 -9 -2 -16 z M85 44 q0 8 -2 12'
+        + ' q5 -9 2 -16 z" fill="' + hair + '"/>');
+    /* face */
+    var er = f.eyes === "big" ? 5 : 2.6;
+    g.push('<circle cx="51" cy="47" r="' + er + '" fill="#242f3a"/>');
+    g.push('<circle cx="69" cy="47" r="' + er + '" fill="#242f3a"/>');
+    if (f.eyes === "big"){
+      g.push('<circle cx="52.4" cy="45.4" r="1.6" fill="#fff"/>');
+      g.push('<circle cx="70.4" cy="45.4" r="1.6" fill="#fff"/>');
+    }
+    g.push('<path d="M58 52 q2 3 4 0" fill="none" stroke="' + SKINL
+      + '" stroke-width="1.6" stroke-linecap="round"/>');
+    g.push('<path d="M53 58 q7 5 14 0" fill="none" stroke="#a9705c"'
+      + ' stroke-width="2" stroke-linecap="round"/>');
     if (f.glasses){
       g.push('<g fill="none" stroke="#2f3b47" stroke-width="2">'
-        + '<circle cx="' + (headCX - 10) + '" cy="' + (headCY + 2) + '" r="9"/>'
-        + '<circle cx="' + (headCX + 10) + '" cy="' + (headCY + 2) + '" r="9"/>'
-        + '<path d="M' + (headCX - 1) + ' ' + (headCY + 2) + ' h2"/></g>');
+        + '<circle cx="51" cy="47" r="9"/><circle cx="69" cy="47" r="9"/>'
+        + '<path d="M60 47h0.5"/><path d="M42 45 l-6 -2"/>'
+        + '<path d="M78 45 l6 -2"/></g>');
     }
-    return '<svg class="fig" viewBox="0 0 140 210" role="img" aria-label="'
-      + esc(p.name) + '" style="' + (h ? "max-height:" + h + "px" : "") + '">'
-      + g.join("") + '</svg>';
+    if (c.hat)
+      g.push('<path d="M34 30 a26 26 0 0 1 52 0 z" fill="' + c.hat + '"/>'
+        + '<rect x="28" y="28" width="64" height="5" rx="2.5" fill="'
+        + c.hat + '"/>');
+
+    /* tall and not tall are the same figure at two sizes, pinned at the
+       feet so both stand on the same ground */
+    var k = f.tall ? 1 : 0.84;
+    return '<svg class="fig" viewBox="0 0 120 240" role="img" aria-label="'
+      + esc(p.name) + '"' + (h ? ' style="max-height:' + h + 'px"' : '') + '>'
+      + '<g transform="translate(' + cx + ' ' + foot + ') scale(' + k
+      + ') translate(' + (-cx) + ' ' + (-foot) + ')">' + g.join("") + '</g>'
+      + '</svg>';
   }
 
   /* ---- the facts, and the sentences that are true of them ----
