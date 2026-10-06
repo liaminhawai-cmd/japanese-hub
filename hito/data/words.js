@@ -7,7 +7,20 @@
 
        人  目  手  大  小  高  長  短  元気  親切
 
-   VOCABULARY. Twenty-four words, deliberately. Each one is met six ways:
+   VOCABULARY. Twenty-four for appearance and personality, then a second
+   set for clothing: eight garments, ten colours and the five wearing
+   verbs. Two sets rather than one long list, each with its own routes.
+
+   COLOURS come in two kinds and the split is the teaching point:
+   あかい and くろい behave like any other い adjective, while みどり and
+   ピンク are nouns and need の before the garment.
+
+   WEARING VERBS are chosen by where on the body the thing goes, not by
+   what it is. Each garment records its verb and each verb its zone, so
+   the page and the marker read the same table.
+
+   The old note, still true of the first twenty-four:
+   Twenty-four words, deliberately. Each one is met six ways:
    matched to its meaning, sorted by its type, heard, used inside a frame,
    negated, and finally produced cold with nothing on screen to copy. Ten
    words with six routes outlast fifty with one.
@@ -83,8 +96,9 @@ window.HITO_WORDS = {
       "ja": "めがね",
       "kana": "めがね",
       "en": "glasses",
-      "kind": "noun",
-      "group": "face"
+      "kind": "garment",
+      "group": "clothes",
+      "verb": "kakeru"
     },
     {
       "ja": "長[なが]い",
@@ -126,14 +140,14 @@ window.HITO_WORDS = {
       "kana": "くろい",
       "en": "black",
       "kind": "i",
-      "group": "look"
+      "group": "colour"
     },
     {
       "ja": "ちゃいろい",
       "kana": "ちゃいろい",
       "en": "brown",
       "kind": "i",
-      "group": "look"
+      "group": "colour"
     },
     {
       "ja": "わかい",
@@ -211,6 +225,214 @@ window.HITO_WORDS = {
       "en": "handsome",
       "kind": "na",
       "group": "person"
+    },
+    {
+      "ja": "あかい",
+      "kana": "あかい",
+      "en": "red",
+      "kind": "i",
+      "group": "colour"
+    },
+    {
+      "ja": "あおい",
+      "kana": "あおい",
+      "en": "blue",
+      "kind": "i",
+      "group": "colour"
+    },
+    {
+      "ja": "しろい",
+      "kana": "しろい",
+      "en": "white",
+      "kind": "i",
+      "group": "colour"
+    },
+    {
+      "ja": "きいろい",
+      "kana": "きいろい",
+      "en": "yellow",
+      "kind": "i",
+      "group": "colour"
+    },
+    {
+      "ja": "みどり",
+      "kana": "みどり",
+      "en": "green",
+      "kind": "noun",
+      "group": "colour",
+      "note": "A noun, so it needs の before the thing: みどりの セーター."
+    },
+    {
+      "ja": "ピンク",
+      "kana": "ピンク",
+      "en": "pink",
+      "kind": "noun",
+      "group": "colour",
+      "note": "A noun, so it needs の: ピンクの シャツ."
+    },
+    {
+      "ja": "オレンジ",
+      "kana": "オレンジ",
+      "en": "orange",
+      "kind": "noun",
+      "group": "colour",
+      "note": "A noun, so it needs の."
+    },
+    {
+      "ja": "むらさき",
+      "kana": "むらさき",
+      "en": "purple",
+      "kind": "noun",
+      "group": "colour",
+      "note": "A noun, so it needs の."
+    },
+    {
+      "ja": "シャツ",
+      "kana": "シャツ",
+      "en": "shirt",
+      "kind": "garment",
+      "group": "clothes",
+      "verb": "kiru"
+    },
+    {
+      "ja": "Tシャツ",
+      "kana": "Tシャツ",
+      "en": "T-shirt",
+      "kind": "garment",
+      "group": "clothes",
+      "verb": "kiru"
+    },
+    {
+      "ja": "セーター",
+      "kana": "セーター",
+      "en": "jumper",
+      "kind": "garment",
+      "group": "clothes",
+      "verb": "kiru"
+    },
+    {
+      "ja": "ズボン",
+      "kana": "ズボン",
+      "en": "trousers",
+      "kind": "garment",
+      "group": "clothes",
+      "verb": "haku"
+    },
+    {
+      "ja": "スカート",
+      "kana": "スカート",
+      "en": "skirt",
+      "kind": "garment",
+      "group": "clothes",
+      "verb": "haku"
+    },
+    {
+      "ja": "くつ",
+      "kana": "くつ",
+      "en": "shoes",
+      "kind": "garment",
+      "group": "clothes",
+      "verb": "haku"
+    },
+    {
+      "ja": "ぼうし",
+      "kana": "ぼうし",
+      "en": "hat",
+      "kind": "garment",
+      "group": "clothes",
+      "verb": "kaburu"
+    },
+    {
+      "ja": "とけい",
+      "kana": "とけい",
+      "en": "watch",
+      "kind": "garment",
+      "group": "clothes",
+      "verb": "suru"
+    },
+    {
+      "ja": "きています",
+      "kana": "きています",
+      "en": "is wearing (upper body)",
+      "kind": "verb",
+      "group": "wearing",
+      "zone": "ue"
+    },
+    {
+      "ja": "はいています",
+      "kana": "はいています",
+      "en": "is wearing (lower body, feet)",
+      "kind": "verb",
+      "group": "wearing",
+      "zone": "shita"
+    },
+    {
+      "ja": "かぶっています",
+      "kana": "かぶっています",
+      "en": "is wearing (on the head)",
+      "kind": "verb",
+      "group": "wearing",
+      "zone": "atama"
+    },
+    {
+      "ja": "かけています",
+      "kana": "かけています",
+      "en": "is wearing (glasses)",
+      "kind": "verb",
+      "group": "wearing",
+      "zone": "me"
+    },
+    {
+      "ja": "しています",
+      "kana": "しています",
+      "en": "is wearing (a watch, a tie)",
+      "kind": "verb",
+      "group": "wearing",
+      "zone": "komono"
     }
-  ]
+  ],
+  "verbs": {
+    "kiru": {
+      "ja": "きています",
+      "zone": "ue",
+      "zone_en": "the upper body",
+      "eg": "シャツ, Tシャツ, セーター"
+    },
+    "haku": {
+      "ja": "はいています",
+      "zone": "shita",
+      "zone_en": "the lower body and the feet",
+      "eg": "ズボン, スカート, くつ"
+    },
+    "kaburu": {
+      "ja": "かぶっています",
+      "zone": "atama",
+      "zone_en": "the head",
+      "eg": "ぼうし"
+    },
+    "kakeru": {
+      "ja": "かけています",
+      "zone": "me",
+      "zone_en": "the eyes",
+      "eg": "めがね"
+    },
+    "suru": {
+      "ja": "しています",
+      "zone": "komono",
+      "zone_en": "small things you put on",
+      "eg": "とけい, ネクタイ"
+    }
+  },
+  "colour_hex": {
+    "あかい": "#c0392b",
+    "あおい": "#2a5fa8",
+    "しろい": "#f4f3ef",
+    "きいろい": "#dfb023",
+    "くろい": "#2d2a28",
+    "ちゃいろい": "#8a5a2b",
+    "みどり": "#3f8f5a",
+    "ピンク": "#e2869f",
+    "オレンジ": "#d9772c",
+    "むらさき": "#7a4a9e"
+  }
 };

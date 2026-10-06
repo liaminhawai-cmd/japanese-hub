@@ -15,7 +15,13 @@
    Short height is せが 高くないです rather than a new word, so the negative
    earns its place instead of being drilled in the abstract.
 
-   めがねを かけています is outside the grammar on this page and is taught
+   Clothing is a second set of facts on the same figures: a top, a
+   bottom, shoes and sometimes a hat or a watch, each with a colour.
+   The drawing reads the colours and so does the marker, so a student
+   who writes あかい シャツを きています is checked against the shirt that
+   is actually on screen.
+
+   めがねを かけています is outside the 〜です grammar and is taught
    here as a fixed chunk. If your Year 8 has not met it, delete the
    glasses line from the rules and set every "glasses" below to false.
 
@@ -32,7 +38,21 @@ window.HITO_PEOPLE = {
         "colour": "black",
         "eyes": "big",
         "tall": true,
-        "glasses": false
+        "glasses": false,
+        "clothes": {
+          "top": [
+            "シャツ",
+            "あかい"
+          ],
+          "bottom": [
+            "ズボン",
+            "くろい"
+          ],
+          "shoes": [
+            "くつ",
+            "しろい"
+          ]
+        }
       },
       "traits": [
         "genki",
@@ -48,7 +68,21 @@ window.HITO_PEOPLE = {
         "colour": "brown",
         "eyes": "small",
         "tall": false,
-        "glasses": true
+        "glasses": true,
+        "clothes": {
+          "top": [
+            "セーター",
+            "みどり"
+          ],
+          "bottom": [
+            "スカート",
+            "くろい"
+          ],
+          "shoes": [
+            "くつ",
+            "ちゃいろい"
+          ]
+        }
       },
       "traits": [
         "majime",
@@ -64,7 +98,25 @@ window.HITO_PEOPLE = {
         "colour": "black",
         "eyes": "small",
         "tall": true,
-        "glasses": false
+        "glasses": false,
+        "clothes": {
+          "top": [
+            "Tシャツ",
+            "あおい"
+          ],
+          "bottom": [
+            "ズボン",
+            "ちゃいろい"
+          ],
+          "shoes": [
+            "くつ",
+            "くろい"
+          ],
+          "extra": [
+            "とけい",
+            null
+          ]
+        }
       },
       "traits": [
         "omoshiroi",
@@ -80,7 +132,21 @@ window.HITO_PEOPLE = {
         "colour": "brown",
         "eyes": "big",
         "tall": false,
-        "glasses": false
+        "glasses": false,
+        "clothes": {
+          "top": [
+            "シャツ",
+            "ピンク"
+          ],
+          "bottom": [
+            "スカート",
+            "しろい"
+          ],
+          "shoes": [
+            "くつ",
+            "くろい"
+          ]
+        }
       },
       "traits": [
         "yasashii",
@@ -96,7 +162,21 @@ window.HITO_PEOPLE = {
         "colour": "black",
         "eyes": "small",
         "tall": false,
-        "glasses": true
+        "glasses": true,
+        "clothes": {
+          "top": [
+            "セーター",
+            "きいろい"
+          ],
+          "bottom": [
+            "ズボン",
+            "あおい"
+          ],
+          "shoes": [
+            "くつ",
+            "しろい"
+          ]
+        }
       },
       "traits": [
         "majime",
@@ -112,7 +192,25 @@ window.HITO_PEOPLE = {
         "colour": "brown",
         "eyes": "big",
         "tall": true,
-        "glasses": false
+        "glasses": false,
+        "clothes": {
+          "top": [
+            "Tシャツ",
+            "むらさき"
+          ],
+          "bottom": [
+            "ズボン",
+            "くろい"
+          ],
+          "shoes": [
+            "くつ",
+            "しろい"
+          ],
+          "hat": [
+            "ぼうし",
+            "あかい"
+          ]
+        }
       },
       "traits": [
         "genki",
@@ -236,6 +334,50 @@ window.HITO_PEOPLE = {
       "title_en": "Write it",
       "rule": "Three sentences about the person on screen. No words are given. Use が for a part, and join two descriptions with くて or で at least once.",
       "eg": []
+    },
+    {
+      "step": "colour",
+      "title": "いろ",
+      "title_en": "Colours",
+      "rule": "Some colour words are い adjectives and go straight in front of the thing. The rest are nouns and need の first. There is no rule for telling which is which: it comes with the word, like い and な.",
+      "eg": [
+        {
+          "ja": "あかい シャツ",
+          "en": "a red shirt (い adjective, nothing added)"
+        },
+        {
+          "ja": "みどりの セーター",
+          "en": "a green jumper (noun, の added)"
+        }
+      ]
+    },
+    {
+      "step": "wear",
+      "title": "きています",
+      "title_en": "Wearing",
+      "rule": "Japanese picks the verb by where on the body the thing goes, not by what it is. All five are in the ています form here, which is what you use for what someone has on right now.",
+      "eg": [
+        {
+          "ja": "あかい シャツを きています。",
+          "en": "upper body"
+        },
+        {
+          "ja": "くろい ズボンを はいています。",
+          "en": "lower body and feet"
+        },
+        {
+          "ja": "あかい ぼうしを かぶっています。",
+          "en": "head"
+        },
+        {
+          "ja": "めがねを かけています。",
+          "en": "glasses"
+        },
+        {
+          "ja": "とけいを しています。",
+          "en": "a watch, a tie"
+        }
+      ]
     }
   ],
   "builder": [

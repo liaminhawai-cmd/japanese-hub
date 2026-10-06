@@ -121,9 +121,17 @@
   function figure(p, h){
     var f = p.facts;
     var hair = f.colour === "black" ? "#2d2a28" : "#7a5230";
+    var HEX = W.colour_hex || {};
     var c = f.clothes || {};
-    var top = c.top || "#9aa9b8", legs = c.bottom || "#55606e",
-        shoe = c.shoes || "#363d47";
+    function col(slot, fallback){
+      return (c[slot] && HEX[c[slot][1]]) || fallback;
+    }
+    var top = col("top", "#9aa9b8"), legs = col("bottom", "#55606e"),
+        shoe = col("shoes", "#363d47");
+    /* Every garment is outlined. Without it しろい disappears into the
+       card and a white shirt cannot be described, let alone marked. */
+    var E = ' stroke="rgba(20,25,32,.3)" stroke-width="1.2"';
+    var skirt = c.bottom && /スカート/.test(c.bottom[0]);
     var cx = 60, foot = 232, g = [];
 
     /* behind everything: long hair down past the shoulders */
@@ -134,13 +142,21 @@
         + ' fill="' + hair + '"/>');
     }
     /* legs, then shoes */
-    g.push('<rect x="45" y="138" width="12" height="86" rx="6" fill="' + legs + '"/>');
-    g.push('<rect x="63" y="138" width="12" height="86" rx="6" fill="' + legs + '"/>');
-    g.push('<ellipse cx="49" cy="' + foot + '" rx="11" ry="6" fill="' + shoe + '"/>');
-    g.push('<ellipse cx="71" cy="' + foot + '" rx="11" ry="6" fill="' + shoe + '"/>');
+    if (skirt){
+      g.push('<path d="M44 138 h32 l10 38 h-52 z" fill="' + legs + '"' + E + '/>');
+      g.push('<rect x="48" y="174" width="9" height="50" rx="4.5" fill="'
+        + SKIN + '"/>');
+      g.push('<rect x="63" y="174" width="9" height="50" rx="4.5" fill="'
+        + SKIN + '"/>');
+    } else {
+      g.push('<rect x="45" y="138" width="12" height="86" rx="6" fill="' + legs + '"' + E + '/>');
+      g.push('<rect x="63" y="138" width="12" height="86" rx="6" fill="' + legs + '"' + E + '/>');
+    }
+    g.push('<ellipse cx="49" cy="' + foot + '" rx="11" ry="6" fill="' + shoe + '"' + E + '/>');
+    g.push('<ellipse cx="71" cy="' + foot + '" rx="11" ry="6" fill="' + shoe + '"' + E + '/>');
     /* arms outside the body, not behind it, or all you see is hands */
-    g.push('<rect x="24" y="84" width="11" height="60" rx="5.5" fill="' + top + '"/>');
-    g.push('<rect x="85" y="84" width="11" height="60" rx="5.5" fill="' + top + '"/>');
+    g.push('<rect x="24" y="84" width="11" height="60" rx="5.5" fill="' + top + '"' + E + '/>');
+    g.push('<rect x="85" y="84" width="11" height="60" rx="5.5" fill="' + top + '"' + E + '/>');
     g.push('<circle cx="29.5" cy="148" r="6" fill="' + SKIN + '" stroke="'
       + SKINL + '" stroke-width="1"/>');
     g.push('<circle cx="90.5" cy="148" r="6" fill="' + SKIN + '" stroke="'
@@ -149,7 +165,7 @@
     g.push('<rect x="54" y="63" width="12" height="20" fill="' + SKIN
       + '" stroke="' + SKINL + '" stroke-width="1"/>');
     g.push('<path d="M37 142 q-1 -48 5 -55 q9 -5 18 -5 q9 0 18 5 q6 7 5 55 z"'
-      + ' fill="' + top + '"/>');
+      + ' fill="' + top + '"' + E + '/>');
     /* head */
     g.push('<circle cx="' + cx + '" cy="44" r="25" fill="' + SKIN
       + '" stroke="' + SKINL + '" stroke-width="1.5"/>');
@@ -182,10 +198,17 @@
         + '<path d="M60 47h0.5"/><path d="M42 45 l-6 -2"/>'
         + '<path d="M78 45 l6 -2"/></g>');
     }
-    if (c.hat)
-      g.push('<path d="M34 30 a26 26 0 0 1 52 0 z" fill="' + c.hat + '"/>'
-        + '<rect x="28" y="28" width="64" height="5" rx="2.5" fill="'
-        + c.hat + '"/>');
+    if (c.hat){
+      var hc = col("hat", "#8a5a2b");
+      g.push('<path d="M36 30 a24 24 0 0 1 48 0 z" fill="' + hc + '"' + E + '/>'
+        + '<rect x="29" y="28" width="62" height="5" rx="2.5" fill="' + hc + '"'
+        + E + '/>');
+    }
+    /* a watch sits on the wrist, so it has somewhere to be seen */
+    if (c.extra && /とけい/.test(c.extra[0]))
+      g.push('<rect x="84" y="138" width="13" height="7" rx="2" fill="#2f3b47"/>'
+        + '<circle cx="90.5" cy="141.5" r="3.4" fill="#d9dee4" stroke="#2f3b47"'
+        + ' stroke-width="1"/>');
 
     /* tall and not tall are the same figure at two sizes, pinned at the
        feet so both stand on the same ground */
@@ -224,6 +247,59 @@
     if (f.glasses)
       out.push({ id:"glasses", ja:"めがねを かけています。",
         re:/めがねをかけています/, wrong:null, look:"the glasses" });
+    /* clothing. The phrase in front of the garment is the point: an
+       い colour goes straight on, a noun colour needs の. Both spellings
+       are accepted because the colour words are kana either way. */
+    var cl = f.clothes || {};
+    function colourKind(name){
+      var found = null;
+      W.words.forEach(function(x){ if (x.kana === name) found = x; });
+      return found && found.kind === "i" ? "i" : "no";
+    }
+    function phrase(colour, item){
+      return colour + (colourKind(colour) === "i" ? " " : "\u306e ") + item;
+    }
+    /* A clothing sentence cannot be matched with a pattern that makes the
+       colour optional: that waves through both a stray \u306e and the wrong
+       colour, which is the one thing this step exists to catch. So read
+       what sits immediately before the garment, and judge that. */
+    var ALLCOL = W.words.filter(function(x){ return x.group === "colour"; })
+                        .map(function(x){ return x.kana; })
+                        .sort(function(a, b){ return b.length - a.length; });
+    [["top", "kiru"], ["bottom", "haku"], ["shoes", "haku"],
+     ["hat", "kaburu"], ["extra", "suru"]].forEach(function(pair){
+      var slot = cl[pair[0]];
+      if (!slot) return;
+      var item = slot[0], colour = slot[1];
+      var verb = (W.verbs[pair[1]] || {}).ja;
+      var ja = (colour ? phrase(colour, item) : item) + "\u3092 " + verb + "\u3002";
+      var tail = item + "\u3092" + verb;
+      out.push({ id:"c-" + pair[0], ja: ja, look:"what they are wearing",
+        judge: function(ln){
+          var i = ln.indexOf(tail);
+          if (i < 0) return null;
+          var before = ln.slice(0, i).replace(/^.*?\u306f/, "");
+          if (!before || !colour) return true;
+          for (var n = 0; n < ALLCOL.length; n++){
+            var c = ALLCOL[n], isI = colourKind(c) === "i";
+            if (before === c + "\u306e")
+              return isI
+                ? { msg: c + " is an \u3044 colour, so it goes straight in front "
+                    + "of " + item + " with no \u306e." }
+                : (c === colour ? true
+                   : { msg: "Good Japanese, but look again: that " + item
+                       + " is " + colour + ", not " + c + "." });
+            if (before === c)
+              return !isI
+                ? { msg: c + " is a noun, so it needs \u306e before " + item + "." }
+                : (c === colour ? true
+                   : { msg: "Good Japanese, but look again: that " + item
+                       + " is " + colour + ", not " + c + "." });
+          }
+          return { msg: "Something is in front of " + item
+            + " that is not one of the colour words." };
+        } });
+    });
     p.traits.forEach(function(t){
       var tr = P.traits[t];
       out.push({ id:"t-" + t,
@@ -241,6 +317,8 @@
     { id:"part",  ja:"〜が 〜です", en:"Part by part" },
     { id:"join",  ja:"〜くて",     en:"Joining" },
     { id:"who",   ja:"だれですか", en:"Who is it?" },
+    { id:"colour",ja:"いろ",       en:"Colours" },
+    { id:"wear",  ja:"きています", en:"Wearing" },
     { id:"write", ja:"かいて",     en:"Write it" }
   ];
   var at = 0, DRAW = {};
@@ -336,7 +414,9 @@
      sent and is then told whether that was right: a wrong answer is
      marked and handed back, never refused. */
   DRAW.sort = function(){
-    var adj = shuffle(W.words.filter(function(x){ return x.kind !== "noun"; }));
+    var adj = shuffle(W.words.filter(function(x){
+      return (x.kind === "i" || x.kind === "na") && x.group !== "colour";
+    }));
     var left = adj.length, pick = null;
     $("main").innerHTML = ruleFor("sort")
       + '<div class="work">'
@@ -538,7 +618,117 @@
     $("next").onclick = function(){ wIdx++; draw(); };
   };
 
-  /* ---- 6. かいてみよう ----
+  /* ---- 7. いろ ----
+     い colour or の colour. Same move as step 2, on the half of the
+     vocabulary where getting it wrong produces a phrase rather than just
+     a wrong word. */
+  DRAW.colour = function(){
+    var cols = shuffle(W.words.filter(function(x){ return x.group === "colour"; }));
+    var left = cols.length, pick = null;
+    $("main").innerHTML = ruleFor("colour")
+      + '<div class="work">'
+      + '<div class="slot" id="pool" style="margin-bottom:10px"></div>'
+      + '<div class="cols" style="height:auto;min-height:150px">'
+      + '<div class="col i" id="ci" role="button" tabindex="0">'
+      + '<h4 class="k-i">\u3042\u304b\u3044 \u30b7\u30e3\u30c4</h4>'
+      + '<div class="in"></div></div>'
+      + '<div class="col na" id="cn" role="button" tabindex="0">'
+      + '<h4 class="k-na">\u307f\u3069\u308a<b>\u306e</b> \u30b7\u30e3\u30c4</h4>'
+      + '<div class="in"></div></div></div></div>'
+      + '<div class="foot"><span class="score" id="sc"></span>'
+      + '<span class="sp"></span><span>Tap a colour, then tap the side it '
+      + 'belongs on.</span></div>';
+    $("pool").innerHTML = cols.map(function(x, i){
+      return '<button class="chip" data-i="' + i + '" data-k="'
+        + (x.kind === "i" ? "i" : "na") + '" data-w="' + esc(x.kana) + '">'
+        + ruby(x.ja) + '</button>';
+    }).join("");
+    function score(){
+      $("sc").innerHTML = '<b>' + (cols.length - left) + '</b> of ' + cols.length;
+    }
+    score();
+    each($("main"), "[data-i]", function(c){
+      c.onclick = function(){
+        each($("main"), ".chip.pick", function(x){ x.classList.remove("pick"); });
+        pick = c; c.classList.add("pick");
+      };
+    });
+    [["ci", "i"], ["cn", "na"]].forEach(function(pair){
+      $(pair[0]).onclick = function(ev){
+        if (ev.target.closest(".chip")) return;
+        if (!pick) return;
+        var c = pick, ok = c.dataset.k === pair[1];
+        pick = null; c.classList.remove("pick");
+        c.classList.add(ok ? "yes" : "no");
+        if (ok){
+          $(pair[0]).querySelector(".in").appendChild(c);
+          c.classList.add("gone"); left--; score();
+          if (!left) done("colour");
+        } else {
+          c.title = c.dataset.w + (c.dataset.k === "i"
+            ? " is an \u3044 adjective: it goes straight in front of the garment."
+            : " is a noun: it needs \u306e in front of the garment.");
+          setTimeout(function(){ c.classList.remove("no"); }, 1400);
+        }
+      };
+    });
+  };
+
+  /* ---- 8. きています ----
+     The verb is chosen by where on the body the thing goes. The figure is
+     on screen because the garment has to be found on it first. */
+  var vIdx = 0;
+  DRAW.wear = function(){
+    var items = [];
+    P.people.forEach(function(p){
+      var cl = p.facts.clothes || {};
+      [["top","kiru"],["bottom","haku"],["shoes","haku"],
+       ["hat","kaburu"],["extra","suru"]].forEach(function(pair){
+        if (cl[pair[0]]) items.push({ p:p, item:cl[pair[0]][0], v:pair[1] });
+      });
+      if (p.facts.glasses) items.push({ p:p, item:"めがね", v:"kakeru" });
+    });
+    vIdx = vIdx % items.length;
+    var it = items[vIdx], V = W.verbs;
+    var keys = Object.keys(V);
+    $("main").innerHTML = ruleFor("wear")
+      + '<div class="work"><div class="who">'
+      + '<div class="pic">' + figure(it.p, 220) + '</div>'
+      + '<div class="q"><p class="jp">' + esc(it.p.name) + 'さんは '
+      + ruby(it.item) + 'を <u>\u3000\u3000\u3000\u3000</u></p>'
+      + '<div class="grid cards" id="opts" style="margin-top:10px"></div>'
+      + '<div id="fb"></div></div></div></div>'
+      + '<div class="foot"><span class="score">' + (vIdx + 1) + ' of '
+      + items.length + '</span><span class="sp"></span>'
+      + '<button class="btn sm" id="next">Next</button></div>';
+    $("opts").innerHTML = shuffle(keys).map(function(k){
+      return '<button class="card" data-v="' + k + '">'
+        + '<span class="ja">' + ruby(V[k].ja) + '</span></button>';
+    }).join("");
+    each($("main"), "[data-v]", function(b){
+      b.onclick = function(){
+        var ok = b.dataset.v === it.v;
+        each($("main"), "[data-v]", function(x){
+          x.classList.toggle("yes", x.dataset.v === it.v);
+          if (x === b && !ok) x.classList.add("no");
+        });
+        var line = it.p.name + "さんは " + it.item + "を " + V[it.v].ja + "。";
+        $("fb").innerHTML = '<div class="mark ' + (ok ? "yes" : "no") + '">'
+          + '<b>' + (ok ? "Yes" : "Not that one") + '</b>'
+          + esc(it.item) + " goes on " + esc(V[it.v].zone_en) + ", and that is "
+          + esc(V[it.v].ja) + ". "
+          + (ok ? "" : "You chose " + esc(V[b.dataset.v].ja) + ", which is for "
+                  + esc(V[b.dataset.v].zone_en) + ".")
+          + '<div class="jp" style="margin-top:4px">' + ruby(line) + ' '
+          + saybtn(line) + '</div></div>';
+        wireSay();
+        if (ok && vIdx >= items.length - 1) done("wear");
+      };
+    });
+    $("next").onclick = function(){ vIdx++; draw(); };
+  };
+
+  /* ---- 9. かいてみよう ----
      The only screen with no Japanese on it to copy. */
   var zIdx = 0;
   DRAW.write = function(){
@@ -567,13 +757,22 @@
       }).filter(function(x){ return x.length; });
       var out = [], right = 0, joined = false;
       lines.forEach(function(ln){
-        var hit = null, bad = null;
-        fs.forEach(function(f){ if (!hit && f.re.test(ln)) hit = f; });
+        var hit = null, bad = null, note = null;
+        fs.forEach(function(f){
+          if (hit) return;
+          if (f.judge){
+            var v = f.judge(ln);
+            if (v === true) hit = f;
+            else if (v && v.msg && !note) note = v.msg;
+          } else if (f.re && f.re.test(ln)) hit = f;
+        });
         fs.forEach(function(f){ if (!bad && f.wrong && f.wrong.test(ln)) bad = f; });
         if (/くて|で(?!す)/.test(ln)) joined = true;
         if (hit){
           right++;
           out.push('<div class="mark yes"><b>True</b>' + esc(ln) + '</div>');
+        } else if (note){
+          out.push('<div class="mark no"><b>Nearly</b>' + esc(note) + '</div>');
         } else if (bad){
           out.push('<div class="mark no"><b>Good Japanese, not this person</b>'
             + 'Look at ' + esc(bad.look) + ' again.</div>');
