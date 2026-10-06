@@ -25,6 +25,12 @@
    negated, and finally produced cold with nothing on screen to copy. Ten
    words with six routes outlast fifty with one.
 
+   NOT EVERY ADJECTIVE DESCRIBES A PERSON. にぎやか was in this list and
+   should not have been: it describes a place or a gathering, a lively
+   town or a lively household, and にぎやかな人 reads as odd at best.
+   The sanity check now refuses a handful of place-only adjectives as
+   personality words; extend that list as you meet more.
+
    DESCRIPTORS. Hair, eyes, height, glasses, age and personality. No body
    size and no skin colour: a Year 8 room is the wrong place to hand out
    vocabulary that can be aimed at the person at the next desk.
@@ -202,13 +208,6 @@ window.HITO_WORDS = {
       "ja": "しずか",
       "kana": "しずか",
       "en": "quiet",
-      "kind": "na",
-      "group": "person"
-    },
-    {
-      "ja": "にぎやか",
-      "kana": "にぎやか",
-      "en": "lively",
       "kind": "na",
       "group": "person"
     },

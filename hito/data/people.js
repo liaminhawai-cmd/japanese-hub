@@ -120,7 +120,7 @@ window.HITO_PEOPLE = {
       },
       "traits": [
         "omoshiroi",
-        "nigiyaka"
+        "genki"
       ],
       "blurb_en": "short black hair, small eyes, tall"
     },
@@ -213,8 +213,8 @@ window.HITO_PEOPLE = {
         }
       },
       "traits": [
-        "genki",
-        "nigiyaka"
+        "akarui",
+        "shinsetsu"
       ],
       "blurb_en": "short brown hair, big eyes, tall"
     }
@@ -244,11 +244,6 @@ window.HITO_PEOPLE = {
       "ja": "おもしろい",
       "kind": "i",
       "en": "funny"
-    },
-    "nigiyaka": {
-      "ja": "にぎやか",
-      "kind": "na",
-      "en": "lively"
     },
     "yasashii": {
       "ja": "やさしい",
@@ -309,8 +304,8 @@ window.HITO_PEOPLE = {
           "en": "kind and funny (い → くて)"
         },
         {
-          "ja": "元気[げんき]で にぎやかです。",
-          "en": "energetic and lively (な → で)"
+          "ja": "元気[げんき]で やさしいです。",
+          "en": "full of energy and kind (な → で)"
         }
       ]
     },
@@ -386,8 +381,8 @@ window.HITO_PEOPLE = {
     },
     {
       "person": "kenta",
-      "ja": "けんたさんは おもしろくて にぎやかです。",
-      "en": "Kenta is funny and lively."
+      "ja": "けんたさんは おもしろくて 元気[げんき]です。",
+      "en": "Kenta is funny and full of energy."
     },
     {
       "person": "haruka",
@@ -401,8 +396,8 @@ window.HITO_PEOPLE = {
     },
     {
       "person": "aoi",
-      "ja": "あおいさんは 元気[げんき]で にぎやかです。",
-      "en": "Aoi is energetic and lively."
+      "ja": "あおいさんは あかるくて 親切[しんせつ]です。",
+      "en": "Aoi is cheerful and helpful."
     }
   ]
 };
