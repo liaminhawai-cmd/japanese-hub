@@ -260,7 +260,7 @@
       return colour + (colourKind(colour) === "i" ? " " : "\u306e ") + item;
     }
     /* A clothing sentence cannot be matched with a pattern that makes the
-       colour optional: that waves through both a stray \u306e and the wrong
+       colour optional: that waves through both a stray の and the wrong
        colour, which is the one thing this step exists to catch. So read
        what sits immediately before the garment, and judge that. */
     var ALLCOL = W.words.filter(function(x){ return x.group === "colour"; })
@@ -314,6 +314,48 @@
   /* だれですか opens, because the problem should arrive before the method:
      a student meets the six and tries to tell them apart before anybody
      has taught them a word. The writing step stays last. */
+  /* ---- a deck, so nothing comes up in the order it is written down ----
+     Every stepped exercise used to walk its list with a counter: the six
+     people in だれですか came up in file order, so the answer to round one
+     was the first card, round two the second, and a student who noticed
+     that never had to read the Japanese again. The same counter ran the
+     part-by-part step and the wearing step, where it made the body part
+     and the garment slot cycle in a fixed order too.
+
+     A deck shuffles the whole list, deals it out, and reshuffles when it
+     is spent, never repeating across the seam. It also counts which items
+     have actually been answered correctly, because "you have seen the
+     last one" stops meaning "you have seen them all" the moment the order
+     is random. */
+  var DECKS = {};
+  function deck(key, n){
+    var d = DECKS[key];
+    if (!d || d.n !== n){
+      var order = [];
+      for (var i = 0; i < n; i++) order.push(i);
+      d = DECKS[key] = { n:n, order:shuffle(order), at:0, right:{} };
+    }
+    return d;
+  }
+  function dealt(key, n){ return deck(key, n).order[deck(key, n).at]; }
+  function advance(key, n){
+    var d = deck(key, n);
+    d.at++;
+    if (d.at >= d.n){
+      var last = d.order[d.n - 1], tries = 0;
+      do { d.order = shuffle(d.order); tries++; }
+      while (d.n > 1 && d.order[0] === last && tries < 20);
+      d.at = 0;
+    }
+  }
+  /* Correct once is enough to count: a student who gets all six right has
+     met all six, in whatever order the deck handed them over. */
+  function gotRight(key, n, i, id){
+    var d = deck(key, n);
+    d.right[i] = 1;
+    if (Object.keys(d.right).length >= n) done(id);
+  }
+
   var STEPS = [
     { id:"who",   ja:"だれですか", en:"Who is it?" },
     { id:"match", ja:"ことば",     en:"Words" },
@@ -497,7 +539,13 @@
         var c = pick; clearPick(); land(c, slot);
       };
     });
-    $("next").onclick = function(){ mRound++; draw(); };
+    /* Reshuffle when the cycle is spent, so a second pass through the
+       words is six different sets rather than the same seven again. */
+    $("next").onclick = function(){
+      mRound++;
+      if (mRound >= rounds){ mRound = 0; mOrder = shuffle(W.words); }
+      draw();
+    };
   };
 
   /* ---- sorting, used by step 3 and step 6 ----
@@ -633,11 +681,11 @@
     });
   }
 
-  /* ---- 2. \u3044 \u304b \u306a ----
+  /* ---- 2. い か な ----
      Six at a time, drawn fresh each round, so "another round" is another
      exercise and not the same twelve reshuffled. Each adjective carries
-     the noun it belongs in front of, because \u9577\u3044 goes with \u304b\u307f and not with
-     \u4eba, and a step that built \u9577\u3044 \u4eba would be teaching the wrong thing. */
+     the noun it belongs in front of, because 長い goes with かみ and not with
+     人, and a step that built 長い 人 would be teaching the wrong thing. */
   DRAW.sort = function(){
     var all = W.words.filter(function(x){
       return (x.kind === "i" || x.kind === "na") && x.group !== "colour";
@@ -676,7 +724,6 @@
   };
 
   /* ---- 3. 〜が 〜です ---- */
-  var pIdx = 0;
   DRAW.part = function(){
     var items = [];
     P.people.forEach(function(p){
@@ -685,13 +732,28 @@
           items.push({ p:p, f:f });
       });
     });
-    pIdx = pIdx % items.length;
-    var it = items[pIdx], p = it.p;
-    var all = ["長[なが]い", "短[みじか]い", "大[おお]きい", "小[ちい]さい",
-               "高[たか]い", "高[たか]くない"];
+    var i = dealt("part", items.length);
+    var it = items[i], p = it.p;
+    /* Three pairs, each adjective next to the one it is really being
+       told apart from. */
+    var PAIRS = [["長[なが]い", "短[みじか]い"],
+                 ["大[おお]きい", "小[ちい]さい"],
+                 ["高[たか]い", "高[たか]くない"]];
+    var all = [];
+    PAIRS.forEach(function(pr){ all = all.concat(pr); });
     var want = it.f.ja.replace(/^[^が]*が /, "").replace(/です。$/, "");
-    var opts = shuffle([want].concat(shuffle(all.filter(function(a){
-      return a !== want; })).slice(0, 3)));
+    /* The opposite was drawn at random with everything else, so three
+       times in five the one adjective the question is actually about was
+       not among the four offered and the answer could be had without
+       reading anything. It is always offered now. */
+    var opp = null;
+    PAIRS.forEach(function(pr){
+      if (pr[0] === want) opp = pr[1];
+      if (pr[1] === want) opp = pr[0];
+    });
+    var rest = shuffle(all.filter(function(a){
+      return a !== want && a !== opp; })).slice(0, 2);
+    var opts = shuffle([want].concat(opp ? [opp] : []).concat(rest));
     var head = it.f.ja.replace(/ [^ ]+です。$/, "");
     $("main").innerHTML = ruleFor("part")
       + '<div class="work"><div class="who">'
@@ -701,7 +763,8 @@
       + ruby(head) + ' <u>　　　</u> です。</p>'
       + '<div class="grid cards" id="opts" style="margin-top:10px"></div>'
       + '<div id="fb"></div></div></div></div>'
-      + '<div class="foot"><span class="score">' + (pIdx + 1) + ' of '
+      + '<div class="foot"><span class="score"><b>'
+      + Object.keys(deck("part", items.length).right).length + '</b> of '
       + items.length + '</span><span class="sp"></span>'
       + '<button class="btn sm" id="next">Next</button></div>';
     $("opts").innerHTML = opts.map(function(o){
@@ -721,17 +784,16 @@
           + ruby(p.name + "さんは " + it.f.ja) + ' ' + saybtn(p.name + "さんは " + it.f.ja)
           + '</div>';
         wireSay();
-        if (ok && pIdx >= items.length - 1) done("part");
+        if (ok) gotRight("part", items.length, i, "part");
       };
     });
-    $("next").onclick = function(){ pIdx++; draw(); };
+    $("next").onclick = function(){ advance("part", items.length); draw(); };
   };
 
   /* ---- 4. 〜くて・〜で ---- */
-  var bIdx = 0;
   DRAW.join = function(){
-    bIdx = bIdx % P.builder.length;
-    var b = P.builder[bIdx];
+    var nb = P.builder.length, i = dealt("join", nb);
+    var b = P.builder[i];
     var p = null;
     P.people.forEach(function(x){ if (x.id === b.person) p = x; });
     var parts = b.ja.replace(/。$/, "").split(" ");
@@ -743,8 +805,9 @@
       + '<div class="slot" id="line"></div>'
       + '<div class="tiles" id="bank"></div><div id="fb"></div></div>'
       + '</div></div>'
-      + '<div class="foot"><span class="score">' + (bIdx + 1) + ' of '
-      + P.builder.length + '</span><span class="sp"></span>'
+      + '<div class="foot"><span class="score"><b>'
+      + Object.keys(deck("join", nb).right).length + '</b> of '
+      + nb + '</span><span class="sp"></span>'
       + '<button class="btn ghost sm" id="clear">Clear</button>'
       + '<button class="btn sm" id="check">Check</button>'
       + '<button class="btn ghost sm" id="next">Next</button></div>';
@@ -773,7 +836,7 @@
     }
     paintBank(); paintLine();
     $("clear").onclick = function(){ bank = shuffle(parts); line = []; paintBank(); paintLine(); };
-    $("next").onclick = function(){ bIdx++; draw(); };
+    $("next").onclick = function(){ advance("join", nb); draw(); };
     $("check").onclick = function(){
       var got = line.join(" "), want = b.ja.replace(/。$/, "");
       var ok = got === want;
@@ -787,16 +850,47 @@
                             : "The first description has to change before it can join the second: い becomes くて, な becomes で.")))
         + '</div>';
       wireSay();
-      if (ok && bIdx >= P.builder.length - 1) done("join");
+      if (ok) gotRight("join", nb, i, "join");
     };
   };
 
-  /* ---- 5. だれですか ---- */
-  var wIdx = 0;
+  /* ---- 5. だれですか ----
+     Two things gave this away. The six cards were laid out in the order
+     the people are written down and the answer walked through them one
+     per round, so round three was the third card. And the clues were
+     always the same three facts, so a student only ever read the hair
+     and the eyes.
+
+     Now the person comes off a shuffled deck, the cards are laid out in
+     a fresh order each round, and the clues are picked at random and
+     grown one at a time until they fit exactly one of the six.
+     Sometimes that is the hair and the eyes, sometimes what they are
+     wearing. */
+  function cluesFor(p, all){
+    var mine = factsOf(p), pool = shuffle(mine.slice()), picked = [];
+    function fits(){
+      return all.filter(function(q){
+        if (q.id === p.id) return true;
+        var theirs = factsOf(q);
+        return picked.every(function(f){
+          return theirs.some(function(g){ return g.id === f.id && g.ja === f.ja; });
+        });
+      }).length;
+    }
+    for (var i = 0; i < pool.length; i++){
+      picked.push(pool[i]);
+      if (picked.length >= 2 && fits() === 1) break;
+      if (picked.length >= 4) break;
+    }
+    /* A set that still fits two people is not a question. Fall back to
+       the three the sanity check guarantees tell all six apart. */
+    if (fits() !== 1) picked = [mine[0], mine[1], mine[2]];
+    return picked;
+  }
   DRAW.who = function(){
-    var p = P.people[wIdx % P.people.length];
-    var fs = factsOf(p);
-    var clues = fs.slice(0, 3);
+    var n = P.people.length, i = dealt("who", n), p = P.people[i];
+    var clues = cluesFor(p, P.people), cards = shuffle(P.people.slice());
+    var d = deck("who", n);
     $("main").innerHTML = ruleFor("who")
       + '<div class="work">'
       + clues.map(function(f){
@@ -804,10 +898,11 @@
         }).join("")
       + '<div class="grid cards" id="six" style="margin-top:10px"></div>'
       + '<div id="fb"></div></div>'
-      + '<div class="foot"><span class="score">' + ((wIdx % P.people.length) + 1)
-      + ' of ' + P.people.length + '</span><span class="sp"></span>'
+      + '<div class="foot"><span class="score"><b>'
+      + Object.keys(d.right).length + '</b> of ' + n + ' found'
+      + '</span><span class="sp"></span>'
       + '<button class="btn sm" id="next">Next</button></div>';
-    $("six").innerHTML = P.people.map(function(x){
+    $("six").innerHTML = cards.map(function(x){
       return '<button class="card" data-p="' + esc(x.id) + '"'
         + ' style="text-align:center">' + figure(x, 130)
         + '<span class="ja">' + esc(x.name) + 'さん</span></button>';
@@ -819,20 +914,19 @@
         $("fb").innerHTML = '<div class="mark ' + (ok ? "yes" : "no") + '">'
           + '<b>' + (ok ? "Yes" : "Not that one") + '</b>'
           + (ok ? esc(p.name) + "さん." : "Check " + esc(clues[0].look)
-                  + " and " + esc(clues[2].look) + ".") + '</div>';
-        if (ok && (wIdx % P.people.length) === P.people.length - 1) done("who");
+                  + " and " + esc(clues[1].look) + ".") + '</div>';
+        if (ok) gotRight("who", n, i, "who");
       };
     });
-    $("next").onclick = function(){ wIdx++; draw(); };
+    $("next").onclick = function(){ advance("who", n); draw(); };
   };
 
-  /* ---- 7. \u3044\u308d ----
-     \u3044 colour or \u306e colour, on a garment that changes every round, so
+  /* ---- 7. いろ ----
+     い colour or の colour, on a garment that changes every round, so
      the phrase built is a different phrase each time. The chip carries
      the colour as a swatch: that tells a student which colour it is
      without telling them which kind it is, which is the only thing the
      step is asking. */
-  var cIdx = 0;
   function swatch(k){
     var hex = (W.colour_hex || {})[k];
     return hex ? '<span class="sw" style="background:' + esc(hex) + '"></span>' : "";
@@ -843,7 +937,7 @@
     var all = W.words.filter(function(x){ return x.kind === "garment"; });
     var wear = all.filter(function(x){ return x.kana !== "めがね"; })
       .concat(all.filter(function(x){ return x.kana === "めがね"; }));
-    var g = wear[cIdx % wear.length];
+    var g = wear[dealt("colour", wear.length)];
     sortGame({
       id: "colour",
       items: deal(W.words.filter(function(x){ return x.group === "colour"; }),
@@ -857,7 +951,7 @@
              { key:"na", cls:"na",
                head:'\u307f\u3069\u308a<b>\u306e</b> ' + ruby(g.ja) }],
       kindOf: function(w){ return w.kind === "i" ? "i" : "na"; },
-      next: function(){ cIdx++; },
+      next: function(){ advance("colour", wear.length); },
       chip: function(w){ return swatch(w.kana) + ruby(w.ja); },
       right: function(w){
         return swatch(w.kana) + ruby(w.ja)
@@ -880,7 +974,6 @@
   /* ---- 8. きています ----
      The verb is chosen by where on the body the thing goes. The figure is
      on screen because the garment has to be found on it first. */
-  var vIdx = 0;
   DRAW.wear = function(){
     var items = [];
     P.people.forEach(function(p){
@@ -891,8 +984,8 @@
       });
       if (p.facts.glasses) items.push({ p:p, item:"めがね", v:"kakeru" });
     });
-    vIdx = vIdx % items.length;
-    var it = items[vIdx], V = W.verbs;
+    var i = dealt("wear", items.length);
+    var it = items[i], V = W.verbs;
     var keys = Object.keys(V);
     $("main").innerHTML = ruleFor("wear")
       + '<div class="work"><div class="who">'
@@ -901,7 +994,8 @@
       + ruby(it.item) + 'を <u>\u3000\u3000\u3000\u3000</u></p>'
       + '<div class="grid cards" id="opts" style="margin-top:10px"></div>'
       + '<div id="fb"></div></div></div></div>'
-      + '<div class="foot"><span class="score">' + (vIdx + 1) + ' of '
+      + '<div class="foot"><span class="score"><b>'
+      + Object.keys(deck("wear", items.length).right).length + '</b> of '
       + items.length + '</span><span class="sp"></span>'
       + '<button class="btn sm" id="next">Next</button></div>';
     $("opts").innerHTML = shuffle(keys).map(function(k){
@@ -925,17 +1019,16 @@
           + '<div class="jp" style="margin-top:4px">' + ruby(line) + ' '
           + saybtn(line) + '</div></div>';
         wireSay();
-        if (ok && vIdx >= items.length - 1) done("wear");
+        if (ok) gotRight("wear", items.length, i, "wear");
       };
     });
-    $("next").onclick = function(){ vIdx++; draw(); };
+    $("next").onclick = function(){ advance("wear", items.length); draw(); };
   };
 
   /* ---- 9. かいてみよう ----
      The only screen with no Japanese on it to copy. */
-  var zIdx = 0;
   DRAW.write = function(){
-    var p = P.people[zIdx % P.people.length];
+    var np = P.people.length, p = P.people[dealt("write", np)];
     var fs = factsOf(p);
     var prev = S.wrote[p.id] || "";
     $("main").innerHTML = ruleFor("write")
@@ -950,7 +1043,7 @@
       + '<button class="btn sm" id="check">Check</button>'
       + '<button class="btn ghost sm" id="next">Another person</button></div>';
     $("ta").value = prev;
-    $("next").onclick = function(){ zIdx++; draw(); };
+    $("next").onclick = function(){ advance("write", np); draw(); };
     $("ta").oninput = function(){ S.wrote[p.id] = $("ta").value; save(); };
     $("check").onclick = function(){
       var raw = $("ta").value;
