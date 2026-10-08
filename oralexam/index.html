@@ -586,7 +586,7 @@
 (function(){
   "use strict";
 
-  var BUILD = "Version 21, 5 October 2026";
+  var BUILD = "Version 22, 8 October 2026";
 
   var CRIT  = window.ORAL_CRITERIA,
       REP   = window.ORAL_REPORTS,
@@ -2316,19 +2316,31 @@
     });
     if ($("changeTopic")) $("changeTopic").onclick = function(){ go("mock:sac"); };
     $("startMock").onclick = function(){
-      if (!S.topic || !topicById(S.topic)) return go("mock:sac");
+      if (!S.topic || !topicById(S.topic)){
+        /* No topic yet, so they have to pick one before anything can run.
+           Remember which button sent them: picking a topic used to start a
+           four minute SAC whatever they had asked for, so on a fresh device
+           the fifteen minute examination could not be reached at all until
+           a SAC had been run by accident first. */
+        PICK_FOR = "mock";
+        return go("mock:sac");
+      }
       MOCK = buildMock(S.band);
       go("mock:run");
     };
-    $("startSac").onclick = function(){ go("mock:sac"); };
+    $("startSac").onclick = function(){ PICK_FOR = "sac"; go("mock:sac"); };
   };
 
   /* Pick the product or practice you researched. The SAC is not the
      examination: the assessor has your topic and nothing else, which is why
      this screen exists rather than the run starting straight away. */
+  /* Which button sent the student to the topic picker. */
+  var PICK_FOR = "sac";
   function drawSacPick(){
     setHead([{ ja:"タイムれんしゅう", r:"mock" }, { ja:"SAC", r:"mock:sac" }],
-            "SAC practice · 4 minutes · pick your topic");
+            PICK_FOR === "mock"
+              ? "The whole examination \u00b7 15 minutes \u00b7 pick your topic"
+              : "SAC practice \u00b7 4 minutes \u00b7 pick your topic");
     var h = '<h2>どのトピックですか<span class="en">Pick the product or practice '
           + 'you researched</span>'
           + qmark('The assessor has heard nothing but the name of your topic. '
@@ -2362,6 +2374,11 @@
            about this topic too, which is the only way it can be a real
            discussion rather than a generic one. */
         S.topic = b.dataset.t; save();
+        if (PICK_FOR === "mock"){
+          PICK_FOR = "sac";
+          MOCK = buildMock(S.band);
+          return go("mock:run");
+        }
         start(buildTopicSac(b.dataset.t, S.band));
       };
     });

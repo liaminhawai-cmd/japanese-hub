@@ -151,6 +151,26 @@ window.ORAL_TOPICS = {
           "move": "facts"
         },
         {
+          "id": "onsen-howdo",
+          "move": "facts",
+          "question_ja": "おんせんの 入[はい]り方[かた]を おしえて ください。",
+          "question_en": "Talk me through how you take an onsen bath.",
+          "width": "shape",
+          "difficulty": 2,
+          "higher_order": false,
+          "from_topic": false
+        },
+        {
+          "id": "onsen-where",
+          "move": "facts",
+          "question_ja": "おんせんは 日本[にほん]の どこに ありますか。",
+          "question_en": "Where in Japan are the hot springs?",
+          "width": "shape",
+          "difficulty": 2,
+          "higher_order": false,
+          "from_topic": false
+        },
+        {
           "id": "onsen-who-and-when-1",
           "width": "shape",
           "difficulty": 2,
@@ -171,34 +191,24 @@ window.ORAL_TOPICS = {
           "move": "facts"
         },
         {
-          "id": "onsen-change-1",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "おんせんは むかしと くらべて かわりましたか。",
-          "question_en": "Have hot springs changed from how they used to be?",
-          "move": "how"
+          "id": "onsen-eg1",
+          "move": "example",
+          "question_ja": "たとえば、どんな おんせんが ありますか。",
+          "question_en": "For example, what kinds of hot spring are there?",
+          "width": "shape",
+          "difficulty": 2,
+          "higher_order": false,
+          "from_topic": false
         },
         {
-          "id": "onsen-values-1",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "おんせんから 日本[にほん]の 人[ひと]の 考[かんが]え方[かた]が わかりますか。",
-          "question_en": "Can you see Japanese ways of thinking in hot springs?",
-          "move": "how"
-        },
-        {
-          "id": "onsen-values-2",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "みんな はだかで 入[はい]りますが、それは どうしてだと 思[おも]いますか。",
-          "question_en": "Everyone bathes undressed. Why do you think that is?",
-          "move": "how"
+          "id": "onsen-eg2",
+          "move": "example",
+          "question_ja": "いま 話[はな]した ことを、れいを あげて せつめいして ください。",
+          "question_en": "Explain what you have just said, giving an example.",
+          "width": "shape",
+          "difficulty": 2,
+          "higher_order": false,
+          "from_topic": false
         },
         {
           "id": "onsen-good-1",
@@ -241,6 +251,56 @@ window.ORAL_TOPICS = {
           "move": "bad"
         },
         {
+          "id": "onsen-change-1",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "おんせんは むかしと くらべて かわりましたか。",
+          "question_en": "Have hot springs changed from how they used to be?",
+          "move": "change"
+        },
+        {
+          "id": "onsen-future-1",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "おんせんは これから どう なると 思[おも]いますか。",
+          "question_en": "What do you think will happen to hot springs?",
+          "move": "change"
+        },
+        {
+          "id": "onsen-sig",
+          "move": "culture",
+          "question_ja": "日本[にほん]の 人[ひと]に とって、おんせんは どうして たいせつですか。",
+          "question_en": "Why do hot springs matter to Japanese people?",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false
+        },
+        {
+          "id": "onsen-values-1",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "おんせんから 日本[にほん]の 人[ひと]の 考[かんが]え方[かた]が わかりますか。",
+          "question_en": "Can you see Japanese ways of thinking in hot springs?",
+          "move": "culture"
+        },
+        {
+          "id": "onsen-values-2",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "みんな はだかで 入[はい]りますが、それは どうしてだと 思[おも]いますか。",
+          "question_en": "Everyone bathes undressed. Why do you think that is?",
+          "move": "culture"
+        },
+        {
           "id": "onsen-fix-1",
           "move": "fix",
           "width": "deep",
@@ -259,6 +319,16 @@ window.ORAL_TOPICS = {
           "from_topic": false,
           "question_ja": "かんこうきゃくと じもとの 人[ひと]の りょうほうが 楽[たの]しむ ために、何[なに]が できますか。",
           "question_en": "What could be done so that both tourists and local people enjoy it?"
+        },
+        {
+          "id": "onsen-future-2",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "いなかの 小[ちい]さい おんせんを まもる ために 何[なに]が できますか。",
+          "question_en": "What could be done to keep the small country ones going?",
+          "move": "fix"
         },
         {
           "id": "onsen-compare-1",
@@ -288,27 +358,7 @@ window.ORAL_TOPICS = {
           "from_topic": false,
           "question_ja": "どうして この トピックを えらびましたか。",
           "question_en": "Why did you choose this topic?",
-          "move": "final"
-        },
-        {
-          "id": "onsen-future-1",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "おんせんは これから どう なると 思[おも]いますか。",
-          "question_en": "What do you think will happen to hot springs?",
-          "move": "final"
-        },
-        {
-          "id": "onsen-future-2",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "いなかの 小[ちい]さい おんせんを まもる ために 何[なに]が できますか。",
-          "question_en": "What could be done to keep the small country ones going?",
-          "move": "final"
+          "move": "opinion"
         },
         {
           "id": "onsen-personal-1",
@@ -318,7 +368,7 @@ window.ORAL_TOPICS = {
           "from_topic": false,
           "question_ja": "おんせんに 入[はい]った ことが ありますか。どうでしたか。",
           "question_en": "Have you been in one? What was it like?",
-          "move": "final"
+          "move": "opinion"
         },
         {
           "id": "onsen-personal-2",
@@ -328,7 +378,7 @@ window.ORAL_TOPICS = {
           "from_topic": false,
           "question_ja": "いれずみが ある 人[ひと]は 入[はい]れませんが、どう 思[おも]いますか。",
           "question_en": "People with tattoos are often turned away. What do you think?",
-          "move": "final"
+          "move": "opinion"
         }
       ]
     },
@@ -441,6 +491,26 @@ window.ORAL_TOPICS = {
           "move": "facts"
         },
         {
+          "id": "hanami-howdo",
+          "move": "facts",
+          "question_ja": "ばしょとりは どうやって しますか。",
+          "question_en": "How does saving a spot actually work?",
+          "width": "shape",
+          "difficulty": 2,
+          "higher_order": false,
+          "from_topic": false
+        },
+        {
+          "id": "hanami-where",
+          "move": "facts",
+          "question_ja": "花見[はなみ]は どこで しますか。",
+          "question_en": "Where does hanami happen?",
+          "width": "shape",
+          "difficulty": 2,
+          "higher_order": false,
+          "from_topic": false
+        },
+        {
           "id": "hanami-who-and-when-1",
           "width": "shape",
           "difficulty": 2,
@@ -461,34 +531,24 @@ window.ORAL_TOPICS = {
           "move": "facts"
         },
         {
-          "id": "hanami-change-1",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "今[いま]の 花見[はなみ]は むかしと ちがいますか。",
-          "question_en": "Is hanami today different from how it was?",
-          "move": "how"
+          "id": "hanami-eg1",
+          "move": "example",
+          "question_ja": "たとえば、花見[はなみ]に どんな ものを もって 行[い]きますか。",
+          "question_en": "For example, what do people take with them?",
+          "width": "shape",
+          "difficulty": 2,
+          "higher_order": false,
+          "from_topic": false
         },
         {
-          "id": "hanami-values-1",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "さくらは 日本[にほん]の 人[ひと]に とって どうして たいせつですか。",
-          "question_en": "Why do cherry blossoms matter so much to Japanese people?",
-          "move": "how"
-        },
-        {
-          "id": "hanami-values-2",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "「花[はな]より だんご」と いう ことばが ありますが、どういう いみですか。",
-          "question_en": "There is a saying, hana yori dango. What does it mean?",
-          "move": "how"
+          "id": "hanami-eg2",
+          "move": "example",
+          "question_ja": "いま 話[はな]した ことを、れいを あげて せつめいして ください。",
+          "question_en": "Explain what you have just said, giving an example.",
+          "width": "shape",
+          "difficulty": 2,
+          "higher_order": false,
+          "from_topic": false
         },
         {
           "id": "hanami-good-1",
@@ -531,6 +591,56 @@ window.ORAL_TOPICS = {
           "move": "bad"
         },
         {
+          "id": "hanami-change-1",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "今[いま]の 花見[はなみ]は むかしと ちがいますか。",
+          "question_en": "Is hanami today different from how it was?",
+          "move": "change"
+        },
+        {
+          "id": "hanami-future-1",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "花見[はなみ]は これからも つづくと 思[おも]いますか。",
+          "question_en": "Do you think hanami will continue?",
+          "move": "change"
+        },
+        {
+          "id": "hanami-sig",
+          "move": "culture",
+          "question_ja": "日本[にほん]の 人[ひと]に とって、さくらは どうして たいせつですか。",
+          "question_en": "Why do cherry blossoms matter to Japanese people?",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false
+        },
+        {
+          "id": "hanami-values-1",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "さくらは 日本[にほん]の 人[ひと]に とって どうして たいせつですか。",
+          "question_en": "Why do cherry blossoms matter so much to Japanese people?",
+          "move": "culture"
+        },
+        {
+          "id": "hanami-values-2",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "「花[はな]より だんご」と いう ことばが ありますが、どういう いみですか。",
+          "question_en": "There is a saying, hana yori dango. What does it mean?",
+          "move": "culture"
+        },
+        {
           "id": "hanami-fix-1",
           "move": "fix",
           "width": "deep",
@@ -549,6 +659,16 @@ window.ORAL_TOPICS = {
           "from_topic": false,
           "question_ja": "人[ひと]が 多[おお]すぎる 場所[ばしょ]では、何[なに]が できますか。",
           "question_en": "What could be done where it gets too crowded?"
+        },
+        {
+          "id": "hanami-future-2",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "人[ひと]が 多[おお]すぎる もんだいは どうしたら いいと 思[おも]いますか。",
+          "question_en": "What should be done about the crowds?",
+          "move": "fix"
         },
         {
           "id": "hanami-compare-1",
@@ -578,27 +698,7 @@ window.ORAL_TOPICS = {
           "from_topic": false,
           "question_ja": "どうして この トピックを えらびましたか。",
           "question_en": "Why did you choose this topic?",
-          "move": "final"
-        },
-        {
-          "id": "hanami-future-1",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "花見[はなみ]は これからも つづくと 思[おも]いますか。",
-          "question_en": "Do you think hanami will continue?",
-          "move": "final"
-        },
-        {
-          "id": "hanami-future-2",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "人[ひと]が 多[おお]すぎる もんだいは どうしたら いいと 思[おも]いますか。",
-          "question_en": "What should be done about the crowds?",
-          "move": "final"
+          "move": "opinion"
         },
         {
           "id": "hanami-personal-1",
@@ -608,7 +708,7 @@ window.ORAL_TOPICS = {
           "from_topic": false,
           "question_ja": "花見[はなみ]を した ことが ありますか。",
           "question_en": "Have you ever been to a hanami?",
-          "move": "final"
+          "move": "opinion"
         },
         {
           "id": "hanami-personal-2",
@@ -618,7 +718,7 @@ window.ORAL_TOPICS = {
           "from_topic": false,
           "question_ja": "しらべて 一番[いちばん] おどろいた ことは 何[なん]ですか。",
           "question_en": "What surprised you most in your research?",
-          "move": "final"
+          "move": "opinion"
         }
       ]
     },
@@ -731,6 +831,26 @@ window.ORAL_TOPICS = {
           "move": "facts"
         },
         {
+          "id": "oshogatsu-howdo",
+          "move": "facts",
+          "question_ja": "おせちりょうりは どうやって じゅんびしますか。",
+          "question_en": "How is osechi food prepared?",
+          "width": "shape",
+          "difficulty": 2,
+          "higher_order": false,
+          "from_topic": false
+        },
+        {
+          "id": "oshogatsu-where",
+          "move": "facts",
+          "question_ja": "はつもうでは どこに 行[い]きますか。",
+          "question_en": "Where do people go for hatsumode?",
+          "width": "shape",
+          "difficulty": 2,
+          "higher_order": false,
+          "from_topic": false
+        },
+        {
           "id": "oshogatsu-who-and-when-1",
           "width": "shape",
           "difficulty": 2,
@@ -751,34 +871,24 @@ window.ORAL_TOPICS = {
           "move": "facts"
         },
         {
-          "id": "oshogatsu-change-1",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "今[いま]の お正月[しょうがつ]は むかしと ちがいますか。",
-          "question_en": "Is New Year different now from how it was?",
-          "move": "how"
+          "id": "oshogatsu-eg1",
+          "move": "example",
+          "question_ja": "たとえば、おせちりょうりには どんな ものが 入[はい]っていますか。",
+          "question_en": "For example, what goes into osechi food?",
+          "width": "shape",
+          "difficulty": 2,
+          "higher_order": false,
+          "from_topic": false
         },
         {
-          "id": "oshogatsu-values-1",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "どうして 日本[にほん]の 人[ひと]は お正月[しょうがつ]に 家族[かぞく]と すごしますか。",
-          "question_en": "Why do Japanese people spend New Year with family?",
-          "move": "how"
-        },
-        {
-          "id": "oshogatsu-values-2",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "お正月[しょうがつ]の 前[まえ]に うちを きれいに するのは どうしてですか。",
-          "question_en": "Why is the house cleaned before New Year?",
-          "move": "how"
+          "id": "oshogatsu-eg2",
+          "move": "example",
+          "question_ja": "いま 話[はな]した ことを、れいを あげて せつめいして ください。",
+          "question_en": "Explain what you have just said, giving an example.",
+          "width": "shape",
+          "difficulty": 2,
+          "higher_order": false,
+          "from_topic": false
         },
         {
           "id": "oshogatsu-good-1",
@@ -819,6 +929,56 @@ window.ORAL_TOPICS = {
           "question_ja": "おせちりょうりを 作[つく]る 家[いえ]は へっていますが、どうしてだと 思[おも]いますか。",
           "question_en": "Fewer homes make osechi now. Why do you think that is?",
           "move": "bad"
+        },
+        {
+          "id": "oshogatsu-change-1",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "今[いま]の お正月[しょうがつ]は むかしと ちがいますか。",
+          "question_en": "Is New Year different now from how it was?",
+          "move": "change"
+        },
+        {
+          "id": "oshogatsu-future-1",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "お正月[しょうがつ]の しゅうかんは これからも のこると 思[おも]いますか。",
+          "question_en": "Will the New Year customs last?",
+          "move": "change"
+        },
+        {
+          "id": "oshogatsu-sig",
+          "move": "culture",
+          "question_ja": "日本[にほん]の 人[ひと]に とって、お正月[しょうがつ]は どうして たいせつですか。",
+          "question_en": "Why does New Year matter to Japanese people?",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false
+        },
+        {
+          "id": "oshogatsu-values-1",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "どうして 日本[にほん]の 人[ひと]は お正月[しょうがつ]に 家族[かぞく]と すごしますか。",
+          "question_en": "Why do Japanese people spend New Year with family?",
+          "move": "culture"
+        },
+        {
+          "id": "oshogatsu-values-2",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "お正月[しょうがつ]の 前[まえ]に うちを きれいに するのは どうしてですか。",
+          "question_en": "Why is the house cleaned before New Year?",
+          "move": "culture"
         },
         {
           "id": "oshogatsu-fix-1",
@@ -868,17 +1028,7 @@ window.ORAL_TOPICS = {
           "from_topic": false,
           "question_ja": "どうして この トピックを えらびましたか。",
           "question_en": "Why did you choose this topic?",
-          "move": "final"
-        },
-        {
-          "id": "oshogatsu-future-1",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "お正月[しょうがつ]の しゅうかんは これからも のこると 思[おも]いますか。",
-          "question_en": "Will the New Year customs last?",
-          "move": "final"
+          "move": "opinion"
         },
         {
           "id": "oshogatsu-future-2",
@@ -888,7 +1038,7 @@ window.ORAL_TOPICS = {
           "from_topic": false,
           "question_ja": "わかい 人[ひと]は お正月[しょうがつ]に きょうみが あると 思[おも]いますか。",
           "question_en": "Are young people interested in New Year?",
-          "move": "final"
+          "move": "opinion"
         },
         {
           "id": "oshogatsu-personal-1",
@@ -898,7 +1048,7 @@ window.ORAL_TOPICS = {
           "from_topic": false,
           "question_ja": "お正月[しょうがつ]を 日本[にほん]で すごして みたいですか。",
           "question_en": "Would you like to spend New Year in Japan?",
-          "move": "final"
+          "move": "opinion"
         },
         {
           "id": "oshogatsu-personal-2",
@@ -908,7 +1058,7 @@ window.ORAL_TOPICS = {
           "from_topic": false,
           "question_ja": "お正月[しょうがつ]に 店[みせ]が 休[やす]む ことについて、どう 思[おも]いますか。",
           "question_en": "What do you think about the shops closing?",
-          "move": "final"
+          "move": "opinion"
         }
       ]
     },
@@ -1021,6 +1171,36 @@ window.ORAL_TOPICS = {
           "move": "facts"
         },
         {
+          "id": "bukatsu-howdo",
+          "move": "facts",
+          "question_ja": "ぶかつどうは どうやって きめますか。",
+          "question_en": "How do students decide which club to join?",
+          "width": "shape",
+          "difficulty": 2,
+          "higher_order": false,
+          "from_topic": false
+        },
+        {
+          "id": "bukatsu-where",
+          "move": "facts",
+          "question_ja": "ぶかつどうは どこで しますか。",
+          "question_en": "Where do clubs meet?",
+          "width": "shape",
+          "difficulty": 2,
+          "higher_order": false,
+          "from_topic": false
+        },
+        {
+          "id": "bukatsu-who",
+          "move": "facts",
+          "question_ja": "ぶかつどうの せんせいは だれですか。",
+          "question_en": "Who runs a club?",
+          "width": "shape",
+          "difficulty": 2,
+          "higher_order": false,
+          "from_topic": false
+        },
+        {
           "id": "bukatsu-who-and-when-1",
           "width": "shape",
           "difficulty": 2,
@@ -1041,34 +1221,24 @@ window.ORAL_TOPICS = {
           "move": "facts"
         },
         {
-          "id": "bukatsu-change-1",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "ぶかつどうは さいきん かわってきましたか。",
-          "question_en": "Have clubs been changing lately?",
-          "move": "how"
+          "id": "bukatsu-eg1",
+          "move": "example",
+          "question_ja": "たとえば、どんな ぶかつどうが ありますか。",
+          "question_en": "For example, what clubs are there?",
+          "width": "shape",
+          "difficulty": 2,
+          "higher_order": false,
+          "from_topic": false
         },
         {
-          "id": "bukatsu-values-1",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "ぶかつどうから 日本[にほん]の 社会[しゃかい]の 何[なに]が わかりますか。",
-          "question_en": "What do clubs tell you about Japanese society?",
-          "move": "how"
-        },
-        {
-          "id": "bukatsu-values-2",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "どうして 日本[にほん]の 学校[がっこう]は チームワークを たいせつに しますか。",
-          "question_en": "Why do Japanese schools make so much of teamwork?",
-          "move": "how"
+          "id": "bukatsu-eg2",
+          "move": "example",
+          "question_ja": "いま 話[はな]した ことを、れいを あげて せつめいして ください。",
+          "question_en": "Explain what you have just said, giving an example.",
+          "width": "shape",
+          "difficulty": 2,
+          "higher_order": false,
+          "from_topic": false
         },
         {
           "id": "bukatsu-good-1",
@@ -1109,6 +1279,56 @@ window.ORAL_TOPICS = {
           "question_ja": "「ブラックぶかつ」とは 何[なん]ですか。",
           "question_en": "What is a black club?",
           "move": "bad"
+        },
+        {
+          "id": "bukatsu-change-1",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "ぶかつどうは さいきん かわってきましたか。",
+          "question_en": "Have clubs been changing lately?",
+          "move": "change"
+        },
+        {
+          "id": "bukatsu-future-1",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "ぶかつどうは これから どう なると 思[おも]いますか。",
+          "question_en": "What will happen to club activities?",
+          "move": "change"
+        },
+        {
+          "id": "bukatsu-sig",
+          "move": "culture",
+          "question_ja": "日本[にほん]の 人[ひと]に とって、ぶかつどうは どうして たいせつですか。",
+          "question_en": "Why do club activities matter to Japanese people?",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false
+        },
+        {
+          "id": "bukatsu-values-1",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "ぶかつどうから 日本[にほん]の 社会[しゃかい]の 何[なに]が わかりますか。",
+          "question_en": "What do clubs tell you about Japanese society?",
+          "move": "culture"
+        },
+        {
+          "id": "bukatsu-values-2",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "どうして 日本[にほん]の 学校[がっこう]は チームワークを たいせつに しますか。",
+          "question_en": "Why do Japanese schools make so much of teamwork?",
+          "move": "culture"
         },
         {
           "id": "bukatsu-fix-1",
@@ -1158,17 +1378,7 @@ window.ORAL_TOPICS = {
           "from_topic": false,
           "question_ja": "どうして この トピックを えらびましたか。",
           "question_en": "Why did you choose this topic?",
-          "move": "final"
-        },
-        {
-          "id": "bukatsu-future-1",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "ぶかつどうは これから どう なると 思[おも]いますか。",
-          "question_en": "What will happen to club activities?",
-          "move": "final"
+          "move": "opinion"
         },
         {
           "id": "bukatsu-future-2",
@@ -1178,7 +1388,7 @@ window.ORAL_TOPICS = {
           "from_topic": false,
           "question_ja": "れんしゅうの 時間[じかん]を へらした ほうが いいと 思[おも]いますか。",
           "question_en": "Should the practice hours be cut?",
-          "move": "final"
+          "move": "opinion"
         },
         {
           "id": "bukatsu-personal-1",
@@ -1188,7 +1398,7 @@ window.ORAL_TOPICS = {
           "from_topic": false,
           "question_ja": "ぶかつどうは 勉強[べんきょう]の じゃまに なると 思[おも]いますか。",
           "question_en": "Do you think clubs get in the way of study?",
-          "move": "final"
+          "move": "opinion"
         },
         {
           "id": "bukatsu-personal-2",
@@ -1198,7 +1408,7 @@ window.ORAL_TOPICS = {
           "from_topic": false,
           "question_ja": "日本[にほん]の 学校[がっこう]で ぶかつどうを して みたいですか。",
           "question_en": "Would you like to join a club at a Japanese school?",
-          "move": "final"
+          "move": "opinion"
         }
       ]
     },
@@ -1311,6 +1521,26 @@ window.ORAL_TOPICS = {
           "move": "facts"
         },
         {
+          "id": "shougakkou-where",
+          "move": "facts",
+          "question_ja": "きゅうしょくは どこで たべますか。",
+          "question_en": "Where do the children eat their lunch?",
+          "width": "shape",
+          "difficulty": 2,
+          "higher_order": false,
+          "from_topic": false
+        },
+        {
+          "id": "shougakkou-who",
+          "move": "facts",
+          "question_ja": "きゅうしょくは だれが はこびますか。",
+          "question_en": "Who carries the school lunch?",
+          "width": "shape",
+          "difficulty": 2,
+          "higher_order": false,
+          "from_topic": false
+        },
+        {
           "id": "shougakkou-who-and-when-1",
           "width": "shape",
           "difficulty": 2,
@@ -1331,34 +1561,24 @@ window.ORAL_TOPICS = {
           "move": "facts"
         },
         {
-          "id": "shougakkou-change-1",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "日本[にほん]の 小学校[しょうがっこう]は かわってきていますか。",
-          "question_en": "Are Japanese primary schools changing?",
-          "move": "how"
+          "id": "shougakkou-eg1",
+          "move": "example",
+          "question_ja": "たとえば、小学校[しょうがっこう]では どんな かもくを べんきょうしますか。",
+          "question_en": "For example, what subjects do they study?",
+          "width": "shape",
+          "difficulty": 2,
+          "higher_order": false,
+          "from_topic": false
         },
         {
-          "id": "shougakkou-values-1",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "小学校[しょうがっこう]の 生活[せいかつ]から 日本[にほん]の 社会[しゃかい]の 何[なに]が わかりますか。",
-          "question_en": "What does primary school life tell you about Japanese society?",
-          "move": "how"
-        },
-        {
-          "id": "shougakkou-values-2",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "そうじや きゅうしょくで 子[こ]どもは 何[なに]を 学[まな]びますか。",
-          "question_en": "What do the children learn from cleaning and from lunch?",
-          "move": "how"
+          "id": "shougakkou-eg2",
+          "move": "example",
+          "question_ja": "いま 話[はな]した ことを、れいを あげて せつめいして ください。",
+          "question_en": "Explain what you have just said, giving an example.",
+          "width": "shape",
+          "difficulty": 2,
+          "higher_order": false,
+          "from_topic": false
         },
         {
           "id": "shougakkou-good-1",
@@ -1399,6 +1619,56 @@ window.ORAL_TOPICS = {
           "question_ja": "子[こ]どもだけで 学校[がっこう]に 行[い]くのは あぶないと 思[おも]いますか。",
           "question_en": "Do you think walking to school alone is unsafe?",
           "move": "bad"
+        },
+        {
+          "id": "shougakkou-change-1",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "日本[にほん]の 小学校[しょうがっこう]は かわってきていますか。",
+          "question_en": "Are Japanese primary schools changing?",
+          "move": "change"
+        },
+        {
+          "id": "shougakkou-future-1",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "これから 日本[にほん]の 小学校[しょうがっこう]は どう なると 思[おも]いますか。",
+          "question_en": "How will Japanese primary schools change?",
+          "move": "change"
+        },
+        {
+          "id": "shougakkou-sig",
+          "move": "culture",
+          "question_ja": "日本[にほん]の 人[ひと]に とって、そうじや きゅうしょくは どうして たいせつですか。",
+          "question_en": "Why do the cleaning and the school lunch matter to Japanese people?",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false
+        },
+        {
+          "id": "shougakkou-values-1",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "小学校[しょうがっこう]の 生活[せいかつ]から 日本[にほん]の 社会[しゃかい]の 何[なに]が わかりますか。",
+          "question_en": "What does primary school life tell you about Japanese society?",
+          "move": "culture"
+        },
+        {
+          "id": "shougakkou-values-2",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "そうじや きゅうしょくで 子[こ]どもは 何[なに]を 学[まな]びますか。",
+          "question_en": "What do the children learn from cleaning and from lunch?",
+          "move": "culture"
         },
         {
           "id": "shougakkou-fix-1",
@@ -1448,17 +1718,7 @@ window.ORAL_TOPICS = {
           "from_topic": false,
           "question_ja": "どうして この トピックを えらびましたか。",
           "question_en": "Why did you choose this topic?",
-          "move": "final"
-        },
-        {
-          "id": "shougakkou-future-1",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "これから 日本[にほん]の 小学校[しょうがっこう]は どう なると 思[おも]いますか。",
-          "question_en": "How will Japanese primary schools change?",
-          "move": "final"
+          "move": "opinion"
         },
         {
           "id": "shougakkou-future-2",
@@ -1468,7 +1728,7 @@ window.ORAL_TOPICS = {
           "from_topic": false,
           "question_ja": "子[こ]どもが へっている ことは 学校[がっこう]に どんな えいきょうが ありますか。",
           "question_en": "How does the falling birth rate affect schools?",
-          "move": "final"
+          "move": "opinion"
         },
         {
           "id": "shougakkou-personal-1",
@@ -1478,7 +1738,7 @@ window.ORAL_TOPICS = {
           "from_topic": false,
           "question_ja": "日本[にほん]の 小学校[しょうがっこう]に 行[い]って みたいですか。",
           "question_en": "Would you like to attend a Japanese primary school?",
-          "move": "final"
+          "move": "opinion"
         },
         {
           "id": "shougakkou-personal-2",
@@ -1488,7 +1748,7 @@ window.ORAL_TOPICS = {
           "from_topic": false,
           "question_ja": "しらべて 一番[いちばん] おどろいた ことは 何[なん]ですか。",
           "question_en": "What surprised you most in your research?",
-          "move": "final"
+          "move": "opinion"
         }
       ]
     },
@@ -1601,6 +1861,26 @@ window.ORAL_TOPICS = {
           "move": "facts"
         },
         {
+          "id": "shichigosan-howdo",
+          "move": "facts",
+          "question_ja": "七五三[しちごさん]の じゅんびは どうやって しますか。",
+          "question_en": "How does a family get ready for it?",
+          "width": "shape",
+          "difficulty": 2,
+          "higher_order": false,
+          "from_topic": false
+        },
+        {
+          "id": "shichigosan-where",
+          "move": "facts",
+          "question_ja": "七五三[しちごさん]の 日[ひ]に どこに 行[い]きますか。",
+          "question_en": "Where does a family go on the day?",
+          "width": "shape",
+          "difficulty": 2,
+          "higher_order": false,
+          "from_topic": false
+        },
+        {
           "id": "shichigosan-who-and-when-1",
           "width": "shape",
           "difficulty": 2,
@@ -1621,34 +1901,24 @@ window.ORAL_TOPICS = {
           "move": "facts"
         },
         {
-          "id": "shichigosan-change-1",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "今[いま]の 七五三[しちごさん]は むかしと ちがいますか。",
-          "question_en": "Is shichigosan different now?",
-          "move": "how"
+          "id": "shichigosan-eg1",
+          "move": "example",
+          "question_ja": "たとえば、子[こ]どもは どんな ふくを きますか。",
+          "question_en": "For example, what do the children wear?",
+          "width": "shape",
+          "difficulty": 2,
+          "higher_order": false,
+          "from_topic": false
         },
         {
-          "id": "shichigosan-values-1",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "七五三[しちごさん]から 日本[にほん]の 家族[かぞく]について 何[なに]が わかりますか。",
-          "question_en": "What does shichigosan tell you about Japanese families?",
-          "move": "how"
-        },
-        {
-          "id": "shichigosan-values-2",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "どうして 日本[にほん]の 人[ひと]は 子[こ]どもの せいちょうを いわいますか。",
-          "question_en": "Why do Japanese people mark a child growing up?",
-          "move": "how"
+          "id": "shichigosan-eg2",
+          "move": "example",
+          "question_ja": "いま 話[はな]した ことを、れいを あげて せつめいして ください。",
+          "question_en": "Explain what you have just said, giving an example.",
+          "width": "shape",
+          "difficulty": 2,
+          "higher_order": false,
+          "from_topic": false
         },
         {
           "id": "shichigosan-good-1",
@@ -1689,6 +1959,56 @@ window.ORAL_TOPICS = {
           "question_ja": "しゃしんの ために 七五三[しちごさん]を する 家族[かぞく]も いますが、どう 思[おも]いますか。",
           "question_en": "Some families do it for the photographs. What do you think?",
           "move": "bad"
+        },
+        {
+          "id": "shichigosan-change-1",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "今[いま]の 七五三[しちごさん]は むかしと ちがいますか。",
+          "question_en": "Is shichigosan different now?",
+          "move": "change"
+        },
+        {
+          "id": "shichigosan-future-1",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "七五三[しちごさん]は これからも つづくと 思[おも]いますか。",
+          "question_en": "Will shichigosan continue?",
+          "move": "change"
+        },
+        {
+          "id": "shichigosan-sig",
+          "move": "culture",
+          "question_ja": "日本[にほん]の 人[ひと]に とって、七五三[しちごさん]は どうして たいせつですか。",
+          "question_en": "Why does shichigosan matter to Japanese people?",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false
+        },
+        {
+          "id": "shichigosan-values-1",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "七五三[しちごさん]から 日本[にほん]の 家族[かぞく]について 何[なに]が わかりますか。",
+          "question_en": "What does shichigosan tell you about Japanese families?",
+          "move": "culture"
+        },
+        {
+          "id": "shichigosan-values-2",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "どうして 日本[にほん]の 人[ひと]は 子[こ]どもの せいちょうを いわいますか。",
+          "question_en": "Why do Japanese people mark a child growing up?",
+          "move": "culture"
         },
         {
           "id": "shichigosan-fix-1",
@@ -1738,17 +2058,7 @@ window.ORAL_TOPICS = {
           "from_topic": false,
           "question_ja": "どうして この トピックを えらびましたか。",
           "question_en": "Why did you choose this topic?",
-          "move": "final"
-        },
-        {
-          "id": "shichigosan-future-1",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "七五三[しちごさん]は これからも つづくと 思[おも]いますか。",
-          "question_en": "Will shichigosan continue?",
-          "move": "final"
+          "move": "opinion"
         },
         {
           "id": "shichigosan-future-2",
@@ -1758,7 +2068,7 @@ window.ORAL_TOPICS = {
           "from_topic": false,
           "question_ja": "しゃしんの 会社[かいしゃ]が ふえた ことは いい ことですか。",
           "question_en": "Is the growth of the photo studios a good thing?",
-          "move": "final"
+          "move": "opinion"
         },
         {
           "id": "shichigosan-personal-1",
@@ -1768,7 +2078,7 @@ window.ORAL_TOPICS = {
           "from_topic": false,
           "question_ja": "七五三[しちごさん]を 見[み]て みたいですか。",
           "question_en": "Would you like to see a shichigosan?",
-          "move": "final"
+          "move": "opinion"
         },
         {
           "id": "shichigosan-personal-2",
@@ -1778,7 +2088,7 @@ window.ORAL_TOPICS = {
           "from_topic": false,
           "question_ja": "おかねが かかる ことについて どう 思[おも]いますか。",
           "question_en": "What do you think about how much it costs?",
-          "move": "final"
+          "move": "opinion"
         }
       ]
     },
@@ -1891,6 +2201,26 @@ window.ORAL_TOPICS = {
           "move": "facts"
         },
         {
+          "id": "konbini-howdo",
+          "move": "facts",
+          "question_ja": "コンビニでは どうやって かいものを しますか。",
+          "question_en": "How does shopping in one actually go?",
+          "width": "shape",
+          "difficulty": 2,
+          "higher_order": false,
+          "from_topic": false
+        },
+        {
+          "id": "konbini-where",
+          "move": "facts",
+          "question_ja": "コンビニは 日本[にほん]の どこに ありますか。",
+          "question_en": "Where in Japan do you find convenience stores?",
+          "width": "shape",
+          "difficulty": 2,
+          "higher_order": false,
+          "from_topic": false
+        },
+        {
           "id": "konbini-who-and-when-1",
           "width": "shape",
           "difficulty": 2,
@@ -1911,34 +2241,24 @@ window.ORAL_TOPICS = {
           "move": "facts"
         },
         {
-          "id": "konbini-change-1",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "コンビニは さいきん かわってきましたか。",
-          "question_en": "Have they been changing lately?",
-          "move": "how"
+          "id": "konbini-eg1",
+          "move": "example",
+          "question_ja": "たとえば、コンビニは どんな サービスを していますか。",
+          "question_en": "For example, what services do they offer?",
+          "width": "shape",
+          "difficulty": 2,
+          "higher_order": false,
+          "from_topic": false
         },
         {
-          "id": "konbini-values-1",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "コンビニから 日本[にほん]の 社会[しゃかい]の 何[なに]が わかりますか。",
-          "question_en": "What do they tell you about Japanese society?",
-          "move": "how"
-        },
-        {
-          "id": "konbini-values-2",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "日本[にほん]の 人[ひと]は どうして ていねいな ほうそうが 好[す]きだと 思[おも]いますか。",
-          "question_en": "Why do you think Japanese shoppers like careful packaging?",
-          "move": "how"
+          "id": "konbini-eg2",
+          "move": "example",
+          "question_ja": "いま 話[はな]した ことを、れいを あげて せつめいして ください。",
+          "question_en": "Explain what you have just said, giving an example.",
+          "width": "shape",
+          "difficulty": 2,
+          "higher_order": false,
+          "from_topic": false
         },
         {
           "id": "konbini-good-1",
@@ -1981,6 +2301,56 @@ window.ORAL_TOPICS = {
           "move": "bad"
         },
         {
+          "id": "konbini-change-1",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "コンビニは さいきん かわってきましたか。",
+          "question_en": "Have they been changing lately?",
+          "move": "change"
+        },
+        {
+          "id": "konbini-future-1",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "コンビニの 会社[かいしゃ]は どんな ことを していますか。",
+          "question_en": "What are the companies doing about it?",
+          "move": "change"
+        },
+        {
+          "id": "konbini-sig",
+          "move": "culture",
+          "question_ja": "日本[にほん]の 人[ひと]に とって、コンビニは どうして たいせつですか。",
+          "question_en": "Why do convenience stores matter to Japanese people?",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false
+        },
+        {
+          "id": "konbini-values-1",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "コンビニから 日本[にほん]の 社会[しゃかい]の 何[なに]が わかりますか。",
+          "question_en": "What do they tell you about Japanese society?",
+          "move": "culture"
+        },
+        {
+          "id": "konbini-values-2",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "日本[にほん]の 人[ひと]は どうして ていねいな ほうそうが 好[す]きだと 思[おも]いますか。",
+          "question_en": "Why do you think Japanese shoppers like careful packaging?",
+          "move": "culture"
+        },
+        {
           "id": "konbini-fix-1",
           "move": "fix",
           "width": "deep",
@@ -1999,6 +2369,26 @@ window.ORAL_TOPICS = {
           "from_topic": false,
           "question_ja": "お店[みせ]と 買[か]う 人[ひと]、どちらが かわった ほうが いいと 思[おも]いますか。",
           "question_en": "Who should change more, the shops or the shoppers?"
+        },
+        {
+          "id": "konbini-future-2",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "これから コンビニは どう なると 思[おも]いますか。",
+          "question_en": "What will happen to convenience stores?",
+          "move": "fix"
+        },
+        {
+          "id": "konbini-personal-2",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "自分[じぶん]は ごみを へらす ために 何[なに]が できますか。",
+          "question_en": "What can you do yourself to cut waste?",
+          "move": "fix"
         },
         {
           "id": "konbini-compare-1",
@@ -2028,27 +2418,7 @@ window.ORAL_TOPICS = {
           "from_topic": false,
           "question_ja": "どうして この トピックを えらびましたか。",
           "question_en": "Why did you choose this topic?",
-          "move": "final"
-        },
-        {
-          "id": "konbini-future-1",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "コンビニの 会社[かいしゃ]は どんな ことを していますか。",
-          "question_en": "What are the companies doing about it?",
-          "move": "final"
-        },
-        {
-          "id": "konbini-future-2",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "これから コンビニは どう なると 思[おも]いますか。",
-          "question_en": "What will happen to convenience stores?",
-          "move": "final"
+          "move": "opinion"
         },
         {
           "id": "konbini-personal-1",
@@ -2058,17 +2428,7 @@ window.ORAL_TOPICS = {
           "from_topic": false,
           "question_ja": "日本[にほん]の コンビニを 使[つか]って みたいですか。",
           "question_en": "Would you like to use a Japanese convenience store?",
-          "move": "final"
-        },
-        {
-          "id": "konbini-personal-2",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "自分[じぶん]は ごみを へらす ために 何[なに]が できますか。",
-          "question_en": "What can you do yourself to cut waste?",
-          "move": "final"
+          "move": "opinion"
         }
       ]
     },
@@ -2181,6 +2541,16 @@ window.ORAL_TOPICS = {
           "move": "facts"
         },
         {
+          "id": "washlet-howdo",
+          "move": "facts",
+          "question_ja": "ウォシュレットは どうやって 使[つか]いますか。",
+          "question_en": "How do you actually use one?",
+          "width": "shape",
+          "difficulty": 2,
+          "higher_order": false,
+          "from_topic": false
+        },
+        {
           "id": "washlet-who-and-when-1",
           "width": "shape",
           "difficulty": 2,
@@ -2201,34 +2571,34 @@ window.ORAL_TOPICS = {
           "move": "facts"
         },
         {
-          "id": "washlet-change-1",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "ウォシュレットは どんな ふうに かわってきましたか。",
-          "question_en": "How have they changed over the years?",
-          "move": "how"
+          "id": "washlet-who",
+          "move": "facts",
+          "question_ja": "だれに とって ウォシュレットは いちばん べんりですか。",
+          "question_en": "Who finds a washlet most useful?",
+          "width": "shape",
+          "difficulty": 2,
+          "higher_order": false,
+          "from_topic": false
         },
         {
-          "id": "washlet-values-1",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "ウォシュレットから 日本[にほん]の 「おもてなし」の 考[かんが]え方[かた]が わかりますか。",
-          "question_en": "Can you see the idea of omotenashi in the washlet?",
-          "move": "how"
+          "id": "washlet-eg1",
+          "move": "example",
+          "question_ja": "たとえば、ウォシュレットには どんな きのうが ありますか。",
+          "question_en": "For example, what functions does one have?",
+          "width": "shape",
+          "difficulty": 2,
+          "higher_order": false,
+          "from_topic": false
         },
         {
-          "id": "washlet-values-2",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "どうして 日本[にほん]では せいけつが たいせつに されていますか。",
-          "question_en": "Why is cleanliness held to matter so much in Japan?",
-          "move": "how"
+          "id": "washlet-eg2",
+          "move": "example",
+          "question_ja": "いま 話[はな]した ことを、れいを あげて せつめいして ください。",
+          "question_en": "Explain what you have just said, giving an example.",
+          "width": "shape",
+          "difficulty": 2,
+          "higher_order": false,
+          "from_topic": false
         },
         {
           "id": "washlet-good-1",
@@ -2269,6 +2639,56 @@ window.ORAL_TOPICS = {
           "question_ja": "ウォシュレットの もんだいは 何[なん]ですか。",
           "question_en": "What are the drawbacks?",
           "move": "bad"
+        },
+        {
+          "id": "washlet-change-1",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "ウォシュレットは どんな ふうに かわってきましたか。",
+          "question_en": "How have they changed over the years?",
+          "move": "change"
+        },
+        {
+          "id": "washlet-future-1",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "ウォシュレットは これから どう なると 思[おも]いますか。",
+          "question_en": "What will happen to the washlet?",
+          "move": "change"
+        },
+        {
+          "id": "washlet-sig",
+          "move": "culture",
+          "question_ja": "日本[にほん]の 人[ひと]に とって、せいけつは どうして たいせつですか。",
+          "question_en": "Why does cleanliness matter to Japanese people?",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false
+        },
+        {
+          "id": "washlet-values-1",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "ウォシュレットから 日本[にほん]の 「おもてなし」の 考[かんが]え方[かた]が わかりますか。",
+          "question_en": "Can you see the idea of omotenashi in the washlet?",
+          "move": "culture"
+        },
+        {
+          "id": "washlet-values-2",
+          "width": "deep",
+          "difficulty": 3,
+          "higher_order": true,
+          "from_topic": false,
+          "question_ja": "どうして 日本[にほん]では せいけつが たいせつに されていますか。",
+          "question_en": "Why is cleanliness held to matter so much in Japan?",
+          "move": "culture"
         },
         {
           "id": "washlet-fix-1",
@@ -2318,17 +2738,7 @@ window.ORAL_TOPICS = {
           "from_topic": false,
           "question_ja": "どうして この トピックを えらびましたか。",
           "question_en": "Why did you choose this topic?",
-          "move": "final"
-        },
-        {
-          "id": "washlet-future-1",
-          "width": "deep",
-          "difficulty": 3,
-          "higher_order": true,
-          "from_topic": false,
-          "question_ja": "ウォシュレットは これから どう なると 思[おも]いますか。",
-          "question_en": "What will happen to the washlet?",
-          "move": "final"
+          "move": "opinion"
         },
         {
           "id": "washlet-future-2",
@@ -2338,7 +2748,7 @@ window.ORAL_TOPICS = {
           "from_topic": false,
           "question_ja": "こうれいしゃが ふえると、トイレは どう かわりますか。",
           "question_en": "How will toilets change as the population ages?",
-          "move": "final"
+          "move": "opinion"
         },
         {
           "id": "washlet-personal-1",
@@ -2348,7 +2758,7 @@ window.ORAL_TOPICS = {
           "from_topic": false,
           "question_ja": "ウォシュレットを 使[つか]った ことが ありますか。",
           "question_en": "Have you ever used one?",
-          "move": "final"
+          "move": "opinion"
         },
         {
           "id": "washlet-personal-2",
@@ -2358,7 +2768,7 @@ window.ORAL_TOPICS = {
           "from_topic": false,
           "question_ja": "電気[でんき]や 水[みず]を 使[つか]いますが、かんきょうに いいと 思[おも]いますか。",
           "question_en": "They use power and water. Are they good for the environment?",
-          "move": "final"
+          "move": "opinion"
         }
       ]
     }
@@ -2367,11 +2777,13 @@ window.ORAL_TOPICS = {
     "define",
     "image",
     "facts",
-    "how",
+    "example",
     "good",
     "bad",
+    "change",
+    "culture",
     "fix",
     "compare",
-    "final"
+    "opinion"
   ]
 };

@@ -145,43 +145,55 @@ window.ORAL_FLOW = {
       "en": "Right, we are out of time, so let us talk about your discussion topic."
     },
     "about": "Eight minutes on your topic. There is no introduction to give: the first answer does that job. Keep it short enough to be an answer and full enough to hand them their next three questions.",
-    "opening_note": "Your first answer sets the discussion up. Say what the thing is, then name two or three parts of it you have researched. That is what they will ask about next.",
+    "opening_note": "Your first answer sets the discussion up. Say what the thing is, then name two or three parts of it you have researched. That is what they will ask about next. The buttons below are the same list as the preparation sheet, so anything on the sheet is a question you can be asked.",
     "moves": [
       {
-        "id": "facts",
-        "label_en": "Who, where, when, what",
-        "label_ja": "だれ・どこ・いつ・なに",
-        "about": "The plain factual questions. Numbers and dates earn marks."
+        "id": "define",
+        "label_en": "Define and explain it",
+        "label_ja": "せつめい",
+        "about": "What it is, in a sentence or two. This is the opener and it hands them their next three questions."
       },
       {
-        "id": "how",
-        "label_en": "How and why",
-        "label_ja": "どうやって・どうして",
-        "about": "Where the marks start: not what happens, but why it does."
+        "id": "facts",
+        "label_en": "Key information",
+        "label_ja": "だれ・なに・いつ・どこ",
+        "about": "Who, what, when, where, how. Numbers and dates earn marks."
+      },
+      {
+        "id": "example",
+        "label_en": "Examples",
+        "label_ja": "たとえば",
+        "about": "A claim with no example behind it is the commonest thin answer. Have two ready."
+      },
+      {
+        "id": "culture",
+        "label_en": "Cultural significance",
+        "label_ja": "どうして たいせつか",
+        "about": "Why it matters in Japan, and what it shows about how people think. The hardest to invent on the spot."
       },
       {
         "id": "good",
-        "label_en": "Good points",
+        "label_en": "Good things",
         "label_ja": "いい点[てん]",
         "about": "What is good about it, and for whom."
       },
       {
         "id": "bad",
-        "label_en": "Bad points",
+        "label_en": "Bad things",
         "label_ja": "わるい点[てん]",
         "about": "Problems. Most students manage this much."
       },
       {
         "id": "fix",
-        "label_en": "Solutions",
+        "label_en": "What could be done",
         "label_ja": "かいけつほうほう",
-        "about": "What could be done about the problems. This is the one that separates a prepared answer from a good one."
+        "about": "This is the one that separates a prepared answer from a good one."
       },
       {
-        "id": "image",
-        "label_en": "Your image",
-        "label_ja": "しゃしん",
-        "about": "Bring the photograph in when it helps a point, not only at the start. Nerves make students forget it entirely."
+        "id": "change",
+        "label_en": "Has it changed, what next",
+        "label_ja": "かわった こと・これから",
+        "about": "How it used to be, and where it is heading."
       },
       {
         "id": "compare",
@@ -190,10 +202,16 @@ window.ORAL_FLOW = {
         "about": "Comparison is named in the criteria. Have one ready."
       },
       {
-        "id": "final",
-        "label_en": "The last questions",
-        "label_ja": "おわりの しつもん",
-        "about": "Why you chose it, what you think of it, whether you have seen or done it, and what happens to it next."
+        "id": "opinion",
+        "label_en": "Your opinion",
+        "label_ja": "あなたの いけん",
+        "about": "What you think, and why you think it. Never just the opinion on its own."
+      },
+      {
+        "id": "image",
+        "label_en": "Your photograph",
+        "label_ja": "しゃしん",
+        "about": "Bring it in when it helps a point, not only at the start. Nerves make students forget it entirely."
       }
     ],
     "strategies": [
