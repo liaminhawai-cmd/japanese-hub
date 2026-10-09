@@ -313,14 +313,14 @@ window.HITO_PEOPLE = {
       "step": "who",
       "title": "だれですか",
       "title_en": "Who is it?",
-      "rule": "Read the description and find the person. Every sentence below is true of exactly one of them.",
+      "rule": "Read the description and find the person. Every sentence is true of exactly one of them, and everything you are told is something you can see in the picture.",
       "eg": []
     },
     {
       "step": "write",
       "title": "かいてみよう",
       "title_en": "Write it",
-      "rule": "Three sentences about the person on screen. No words are given. Use が for a part, and join two descriptions with くて or で at least once.",
+      "rule": "Three sentences about the person on screen. No words are given. Use が for a part, and join two descriptions with くて or で at least once. The picture cannot show what someone is like, so that part is written underneath it in English.",
       "eg": []
     },
     {

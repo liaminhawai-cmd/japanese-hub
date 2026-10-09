@@ -221,32 +221,40 @@
   }
 
   /* ---- the facts, and the sentences that are true of them ----
-     One table. The exercises read it, and so does the marker. */
+     One table. The exercises read it, and so does the marker.
+
+     Each fact says whether the drawing shows it. Hair, eyes, height,
+     glasses and every garment are drawn; what someone is like is not,
+     and no drawing of a face can say 親切 or まじめ. A step that asks a
+     student to pick a person out of six from a personality is asking
+     them to read character off a face, which is worse than merely
+     unanswerable, so だれですか takes its clues from the seen facts only. */
   function factsOf(p){
     var f = p.facts, out = [];
     out.push({ id:"hair",
       ja: f.hair === "long" ? "かみが 長[なが]いです。" : "かみが 短[みじか]いです。",
       re: f.hair === "long" ? /かみが(ながい|長い)です/ : /かみが(みじかい|短い)です/,
       wrong: f.hair === "long" ? /かみが(みじかい|短い)です/ : /かみが(ながい|長い)です/,
-      look: "the hair" });
+      look: "the hair", seen: true });
     out.push({ id:"colour",
       ja: f.colour === "black" ? "かみが くろいです。" : "かみが ちゃいろいです。",
       re: f.colour === "black" ? /かみがくろいです/ : /かみがちゃいろいです/,
       wrong: f.colour === "black" ? /かみがちゃいろいです/ : /かみがくろいです/,
-      look: "the colour of the hair" });
+      look: "the colour of the hair", seen: true });
     out.push({ id:"eyes",
       ja: f.eyes === "big" ? "目[め]が 大[おお]きいです。" : "目[め]が 小[ちい]さいです。",
       re: f.eyes === "big" ? /(め|目)が(おおきい|大きい)です/ : /(め|目)が(ちいさい|小さい)です/,
       wrong: f.eyes === "big" ? /(め|目)が(ちいさい|小さい)です/ : /(め|目)が(おおきい|大きい)です/,
-      look: "the eyes" });
+      look: "the eyes", seen: true });
     out.push({ id:"tall",
       ja: f.tall ? "せが 高[たか]いです。" : "せが 高[たか]くないです。",
       re: f.tall ? /せが(たかい|高い)です/ : /せが(たかくない|高くない)です/,
       wrong: f.tall ? /せが(たかくない|高くない)です/ : /せが(たかい|高い)です/,
-      look: "how tall they are" });
+      look: "how tall they are", seen: true });
     if (f.glasses)
       out.push({ id:"glasses", ja:"めがねを かけています。",
-        re:/めがねをかけています/, wrong:null, look:"the glasses" });
+        re:/めがねをかけています/, wrong:null, look:"the glasses",
+        seen: true });
     /* clothing. The phrase in front of the garment is the point: an
        い colour goes straight on, a noun colour needs の. Both spellings
        are accepted because the colour words are kana either way. */
@@ -275,6 +283,7 @@
       var ja = (colour ? phrase(colour, item) : item) + "\u3092 " + verb + "\u3002";
       var tail = item + "\u3092" + verb;
       out.push({ id:"c-" + pair[0], ja: ja, look:"what they are wearing",
+        seen: true,
         judge: function(ln){
           var i = ln.indexOf(tail);
           if (i < 0) return null;
@@ -303,9 +312,9 @@
     p.traits.forEach(function(t){
       var tr = P.traits[t];
       out.push({ id:"t-" + t,
-        ja: plain(tr.ja) + (tr.kind === "na" ? "です。" : "です。"),
+        ja: plain(tr.ja) + "です。",
         re: new RegExp("(" + kana(tr.ja) + "|" + plain(tr.ja) + ")です"),
-        wrong: null, look:"what they are like" });
+        wrong: null, look:"what they are like", seen: false, en: tr.en });
     });
     return out;
   }
@@ -867,11 +876,12 @@
      Sometimes that is the hair and the eyes, sometimes what they are
      wearing. */
   function cluesFor(p, all){
-    var mine = factsOf(p), pool = shuffle(mine.slice()), picked = [];
+    var mine = factsOf(p).filter(function(f){ return f.seen; });
+    var pool = shuffle(mine.slice()), picked = [];
     function fits(){
       return all.filter(function(q){
         if (q.id === p.id) return true;
-        var theirs = factsOf(q);
+        var theirs = factsOf(q).filter(function(f){ return f.seen; });
         return picked.every(function(f){
           return theirs.some(function(g){ return g.id === f.id && g.ja === f.ja; });
         });
@@ -1034,7 +1044,16 @@
     $("main").innerHTML = ruleFor("write")
       + '<div class="work"><div class="who">'
       + '<div class="pic">' + figure(p, 300)
-      + '<div style="text-align:center" class="jp">' + esc(p.name) + 'さん</div></div>'
+      + '<div style="text-align:center" class="jp">' + esc(p.name) + 'さん</div>'
+      /* The drawing shows the hair, the eyes, the height and the clothes.
+         It cannot show 親切, so the two personality words are handed over
+         in English: the student still has to produce the Japanese, which
+         is the whole job of this step, and nothing Japanese is on screen
+         to copy. Without this the marker was calling a guess true. */
+      + '<div class="brief">What they are like: <b>'
+      + fs.filter(function(f){ return !f.seen; })
+          .map(function(f){ return esc(f.en); }).join('</b>, <b>')
+      + '</b></div></div>'
       + '<div class="q"><textarea id="ta" rows="7" spellcheck="false"'
       + ' aria-label="Write three sentences"></textarea>'
       + '<div id="fb"></div></div></div></div>'
