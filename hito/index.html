@@ -20,8 +20,19 @@
     --na:#7a4a86;           /* な adjectives, everywhere, always */
     --noun:#5a6470;         /* the things you describe */
     --font:Calibri,Carlito,'Segoe UI',Tahoma,Verdana,sans-serif;
-    --jp:'Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic Medium',
-         YuGothic,'Noto Sans JP','IPAGothic',Meiryo,sans-serif;
+    /* This page was the odd one out: it went straight to Hiragino Sans,
+       a gothic, and skipped every textbook face, while the hub landing
+       page and the oral app both lead with UD Digi Kyokasho. So a Year 8
+       learning to form characters was being shown gothic strokes here
+       and kyokasho strokes everywhere else in the suite.
+
+       The stack is now the hub's, character for character. UD Digi
+       Kyokasho is the UD textbook face and ships with Windows 10 and
+       later, which is the school machines; a Mac falls to YuKyokasho,
+       which is also a textbook face. An iPad has no kyokasho at all and
+       lands on Hiragino, which is the one gap and not one a font stack
+       can close. Nothing here is downloaded. */
+    --jp:'UD Digi Kyokasho N-R','UD Digi Kyokasho NP-R','UD Digi Kyokasho NK-R','UD デジタル教科書体 N-R','UDデジタル教科書体N-R','HGP教科書体','HG教科書体','YuKyokasho Yoko',YuKyokasho,'Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic',YuGothic,Meiryo,sans-serif;
   }
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{height:100%}
@@ -303,6 +314,8 @@
   <div class="sp"></div>
   <button class="tool" id="furiBtn">ふりがな</button>
   <button class="tool" id="enBtn">EN</button>
+  <button class="tool" id="rateBtn" title="How fast the voice speaks">
+    <span id="rateLabel">×1</span></button>
   <button class="tool" id="sfxBtn" aria-pressed="true" title="Sound">♪</button>
   <button class="tool" id="resetBtn">Reset</button>
 </div>

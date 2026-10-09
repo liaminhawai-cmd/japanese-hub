@@ -62,6 +62,9 @@
     var a = sound();
     try { a.pause(); } catch (e){}
     a.src = "audio/" + clip;
+    /* After the src and not before: changing the source resets the rate
+       on Safari, which is most of the phones this runs on. */
+    try { a.playbackRate = S.rate; } catch (e){}
     var r = a.play();
     if (r && r.catch) r.catch(function(){});
   }
@@ -73,7 +76,7 @@
 
   /* ---- what the device remembers, on this device only ---- */
   var KEY = "hito-v1";
-  var S = { furi:true, en:true, sfx:true, done:{}, wrote:{} };
+  var S = { furi:true, en:true, sfx:true, rate:1, done:{}, wrote:{} };
   try { var raw = localStorage.getItem(KEY); if (raw){
     var o = JSON.parse(raw); for (var k in S) if (o[k] !== undefined) S[k] = o[k];
   } } catch (e){}
@@ -87,6 +90,8 @@
   function paintToggles(){
     /* Twenty-five devices groaning at once is a classroom problem, so
        the noise has a switch. It governs the drum tick as well. */
+    $("rateLabel").textContent = "\u00d7" + S.rate;
+    $("rateBtn").classList.toggle("off", S.rate !== 1);
     $("sfxBtn").classList.toggle("off", !S.sfx);
     $("sfxBtn").setAttribute("aria-pressed", S.sfx ? "true" : "false");
     document.body.classList.toggle("nofuri", !S.furi);
@@ -96,6 +101,22 @@
   }
   $("furiBtn").onclick = function(){ S.furi = !S.furi; paintToggles(); save(); };
   $("enBtn").onclick = function(){ S.en = !S.en; paintToggles(); save(); };
+  /* Three speeds, in the bar rather than a settings page, because 0.7 is
+     how you catch a word you missed at full speed and it gets reached for
+     many times in a sitting. The recordings are one fixed voice, so the
+     speed is the only thing about them left worth changing. */
+  var RATES = [0.7, 1, 1.2];
+  $("rateBtn").onclick = function(){
+    S.rate = RATES[(RATES.indexOf(S.rate) + 1) % RATES.length] || 1;
+    save(); paintToggles();
+    /* Say something at the new speed, or the button is a number that
+       changes and nothing else. */
+    var w = null;
+    W.words.forEach(function(x){
+      if (!w && CLIPS[speakable(x.ja)]) w = x;
+    });
+    if (w) say(w.ja);
+  };
   $("sfxBtn").onclick = function(){
     S.sfx = !S.sfx; save(); paintToggles();
     if (S.sfx) CLICK.whoosh();          /* so you can hear what you turned on */
