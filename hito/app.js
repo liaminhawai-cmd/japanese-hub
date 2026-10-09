@@ -73,7 +73,7 @@
 
   /* ---- what the device remembers, on this device only ---- */
   var KEY = "hito-v1";
-  var S = { furi:true, en:true, done:{}, wrote:{} };
+  var S = { furi:true, en:true, sfx:true, done:{}, wrote:{} };
   try { var raw = localStorage.getItem(KEY); if (raw){
     var o = JSON.parse(raw); for (var k in S) if (o[k] !== undefined) S[k] = o[k];
   } } catch (e){}
@@ -85,6 +85,10 @@
     }, 200);
   }
   function paintToggles(){
+    /* Twenty-five devices groaning at once is a classroom problem, so
+       the noise has a switch. It governs the drum tick as well. */
+    $("sfxBtn").classList.toggle("off", !S.sfx);
+    $("sfxBtn").setAttribute("aria-pressed", S.sfx ? "true" : "false");
     document.body.classList.toggle("nofuri", !S.furi);
     document.body.classList.toggle("noen", !S.en);
     $("furiBtn").classList.toggle("off", !S.furi);
@@ -92,6 +96,10 @@
   }
   $("furiBtn").onclick = function(){ S.furi = !S.furi; paintToggles(); save(); };
   $("enBtn").onclick = function(){ S.en = !S.en; paintToggles(); save(); };
+  $("sfxBtn").onclick = function(){
+    S.sfx = !S.sfx; save(); paintToggles();
+    if (S.sfx) CLICK.whoosh();          /* so you can hear what you turned on */
+  };
   $("resetBtn").onclick = function(){
     S.done = {}; S.wrote = {}; save(); draw();
   };
@@ -487,6 +495,7 @@
       return ctx;
     }
     function play(){
+      if (!S.sfx) return;
       try {
         var c = build();
         if (!c) return;
@@ -503,11 +512,124 @@
         src.start(t); src.stop(t + 0.07);
       } catch (e){}
     }
-    return { play: play };
+    /* ---- the whoosh and the groan ----
+       Both synthesised rather than fetched: the page has to work on a
+       tram, and two more files to download for two sound effects is not
+       a trade worth making.
+
+       The whoosh is noise through a bandpass whose centre frequency
+       sweeps up and then falls away, which is what a thing moving past
+       your ear actually does to the spectrum. Short, 220ms, because a
+       ninja that takes a second is not a ninja.
+
+       The groan is a triangle sagging from 150Hz to 65 with a slow
+       wobble on top and everything above 600Hz taken off. Triangle
+       rather than sawtooth: a saw at that pitch is a horror film and
+       this is a Year 8 classroom. */
+    function whoosh(){
+      if (!S.sfx) return;
+      try {
+        var c = build(); if (!c) return;
+        if (c.state === "suspended") c.resume();
+        var t = c.currentTime;
+        var src = c.createBufferSource();
+        /* a longer piece of noise than the tick needs, looped */
+        src.buffer = noise; src.loop = true;
+        var bp = c.createBiquadFilter();
+        bp.type = "bandpass"; bp.Q.value = 1.4;
+        bp.frequency.setValueAtTime(700, t);
+        bp.frequency.exponentialRampToValueAtTime(4200, t + 0.085);
+        bp.frequency.exponentialRampToValueAtTime(600, t + 0.22);
+        var g = c.createGain();
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.exponentialRampToValueAtTime(0.2, t + 0.04);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
+        src.connect(bp); bp.connect(g); g.connect(c.destination);
+        src.start(t); src.stop(t + 0.24);
+      } catch (e){}
+    }
+    function groan(){
+      if (!S.sfx) return;
+      try {
+        var c = build(); if (!c) return;
+        if (c.state === "suspended") c.resume();
+        var t = c.currentTime, D = 0.75;
+        var o1 = c.createOscillator();
+        o1.type = "triangle";
+        o1.frequency.setValueAtTime(150, t);
+        o1.frequency.exponentialRampToValueAtTime(65, t + D);
+        /* the wobble, or it is a foghorn rather than a groan */
+        var lfo = c.createOscillator(), lg = c.createGain();
+        lfo.frequency.value = 5.5; lg.gain.value = 7;
+        lfo.connect(lg); lg.connect(o1.frequency);
+        var lp = c.createBiquadFilter();
+        lp.type = "lowpass"; lp.frequency.value = 600;
+        var g = c.createGain();
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.exponentialRampToValueAtTime(0.17, t + 0.12);
+        g.gain.setValueAtTime(0.17, t + 0.34);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + D);
+        o1.connect(lp); lp.connect(g); g.connect(c.destination);
+        o1.start(t); lfo.start(t);
+        o1.stop(t + D + 0.02); lfo.stop(t + D + 0.02);
+      } catch (e){}
+    }
+    return { play: play, whoosh: whoosh, groan: groan };
   })();
   /* The things that look pressable: the home panes, the tab row, and the
      tiles and move buttons inside a section. Not every button in the app:
      a clack on Next twenty times in a drill is a different thing. */
+
+  /* ---- the ninja ----
+     The zombie needed an opposite. A ninja crosses rather than rises,
+     and is gone in half the time the zombie takes: right is
+     acknowledged and then got out of the way of, which is the right
+     proportion when being right is the thing you want to be unremarkable
+     and repeatable.
+
+     Same guards as the zombie. It cannot be tapped, it never covers the
+     feedback, and reduced motion gets the sound without the dash. */
+  var nLast = 0;
+  function ninja(near){
+    CLICK.whoosh();
+    try {
+      if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    } catch (e){}
+    var now = Date.now();
+    if (now - nLast < 420) return;
+    nLast = now;
+    var box = document.createElement("div");
+    box.className = "ninj";
+    box.setAttribute("aria-hidden", "true");
+    var r = near && near.getBoundingClientRect ? near.getBoundingClientRect() : null;
+    box.style.left = (r ? r.left + r.width / 2 : innerWidth / 2) + "px";
+    box.style.top  = (r ? r.top + r.height / 2 - 26 : innerHeight * 0.5) + "px";
+    box.innerHTML =
+        '<svg viewBox="0 0 64 52" width="64" height="52">'
+      /* the scarf, trailing behind the direction of travel */
+      + '<path d="M30 16 q-12 -4 -24 2 q10 1 14 4 q-9 1 -13 5 q12 -1 21 -3 z"'
+      + ' fill="#b23a3a" opacity=".92"/>'
+      /* a body folded forward, mid-dash */
+      + '<path d="M28 18 q12 -3 19 6 q4 7 -3 11 q-9 5 -17 -1 q-6 -5 1 -16 z"'
+      + ' fill="#20262f"/>'
+      /* back leg kicked out */
+      + '<path d="M34 34 q-6 7 -14 8 q6 -8 8 -12 z" fill="#20262f"/>'
+      /* arm thrown forward */
+      + '<path d="M44 22 q9 -2 14 3" stroke="#20262f" stroke-width="5"'
+      + ' stroke-linecap="round" fill="none"/>'
+      /* the head, and the eye slit that makes it a ninja */
+      + '<circle cx="44" cy="17" r="10" fill="#262d37"/>'
+      + '<path d="M38 15 h13 v4 h-13 z" fill="#f2e9d8"/>'
+      + '<circle cx="42" cy="17" r="1.7" fill="#20262f"/>'
+      + '<circle cx="48" cy="17" r="1.7" fill="#20262f"/>'
+      /* two speed lines, which is the whole of the whoosh made visible */
+      + '<path d="M2 24 h14 M6 31 h10" stroke="#20262f" stroke-width="2"'
+      + ' stroke-linecap="round" opacity=".5"/>'
+      + '</svg>';
+    document.body.appendChild(box);
+    box.addEventListener("animationend", function(){ box.remove(); });
+    setTimeout(function(){ if (box.parentNode) box.remove(); }, 1400);
+  }
 
   /* ---- the zombie ----
      Andrew asked for this twice. I argued once that a celebration or a
@@ -521,6 +643,7 @@
      asking for reduced motion gets nothing at all. */
   var zLast = 0;
   function zombie(near){
+    CLICK.groan();
     try {
       if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     } catch (e){}
@@ -710,6 +833,7 @@
       var kana = chip.dataset.w, ok = slot.dataset.m === kana, x = wordOf(kana);
       if (ok){
         slot.classList.add("yes");
+        ninja(slot);
         slot.querySelector(".got").innerHTML = ruby(x.ja) + ' '
           + saybtn(x.ja);
         chip.remove();
@@ -895,6 +1019,7 @@
       pick = null; c.classList.remove("pick");
       if (ok){
         c.classList.add("yes", "gone");
+        ninja(c);
         col.querySelector(".in").appendChild(c);
         left--; score();
         $("fb").innerHTML = '<div class="mark yes"><b>Yes</b>'
@@ -1027,7 +1152,7 @@
           x.classList.toggle("yes", x.dataset.o === want);
           if (x === b && !ok) x.classList.add("no");
         });
-        if (!ok) zombie(b);
+        if (ok) ninja(b); else zombie(b);
         $("fb").innerHTML = '<div class="mark ' + (ok ? "yes" : "no") + '">'
           + '<b>' + (ok ? "Yes" : "Not that one") + '</b>'
           + (ok ? "" : "Look at " + esc(it.f.look) + " again. ")
@@ -1091,7 +1216,8 @@
       var got = line.join(" "), want = b.ja.replace(/。$/, "");
       var ok = got === want;
       var joined = /くて|で$|で /.test(got);
-      if (!ok && line.length === parts.length) zombie($("fb"));
+      if (ok) ninja($("fb"));
+      else if (line.length === parts.length) zombie($("fb"));
       $("fb").innerHTML = '<div class="mark ' + (ok ? "yes" : "no") + '">'
         + '<b>' + (ok ? "Yes" : "Not yet") + '</b>'
         + (ok ? ruby(b.ja) + " " + saybtn(b.ja)
@@ -1163,7 +1289,7 @@
       b.onclick = function(){
         var ok = b.dataset.p === p.id;
         b.classList.add(ok ? "yes" : "no");
-        if (!ok) zombie(b);
+        if (ok) ninja(b); else zombie(b);
         $("fb").innerHTML = '<div class="mark ' + (ok ? "yes" : "no") + '">'
           + '<b>' + (ok ? "Yes" : "Not that one") + '</b>'
           + (ok ? esc(p.name) + "さん." : "Check " + esc(clues[0].look)
@@ -1262,7 +1388,7 @@
           x.classList.toggle("yes", x.dataset.v === it.v);
           if (x === b && !ok) x.classList.add("no");
         });
-        if (!ok) zombie(b);
+        if (ok) ninja(b); else zombie(b);
         var line = it.p.name + "さんは " + it.item + "を " + V[it.v].ja + "。";
         $("fb").innerHTML = '<div class="mark ' + (ok ? "yes" : "no") + '">'
           + '<b>' + (ok ? "Yes" : "Not that one") + '</b>'
@@ -1332,6 +1458,7 @@
       if (ok){
         t.right++;
         if (t.right >= 8) done("spin");
+        ninja($("sin"));
         $("fb").innerHTML = '<div class="mark yes"><b>Yes</b>'
           + '<div class="ph">' + ruby(w.ja) + ' ' + saybtn(w.ja)
           + '</div></div>';

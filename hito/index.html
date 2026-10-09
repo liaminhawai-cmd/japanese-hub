@@ -224,8 +224,21 @@
      none so it can never swallow a tap meant for the feedback under it.
      Floats up and fades; the small sway stops it reading as a sprite on
      a rail. */
-  .zomb{position:fixed;z-index:60;transform:translate(-50%,0);
-        pointer-events:none;animation:zrise 1.6s ease-out forwards}
+  .zomb,.ninj{position:fixed;z-index:60;pointer-events:none}
+  .zomb{transform:translate(-50%,0);animation:zrise 1.6s ease-out forwards}
+  /* The ninja crosses and is gone in 0.7s. Right should be acknowledged
+     and then got out of the way of: it is the thing you want to be
+     unremarkable and repeatable, so it cannot take as long as being
+     wrong does. */
+  .ninj{transform:translate(-50%,-50%);animation:ndash .7s cubic-bezier(.2,.8,.3,1) forwards}
+  .ninj svg{display:block;filter:drop-shadow(0 2px 5px rgba(20,25,32,.3))}
+  @keyframes ndash{
+    0%{opacity:0;transform:translate(-190%,-50%) scale(.9)}
+    22%{opacity:1}
+    70%{opacity:1;transform:translate(-20%,-54%) scale(1)}
+    100%{opacity:0;transform:translate(120%,-58%) scale(.96)}
+  }
+  @media (prefers-reduced-motion:reduce){ .ninj{display:none} }
   .zomb svg{display:block;filter:drop-shadow(0 2px 6px rgba(20,25,32,.25))}
   @keyframes zrise{
     0%{opacity:0;transform:translate(-50%,10px) scale(.84) rotate(-4deg)}
@@ -290,6 +303,7 @@
   <div class="sp"></div>
   <button class="tool" id="furiBtn">ふりがな</button>
   <button class="tool" id="enBtn">EN</button>
+  <button class="tool" id="sfxBtn" aria-pressed="true" title="Sound">♪</button>
   <button class="tool" id="resetBtn">Reset</button>
 </div>
 <nav class="steps" id="steps"></nav>
