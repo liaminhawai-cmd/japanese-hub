@@ -317,6 +317,12 @@ window.HITO_PEOPLE = {
       "eg": []
     },
     {
+      "step": "spin",
+      "title_en": "Spin a word",
+      "rule": "Flick the drum or press the button. It stops on an English meaning: write that word in Japanese. Kana or kanji, either is fine.",
+      "eg": []
+    },
+    {
       "step": "write",
       "title": "かいてみよう",
       "title_en": "Write it",

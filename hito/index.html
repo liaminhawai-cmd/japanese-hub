@@ -219,6 +219,58 @@
   .brief{margin-top:8px;font-size:12.5px;line-height:1.4;
        color:var(--muted);text-align:center}
   .brief b{color:var(--ink);font-weight:700}
+  /* ---- the zombie ----
+     Fixed, so it drifts over whatever is on screen, and pointer-events
+     none so it can never swallow a tap meant for the feedback under it.
+     Floats up and fades; the small sway stops it reading as a sprite on
+     a rail. */
+  .zomb{position:fixed;z-index:60;transform:translate(-50%,0);
+        pointer-events:none;animation:zrise 1.6s ease-out forwards}
+  .zomb svg{display:block;filter:drop-shadow(0 2px 6px rgba(20,25,32,.25))}
+  @keyframes zrise{
+    0%{opacity:0;transform:translate(-50%,10px) scale(.84) rotate(-4deg)}
+    18%{opacity:.95}
+    55%{transform:translate(-42%,-70px) scale(1) rotate(5deg)}
+    100%{opacity:0;transform:translate(-56%,-150px) scale(1.02) rotate(-3deg)}
+  }
+  @media (prefers-reduced-motion:reduce){ .zomb{display:none} }
+
+  /* ---- the drum, lifted with the module from the oral app ---- */
+  .rwin{position:relative;flex:1;min-width:0;height:192px;overflow:hidden;
+        background:var(--paper);border:1px solid var(--line);border-radius:9px;
+        touch-action:none;cursor:grab;-webkit-user-select:none;user-select:none;
+        -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 24%,
+                           #000 76%,transparent 100%);
+        mask-image:linear-gradient(to bottom,transparent 0,#000 24%,
+                   #000 76%,transparent 100%)}
+  .reel.spinning .rwin{cursor:default}
+  .rwin:active{cursor:grabbing}
+  .rstrip{will-change:transform}
+  .ritem{height:64px;display:flex;flex-direction:column;align-items:center;
+         justify-content:center;gap:1px;text-align:center;padding:0 10px}
+  .ritem b{font-size:clamp(16px,5vw,21px);font-weight:600;line-height:1.15;
+           white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+           max-width:100%}
+  .ritem i{font-style:normal;font-size:12px;color:var(--muted);
+           letter-spacing:.04em}
+  .rmark{position:absolute;left:0;right:0;top:64px;height:64px;
+         pointer-events:none;border-top:2px solid var(--deep);
+         border-bottom:2px solid var(--deep);background:rgba(0,0,0,.035)}
+  .reel{display:flex;align-items:center;gap:9px;margin:2px 0 10px}
+  .rspin{flex:none;width:44px;height:44px;border-radius:50%;cursor:pointer;
+         padding:0;border:2px solid var(--line);background:var(--paper);
+         color:var(--deep);display:flex;align-items:center;
+         justify-content:center;opacity:.78;transition:opacity .13s}
+  .rspin:hover,.rspin:focus{opacity:1;border-color:var(--deep);outline:none}
+  .rspin svg{width:21px;height:21px}
+  .reel.spinning .rspin{opacity:.3;pointer-events:none}
+  .ask-en{font-size:15px;color:var(--muted);margin:2px 0 7px}
+  .ask-en b{color:var(--ink);font-size:17px}
+  .row{display:flex;gap:8px;align-items:center}
+  #sin{flex:1;min-width:0;font-family:var(--jp);font-size:22px;
+       border:2px solid var(--line);border-radius:9px;padding:8px 11px;
+       background:var(--paper);color:inherit}
+  #sin:focus{border-color:var(--deep);outline:none}
   .score{font-size:13px;color:var(--muted)}
   .score b{color:var(--ink);font-size:16px}
   @media (max-width:760px){

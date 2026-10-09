@@ -323,6 +323,241 @@
   /* だれですか opens, because the problem should arrive before the method:
      a student meets the six and tries to tell them apart before anybody
      has taught them a word. The writing step stays last. */
+  /* ================= the drum, and the zombie =================
+     Both lifted from the oral examination app, which is where the drum
+     was written and tuned. Nothing here is a second implementation: the
+     physics, the tick and the reduced-motion path are the same code, so
+     a fix in one is a fix the other should get too.
+
+     Why a drum and not a Wheel of Fortune: on a wheel the labels sit at
+     every angle and shrink to fit a wedge, which is the wrong thing to
+     do to words a student is still learning to read. On a drum they
+     stay horizontal and full size. */
+  var REEL = (function(){
+    var H = 64, raf = 0;
+    function reduced(){
+      try { return matchMedia("(prefers-reduced-motion: reduce)").matches; }
+      catch (e){ return false; }
+    }
+    function cancel(){ if (raf) cancelAnimationFrame(raf); raf = 0; }
+
+    function mount(box, items, onLand){
+      var L = items.length, SPAN = L * H;
+      var win = box.querySelector(".rwin"), strip = box.querySelector(".rstrip");
+      var three = "";
+      for (var c = 0; c < 3; c++){
+        three += items.map(function(it){
+          return '<div class="ritem"><b>' + it.html + '</b>'
+               + (it.sub ? '<i>' + it.sub + '</i>' : '') + '</div>';
+        }).join("");
+      }
+      strip.innerHTML = three;
+
+      var SLOW = 2.4, DRAG = 90, CATCH = 300, K = 150, C = 16;
+      var pos = 0, v = 0, target = null, last = 0, lastTick = 0, lastDetent = 0;
+      var spinning = false;
+
+      function wrap(x){ return ((x % SPAN) + SPAN) % SPAN; }
+      function paint(){
+        strip.style.transform =
+          "translate3d(0," + (H - SPAN - wrap(pos)).toFixed(2) + "px,0)";
+      }
+      function at(){ return Math.round(wrap(pos) / H) % L; }
+      function ticks(now){
+        var d = Math.floor(wrap(pos) / H);
+        if (d !== lastDetent){
+          lastDetent = d;
+          if (now - lastTick > 26){ lastTick = now; CLICK.play(); }
+        }
+      }
+      function done(){
+        spinning = false;
+        box.classList.remove("spinning");
+        if (onLand) onLand(items[at()], at());
+      }
+      function frame(now){
+        var dt = last ? Math.min(0.05, (now - last) / 1000) : 0.016;
+        last = now;
+        if (target === null){
+          var sgn = v < 0 ? -1 : 1;
+          v -= (SLOW * v + DRAG * sgn) * dt;
+          if (v * sgn < 0) v = 0;
+          pos += v * dt;
+          if (Math.abs(v) < CATCH) target = Math.round(pos / H) * H;
+        } else {
+          v += (-K * (pos - target) - C * v) * dt;
+          pos += v * dt;
+          if (Math.abs(pos - target) < 0.4 && Math.abs(v) < 8){
+            pos = target; v = 0;
+            paint(); done(); return;
+          }
+        }
+        paint(); ticks(now);
+        raf = requestAnimationFrame(frame);
+      }
+      function launch(v0){
+        cancel();
+        target = null; v = v0; last = 0;
+        spinning = true;
+        box.classList.add("spinning");
+        /* A device asking for reduced motion gets a short plain glide
+           rather than a jump: landing with no movement at all reads as
+           broken, and three slots of travel is not what that setting is
+           protecting anybody from. */
+        if (reduced()){
+          var from = pos, to = Math.round((pos + 3 * H) / H) * H, t0 = 0;
+          (function ease(now){
+            if (!t0) t0 = now;
+            var k = Math.min(1, (now - t0) / 480);
+            pos = from + (to - from) * (1 - Math.pow(1 - k, 3));
+            paint();
+            if (k < 1) raf = requestAnimationFrame(ease);
+            else { pos = to; paint(); done(); }
+          })(performance.now());
+          return;
+        }
+        raf = requestAnimationFrame(frame);
+      }
+
+      /* A flick, for a finger. The velocity is taken from the last few
+         milliseconds rather than the whole gesture, so a slow drag that
+         ends in a snap throws the drum and a slow drag that ends still
+         does not. */
+      var grab = null;
+      win.addEventListener("pointerdown", function(ev){
+        cancel(); spinning = false; box.classList.remove("spinning");
+        v = 0; target = null;
+        grab = { y:ev.clientY, pos:pos, t:performance.now(),
+                 ly:ev.clientY, lt:performance.now(), v:0, moved:0 };
+        try { win.setPointerCapture(ev.pointerId); } catch (e){}
+      });
+      win.addEventListener("pointermove", function(ev){
+        if (!grab) return;
+        ev.preventDefault();
+        pos = grab.pos - (ev.clientY - grab.y);
+        grab.moved += Math.abs(ev.clientY - grab.ly);
+        var now = performance.now(), dt = now - grab.lt;
+        if (dt > 4){
+          grab.v = -(ev.clientY - grab.ly) / dt * 1000;
+          grab.ly = ev.clientY; grab.lt = now;
+          grab.mouse = ev.pointerType === "mouse";
+        }
+        paint(); ticks(now);
+      });
+      function release(){
+        if (!grab) return;
+        /* A hand can flick; a mouse cannot. The same gesture drags a
+           cursor at perhaps a third the speed of a thumb, so a mouse
+           throw is scaled up to land in the same range. The button on the
+           rim is there because even scaled, dragging a mouse is a poor way
+           to throw anything. */
+        var fling = grab.v * (grab.mouse ? 2.2 : 1);
+        var stale = performance.now() - grab.lt > 130;
+        grab = null;
+        if (stale || Math.abs(fling) < 130){ launch(0); return; }
+        launch(Math.max(-7000, Math.min(7000, fling)));
+      }
+      win.addEventListener("pointerup", release);
+      win.addEventListener("pointercancel", release);
+
+      paint();
+      return {
+        /* The button spin. A random amount of energy, so it is not the same
+           throw every time, and always downward so the list reads the way
+           it would if you had flicked it up yourself. */
+        spin: function(){ launch(2400 + Math.random() * 1300); },
+        at: at,
+        spinning: function(){ return spinning; }
+      };
+    }
+    return { mount: mount, cancel: cancel };
+  })();
+
+  var CLICK = (function(){
+    var ctx = null, noise = null;
+    function build(){
+      if (ctx) return ctx;
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return null;
+      ctx = new AC();
+      var n = Math.floor(ctx.sampleRate * 0.06);
+      noise = ctx.createBuffer(1, n, ctx.sampleRate);
+      var d = noise.getChannelData(0);
+      for (var i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / n);
+      return ctx;
+    }
+    function play(){
+      try {
+        var c = build();
+        if (!c) return;
+        if (c.state === "suspended") c.resume();
+        var t = c.currentTime;
+        var src = c.createBufferSource(); src.buffer = noise;
+        var bp = c.createBiquadFilter();
+        bp.type = "bandpass"; bp.frequency.value = 1750; bp.Q.value = 7;
+        var g = c.createGain();
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.exponentialRampToValueAtTime(0.26, t + 0.003);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + 0.055);
+        src.connect(bp); bp.connect(g); g.connect(c.destination);
+        src.start(t); src.stop(t + 0.07);
+      } catch (e){}
+    }
+    return { play: play };
+  })();
+  /* The things that look pressable: the home panes, the tab row, and the
+     tiles and move buttons inside a section. Not every button in the app:
+     a clack on Next twenty times in a drill is a different thing. */
+
+  /* ---- the zombie ----
+     Andrew asked for this twice. I argued once that a celebration or a
+     creature on a wrong answer makes being wrong the most interesting
+     thing on the screen and that a Year 8 will farm it; he has heard
+     that and decided, and it is his room.
+
+     So it is built to be hard to farm. It rises once, takes a second
+     and a half, never blocks the feedback that names the rule, and does
+     not fire twice for the same mistake in quick succession. A device
+     asking for reduced motion gets nothing at all. */
+  var zLast = 0;
+  function zombie(near){
+    try {
+      if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    } catch (e){}
+    var now = Date.now();
+    if (now - zLast < 900) return;
+    zLast = now;
+    var box = document.createElement("div");
+    box.className = "zomb";
+    box.setAttribute("aria-hidden", "true");
+    var r = near && near.getBoundingClientRect ? near.getBoundingClientRect() : null;
+    box.style.left = (r ? r.left + r.width / 2 : innerWidth / 2) + "px";
+    box.style.top  = (r ? r.top : innerHeight * 0.6) + "px";
+    box.innerHTML =
+      '<svg viewBox="0 0 48 64" width="48" height="64">'
+      /* one arm out in front, the other trailing */
+      + '<path d="M10 30 q-7 2 -8 10" stroke="#6f9a4e" stroke-width="5"'
+      + ' stroke-linecap="round" fill="none"/>'
+      + '<path d="M38 30 q8 -1 10 4" stroke="#6f9a4e" stroke-width="5"'
+      + ' stroke-linecap="round" fill="none"/>'
+      /* a tattered sheet of a body, so it reads as floating */
+      + '<path d="M13 26 h22 v24 l-4 -4 l-4 5 l-4 -5 l-4 5 l-4 -5 l-2 3 z"'
+      + ' fill="#7fae59"/>'
+      + '<circle cx="24" cy="18" r="12" fill="#8fbf66"/>'
+      /* stitches, which is what makes it a zombie and not a frog */
+      + '<path d="M15 10 l4 4 M17 8 l-1 3 M21 11 l-1 3" stroke="#5d8440"'
+      + ' stroke-width="1.4" stroke-linecap="round" fill="none"/>'
+      + '<circle cx="19" cy="17" r="2.6" fill="#1f2a18"/>'
+      + '<circle cx="29" cy="17" r="2.6" fill="#1f2a18"/>'
+      + '<path d="M19 24 q5 3 10 0" stroke="#1f2a18" stroke-width="1.6"'
+      + ' stroke-linecap="round" fill="none"/>'
+      + '<path d="M21 24 v3 M26 24 v3" stroke="#1f2a18" stroke-width="1.2"/>'
+      + '</svg>';
+    document.body.appendChild(box);
+    box.addEventListener("animationend", function(){ box.remove(); });
+    setTimeout(function(){ if (box.parentNode) box.remove(); }, 2600);
+  }
+
   /* ---- a deck, so nothing comes up in the order it is written down ----
      Every stepped exercise used to walk its list with a counter: the six
      people in だれですか came up in file order, so the answer to round one
@@ -359,6 +594,8 @@
   }
   /* Correct once is enough to count: a student who gets all six right has
      met all six, in whatever order the deck handed them over. */
+  var TALLY = {};
+  function tallyOf(key){ return TALLY[key] || (TALLY[key] = { right:0 }); }
   function gotRight(key, n, i, id){
     var d = deck(key, n);
     d.right[i] = 1;
@@ -373,6 +610,7 @@
     { id:"join",  ja:"〜くて",     en:"Joining" },
     { id:"colour",ja:"いろ",       en:"Colours" },
     { id:"wear",  ja:"きています", en:"Wearing" },
+    { id:"spin",  ja:"ルーレット", en:"Spin a word" },
     { id:"write", ja:"かいて",     en:"Write it" }
   ];
   var at = 0, DRAW = {};
@@ -480,6 +718,7 @@
         if (!left) done("match");
       } else {
         slot.classList.add("no");
+        zombie(slot);
         setTimeout(function(){ slot.classList.remove("no"); }, 700);
         miss[kana] = (miss[kana] || 0) + 1;
         /* Stuck twice on the same word: show the spelling. The rung is
@@ -665,6 +904,7 @@
         tip(cfg.hint);
       } else {
         c.classList.add("no");
+        zombie(c);
         again[w.kana] = 1;
         var asked = cfg.wrong(w, key);
         /* No heading line: the red edge and the two labels already say it,
@@ -787,6 +1027,7 @@
           x.classList.toggle("yes", x.dataset.o === want);
           if (x === b && !ok) x.classList.add("no");
         });
+        if (!ok) zombie(b);
         $("fb").innerHTML = '<div class="mark ' + (ok ? "yes" : "no") + '">'
           + '<b>' + (ok ? "Yes" : "Not that one") + '</b>'
           + (ok ? "" : "Look at " + esc(it.f.look) + " again. ")
@@ -850,6 +1091,7 @@
       var got = line.join(" "), want = b.ja.replace(/。$/, "");
       var ok = got === want;
       var joined = /くて|で$|で /.test(got);
+      if (!ok && line.length === parts.length) zombie($("fb"));
       $("fb").innerHTML = '<div class="mark ' + (ok ? "yes" : "no") + '">'
         + '<b>' + (ok ? "Yes" : "Not yet") + '</b>'
         + (ok ? ruby(b.ja) + " " + saybtn(b.ja)
@@ -921,6 +1163,7 @@
       b.onclick = function(){
         var ok = b.dataset.p === p.id;
         b.classList.add(ok ? "yes" : "no");
+        if (!ok) zombie(b);
         $("fb").innerHTML = '<div class="mark ' + (ok ? "yes" : "no") + '">'
           + '<b>' + (ok ? "Yes" : "Not that one") + '</b>'
           + (ok ? esc(p.name) + "さん." : "Check " + esc(clues[0].look)
@@ -1019,6 +1262,7 @@
           x.classList.toggle("yes", x.dataset.v === it.v);
           if (x === b && !ok) x.classList.add("no");
         });
+        if (!ok) zombie(b);
         var line = it.p.name + "さんは " + it.item + "を " + V[it.v].ja + "。";
         $("fb").innerHTML = '<div class="mark ' + (ok ? "yes" : "no") + '">'
           + '<b>' + (ok ? "Yes" : "Not that one") + '</b>'
@@ -1033,6 +1277,84 @@
       };
     });
     $("next").onclick = function(){ advance("wear", items.length); draw(); };
+  };
+
+  /* ---- 9. ルーレット ----
+     Andrew asked for a spinning wheel for random word practice. A wheel
+     on its own is a picker, not a task, so the drum carries the English
+     and the student types the Japanese. That way the thing it chooses is
+     a question rather than an answer, and what they produce is checkable
+     rather than self-marked.
+
+     Kana or kanji both pass: the kanji are a draft set and a student who
+     writes かみ for hair has not got it wrong. */
+  var spinR = null, spinWord = null;
+  DRAW.spin = function(){
+    var pool = W.words.filter(function(w){ return w.kind !== "verb"; });
+    var items = shuffle(pool);
+    var t = tallyOf("spin");
+    $("main").innerHTML = ruleFor("spin")
+      + '<div class="work fit">'
+      + '<div class="reel" id="reel">'
+      + '<div class="rwin"><div class="rstrip"></div><div class="rmark"></div></div>'
+      + '<button class="rspin" id="rgo" aria-label="Spin">'
+      + '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none"'
+      + ' stroke="currentColor" stroke-width="2" stroke-linecap="round">'
+      + '<path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 3v4h-4"/>'
+      + '</svg></button></div>'
+      + '<div id="ask"></div></div>'
+      + '<div id="fb" class="fbslot"></div>'
+      + '<div class="foot"><span class="score"><b>' + t.right
+      + '</b> right</span><span class="sp"></span>'
+      + '<span id="tip">Flick the drum, or press the button.</span></div>';
+    spinR = REEL.mount($("reel"), items.map(function(w){
+      return { html: esc(w.en), sub: "" };
+    }), function(it, i){ landed(items[i]); });
+    $("rgo").onclick = function(){ $("fb").innerHTML = ""; spinR.spin(); };
+
+    function landed(w){
+      spinWord = w;
+      $("tip").textContent = "Write it in Japanese.";
+      $("ask").innerHTML =
+          '<p class="ask-en">Say and write: <b>' + esc(w.en) + '</b></p>'
+        + '<div class="row"><input id="sin" type="text" autocomplete="off"'
+        + ' autocapitalize="off" spellcheck="false" lang="ja"'
+        + ' aria-label="Write it in Japanese">'
+        + '<button class="btn sm" id="sgo">Check</button></div>';
+      $("sin").focus();
+      $("sin").onkeydown = function(ev){ if (ev.key === "Enter") check(); };
+      $("sgo").onclick = check;
+    }
+    function check(){
+      var w = spinWord, got = ($("sin").value || "").replace(/[\s\u3000]+/g, "");
+      if (!got) return;
+      var ok = got === w.kana || got === plain(w.ja);
+      if (ok){
+        t.right++;
+        if (t.right >= 8) done("spin");
+        $("fb").innerHTML = '<div class="mark yes"><b>Yes</b>'
+          + '<div class="ph">' + ruby(w.ja) + ' ' + saybtn(w.ja)
+          + '</div></div>';
+        $("ask").innerHTML = "";
+        $("tip").textContent = "Spin again.";
+        wireSay();
+        draw9();
+      } else {
+        zombie($("sin"));
+        $("fb").innerHTML = '<div class="mark no">'
+          + '<div class="ph bad"><i>not</i>' + esc(got) + '</div>'
+          + '<div class="ph"><i>yes</i>' + ruby(w.ja) + ' ' + saybtn(w.ja)
+          + '</div><p>' + esc(w.en) + ' is ' + esc(w.kana)
+          + (plain(w.ja) !== w.kana ? ', written ' + esc(plain(w.ja)) : '')
+          + '.</p></div>';
+        $("sin").select();
+        wireSay();
+      }
+    }
+    function draw9(){
+      $("main").querySelector(".score").innerHTML =
+        '<b>' + t.right + '</b> right';
+    }
   };
 
   /* ---- 9. かいてみよう ----
