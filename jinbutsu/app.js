@@ -34,7 +34,26 @@
   var RUN = /([一-鿿々]+)\[([ぁ-ゟー]+)\]/g;
   function plain(t){ return String(t||"").replace(RUN,"$1").replace(/[《》]/g,""); }
   function kana(t){ return String(t||"").replace(RUN,"$2").replace(/[《》]/g,""); }
-  function speakable(t){ return plain(t).replace(/[\s　]+/g,""); }
+  /* ---- は as わ, へ as え ----
+     The topic particle は is said わ, and the recorded voice does not always
+     work that out: in the oral exam app 高校生は came back with a HA in the
+     middle of it. Which は is the particle is not guessed. Andrew spaces his
+     Japanese at the phrase boundaries, so a は that ENDS one of those phrases
+     is the particle, and ではなく is the one shape where it sits inside a
+     phrase instead. That is the whole rule, and it matters that it is this
+     narrow: はこ and はしります begin with a は that has to stay one.
+
+     Only the sound changes. は is still は everywhere on the screen. */
+  var CHUNKS = /[^\s\u3000、。！？!?「」『』《》]+/g;
+  function particles(t){
+    return String(t).replace(CHUNKS, function(c){
+      c = c.replace(/では(?=[なあ])/g, "でわ");
+      if (/は$/.test(c)) return c.slice(0, -1) + "わ";
+      if (/へ$/.test(c)) return c.slice(0, -1) + "え";
+      return c;
+    });
+  }
+  function speakable(t){ return particles(plain(t)).replace(/[\s　]+/g,""); }
 
   /* ---- furigana the worksheets left off ----
      A worksheet rubies a kanji once and leaves it bare after that. On

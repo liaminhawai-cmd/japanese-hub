@@ -55,7 +55,27 @@
   ["pointerdown","touchstart","keydown"].forEach(function(ev){
     document.addEventListener(ev, wake, { capture:true, once:true });
   });
-  function speakable(t){ return plain(t).replace(/[\s　]+/g, ""); }
+  /* ---- は as わ, へ as え ----
+     The topic particle は is said わ, and a recorded voice does not always
+     work that out: in the oral exam app 高校生は came back with a HA in the
+     middle of it. Which は is the particle is not guessed. The Japanese
+     here is spaced at the phrase boundaries, so a は that ENDS one of those
+     phrases is the particle, and ではなく is the one shape where it sits
+     inside a phrase instead. That matters more than it sounds: はいています
+     and はしります begin with a は that has to stay one, and a blanket swap
+     would have wrecked both.
+
+     Only the sound changes. は is still は everywhere a student can see it. */
+  var CHUNKS = /[^\s\u3000、。！？!?「」『』]+/g;
+  function particles(t){
+    return String(t).replace(CHUNKS, function(c){
+      c = c.replace(/では(?=[なあ])/g, "でわ");
+      if (/は$/.test(c)) return c.slice(0, -1) + "わ";
+      if (/へ$/.test(c)) return c.slice(0, -1) + "え";
+      return c;
+    });
+  }
+  function speakable(t){ return particles(plain(t)).replace(/[\s　]+/g, ""); }
   function say(text){
     var clip = CLIPS[speakable(text)];
     if (!clip) return;
