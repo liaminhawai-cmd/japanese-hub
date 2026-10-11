@@ -189,6 +189,10 @@
   @media (max-height:640px){
     .rule{font-size:13px;line-height:1.4;max-height:5.4em;overflow:auto}
     .para{font-size:18px;line-height:1.95}
+    /* a gap and its tiles have to be on screen together, or the tile is
+       dragged from under the footer, which on a 568px screen it was */
+    .tile{font-size:16px;min-height:34px;padding:3px 9px;line-height:1.5}
+    .qrow{margin-bottom:9px}
   }
   @media (max-width:760px){
     .gidx{flex-wrap:nowrap}

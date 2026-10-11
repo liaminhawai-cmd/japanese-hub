@@ -558,9 +558,18 @@
         t.style.opacity = "";
         clearOver();
         if (moved){
+          /* A near miss still counts. On a 320px screen the gap and its
+             tiles only just fit together, and a drag let go beside the
+             gap rather than on it is the commonest thing a finger does.
+             Dropping anywhere in the item takes it to that item's gap,
+             and a drop that lands nowhere leaves the tile armed so the
+             gesture is not simply lost. */
           var over = document.elementFromPoint(ev.clientX, ev.clientY);
-          var gap = over && over.closest && over.closest("[data-gap]");
+          var gap = over && over.closest && (over.closest("[data-gap]")
+            || (over.closest("[data-it]")
+                && over.closest("[data-it]").querySelector("[data-gap]")));
           if (gap) onDrop(t, gap);
+          else t.classList.add("armed");
           return;
         }
         /* a tap arms the tile; the next tap on a gap drops it there */
