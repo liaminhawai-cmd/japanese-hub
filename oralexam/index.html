@@ -586,7 +586,7 @@
 (function(){
   "use strict";
 
-  var BUILD = "Version 22, 8 October 2026";
+  var BUILD = "Version 23, 11 October 2026";
 
   var CRIT  = window.ORAL_CRITERIA,
       REP   = window.ORAL_REPORTS,
@@ -630,17 +630,44 @@
      right and the intonation flat, because the engine takes its pitch accent
      and its phrasing from the kanji. So it gets the ordinary written form.
 
-     Two things are done to it. The spaces come out: they are in the data to
-     make a long kana line readable, and a speech engine treats a space as a
-     pause, which is what made it sound chopped into pieces. Then a reading is
-     swapped in for the few words the engine is known to get wrong, which are
-     listed in readings.js with nothing else beside them. Longest first, so
-     何年生 is matched before 何年. */
+     Three things are done to it. The particles は and へ are written as they
+     are said, わ and え, because an engine does not always work that out: 日本の
+     高校生は came out with a HA in the middle of it. Then the spaces come out:
+     they are in the data to make a long kana line readable, and a speech engine
+     treats a space as a pause, which is what made it sound chopped into pieces.
+     Then a reading is swapped in for the few words the engine is known to get
+     wrong, which are listed in readings.js with nothing else beside them.
+     Longest first, so 何年生 is matched before 何年.
+
+     Nothing on screen changes. は is still は where a student can see it. */
   var OVERRIDE = ((window.ORAL_READINGS || {}).overrides || [])
     .slice().sort(function(a, b){ return b.ja.length - a.ja.length; });
+  /* ---- は as わ, へ as え ----
+     Which は is the particle? The data already knows, because the Japanese
+     here is spaced at the phrase boundaries, and a は that ENDS one of those
+     phrases is the particle. That rule was checked against a morphological
+     analyser over every line in this app: it finds all 462 of them and
+     touches nothing else, which matters, because はこ and はしります begin
+     with a は that must stay a は.
+
+     ではなく and ではありません are the one shape where the particle sits
+     inside a phrase rather than ending it, so they are named.
+
+     A word that ends in は and is not a particle goes in not_particle in
+     readings.js. こんにちは does not need to be there: it is said わ. */
+  var NOTWA = (window.ORAL_READINGS || {}).not_particle || [];
+  var CHUNKS = /[^ \u3000、。！？!?「」『』]+/g;
+  function particles(text){
+    return String(text).replace(CHUNKS, function(chunk){
+      if (NOTWA.indexOf(chunk) >= 0) return chunk;
+      chunk = chunk.replace(/では(?=[なあ])/g, "でわ");
+      if (/は$/.test(chunk)) return chunk.slice(0, -1) + "わ";
+      if (/へ$/.test(chunk)) return chunk.slice(0, -1) + "え";
+      return chunk;
+    });
+  }
   function speakable(text){
-    var out = String(text == null ? "" : text)
-      .replace(KRUN, "$1")
+    var out = particles(String(text == null ? "" : text).replace(KRUN, "$1"))
       .replace(/[ \u3000]+/g, "");
     for (var i = 0; i < OVERRIDE.length; i++)
       out = out.split(OVERRIDE[i].ja).join(OVERRIDE[i].say);
