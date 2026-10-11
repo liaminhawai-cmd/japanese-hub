@@ -251,13 +251,18 @@
   }
 
   /* ---- the rungs ---- */
+  /* Two groups, and the bar shows the join. The first five are about
+     whichever person is chosen and change when the chips below change;
+     the last three are about the unit and stand on their own. Grammar
+     sat second, in the middle of the person's own sequence, which read
+     as though it belonged to that person. It does not. */
   var STEPS = [
     { id:"kotoba", ja:"ことば",   en:"The words" },
-    { id:"bunpou", ja:"ぶんぽう", en:"Grammar", whole:true },
     { id:"yomu",   ja:"よむ",     en:"Read it" },
     { id:"toi",    ja:"しつもん", en:"Questions" },
     { id:"yaku",   ja:"やくす",   en:"Translate" },
     { id:"hayaku", ja:"はやく",   en:"Read it again" },
+    { id:"bunpou", ja:"ぶんぽう", en:"Grammar", whole:true },
     { id:"jibun",  ja:"じぶんで", en:"Write your own", whole:true },
     { id:"kuraberu", ja:"くらべる", en:"All six", whole:true }
   ];
@@ -266,10 +271,16 @@
   function tag(){ return STEPS[at].id + ":" + P().id; }
 
   function paintSteps(){
+    var lastWhole = false;
     $("steps").innerHTML = STEPS.map(function(s,i){
       var all = s.whole
         ? S.done[s.id] : K.people.every(function(p){ return S.done[s.id+":"+p.id]; });
-      return '<button data-i="'+i+'"'+(i===at?' aria-current="step"':'')
+      var head = "";
+      if (!i) head = '<span class="grp">この人<em>this person</em></span>';
+      else if (s.whole && !lastWhole)
+        head = '<span class="grp">ユニット<em>the whole unit</em></span>';
+      lastWhole = !!s.whole;
+      return head + '<button data-i="'+i+'"'+(i===at?' aria-current="step"':'')
         + '><b>'+esc(s.ja)+'</b><i'+(all?' class="done"':'')+'>'
         + esc(s.en)+(all?" ✓":"")+'</i></button>';
     }).join("");

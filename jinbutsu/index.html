@@ -53,6 +53,17 @@
   .steps i{display:block;font-style:normal;font-size:10.5px;
        letter-spacing:.05em;text-transform:uppercase}
   .steps .done{color:var(--ok);font-weight:700}
+  /* the bar is in two halves: five rungs about the person chosen below,
+     three about the unit. The label is what says which is which. */
+  .steps .grp{flex:none;align-self:stretch;display:flex;flex-direction:column;
+       justify-content:center;padding:0 9px;border-left:1px solid var(--line);
+       font-family:var(--jp);font-size:11px;font-weight:700;color:var(--muted);
+       line-height:1.25;white-space:nowrap}
+  .steps .grp:first-child{border-left:0;padding-left:4px}
+  .steps .grp em{font-family:var(--font);font-style:normal;font-size:9px;
+       letter-spacing:.06em;text-transform:uppercase;font-weight:600;
+       color:var(--line)}
+  @media (max-width:760px){ .steps .grp em{display:none} }
   .steps button[aria-current]{border-bottom-color:var(--deep)}
   .steps button[aria-current] i{color:var(--deep)}
 
