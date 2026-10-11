@@ -142,10 +142,16 @@
     var best = Object.keys(S.best).map(function(k){
       return k + " " + (S.best[k]/1000).toFixed(1) + "s";
     }).join(", ");
+    var rungs = 0, total = 0;
+    STEPS.forEach(function(st){
+      if (st.whole){ total++; if (S.done[st.id]) rungs++; }
+      else K.people.forEach(function(p){
+        total++; if (S.done[st.id + ":" + p.id]) rungs++;
+      });
+    });
     var line = "れきしの人 · " + S.pts + " points"
       + (S.spent ? " (" + S.spent + " spent on support)" : " with no support used")
-      + " · " + Object.keys(S.done).length + " of " + STEPS.length * K.people.length
-      + " rungs done"
+      + " · " + rungs + " of " + total + " rungs done"
       + (best ? " · best reads: " + best : "")
       + " · " + new Date().toLocaleDateString("en-AU");
     var ta = document.createElement("textarea");
@@ -247,11 +253,13 @@
   /* ---- the rungs ---- */
   var STEPS = [
     { id:"kotoba", ja:"ことば",   en:"The words" },
+    { id:"bunpou", ja:"ぶんぽう", en:"Grammar", whole:true },
     { id:"yomu",   ja:"よむ",     en:"Read it" },
     { id:"toi",    ja:"しつもん", en:"Questions" },
     { id:"yaku",   ja:"やくす",   en:"Translate" },
     { id:"hayaku", ja:"はやく",   en:"Read it again" },
-    { id:"kuraberu", ja:"くらべる", en:"All six" }
+    { id:"jibun",  ja:"じぶんで", en:"Write your own", whole:true },
+    { id:"kuraberu", ja:"くらべる", en:"All six", whole:true }
   ];
   var at = 0, who = 0, DRAW = {};
   function P(){ return K.people[who % K.people.length]; }
@@ -259,7 +267,7 @@
 
   function paintSteps(){
     $("steps").innerHTML = STEPS.map(function(s,i){
-      var all = s.id === "kuraberu"
+      var all = s.whole
         ? S.done[s.id] : K.people.every(function(p){ return S.done[s.id+":"+p.id]; });
       return '<button data-i="'+i+'"'+(i===at?' aria-current="step"':'')
         + '><b>'+esc(s.ja)+'</b><i'+(all?' class="done"':'')+'>'
@@ -268,7 +276,7 @@
     each($("steps"),"[data-i]",function(b){
       b.onclick = function(){ at = +b.dataset.i; draw(); };
     });
-    var hide = STEPS[at].id === "kuraberu";
+    var hide = !!STEPS[at].whole;
     $("whobar").style.display = hide ? "none" : "";
     $("whobar").innerHTML = hide ? "" : K.people.map(function(p,i){
       return '<button data-w="'+i+'"'+(i===who?' aria-current="true"':'')+'>'
@@ -295,77 +303,373 @@
     wireSay();
   }
 
-  /* ---- 1. ことば ----
-     The unit's words, as a listening task. The card plays and shows a
-     number, never the word: a student has to hear it, decide, and put
-     it somewhere, which is a different job from reading 生まれました and
-     finding "was born" in the next column. */
-  var kRound = 0, kOrder = null;
-  DRAW.kotoba = function(){
-    var mine = (K.vocab||[]).filter(function(v){
-      return v.group !== "led" || P().id === "led";
+  /* ---- 1. ことば, in three passes ----
+     Andrew: "if the words are new to a student, how are they supposed
+     to learn them? Do they just guess until they get them right?" They
+     did. A six-item match is self-solving — get three and the rest fall
+     out by elimination — and matching only ever tests. A student
+     meeting 生まれました for the first time had nowhere to learn it.
+
+     So the rung has a meet before the test and a produce after it.
+
+       みる    the word, its meaning, its sound, and the sentence from
+               the article where it actually turns up. Nothing to get
+               wrong. You press through.
+       えらぶ  the match, but only over words already met, and the
+               distractors come from the same group so "it must be the
+               last one" stops working.
+       かく    English on screen, type the Japanese. Nothing to eliminate.
+
+     A word you get wrong comes back. A word you get right twice drops
+     out. That is the whole of the spacing and it is enough at this
+     scale. */
+  var kPhase = "miru", kAt = 0, kPool = null;
+  function wordsFor(p){
+    return (K.vocab || []).filter(function(v){
+      return v.group !== "led" || p.id === "led";
     });
-    var per = 6, rounds = Math.ceil(mine.length / per);
-    kRound = kRound % rounds;
-    if (!kOrder || kOrder.length !== mine.length) kOrder = shuffle(mine);
-    var set = kOrder.slice(kRound*per, kRound*per+per);
-    var silent = !Object.keys(CLIPS).length;
-    var chips = shuffle(set), slots = shuffle(set), left = set.length, pick = null;
+  }
+  /* where this word turns up in this person's article, so it is met in
+     a sentence rather than on a flashcard */
+  function inContext(p, v){
+    var needle = plain(v.ja).replace(/[\s\u3000〜]/g, "");
+    var best = null;
+    p.paras.forEach(function(para){
+      plain(para).split(/(?<=。)/).forEach(function(sv){
+        if (!best && needle && sv.replace(/[\s\u3000]/g,"").indexOf(needle) >= 0) best = sv.trim();
+      });
+    });
+    return best;
+  }
+  function kstate(v){
+    return (S.wrote["k:" + v.ja] | 0);   /* 0 unseen, 1 met, 2+ right */
+  }
+  function kbump(v, n){
+    S.wrote["k:" + v.ja] = Math.max(0, kstate(v) + n); save();
+  }
+  DRAW.kotoba = function(){
+    var p = P(), all = wordsFor(p);
+    var unmet = all.filter(function(v){ return kstate(v) < 1; });
+    var met   = all.filter(function(v){ return kstate(v) >= 1 && kstate(v) < 3; });
+    var known = all.filter(function(v){ return kstate(v) >= 3; });
+    var tabs = [["miru","みる","Meet them", unmet.length],
+                ["erabu","えらぶ","Match them", met.length],
+                ["kaku","かく","Write them", met.length]];
+    if (kPhase === "miru" && !unmet.length) kPhase = "erabu";
     $("main").innerHTML =
-        '<div class="rule"><b>The words</b>Press a card to hear it, then put '
-      + 'it on its meaning. The spelling appears once it lands, so listen '
-      + 'first and read after.</div>'
-      + '<div class="work"><div id="slots"></div></div>'
-      + foot('<div id="tray" style="display:flex;gap:7px;flex-wrap:wrap"></div>'
-        + '<span class="sp"></span><span class="score" id="sc"></span>'
-        + '<button class="btn ghost sm" id="next">Next six</button>');
+        '<div class="rule"><b>The words</b>Meet a word before you are asked '
+      + 'to match it, and write it after. Guessing your way through a '
+      + 'matching task is not learning a word.</div>'
+      + '<div class="row" style="margin-bottom:9px" id="ph">'
+      + tabs.map(function(t){
+          return '<button class="btn ' + (kPhase === t[0] ? "sm" : "ghost sm")
+            + '" data-p="' + t[0] + '"><span style="font-family:var(--jp)">'
+            + esc(t[1]) + '</span> <span class="en">' + esc(t[2]) + '</span>'
+            + ' · ' + t[3] + '</button>';
+        }).join("")
+      + '</div><div class="work" id="kw"></div>'
+      + foot('<span class="score">' + known.length + ' of ' + all.length
+        + ' known</span>');
+    each($("main"),"[data-p]",function(b){
+      b.onclick = function(){ kPhase = b.dataset.p; kAt = 0; kPool = null; draw(); };
+    });
+    if (kPhase === "miru") return miru(p, unmet.length ? unmet : all);
+    if (kPhase === "kaku") return kaku(p, met.length ? met : all);
+    return erabu(p, met.length >= 4 ? met : all);
+  };
+  function miru(p, pool){
+    kAt = kAt % pool.length;
+    var v = pool[kAt], ctx = inContext(p, v);
+    $("kw").innerHTML = '<div class="col" style="text-align:center">'
+      + '<p class="para" style="font-size:30px;margin-bottom:4px">' + ruby(v.ja) + '</p>'
+      + '<p style="font-size:19px;margin-bottom:10px">' + esc(v.en) + '</p>'
+      + '<p>' + saybtn(v.ja) + '</p>'
+      + (ctx ? '<div class="mark yes" style="text-align:left;margin-top:14px">'
+          + '<b>in the article</b><span class="jp">' + ruby(ctx) + '</span> '
+          + saybtn(ctx) + '</div>'
+        : '<p class="hint" style="margin-top:14px">This one is on the unit '
+          + 'list but does not appear in this article.</p>')
+      + '<div class="row" style="justify-content:center;margin-top:16px">'
+      + '<button class="btn" id="got">I have met it</button></div>'
+      + '<p class="hint" style="margin-top:8px">' + (kAt+1) + ' of ' + pool.length
+      + '</p></div>';
+    wireSay();
+    say(v.ja);
+    $("got").onclick = function(){
+      if (kstate(v) < 1) kbump(v, 1);
+      kAt++;
+      if (kAt >= pool.length){ kPhase = "erabu"; kAt = 0; }
+      draw();
+    };
+  }
+  function erabu(p, pool){
+    /* six from one group where there are six, so elimination is not a
+       strategy: all the distractors are the same kind of word */
+    if (!kPool || !kPool.length){
+      var byg = {};
+      pool.forEach(function(v){ (byg[v.group] = byg[v.group] || []).push(v); });
+      var big = Object.keys(byg).filter(function(g){ return byg[g].length >= 4; });
+      kPool = big.length ? shuffle(byg[big[Math.floor(Math.random()*big.length)]]).slice(0,6)
+                         : shuffle(pool).slice(0,6);
+    }
+    var set = kPool, chips = shuffle(set), slots = shuffle(set), left = set.length;
+    var pick = null;
+    $("kw").innerHTML = '<div class="col"><div id="slots"></div></div>';
     $("slots").innerHTML = slots.map(function(x){
       return '<div class="qrow" data-m="'+esc(x.ja)+'" style="border:2px dashed '
         + 'var(--line);border-radius:9px;padding:8px 11px;cursor:pointer">'
         + '<span class="en">'+esc(x.en)+'</span><span class="got"></span></div>';
     }).join("");
-    $("tray").innerHTML = chips.map(function(x,i){
+    var tray = document.createElement("div");
+    tray.className = "row";
+    tray.style.cssText = "flex-wrap:wrap;margin-top:10px";
+    tray.innerHTML = chips.map(function(x,i){
       return '<button class="btn ghost sm" data-w="'+esc(x.ja)+'">'
-        + (silent ? esc(plain(x.ja)) : (i+1) + ' ▶') + '</button>';
+        + (hasvoice(x.ja) ? (i+1) + ' ▶' : esc(plain(x.ja))) + '</button>';
     }).join("");
-    function sc(){ $("sc").innerHTML = '<b>'+(set.length-left)+'</b> of '+set.length
-      + ' · set ' + (kRound+1) + ' of ' + rounds; }
-    sc();
-    each($("main"),"[data-w]",function(b){
+    $("kw").querySelector(".col").appendChild(tray);
+    each($("kw"),"[data-w]",function(b){
       b.onclick = function(){
         say(b.dataset.w);
-        each($("main"),"[data-w]",function(x){ x.classList.remove("btn"); x.className="btn ghost sm"; });
+        each($("kw"),"[data-w]",function(x){ x.className = "btn ghost sm"; });
         b.className = "btn sm"; pick = b;
       };
     });
-    each($("main"),"[data-m]",function(slot){
+    each($("kw"),"[data-m]",function(slot){
       slot.onclick = function(){
         if (!pick || slot.dataset.got) return;
-        var v = (K.vocab||[]).filter(function(x){ return x.ja === pick.dataset.w; })[0];
+        var v = set.filter(function(x){ return x.ja === pick.dataset.w; })[0];
         if (slot.dataset.m === pick.dataset.w){
           slot.dataset.got = "1";
-          slot.style.borderStyle = "solid";
-          slot.style.borderColor = "var(--ok)";
-          slot.querySelector(".got").innerHTML =
-            ' <span class="jp" style="font-family:var(--jp);font-size:18px">'
-            + ruby(v.ja) + '</span> ' + saybtn(v.ja);
-          pick.remove(); pick = null; left--; sc(); wireSay();
-          award(1);
-          if (!left) done();
+          slot.style.borderStyle = "solid"; slot.style.borderColor = "var(--ok)";
+          slot.querySelector(".got").innerHTML = ' <span style="font-family:var(--jp);'
+            + 'font-size:18px">' + ruby(v.ja) + '</span> ' + saybtn(v.ja);
+          pick.remove(); pick = null; left--; award(1); kbump(v, 1); wireSay();
+          if (!left){ kPool = null; done(); draw(); }
         } else {
+          /* wrong: the word goes back to unmet, because a word you
+             cannot pick is a word you have not met */
+          kbump(v, -1);
           slot.style.borderColor = "var(--accent)";
           setTimeout(function(){ slot.style.borderColor = "var(--line)"; }, 600);
         }
       };
     });
-    $("next").onclick = function(){
-      kRound++;
-      if (kRound >= rounds){ kRound = 0; kOrder = shuffle(mine); }
-      draw();
+  }
+  function kaku(p, pool){
+    kAt = kAt % pool.length;
+    var v = pool[kAt];
+    $("kw").innerHTML = '<div class="col" style="text-align:center">'
+      + '<p style="font-size:22px;margin:18px 0 12px">' + esc(v.en) + '</p>'
+      + '<div class="row"><input class="ans" id="kin" lang="ja" autocomplete="off"'
+      + ' autocapitalize="off" spellcheck="false">'
+      + '<button class="btn sm" id="kgo">Check</button></div>'
+      + '<div id="kfb"></div>'
+      + '<div class="row" style="justify-content:center;margin-top:12px">'
+      + '<button class="btn ghost sm" id="khint">Show the first letter</button>'
+      + '<button class="btn ghost sm" id="knext">Skip</button></div></div>';
+    $("kin").focus();
+    function check(){
+      var got = ($("kin").value||"").replace(/[\s\u3000]/g,"");
+      if (!got) return;
+      var want = [plain(v.ja), kana(v.ja)].map(function(x){
+        return x.replace(/[\s\u3000〜]/g,""); });
+      if (want.indexOf(got) >= 0){
+        award(2); kbump(v, 1);
+        $("kfb").innerHTML = '<div class="mark yes"><b>Yes</b><span class="jp">'
+          + ruby(v.ja) + '</span> ' + saybtn(v.ja) + '</div>';
+        wireSay();
+        setTimeout(function(){ kAt++; draw(); }, 900);
+      } else {
+        kbump(v, -1);
+        $("kfb").innerHTML = '<div class="mark no"><b>Not yet</b>'
+          + '<span class="jp">' + esc(got) + '</span> is not it. '
+          + 'Go back to みる and meet it again.</div>';
+      }
+    }
+    $("kgo").onclick = check;
+    $("kin").onkeydown = function(ev){ if (ev.key === "Enter") check(); };
+    $("khint").onclick = function(){
+      spend(1, "first letter");
+      $("kin").value = kana(v.ja).replace(/[\s\u3000〜]/g,"").slice(0,1);
+      $("kin").focus();
+      $("khint").disabled = true;
     };
+    $("knext").onclick = function(){ kAt++; draw(); };
+  }
+
+  /* ---- 2. ぶんぽう ----
+     Andrew's own list of the patterns this unit turns on, plus
+     住んでいます, which is in all six articles and belongs with them.
+
+     A pattern is explained once, shown in sentences taken out of the
+     articles the student is about to read, and then practised. The
+     practice is a gapfill, and the tile goes into the gap by drag or by
+     two taps: a school iPad does not do HTML5 drag-and-drop at all and a
+     mouse is clumsy at tapping twice, so both gestures run the same
+     handler.
+
+     The distractors are the forms the answer is confusable with: です
+     against でした, に against で. A student who guesses is choosing
+     between two tenses, not between a verb and a particle, so guessing
+     gets them a coin toss and not a pass. */
+  var gAt = 0;
+  function gkey(g, i){ return "g:" + g.id + ":" + i; }
+  function gdone(g){
+    return (g.items || []).length > 0
+      && (g.items || []).every(function(_, i){ return S.wrote[gkey(g, i)]; });
+  }
+  /* Drag with a pointer, or tap and tap. One handler for both: if the
+     pointer never travelled, it was a tap. */
+  function dragdrop(scope, onDrop){
+    var ghost = null;
+    function clearOver(){
+      each(scope, "[data-gap]", function(g){ g.classList.remove("over"); });
+    }
+    each(scope, "[data-tile]", function(t){
+      var held = false, x0 = 0, y0 = 0, moved = false;
+      t.onpointerdown = function(ev){
+        if (t.classList.contains("spent")) return;
+        held = true; moved = false; x0 = ev.clientX; y0 = ev.clientY;
+        try { t.setPointerCapture(ev.pointerId); } catch(e){}
+      };
+      t.onpointermove = function(ev){
+        if (!held) return;
+        if (!moved && Math.abs(ev.clientX - x0) + Math.abs(ev.clientY - y0) < 8) return;
+        if (!moved){
+          moved = true;
+          ghost = t.cloneNode(true);
+          ghost.style.cssText += ";position:fixed;z-index:80;pointer-events:none;"
+            + "margin:0;opacity:.92;box-shadow:0 5px 16px rgba(0,0,0,.28)";
+          document.body.appendChild(ghost);
+          t.style.opacity = ".35";
+        }
+        ghost.style.left = (ev.clientX - ghost.offsetWidth / 2) + "px";
+        ghost.style.top  = (ev.clientY - ghost.offsetHeight / 2) + "px";
+        var over = document.elementFromPoint(ev.clientX, ev.clientY);
+        var gap = over && over.closest && over.closest("[data-gap]");
+        clearOver();
+        if (gap) gap.classList.add("over");
+      };
+      t.onpointerup = function(ev){
+        if (!held) return;
+        held = false;
+        if (ghost){ ghost.remove(); ghost = null; }
+        t.style.opacity = "";
+        clearOver();
+        if (moved){
+          var over = document.elementFromPoint(ev.clientX, ev.clientY);
+          var gap = over && over.closest && over.closest("[data-gap]");
+          if (gap) onDrop(t, gap);
+          return;
+        }
+        /* a tap arms the tile; the next tap on a gap drops it there */
+        var was = t.classList.contains("armed");
+        each(scope, "[data-tile]", function(x){ x.classList.remove("armed"); });
+        if (!was) t.classList.add("armed");
+      };
+      t.onpointercancel = t.onpointerup;
+    });
+    each(scope, "[data-gap]", function(gap){
+      gap.onclick = function(){
+        var armed = scope.querySelector("[data-tile].armed");
+        if (armed) onDrop(armed, gap);
+      };
+    });
+  }
+  DRAW.bunpou = function(){
+    var G = K.grammar || [];
+    if (!G.length){ $("main").innerHTML = '<div class="work"></div>'; return; }
+    gAt = ((gAt % G.length) + G.length) % G.length;
+    var g = G[gAt], finished = G.filter(gdone).length;
+    $("main").innerHTML =
+        '<div class="rule"><b>Grammar</b>' + G.length + ' patterns, and between '
+      + 'them they build every sentence in this unit. The examples are the '
+      + 'articles&rsquo; own sentences, so you will meet them again on the page. '
+      + 'Drag a tile into the gap, or tap the tile and then the gap.</div>'
+      + '<div class="row gidx" id="gidx">'
+      + G.map(function(x, i){
+          return '<button data-g="' + i + '"' + (i === gAt ? ' aria-current="true"' : '')
+            + (gdone(x) ? ' class="done"' : '') + '>' + ruby(x.pat)
+            + (gdone(x) ? " ✓" : "") + '</button>';
+        }).join("")
+      + '</div>'
+      + '<div class="work"><div class="col" id="gw"></div></div>'
+      + foot('<span class="score"><b>' + finished + '</b> of ' + G.length
+          + ' practised</span>'
+        + '<button class="btn ghost sm" id="gprev">Back</button>'
+        + '<button class="btn sm" id="gnext">Next pattern</button>');
+    each($("gidx"), "[data-g]", function(b){
+      b.onclick = function(){ gAt = +b.dataset.g; draw(); };
+    });
+    $("gprev").onclick = function(){ gAt--; draw(); };
+    $("gnext").onclick = function(){ gAt++; draw(); };
+
+    $("gw").innerHTML =
+        '<p class="para" style="margin-bottom:2px">' + ruby(g.pat) + '</p>'
+      + '<p style="font-size:17px;font-weight:700;margin-bottom:6px" class="en">'
+      + esc(g.title_en) + '</p>'
+      + '<div class="mark yes"><b>how it works</b>' + esc(g.rule) + '</div>'
+      + '<div class="mark"><b>the shape</b><span class="jp">' + ruby(g.form)
+      + '</span></div>'
+      + '<h3 class="sub">In the articles</h3>'
+      + (g.egs || []).map(function(e){
+          return '<div class="qrow" style="margin-bottom:7px">'
+            + '<div class="q">' + ruby(e.ja) + ' ' + saybtn(e.ja) + '</div>'
+            + '<div class="en" style="font-size:14px;color:var(--muted)">'
+            + esc(e.en) + (e.mine ? ' <i>(not from the articles: this one is '
+              + 'here to show the contrast)</i>' : '') + '</div></div>';
+        }).join("")
+      + '<h3 class="sub">Now you</h3>'
+      + '<div id="gits"></div>';
+
+    $("gits").innerHTML = (g.items || []).map(function(it, i){
+      var parts = String(it.ja).split(/＿+/);
+      var got = S.wrote[gkey(g, i)];
+      return '<div class="qrow" data-it="' + i + '">'
+        + '<div class="q">' + ruby(parts[0] || "")
+        + '<span class="gap' + (got ? ' ok' : '') + '" data-gap="' + i + '">'
+        + (got ? ruby(it.answer) : '　') + '</span>'
+        + ruby(parts.slice(1).join("")) + '</div>'
+        + '<div class="row" style="flex-wrap:wrap;margin-top:6px" data-tray="' + i
+        + '">' + (got ? "" : shuffle((it.options || []).slice()).map(function(o){
+            return '<button class="tile" data-tile="' + esc(plain(o)) + '" data-for="'
+              + i + '">' + ruby(o) + '</button>';
+          }).join("")) + '</div>'
+        + '<div data-gfb="' + i + '"></div></div>';
+    }).join("");
+
+    dragdrop($("gits"), function(tile, gap){
+      var i = +gap.dataset.gap, it = g.items[i];
+      if (String(tile.dataset.for) !== String(i)) return;   /* another item's tile */
+      if (S.wrote[gkey(g, i)]) return;
+      var fb = $("gits").querySelector('[data-gfb="' + i + '"]');
+      if (tile.dataset.tile === plain(it.answer)){
+        S.wrote[gkey(g, i)] = 1; save();
+        award(2);
+        gap.innerHTML = ruby(it.answer);
+        gap.classList.remove("bad"); gap.classList.add("ok");
+        each($("gits"), '[data-tray="' + i + '"] .tile', function(x){ x.remove(); });
+        fb.innerHTML = '<div class="mark yes"><b>Yes</b><span class="jp">'
+          + ruby(String(it.ja).replace(/＿+/, plain(it.answer))) + '</span></div>';
+        wireSay();
+        if (gdone(g)) draw();
+      } else {
+        gap.classList.add("bad");
+        tile.classList.remove("armed");
+        setTimeout(function(){ gap.classList.remove("bad"); }, 700);
+        fb.innerHTML = '<div class="mark no"><b>Not that one</b>'
+          + 'Read the shape again: <span class="jp">' + ruby(g.form)
+          + '</span></div>';
+      }
+    });
+    wireSay();
+    if (G.every(gdone) && !S.done["bunpou"]){
+      S.done["bunpou"] = 1; save(); paintSteps();
+    }
   };
 
-  /* ---- 2. よむ ----
+  /* ---- 3. よむ ----
      The article, in a narrow column, with the support one tap away and
      costing a point. Tap a word for its meaning; tap a kana for the
      chart. Nothing is hidden and nothing is free. */
@@ -439,7 +743,7 @@
     $("read").onclick = function(){ award(3); done(); $("read").disabled = true; };
   };
 
-  /* ---- 3. しつもん ----
+  /* ---- 4. しつもん ----
      The paper's own questions, in the paper's own language. The marker
      looks for the content the answer turns on, never an exact string: a
      short Japanese answer has too many right forms for a match to be
@@ -528,7 +832,7 @@
     check();
   };
 
-  /* ---- 4. やくす ----
+  /* ---- 5. やくす ----
      The underlined spans, which are the ones the paper asks for. There
      is no machine here that can mark a translation, and pretending
      otherwise would be the worst thing this app could do. So it takes
@@ -589,7 +893,7 @@
     $("dn").onclick = function(){ award(3); done(); $("dn").disabled = true; };
   };
 
-  /* ---- 5. はやく ----
+  /* ---- 6. はやく ----
      The pacer. A line travels down the column at the speed of the
      student's own best run of this article, the way the invisible
      world-record line travels down a swimming pool.
@@ -674,7 +978,149 @@
     };
   };
 
-  /* ---- 6. くらべる ----
+  /* ---- 7. じぶんで ----
+     The same frame, twelve slots, about themselves. This is the paper
+     task: the CAT asks for a self-introduction built on the articles,
+     and a student who can fill these twelve lines has written it.
+
+     What the page checks is the GRAMMAR AND NOTHING ELSE. It can see
+     whether a sentence has に and 生まれました in it. It cannot see
+     whether the year is the right year, and no checker could, so it says
+     so on every tick rather than letting a student think the machine has
+     marked their Japanese. The model sentence is one of Andrew's own, out
+     of the article named beside it, and showing it costs a point like
+     every other support.
+
+     At the end it puts the twelve lines together as one paragraph,
+     because twelve ticked boxes do not look like a piece of writing and
+     the paragraph does. */
+  function fslot(i){ return (K.frame || [])[i]; }
+  /* the slot credits a person, and an id is not a name */
+  function whoName(id){
+    var p = (K.people || []).filter(function(x){ return x.id === id; })[0];
+    return p ? p.name_en.split(" ")[0] : id;
+  }
+  function fkey(i){ return "f:" + (fslot(i) || {}).id; }
+  /* a need group is satisfied by any one of its spellings: 好きです and
+     すきです are the same answer and both are on the worksheet */
+  function fmiss(f, got){
+    var n = String(got || "").replace(/[\s　]/g, "");
+    if (!n) return null;
+    var missing = [];
+    (f.need || []).forEach(function(grp){
+      var ok = grp.some(function(k){
+        return n.indexOf(plain(k).replace(/[\s　]/g, "")) >= 0;
+      });
+      if (!ok) missing.push(grp[0]);
+    });
+    return missing;
+  }
+  DRAW.jibun = function(){
+    var F = K.frame || [];
+    var okCount = F.filter(function(_, i){ return S.done["jb:" + i]; }).length;
+    $("main").innerHTML =
+        '<div class="rule"><b>Write your own</b>Twelve sentences, the same '
+      + 'frame the six articles use, about you. The page checks the pattern '
+      + 'only: it can see whether your sentence has the right grammar in it, '
+      + 'and it cannot see whether what you wrote is true or whether the words '
+      + 'are the right words. That part is yours and your teacher&rsquo;s.</div>'
+      + '<div class="work"><div class="col" id="fw"></div></div>'
+      + '<div id="tip"></div>'
+      + foot('<span class="score" id="fsc"><b>' + okCount + '</b> of ' + F.length
+          + '</span>'
+        + '<button class="btn sm" id="fshow">Show my paragraph</button>');
+    $("fw").innerHTML = F.map(function(f, i){
+      return '<div class="qrow" data-f="' + i + '">'
+        + '<div class="q en"><b>' + (i + 1) + '.</b> ' + esc(f.en) + '</div>'
+        + '<p class="hint" style="margin-bottom:5px">' + esc(f.note) + '</p>'
+        + '<input class="ans" lang="ja" data-fi="' + i + '" autocomplete="off"'
+        + ' autocapitalize="off" spellcheck="false">'
+        + '<div class="row" style="margin-top:5px;flex-wrap:wrap">'
+        + '<button class="btn ghost sm" data-model="' + i + '">Show how '
+        + esc(whoName(f.from)) + ' says it</button>'
+        + '<button class="btn sm" data-check="' + i + '">Check the pattern</button>'
+        + '</div><div data-ffb="' + i + '"></div></div>';
+    }).join("");
+    each($("fw"), "[data-fi]", function(inp){
+      var i = +inp.dataset.fi;
+      inp.value = S.wrote[fkey(i)] || "";
+      inp.oninput = function(){ S.wrote[fkey(i)] = inp.value; save(); };
+      inp.onkeydown = function(ev){ if (ev.key === "Enter") check(i); };
+    });
+    each($("fw"), "[data-model]", function(b){
+      b.onclick = function(){
+        var i = +b.dataset.model, f = F[i];
+        spend(1, "model sentence");
+        $("fw").querySelector('[data-ffb="' + i + '"]').innerHTML =
+            '<div class="mark"><b>' + esc(whoName(f.from)) + '&rsquo;s own sentence</b>'
+          + '<span class="jp">' + ruby(f.model) + '</span> ' + saybtn(f.model)
+          + '</div>';
+        b.disabled = true;
+        wireSay();
+      };
+    });
+    each($("fw"), "[data-check]", function(b){
+      b.onclick = function(){ check(+b.dataset.check); };
+    });
+    function check(i){
+      var f = F[i], fb = $("fw").querySelector('[data-ffb="' + i + '"]');
+      var got = ($("fw").querySelector('[data-fi="' + i + '"]').value || "");
+      var missing = fmiss(f, got);
+      if (missing === null){
+        fb.innerHTML = '<div class="mark hm"><b>Nothing there yet</b>Write the '
+          + 'sentence first.</div>';
+        return;
+      }
+      if (!missing.length){
+        if (!S.done["jb:" + i]){ S.done["jb:" + i] = 1; award(3); save(); }
+        fb.innerHTML = '<div class="mark yes"><b>The pattern is there</b>'
+          + '<span class="jp">' + esc(got) + '</span><br>'
+          + 'That is the grammar this slot wanted. Whether it is true, and '
+          + 'whether the words are the right words, this page cannot tell '
+          + 'you.</div>';
+        var okNow = F.filter(function(_, j){ return S.done["jb:" + j]; }).length;
+        $("fsc").innerHTML = '<b>' + okNow + '</b> of ' + F.length;
+        if (okNow === F.length && !S.done["jibun"]){
+          S.done["jibun"] = 1; award(4); save(); paintSteps();
+        }
+      } else {
+        fb.innerHTML = '<div class="mark no"><b>Not yet</b>'
+          + 'There is no <span class="jp">' + esc(plain(missing[0])) + '</span> '
+          + 'in your sentence' + (missing.length > 1 ? ', and ' + (missing.length - 1)
+              + ' other part' + (missing.length > 2 ? 's are' : ' is') + ' missing too'
+            : '') + '. ' + esc(f.note) + '</div>';
+      }
+    }
+    $("fshow").onclick = function(){
+      var lines = F.map(function(f, i){ return (S.wrote[fkey(i)] || "").trim(); })
+                   .filter(Boolean);
+      if (!lines.length){
+        $("tip").innerHTML = '<div class="mark hm"><b>Nothing to show</b>Write a '
+          + 'sentence or two first.</div>';
+        return;
+      }
+      var para = lines.join("");
+      $("tip").innerHTML = '<div class="work fit" style="max-height:38vh">'
+        + '<div class="col"><p class="para">' + esc(para) + '</p>'
+        + '<p class="hint">' + lines.length + ' of ' + F.length
+        + ' sentences. This is your own writing, exactly as you typed it, with '
+        + 'nothing corrected. Nothing is saved anywhere but this device, so '
+        + 'copy it or take a photograph if you want to keep it.</p>'
+        + '<div class="row"><button class="btn ghost sm" id="fcopy">Copy it</button>'
+        + '</div></div></div>';
+      $("fcopy").onclick = function(){
+        var ta = document.createElement("textarea");
+        ta.value = para;
+        ta.style.cssText = "position:fixed;left:-9999px";
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand("copy"); } catch(e){}
+        ta.remove();
+        $("fcopy").textContent = "Copied";
+      };
+    };
+  };
+
+  /* ---- 8. くらべる ----
      All six at once. This is where the English videos land: a student
      who has watched the clip on Saigō has something to put in the row
      that reading alone would not give them. It is also the only screen
@@ -705,8 +1151,56 @@
       + rows + '</table>'
       + '<p class="hint" style="margin-top:10px">The last two columns are '
       + 'pulled out of the articles automatically, so check them against the '
-      + 'text rather than trusting them.</p></div>'
+      + 'text rather than trusting them.</p>'
+      + '<h3 class="sub">The videos</h3>'
+      + '<p class="hint">English clips, one a person. They open on YouTube in '
+      + 'a new tab: nothing is embedded in this page, so the page itself stays '
+      + 'fast and makes no requests of its own. Watch one, then come back and '
+      + 'fill its row above.</p>'
+      + '<div id="vids"></div>'
+      + '</div>'
       + foot('<button class="btn sm" id="dn">Done</button>');
+    /* The videos are links, never embeds, and the clip with questions
+       against it gets them as a written task: they are the ones the
+       class works through on paper, so the answers stay on the device
+       and go nowhere. */
+    var byp = {};
+    K.people.forEach(function(p){ byp[p.id] = p; });
+    $("vids").innerHTML = (K.videos || []).map(function(v, i){
+      var p = byp[v.person] || {};
+      return '<div class="qrow" style="margin-bottom:9px">'
+        + '<a class="vid" href="' + esc(v.url) + '" target="_blank" rel="noopener">'
+        + '<span class="jp" style="font-family:var(--jp)">'
+        + esc(plain(p.name_ja || v.person)) + '</span> &middot; ' + esc(v.title)
+        + ' &nearr;</a>'
+        + ((v.questions || []).length
+            ? '<button class="btn ghost sm" data-vq="' + i + '">'
+              + (v.questions.length) + ' questions on this one</button>'
+              + '<div data-vqb="' + i + '"></div>'
+            : '<span class="hint">No question sheet for this one yet.</span>')
+        + '</div>';
+    }).join("");
+    each($("vids"), "[data-vq]", function(b){
+      b.onclick = function(){
+        var i = +b.dataset.vq, v = K.videos[i];
+        var box = $("vids").querySelector('[data-vqb="' + i + '"]');
+        if (box.innerHTML){ box.innerHTML = ""; return; }
+        box.innerHTML = '<ol style="margin:7px 0 0 20px">'
+          + v.questions.map(function(q, j){
+              return '<li style="margin-bottom:8px"><div class="en" '
+                + 'style="font-size:14.5px">' + esc(q) + '</div>'
+                + '<textarea class="ans en" rows="2" data-vqa="' + i + ':' + j
+                + '"></textarea></li>';
+            }).join("")
+          + '</ol><p class="hint">The timestamps say where in the clip to '
+          + 'listen. Your answers stay on this device and are sent nowhere.</p>';
+        each(box, "[data-vqa]", function(ta){
+          var key = "v:" + ta.dataset.vqa;
+          ta.value = S.wrote[key] || "";
+          ta.oninput = function(){ S.wrote[key] = ta.value; save(); };
+        });
+      };
+    });
     $("dn").onclick = function(){ S.done["kuraberu"] = 1; award(2); save();
       paintSteps(); $("dn").disabled = true; };
   };

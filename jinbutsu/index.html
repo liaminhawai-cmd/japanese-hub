@@ -128,6 +128,38 @@
   .sheet h3{font-family:var(--jp);font-size:19px;margin-bottom:3px}
   .sheet p{font-size:13px;color:var(--muted);margin-bottom:9px}
 
+  /* ---- the gapfill ----
+     Dragged with a pointer, or tapped twice. A school iPad does not do
+     HTML5 drag-and-drop at all and a mouse is clumsy at tapping, so the
+     same handler takes both gestures and they do the same thing. */
+  .tile{border:2px solid var(--deep);background:#fff;color:var(--deep);
+        border-radius:9px;min-height:40px;padding:5px 12px;cursor:grab;
+        font-family:var(--jp);font-size:18px;line-height:1.6;max-width:100%;
+        white-space:normal;text-align:left;
+        touch-action:none;-webkit-user-select:none;user-select:none}
+  .tile.armed{background:var(--deep);color:#fff}
+  .tile.spent{opacity:.3;cursor:default}
+  .gap{display:inline-block;min-width:5.5em;border-bottom:2.5px dashed var(--deep);
+       text-align:center;padding:0 6px;cursor:pointer}
+  .gap.over{background:#fdf3c9}
+  .gap.ok{border-bottom-style:solid;border-bottom-color:var(--ok)}
+  .gap.bad{border-bottom-color:var(--accent);background:#fdf2f2}
+  /* the grammar index: one chip a pattern, ticked when its practice is done.
+     Thirteen chips wrapped onto four lines ate 300px of a phone screen and
+     left the exercise itself in a keyhole, so on a narrow screen they stay
+     on one line and scroll sideways, the way the rung bar does. */
+  .gidx{flex-wrap:wrap;margin-bottom:9px;overflow-x:auto;
+       overscroll-behavior-x:contain}
+  .gidx button{flex:none;border:2px solid var(--line);border-radius:999px;background:#fff;
+       color:var(--muted);cursor:pointer;padding:3px 10px;min-height:32px;
+       font-family:var(--jp);font-size:14px}
+  .gidx button[aria-current]{border-color:var(--deep);color:var(--deep);
+       background:#eef3f9;font-weight:700}
+  .gidx button.done{border-color:var(--ok);color:var(--ok)}
+  .vid{display:block;margin:7px 0;font-size:15px}
+  h3.sub{font-size:13px;letter-spacing:.08em;text-transform:uppercase;
+       color:var(--muted);margin:16px 0 4px}
+
   .mark{border-left:4px solid var(--line);padding:5px 10px;margin:6px 0;font-size:14px}
   .mark.yes{border-color:var(--ok)} .mark.no{border-color:var(--accent)}
   .mark.hm{border-color:#b8860b}
@@ -152,7 +184,14 @@
   table.cmp th{background:var(--paper);font-size:12px;letter-spacing:.04em;
        text-transform:uppercase;color:var(--muted)}
   table.cmp .jp{font-family:var(--jp);font-size:16px}
+  /* On a short screen the yellow rule box and the chip row between them
+     left the exercise with no height at all, so both are held down. */
+  @media (max-height:640px){
+    .rule{font-size:13px;line-height:1.4;max-height:5.4em;overflow:auto}
+    .para{font-size:18px;line-height:1.95}
+  }
   @media (max-width:760px){
+    .gidx{flex-wrap:nowrap}
     .bar{padding:6px 10px} .tool{padding:0 8px;font-size:12px}
     .steps button{min-width:76px} .steps b{font-size:13.5px}
     .para{font-size:19px;line-height:2}

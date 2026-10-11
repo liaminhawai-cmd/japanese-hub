@@ -1079,5 +1079,746 @@ window.KIJI = {
     "才": "さい",
     "金": "かね",
     "食": "た"
-  }
+  },
+  "grammar": [
+    {
+      "id": "desu",
+      "pat": "〜です",
+      "title_en": "X is Y",
+      "rule": "The plainest sentence in the unit, and the one every article uses to say what someone is. No verb to conjugate: the thing, then です.",
+      "form": "noun + です",
+      "egs": [
+        {
+          "ja": "さむらいです。",
+          "en": "(I) am a samurai."
+        },
+        {
+          "ja": "私[わたし]は　じぎょう家[か]　です。",
+          "en": "I am an entrepreneur."
+        },
+        {
+          "ja": "せいじ家[か]に　なりました。",
+          "en": "(I) became a politician."
+        }
+      ],
+      "items": [
+        {
+          "ja": "みやもとむさしは　＿＿＿＿。",
+          "answer": "さむらいです",
+          "options": [
+            "さむらいです",
+            "さむらいでした",
+            "さむらいに　なりたいです"
+          ]
+        },
+        {
+          "ja": "ひろおかさんは　じぎょう家[か]　＿＿＿＿。",
+          "answer": "です",
+          "options": [
+            "です",
+            "でした",
+            "じゃないです"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "umareta",
+      "pat": "〜に生[う]まれました",
+      "title_en": "Born in a year",
+      "rule": "The year takes に, the same に that marks a point in time. Every article opens with it, so it is the first thing to own.",
+      "form": "year + に + 生[う]まれました",
+      "egs": [
+        {
+          "ja": "1835年[ねん]に　生[う]まれました。",
+          "en": "I was born in 1835."
+        },
+        {
+          "ja": "千八百四十九年[ねん]に　京都[きょうと]で　生[う]まれました。",
+          "en": "I was born in Kyoto in 1849."
+        }
+      ],
+      "items": [
+        {
+          "ja": "1836年[ねん]＿＿　生[う]まれました。",
+          "answer": "に",
+          "options": [
+            "に",
+            "で",
+            "を",
+            "は"
+          ]
+        },
+        {
+          "ja": "1584年[ねん]に　＿＿＿＿＿＿。",
+          "answer": "生[う]まれました",
+          "options": [
+            "生[う]まれました",
+            "住[す]んでいました",
+            "なりました"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sunde",
+      "pat": "〜に住[す]んでいます",
+      "title_en": "Lives in, lived in",
+      "rule": "The place takes に. 住[す]んでいます is now and 住[す]んでいました is then, and most of the articles use both in the same breath.",
+      "form": "place + に + 住[す]んでいます / 住[す]んでいました",
+      "egs": [
+        {
+          "ja": "とさに　住[す]んでいました。",
+          "en": "I used to live in Tosa."
+        },
+        {
+          "ja": "今[いま]は　ながさきに　住[す]んでいます。",
+          "en": "Now I live in Nagasaki."
+        }
+      ],
+      "items": [
+        {
+          "ja": "今[いま]は、京都[きょうと]に　＿＿＿＿＿＿＿＿。",
+          "answer": "住[す]んでいます",
+          "options": [
+            "住[す]んでいます",
+            "住[す]んでいました",
+            "行[い]きます"
+          ]
+        },
+        {
+          "ja": "子[こ]どもの　時[とき]、京都[きょうと]に　＿＿＿＿＿＿＿＿＿。",
+          "answer": "住[す]んでいました",
+          "options": [
+            "住[す]んでいました",
+            "住[す]んでいます",
+            "住[す]みたいです"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ta-ato",
+      "pat": "〜た後[あと]",
+      "title_en": "After doing something",
+      "rule": "Put the verb into its plain past, the た form, and add 後[あと]. Not the ます form: 食[た]べました後 is wrong.",
+      "form": "plain past (た form) + 後[あと]",
+      "egs": [
+        {
+          "ja": "あさごはんを　食[た]べた後[あと]、しごとに　行[い]きます。",
+          "en": "After eating breakfast, I go to work."
+        },
+        {
+          "ja": "あさごはんを　食[た]べた後[ご]、父[ちち]と　話[はな]したり、さんぽに　行[い]ったりします。",
+          "en": "After breakfast I talk with my father and go for a walk."
+        }
+      ],
+      "items": [
+        {
+          "ja": "あさごはんを　食[た]べ＿＿後[あと]、しごとに　行[い]きます。",
+          "answer": "た",
+          "options": [
+            "た",
+            "ます",
+            "ました",
+            "て"
+          ]
+        },
+        {
+          "ja": "あさごはんを　＿＿＿＿後[あと]、けんどうを　れんしゅう　します。",
+          "answer": "食[た]べた",
+          "options": [
+            "食[た]べた",
+            "食[た]べます",
+            "食[た]べました",
+            "食[た]べて"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tari",
+      "pat": "〜たり　〜たり　します",
+      "title_en": "Doing things like A and B",
+      "rule": "Two examples of what you do, not a complete list. Both verbs go into the た form and take り, and the sentence finishes with します.",
+      "form": "Vたり + Vたり + します",
+      "egs": [
+        {
+          "ja": "人[ひと]と　話[はな]したり、けいやくを　作[つく]ったり　します。",
+          "en": "I do things like talking with people and drawing up contracts."
+        },
+        {
+          "ja": "けんどうを　練習[れんしゅう]したり、本[ほん]を　読[よ]んだり　します。",
+          "en": "I do things like practising kendo and reading books."
+        }
+      ],
+      "items": [
+        {
+          "ja": "人[ひと]と　話[はな]し＿＿、ものを　売[う]ったり　します。",
+          "answer": "たり",
+          "options": [
+            "たり",
+            "ました",
+            "ます",
+            "て"
+          ]
+        },
+        {
+          "ja": "じっけんを　したり、かんがえなおしたり　＿＿＿。",
+          "answer": "します",
+          "options": [
+            "します",
+            "です",
+            "あります",
+            "いきます"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "suki",
+      "pat": "〜ことが　好[す]きです",
+      "title_en": "Likes doing something",
+      "rule": "To like doing a thing, not just to like a thing. The verb goes into its plain form and こと turns it into a noun, which が then marks.",
+      "form": "plain form verb + ことが + 好[す]きです",
+      "egs": [
+        {
+          "ja": "ものを　売[う]ることが　好[す]きです。",
+          "en": "I like selling things."
+        },
+        {
+          "ja": "てがみを　書[か]くことが　好[す]きです。",
+          "en": "I like writing letters."
+        },
+        {
+          "ja": "人[ひと]を　たすけることが　好[す]きです。",
+          "en": "I like helping people."
+        }
+      ],
+      "items": [
+        {
+          "ja": "お金[かね]を　作[つく]る＿＿が　好[す]きです。",
+          "answer": "こと",
+          "options": [
+            "こと",
+            "の",
+            "もの",
+            "ところ"
+          ]
+        },
+        {
+          "ja": "ものを　売[う]ることが　＿＿＿＿＿。",
+          "answer": "好[す]きです",
+          "options": [
+            "好[す]きです",
+            "好[す]きじゃないです",
+            "したいです"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tsukuri",
+      "pat": "〜を　作[つく]りました",
+      "title_en": "Made, built, founded",
+      "rule": "作[つく]ります covers making a thing, drawing up a contract and founding a bank. The thing made takes を.",
+      "form": "thing + を + 作[つく]りました",
+      "egs": [
+        {
+          "ja": "１０年前[ねんまえ]、ぎんこうを　作[つく]りました。",
+          "en": "Ten years ago I founded a bank."
+        },
+        {
+          "ja": "けいやくを　作[つく]ったり　します。",
+          "en": "I draw up contracts and so on."
+        }
+      ],
+      "items": [
+        {
+          "ja": "ぎんこう＿＿　作[つく]りました。",
+          "answer": "を",
+          "options": [
+            "を",
+            "が",
+            "に",
+            "は"
+          ]
+        },
+        {
+          "ja": "女子大学[じょしだいがく]を　＿＿＿＿＿＿。",
+          "answer": "作[つく]りたいです",
+          "options": [
+            "作[つく]りたいです",
+            "作[つく]りました",
+            "作[つく]ります"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "shikashi",
+      "pat": "しかし",
+      "title_en": "However",
+      "rule": "Starts a sentence and turns it against the one before. The articles use it for the hinge: where someone lived, then where they live now; what they were, then what they became.",
+      "form": "sentence 。 しかし、 sentence",
+      "egs": [
+        {
+          "ja": "とさに　住[す]んでいました。しかし、今[いま]は　ながさきに　住[す]んでいます。",
+          "en": "I lived in Tosa. However, now I live in Nagasaki."
+        },
+        {
+          "ja": "私[わたし]は　さむらいでした。しかし、みつびしの　しゃちょうに　なりました。",
+          "en": "I was a samurai. However, I became the head of Mitsubishi."
+        }
+      ],
+      "items": [
+        {
+          "ja": "さつまに　住[す]んでいました。＿＿＿＿、今[いま]は　東京[とうきょう]に　住[す]んでいます。",
+          "answer": "しかし",
+          "options": [
+            "しかし",
+            "だから",
+            "でも、そして",
+            "それから"
+          ]
+        },
+        {
+          "ja": "たくさんの　科学者[かがくしゃ]が　作[つく]ろうと　しました＿＿、なかなか　できませんでした。",
+          "answer": "が",
+          "options": [
+            "が",
+            "から",
+            "ので",
+            "と"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "shourai",
+      "pat": "しょうらい",
+      "title_en": "In the future",
+      "rule": "Sets up what someone wants next, and almost always runs into a 〜たいです. Every article ends on it, which is why the last sentence of a new one is usually guessable.",
+      "form": "しょうらい、 ... 〜たいです",
+      "egs": [
+        {
+          "ja": "しょうらい、外国[がいこく]に　行[い]きたいです。",
+          "en": "In the future I want to go overseas."
+        },
+        {
+          "ja": "しょう来[らい]、さつまに　帰[かえ]りたいです。",
+          "en": "In the future I want to go back to Satsuma."
+        }
+      ],
+      "items": [
+        {
+          "ja": "＿＿＿＿＿、けんどうの　先生[せんせい]に　なりたいです。",
+          "answer": "しょうらい",
+          "options": [
+            "しょうらい",
+            "毎日[まいにち]",
+            "今[いま]",
+            "時々[ときどき]"
+          ]
+        },
+        {
+          "ja": "しょうらい、しずかな　ところに　＿＿＿＿＿＿。",
+          "answer": "住[す]みたいです",
+          "options": [
+            "住[す]みたいです",
+            "住[す]んでいます",
+            "住[す]んでいました"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ikitai",
+      "pat": "〜に　行[い]きたいです",
+      "title_en": "Want to go somewhere",
+      "rule": "Take the ます off 行[い]きます and put たい on. The place still takes に. The same move makes 帰[かえ]りたい and 住[す]みたい.",
+      "form": "place + に + Vたいです",
+      "egs": [
+        {
+          "ja": "外国[がいこく]に　行[い]きたいです。",
+          "en": "I want to go overseas."
+        },
+        {
+          "ja": "とても　行[い]きたいです。",
+          "en": "I really want to go."
+        },
+        {
+          "ja": "さつまに　帰[かえ]りたいです。",
+          "en": "I want to go back to Satsuma."
+        }
+      ],
+      "items": [
+        {
+          "ja": "外国[がいこく]に　行[い]き＿＿です。",
+          "answer": "たい",
+          "options": [
+            "たい",
+            "ました",
+            "ます",
+            "たかった"
+          ]
+        },
+        {
+          "ja": "えどに　＿＿＿＿＿＿。",
+          "answer": "行[い]きたいです",
+          "options": [
+            "行[い]きたいです",
+            "行[い]きました",
+            "行[い]っています"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "naritai",
+      "pat": "〜に　なりたいです",
+      "title_en": "Want to become something",
+      "rule": "What you want to become takes に, not を. なります is the verb for becoming, and なりました is how three of the articles say what someone turned into.",
+      "form": "noun + に + なりたいです  (past: なりました)",
+      "egs": [
+        {
+          "ja": "けんどうの　先生[せんせい]に　なりたいです。",
+          "en": "I want to become a kendo teacher."
+        },
+        {
+          "ja": "上手[じょうず]に　なりたいです。",
+          "en": "I want to become good at it."
+        },
+        {
+          "ja": "せいじ家[か]に　なりました。",
+          "en": "I became a politician."
+        }
+      ],
+      "items": [
+        {
+          "ja": "けんどうの　先生[せんせい]＿＿　なりたいです。",
+          "answer": "に",
+          "options": [
+            "に",
+            "を",
+            "が",
+            "で"
+          ]
+        },
+        {
+          "ja": "みつびしの　しゃちょうに　＿＿＿＿＿。",
+          "answer": "なりました",
+          "options": [
+            "なりました",
+            "なりたいです",
+            "でした",
+            "います"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nai-koto",
+      "pat": "〜た　ことが　ありません",
+      "title_en": "Have never done it",
+      "rule": "Experience, not the past. 行[い]きました is I went; 行[い]ったことがありません is I have never been. Plain past, then ことが, then あります or ありません.",
+      "form": "plain past (た form) + ことが + あります / ありません",
+      "egs": [
+        {
+          "ja": "えどに　行[い]ったことが　ありません。",
+          "en": "I have never been to Edo."
+        },
+        {
+          "ja": "行[い]ったことが　あります。",
+          "en": "I have been there.",
+          "mine": true
+        }
+      ],
+      "items": [
+        {
+          "ja": "えどに　行[い]った　ことが　＿＿＿＿＿＿。",
+          "answer": "ありません",
+          "options": [
+            "ありません",
+            "います",
+            "でした",
+            "じゃないです"
+          ]
+        },
+        {
+          "ja": "えどに　＿＿＿＿　ことが　ありません。",
+          "answer": "行[い]った",
+          "options": [
+            "行[い]った",
+            "行[い]きます",
+            "行[い]って",
+            "行[い]きたい"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wasuretai",
+      "pat": "〜を　わすれたいです",
+      "title_en": "Want to forget it",
+      "rule": "The same たい as 行[い]きたい, on a verb that is doing something much heavier. Musashi uses it about Sekigahara, and it is the one place in these articles where the grammar carries a feeling.",
+      "form": "thing + を + わすれたいです",
+      "egs": [
+        {
+          "ja": "わすれたいです。",
+          "en": "I want to forget it."
+        },
+        {
+          "ja": "せっぷくも　しました。わすれたいです。",
+          "en": "I even committed seppuku. I want to forget it."
+        }
+      ],
+      "items": [
+        {
+          "ja": "わすれ＿＿です。",
+          "answer": "たい",
+          "options": [
+            "たい",
+            "ました",
+            "ます",
+            "ません"
+          ]
+        },
+        {
+          "ja": "せきがはらを　＿＿＿＿＿＿。",
+          "answer": "わすれたいです",
+          "options": [
+            "わすれたいです",
+            "わすれました",
+            "おぼえたいです"
+          ]
+        }
+      ]
+    }
+  ],
+  "videos": [
+    {
+      "person": "saigo",
+      "title": "Saigō Takamori: The Last Samurai",
+      "url": "https://www.youtube.com/watch?v=16PD3ka1xHU",
+      "questions": [
+        "Describe Saigō's early life and background. What distinguished him from his contemporaries? (0:06–0:28)",
+        "What role did he play in the overthrow of the Tokugawa Shogunate? (0:00–0:28)",
+        "Explain the relationship between Saigō and his lord, Shimazu Nariakira. How did it influence his political actions? (1:19–2:33)",
+        "What event led Saigō to contemplate seppuku? Who intervened? (1:29–1:52)",
+        "What led to his exile on Amami Ōshima, and what was his status then? (2:17–2:41)",
+        "How did his return to Satsuma affect his relationship with Shimazu Hisamitsu? (3:13–3:38)",
+        "What changed in Japanese politics while he was away from Satsuma? (3:39–4:07)",
+        "What was his position during the Boshin War, and his role in the surrender of Edo? (6:02–6:25)",
+        "What was the impact of his private school on former samurai and the government? (10:16–10:42)",
+        "Summarise the events leading to his final stand at Shiroyama, and the consequences. (12:24–13:20)"
+      ]
+    },
+    {
+      "person": "sakamoto",
+      "title": "Sakamoto Ryōma",
+      "url": "https://www.youtube.com/watch?v=MaigNoQ_Y7Q",
+      "questions": []
+    },
+    {
+      "person": "musashi",
+      "title": "Miyamoto Musashi",
+      "url": "https://www.youtube.com/watch?v=WolmBrbo9-U",
+      "questions": []
+    },
+    {
+      "person": "iwasaki",
+      "title": "Iwasaki Yatarō and the founding of Mitsubishi",
+      "url": "https://www.youtube.com/watch?v=g7BYkmDaMHs",
+      "questions": []
+    },
+    {
+      "person": "hirooka",
+      "title": "Hirooka Asako",
+      "url": "https://www.youtube.com/watch?v=5VLmRiVE96E",
+      "questions": []
+    }
+  ],
+  "frame": [
+    {
+      "id": "greet",
+      "en": "Greet the class.",
+      "note": "Start the way every one of these articles starts.",
+      "from": "sakamoto",
+      "model": "みなさん、おはようございます。",
+      "need": [
+        [
+          "みなさん"
+        ]
+      ]
+    },
+    {
+      "id": "name",
+      "en": "Give your name.",
+      "note": "は marks what the sentence is about, and です closes it.",
+      "from": "sakamoto",
+      "model": "私[わたし]の　名前[なまえ]は　さかもと　りょうまです。",
+      "need": [
+        [
+          "私",
+          "わたし"
+        ],
+        [
+          "名前",
+          "なまえ"
+        ],
+        [
+          "です"
+        ]
+      ]
+    },
+    {
+      "id": "born",
+      "en": "Say what year you were born in.",
+      "note": "The year takes に.",
+      "from": "sakamoto",
+      "model": "私は、1836年[ねん]に　生[う]まれました。",
+      "need": [
+        [
+          "に"
+        ],
+        [
+          "生まれました",
+          "うまれました"
+        ]
+      ]
+    },
+    {
+      "id": "age",
+      "en": "Say how old you are.",
+      "note": "才 after the number, then です.",
+      "from": "sakamoto",
+      "model": "25才[さい]です。",
+      "need": [
+        [
+          "才",
+          "さい"
+        ],
+        [
+          "です"
+        ]
+      ]
+    },
+    {
+      "id": "what",
+      "en": "Say what you are.",
+      "note": "No verb to conjugate: the thing, then です. Yours is probably 高校生.",
+      "from": "hirooka",
+      "model": "私[わたし]は　じぎょう家[か]　です。",
+      "need": [
+        [
+          "です"
+        ]
+      ]
+    },
+    {
+      "id": "live",
+      "en": "Say where you live.",
+      "note": "The place takes に, and 住んでいます is the living.",
+      "from": "sakamoto",
+      "model": "とさに　住[す]んでいます。",
+      "need": [
+        [
+          "に"
+        ],
+        [
+          "住んでいます",
+          "すんでいます"
+        ]
+      ]
+    },
+    {
+      "id": "suki",
+      "en": "Say something you like doing.",
+      "note": "Dictionary form, then ことが好きです.",
+      "from": "iwasaki",
+      "model": "ものを　売[う]ることが　好[す]きです。",
+      "need": [
+        [
+          "ことが"
+        ],
+        [
+          "好きです",
+          "すきです"
+        ]
+      ]
+    },
+    {
+      "id": "ato",
+      "en": "Say what you do after breakfast, and two things you do.",
+      "note": "た後 for the after, then 〜たり〜たりします for the two things.",
+      "from": "sakamoto",
+      "model": "あさごはんを　食[た]べた後[ご]、父[ちち]と　話[はな]したり、さんぽに　行[い]ったりします。",
+      "need": [
+        [
+          "後",
+          "あと"
+        ],
+        [
+          "たり"
+        ]
+      ]
+    },
+    {
+      "id": "shourai",
+      "en": "Say what you want to become.",
+      "note": "しょうらい opens it, になりたいです closes it.",
+      "from": "sakamoto",
+      "model": "しょうらい、けんどうの　先生[せんせい]に　なりたいです。",
+      "need": [
+        [
+          "しょうらい",
+          "しょう来"
+        ],
+        [
+          "なりたいです"
+        ]
+      ]
+    },
+    {
+      "id": "nai",
+      "en": "Say somewhere you have never been.",
+      "note": "しかし turns the paragraph, then 行ったことがありません.",
+      "from": "sakamoto",
+      "model": "しかし、えどに　行[い]ったことが　ありません。",
+      "need": [
+        [
+          "しかし"
+        ],
+        [
+          "ことがありません"
+        ]
+      ]
+    },
+    {
+      "id": "ikitai",
+      "en": "Say you want to go there.",
+      "note": "に行きたいです, and とても in front of it if you mean it.",
+      "from": "sakamoto",
+      "model": "とても　行きたいです。",
+      "need": [
+        [
+          "行きたいです",
+          "いきたいです"
+        ]
+      ]
+    },
+    {
+      "id": "bye",
+      "en": "Sign off.",
+      "note": "The ordinary close. Every one of the six uses it.",
+      "from": "sakamoto",
+      "model": "よろしく　おねがいします。",
+      "need": [
+        [
+          "よろしく"
+        ]
+      ]
+    }
+  ]
 };
