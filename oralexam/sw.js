@@ -16,7 +16,7 @@
    Bump CACHE when anything in SHELL changes, or phones keep the old copy.
    ========================================================================== */
 
-var CACHE = "oral-exam-v27";
+var CACHE = "oral-exam-v28";
 
 var SHELL = [
   "./",

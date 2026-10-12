@@ -40,13 +40,17 @@ window.ORAL_FLOW = {
   "entry": {
     "name_ja": "にゅうしつ",
     "name_en": "Walking in",
-    "about": "None of this is assessed, and all of it has to be done. Say each line out loud: on the day these are the first words the assessors hear from you.",
+    "about": [
+      "No marks for the phrases below. Learn them anyway.",
+      "On the day they are the first words the assessors hear from you.",
+      "Say each one out loud."
+    ],
     "steps": [
       {
         "who": "you",
         "ja": "しつれいします。",
         "en": "Excuse me.",
-        "note": "Knock, open the door, say it, and wait to be asked to sit."
+        "note": "Knock, open the door, say it, and wait until they ask you to sit."
       },
       {
         "who": "assessor",
@@ -83,7 +87,7 @@ window.ORAL_FLOW = {
         "who": "assessor",
         "ja": "ディスカッションの トピックは 何[なん]ですか。",
         "en": "What is your discussion topic?",
-        "note": "They ask now so that your topic is kept out of Section 1. Hand over your image at this point as well: bringing one is a requirement."
+        "note": "They ask now so they can keep your topic out of Section 1. Hand over your image here as well. You must bring one."
       },
       {
         "who": "you",
@@ -145,13 +149,13 @@ window.ORAL_FLOW = {
       "en": "Right, we are out of time, so let us talk about your discussion topic."
     },
     "about": "Eight minutes on your topic. There is no introduction to give: the first answer does that job. Keep it short enough to be an answer and full enough to hand them their next three questions.",
-    "opening_note": "Your first answer sets the discussion up. Say what the thing is, then name two or three parts of it you have researched. That is what they will ask about next. The buttons below are the same list as the preparation sheet, so anything on the sheet is a question you can be asked.",
+    "opening_note": "Your first answer sets the discussion up. Say what the thing is, then name two or three parts of it you have researched. That is what they will ask about next. The buttons below are the same list as the preparation sheet, so anything on the sheet is a question they can ask you.",
     "moves": [
       {
         "id": "define",
         "label_en": "Define and explain it",
         "label_ja": "せつめい",
-        "about": "What it is, in a sentence or two. This is the opener and it hands them their next three questions."
+        "about": "What it is, in a sentence or two. The opener hands them their next three questions."
       },
       {
         "id": "facts",
@@ -185,9 +189,9 @@ window.ORAL_FLOW = {
       },
       {
         "id": "fix",
-        "label_en": "What could be done",
+        "label_en": "What to do about it",
         "label_ja": "かいけつほうほう",
-        "about": "This is the one that separates a prepared answer from a good one."
+        "about": "The move that separates a prepared answer from a good one."
       },
       {
         "id": "change",
@@ -199,7 +203,7 @@ window.ORAL_FLOW = {
         "id": "compare",
         "label_en": "Compared with Australia",
         "label_ja": "オーストラリアと くらべて",
-        "about": "Comparison is named in the criteria. Have one ready."
+        "about": "The criteria name comparison. Have one ready."
       },
       {
         "id": "opinion",

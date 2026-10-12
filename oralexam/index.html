@@ -126,6 +126,8 @@
   h3{font-size:17px;margin:18px 0 8px}
   p{margin:0 0 10px}
   .lede{color:var(--muted);font-size:15.5px;margin-bottom:14px}
+  ul.lede{padding-left:18px}
+  ul.lede li{margin-bottom:3px}
 
   .card{background:var(--paper);border:1px solid var(--line);border-radius:13px;
         padding:13px 14px;margin:0 0 11px;box-shadow:var(--shadow)}
@@ -586,7 +588,7 @@
 (function(){
   "use strict";
 
-  var BUILD = "Version 23, 11 October 2026";
+  var BUILD = "Version 24, 12 October 2026";
 
   var CRIT  = window.ORAL_CRITERIA,
       REP   = window.ORAL_REPORTS,
@@ -1702,9 +1704,8 @@
     var h = '<h2>しつもんの ことば<span class="en">Question words</span></h2>'
           + qmark('The fault named in all six VCAA oral exam reports is the '
                 + 'answer not matching the question, and it comes from missing '
-                + 'the question word rather than from weak Japanese. Each '
-                + 'question is read aloud first, the way you meet it in the '
-                + 'room.')
+                + 'the question word rather than from weak Japanese. You hear '
+                + 'each question first, the way you meet it in the room.')
           + '<div class="tiles">'
           + QW.rounds.map(function(r){
               return '<button class="tile" data-r="drill:r:' + esc(r.id) + '">'
@@ -1840,6 +1841,16 @@
   }
   function each(scope, sel, fn){
     Array.prototype.forEach.call(scope.querySelectorAll(sel), fn);
+  }
+  /* An intro is either one line or a few short ones. A list of three is
+     easier to take in at the top of a screen than a sentence carrying
+     three ideas, so the data says which it wants and this draws it. */
+  function lede(about){
+    if (!about) return "";
+    if (typeof about === "string") return '<p class="lede">' + esc(about) + '</p>';
+    return '<ul class="lede">' + about.map(function(line){
+      return '<li>' + esc(line) + '</li>';
+    }).join("") + '</ul>';
   }
 
   /* ルーレット. Lands on one of the ten things the conversation is about,
@@ -2318,8 +2329,8 @@
           + '<div class="row"><button class="btn ghost wide" id="startSac">'
           + 'SAC practice · 4 minutes</button></div>'
           + '<p class="seghint">The short one is for the SAC: pick the product '
-          + 'or practice you researched and be asked about it by someone who has '
-          + 'heard nothing but its name.</p>'
+          + 'or practice you researched, and answer questions from someone who '
+          + 'has heard nothing but its name.</p>'
           + '<details><summary>What you are walking into</summary>'
           + '<div class="dbody"><ul style="margin:2px 0 0 18px;font-size:15.5px">'
           + '<li>' + esc(ex.total_minutes_wording) + ', ' + ex.total_marks
@@ -2335,8 +2346,8 @@
           + '<div class="tip"><b>No introduction in Section 2</b>'
           + esc(CRIT.sections[1].no_introduction.wording) + ' '
           + esc(CRIT.sections[1].no_introduction.also) + '</div></div></details>'
-          + '<p class="note">Nothing is uploaded. A recording you make stays on '
-          + 'this phone.</p>' + foot();
+          + '<p class="note">Nothing leaves this phone. A recording you make '
+          + 'stays on it.</p>' + foot();
     $("main").innerHTML = h;
     each($("main"), "[data-band]", function(b){
       b.onclick = function(){ S.band = b.dataset.band; save(); draw(); };
@@ -2437,13 +2448,13 @@
   function drawEntry(){
     var t = topicById(MOCK.topic);
     setHead([{ ja:"タイムれんしゅう", r:"mock" }, { ja:FL.entry.name_ja, r:"mock:run" }],
-            FL.entry.name_en + " · not assessed, not optional");
+            FL.entry.name_en + " · no marks, do it anyway");
     $("main").innerHTML = '<h2>' + ruby(FL.entry.name_ja)
       + '<span class="en">' + esc(FL.entry.name_en) + '</span></h2>'
-      + '<p class="lede">' + esc(FL.entry.about) + '</p>'
+      + lede(FL.entry.about)
       + (t ? '<div class="mytopic"><b>' + ruby(t.name_ja) + '</b> '
-             + esc(t.name_en) + '<span>This is what you name on the way in, '
-             + 'and it is why Section 1 never touches it.</span></div>' : "")
+             + esc(t.name_en) + '<span>You name this topic on the way in, '
+             + 'which is why Section 1 never touches it.</span></div>' : "")
       + scriptCards(FL.entry.steps)
       + '<div class="row"><button class="btn wide" id="startS1">'
       + 'Done. Start the ' + CRIT.sections[0].minutes + ' minutes</button></div>'
@@ -2468,7 +2479,7 @@
       + '<span class="en">The assessor hands over</span></h2>'
       + scriptCards([{ who:"assessor", ja:FL.section2.transition.ja,
                        en:FL.section2.transition.en }])
-      + '<p class="lede">' + esc(FL.section2.about) + '</p>'
+      + lede(FL.section2.about)
       + (t ? '<div class="mytopic"><b>' + ruby(t.name_ja) + '</b> '
              + esc(t.name_en) + '</div>' : "")
       + '<div class="row"><button class="btn wide" id="startS2">Start the '
@@ -3397,9 +3408,9 @@
      paragraph that used to sit under it is behind the ? instead: it is
      reassurance, and a wall of reassurance under a button is its own reason
      not to press the button. */
-  var RECTIP = "Nothing is uploaded. The recording stays on this phone, "
-             + "and it lasts until you close the app, so press Save to keep "
-             + "it. Your phone will ask for the microphone the first time.";
+  var RECTIP = "Nothing leaves this phone. The recording stays here, and it "
+             + "lasts until you close the app, so press Save to keep it. Your "
+             + "phone will ask for the microphone the first time.";
   function recordBlock(slot){
     var on = REC.on && REC.slot === slot;
     var mine = REC.url && REC.slot === slot;
@@ -3466,7 +3477,7 @@
     return '<p class="foot">VCE Japanese Second Language oral examination practice. '
          + 'Criteria and descriptors from the VCAA assessment criteria document '
          + esc(CRIT.sources[0].version) + '; examiner tips quoted from the '
-         + 'VCAA oral exam reports 2020 to 2025. Draft, still being corrected. '
+         + 'VCAA oral exam reports 2020 to 2025. Still a draft, still correcting it. '
          + esc(BUILD) + '</p>';
   }
 
