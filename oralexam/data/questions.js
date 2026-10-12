@@ -182,15 +182,27 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "どんな 学校[がっこう]ですか。",
-          "en": "What kind of school is it?"
+          "en": "What kind of school is it?",
+          "model": {
+            "ja": "大[おお]きい 高校[こうこう]です。学生[がくせい]が 千人[せんにん]ぐらい いて、せいふくも あります。",
+            "en": "It is a big secondary school. There are about a thousand students and we have a uniform."
+          }
         },
         {
           "ja": "クラスは 何人[なんにん]ぐらい いますか。",
-          "en": "About how many people are in your class?"
+          "en": "About how many people are in your class?",
+          "model": {
+            "ja": "二十五人[にじゅうごにん]ぐらい います。日本語[にほんご]の クラスは もっと 少[すく]ないです。",
+            "en": "About twenty-five. My Japanese class is smaller than that."
+          }
         },
         {
           "ja": "学校[がっこう]まで どうやって 行[い]きますか。",
-          "en": "How do you get to school?"
+          "en": "How do you get to school?",
+          "model": {
+            "ja": "電車[でんしゃ]で 行[い]きます。家[いえ]から 三十分[さんじゅっぷん]ぐらい かかります。",
+            "en": "I go by train. It takes about thirty minutes from my house."
+          }
         }
       ],
       "model_responses": {
@@ -252,11 +264,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "メルボルンの 一番[いちばん] いい点[てん]は 何[なん]ですか。",
-          "en": "What is the best thing about Melbourne?"
+          "en": "What is the best thing about Melbourne?",
+          "model": {
+            "ja": "カフェが 多[おお]いことだと 思[おも]います。友[とも]だちと よく 行[い]きます。",
+            "en": "I think it is how many cafes there are. I often go with my friends."
+          }
         },
         {
           "ja": "メルボルンは 住[す]みやすいですか。",
-          "en": "Is Melbourne an easy place to live?"
+          "en": "Is Melbourne an easy place to live?",
+          "model": {
+            "ja": "はい、住[す]みやすいと 思[おも]います。電車[でんしゃ]や トラムが あるので、車[くるま]が なくても こまりません。",
+            "en": "Yes, I think it is easy to live in. There are trains and trams, so you manage without a car."
+          }
         }
       ],
       "model_responses": {
@@ -314,15 +334,27 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "朝[あさ]ごはんは 何[なに]を 食[た]べますか。",
-          "en": "What do you eat for breakfast?"
+          "en": "What do you eat for breakfast?",
+          "model": {
+            "ja": "たいてい トーストと たまごを 食[た]べます。いそがしい 時[とき]は くだものだけです。",
+            "en": "Usually toast and eggs. When I am in a hurry I just have fruit."
+          }
         },
         {
           "ja": "朝[あさ] 早[はや]く おきるのは たいへんですか。",
-          "en": "Is getting up early hard?"
+          "en": "Is getting up early hard?",
+          "model": {
+            "ja": "冬[ふゆ]は たいへんです。でも、朝[あさ]の 電車[でんしゃ]は しずかなので、本[ほん]が 読[よ]めます。",
+            "en": "In winter it is hard. But the morning train is quiet, so I can read."
+          }
         },
         {
           "ja": "週[しゅう]まつも 同[おな]じ 時間[じかん]に おきますか。",
-          "en": "Do you get up at the same time on the weekend too?"
+          "en": "Do you get up at the same time on the weekend too?",
+          "model": {
+            "ja": "いいえ、週[しゅう]まつは 九時[くじ]ごろ おきます。土曜日[どようび]は アルバイトが あるので、おそく なりません。",
+            "en": "No, at the weekend I get up about nine. I have my job on Saturday, so I do not sleep in."
+          }
         }
       ],
       "model_responses": {
@@ -380,15 +412,27 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "どうして そう 思[おも]いますか。",
-          "en": "Why do you think that?"
+          "en": "Why do you think that?",
+          "model": {
+            "ja": "夜[よる] バスが ないので、友[とも]だちは 家[いえ]の 人[ひと]に 車[くるま]で むかえに 来[き]てもらいます。それは たいへんだと 思[おも]います。",
+            "en": "Because there are no buses at night, my friends have to ask someone at home to drive out and collect them. I think that is hard."
+          }
         },
         {
           "ja": "だれが それを かえられると 思[おも]いますか。",
-          "en": "Who do you think could change it?"
+          "en": "Who do you think could change it?",
+          "model": {
+            "ja": "町[まち]の やくしょだと 思[おも]います。でも、住[す]んでいる 人[ひと]が こえを 出[だ]さないと、かわらないと 思[おも]います。",
+            "en": "The local council, I think. But nothing changes unless the people who live there speak up."
+          }
         },
         {
           "ja": "メルボルンの ほかの 町[まち]と くらべて どうですか。",
-          "en": "How does it compare with other parts of Melbourne?"
+          "en": "How does it compare with other parts of Melbourne?",
+          "model": {
+            "ja": "町[まち]の 中[なか]は 電車[でんしゃ]も トラムも 多[おお]くて べんりです。私[わたし]の 町[まち]は とおいので、バスだけです。",
+            "en": "The inner city has plenty of trains and trams, so it is convenient. My suburb is far out, so we only have buses."
+          }
         }
       ],
       "model_responses": {
@@ -448,15 +492,27 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "ご兄弟[きょうだい]は 何[なに]を していますか。",
-          "en": "What do your brothers and sisters do?"
+          "en": "What do your brothers and sisters do?",
+          "model": {
+            "ja": "兄[あに]は 大学[だいがく]で けいざいを 勉強[べんきょう]しています。妹[いもうと]は 中学校[ちゅうがっこう]の 二年生[にねんせい]で、バスケットボールの チームに 入[はい]っています。",
+            "en": "My brother studies economics at university. My sister is in Year 8 and plays in a basketball team."
+          }
         },
         {
           "ja": "だれと 一番[いちばん] なかが いいですか。",
-          "en": "Who are you closest to?"
+          "en": "Who are you closest to?",
+          "model": {
+            "ja": "妹[いもうと]と 一番[いちばん] なかが いいです。同[おな]じ テレビばんぐみが 好[す]きで、よく いっしょに 見[み]ます。",
+            "en": "I am closest to my sister. We like the same television programmes and often watch them together."
+          }
         },
         {
           "ja": "一人[ひとり]っ子[こ]の ほうが いいと 思[おも]いますか。",
-          "en": "Do you think it is better to be an only child?"
+          "en": "Do you think it is better to be an only child?",
+          "model": {
+            "ja": "いいえ、兄弟[きょうだい]が いる ほうが いいと 思[おも]います。けんかも しますが、こまった 時[とき]に 話[はな]を 聞[き]いてくれるからです。",
+            "en": "No, I think it is better to have brothers and sisters. We argue, but they listen when something goes wrong."
+          }
         }
       ],
       "model_responses": {
@@ -521,11 +577,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "どんな お仕事[しごと]か せつめいして ください。",
-          "en": "Please explain what kind of job that is."
+          "en": "Please explain what kind of job that is.",
+          "model": {
+            "ja": "父[ちち]は 高校[こうこう]で すうがくを 教[おし]えています。母[はは]は 病院[びょういん]で かんごしを しています。",
+            "en": "My father teaches mathematics at a secondary school. My mother is a nurse at a hospital."
+          }
         },
         {
           "ja": "同[おな]じ 仕事[しごと]を したいですか。",
-          "en": "Would you like to do the same job?"
+          "en": "Would you like to do the same job?",
+          "model": {
+            "ja": "はい、私[わたし]も 先生[せんせい]に なりたいです。でも、小学校[しょうがっこう]の 先生[せんせい]が いいです。小[ちい]さい 子[こ]どもと 話[はな]すのが 好[す]きだからです。",
+            "en": "Yes, I want to be a teacher too. But a primary teacher, because I like talking with young children."
+          }
         }
       ],
       "model_responses": {
@@ -589,11 +653,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "どんな ところが にていますか。",
-          "en": "In what way are you alike?"
+          "en": "In what way are you alike?",
+          "model": {
+            "ja": "二人[ふたり]とも 話[はな]すのが 好[す]きで、はじめて 会[あ]った 人[ひと]とも すぐに 話[はな]せます。",
+            "en": "We both like talking, and we can both talk to someone the first time we meet them."
+          }
         },
         {
           "ja": "ちがう ところは ありますか。",
-          "en": "Is there anything that is different?"
+          "en": "Is there anything that is different?",
+          "model": {
+            "ja": "母[はは]は 朝[あさ] 早[はや]く おきますが、私[わたし]は おきるのが にがてです。",
+            "en": "My mother gets up early, and I am no good at getting up."
+          }
         }
       ],
       "model_responses": {
@@ -651,11 +723,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "今[いま]、家[いえ]で どんな 手[て]つだいを していますか。",
-          "en": "What jobs do you do at home now?"
+          "en": "What jobs do you do at home now?",
+          "model": {
+            "ja": "晩[ばん]ごはんの 後[あと]に おさらを 洗[あら]います。週[しゅう]まつは へやの そうじも します。",
+            "en": "I wash the dishes after dinner. At the weekend I clean my room as well."
+          }
         },
         {
           "ja": "大学[だいがく]に 入[はい]ったら、家[いえ]を 出[で]ますか。",
-          "en": "Will you move out when you start university?"
+          "en": "Will you move out when you start university?",
+          "model": {
+            "ja": "いいえ、はじめは 家[いえ]から 大学[だいがく]に 行[い]きたいです。お金[かね]を ためてから、一人[ひとり]で 住[す]みたいと 思[おも]っています。",
+            "en": "No, at first I want to travel to university from home. Once I have saved some money I would like to live on my own."
+          }
         }
       ],
       "model_responses": {
@@ -715,15 +795,27 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "その 中[なか]で 一番[いちばん] 好[す]きな かもくは 何[なん]ですか。",
-          "en": "Which of them is your favourite subject?"
+          "en": "Which of them is your favourite subject?",
+          "model": {
+            "ja": "せいぶつが 一番[いちばん] 好[す]きです。じっけんが 多[おお]くて、おもしろいからです。",
+            "en": "Biology is my favourite, because there are a lot of experiments and it is interesting."
+          }
         },
         {
           "ja": "どうしてですか。",
-          "en": "Why is that?"
+          "en": "Why is that?",
+          "model": {
+            "ja": "ノートを 読[よ]むだけじゃ なくて、自分[じぶん]で じっけんを するからです。",
+            "en": "Because you do not only read your notes, you do the experiments yourself."
+          }
         },
         {
           "ja": "一番[いちばん] にがてな かもくは 何[なん]ですか。",
-          "en": "Which subject are you weakest at?"
+          "en": "Which subject are you weakest at?",
+          "model": {
+            "ja": "すうがくが 一番[いちばん] にがてです。父[ちち]が すうがくの 先生[せんせい]ですが、私[わたし]は あまり 上手[じょうず]じゃ ありません。",
+            "en": "Mathematics is my weakest. My father teaches maths, but I am not much good at it."
+          }
         }
       ],
       "model_responses": {
@@ -781,11 +873,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "一番[いちばん] たいへんだったのは 何[なん]ですか。",
-          "en": "What was the hardest part?"
+          "en": "What was the hardest part?",
+          "model": {
+            "ja": "時間[じかん]の 使[つか]い方[かた]が 一番[いちばん] たいへんでした。テストと アルバイトが 同[おな]じ 週[しゅう]に あると、こまりました。",
+            "en": "Managing my time was the hardest part. When a test and my job fell in the same week it was difficult."
+          }
         },
         {
           "ja": "来年[らいねん]は どう かえたいですか。",
-          "en": "What would you like to change next year?"
+          "en": "What would you like to change next year?",
+          "model": {
+            "ja": "来年[らいねん]は もっと 早[はや]く けいかくを 立[た]てたいです。毎晩[まいばん] おそくまで 勉強[べんきょう]しない ように します。",
+            "en": "Next year I want to plan earlier. I will try not to study late every night."
+          }
         }
       ],
       "model_responses": {
@@ -851,11 +951,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "その 行事[ぎょうじ]で 何[なに]を しますか。",
-          "en": "What do you do at that event?"
+          "en": "What do you do at that event?",
+          "model": {
+            "ja": "クラスで チームを 作[つく]って、一日中[いちにちじゅう] はしったり およいだり します。おうえんも します。",
+            "en": "We make teams in our class and spend all day running and swimming. We cheer as well."
+          }
         },
         {
           "ja": "日本[にほん]の 学校[がっこう]の 行事[ぎょうじ]に ついて 知[し]っていますか。",
-          "en": "Do you know anything about school events in Japan?"
+          "en": "Do you know anything about school events in Japan?",
+          "model": {
+            "ja": "たいいくさいが あると 聞[き]きました。日本[にほん]の 学生[がくせい]は 前[まえ]から れんしゅうするので、オーストラリアより まじめだと 思[おも]います。",
+            "en": "I have heard they have a sports festival. Japanese students practise beforehand, so I think it is more serious than ours."
+          }
         }
       ],
       "model_responses": {
@@ -914,15 +1022,27 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "どうして そう 思[おも]いますか。",
-          "en": "Why do you think that?"
+          "en": "Why do you think that?",
+          "model": {
+            "ja": "じゅぎょうの 時[とき]に メッセージが 来[く]ると、勉強[べんきょう]が できなく なるからです。",
+            "en": "Because when a message arrives during class you stop being able to study."
+          }
         },
         {
           "ja": "先生[せんせい]は 同[おな]じ 考[かんが]えだと 思[おも]いますか。",
-          "en": "Do you think teachers would agree?"
+          "en": "Do you think teachers would agree?",
+          "model": {
+            "ja": "先生[せんせい]は もっと きびしいと 思[おも]います。でも、しらべる 時[とき]は 使[つか]っても いいと 言[い]う 先生[せんせい]も います。",
+            "en": "I think teachers are stricter. But some teachers say it is fine to use them for looking something up."
+          }
         },
         {
           "ja": "いい点[てん]と わるい点[てん]を 教[おし]えてください。",
-          "en": "Please tell me the good points and the bad points."
+          "en": "Please tell me the good points and the bad points.",
+          "model": {
+            "ja": "いい点[てん]は、わからない ことばを すぐに しらべられる ことです。わるい点[てん]は、休[やす]み 時間[じかん]に だれも 話[はな]さなく なる ことです。",
+            "en": "The good point is that you can look up a word you do not know straight away. The bad point is that nobody talks at break time any more."
+          }
         }
       ],
       "model_responses": {
@@ -982,11 +1102,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "週[しゅう]に 何回[なんかい] 会[あ]いますか。",
-          "en": "How many times a week do you meet?"
+          "en": "How many times a week do you meet?",
+          "model": {
+            "ja": "週[しゅう]に 二回[にかい]ぐらい 会[あ]います。学校[がっこう]の 後[あと]と 週[しゅう]まつです。",
+            "en": "About twice a week, after school and at the weekend."
+          }
         },
         {
           "ja": "どこで 会[あ]いますか。",
-          "en": "Where do you meet?"
+          "en": "Where do you meet?",
+          "model": {
+            "ja": "たいてい 町[まち]の カフェで 会[あ]います。駅[えき]の 近[ちか]くなので、べんりです。",
+            "en": "Usually at a cafe in the city. It is near the station, so it is easy."
+          }
         }
       ],
       "model_responses": {
@@ -1044,11 +1172,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "そんな 友[とも]だちが いますか。",
-          "en": "Do you have a friend like that?"
+          "en": "Do you have a friend like that?",
+          "model": {
+            "ja": "はい、います。去年[きょねん] 私[わたし]が 病気[びょうき]に なった 時[とき]、毎日[まいにち] ノートを 持[も]ってきてくれました。",
+            "en": "Yes, I do. When I was ill last year they brought me the notes every day."
+          }
         },
         {
           "ja": "自分[じぶん]も そんな 友[とも]だちだと 思[おも]いますか。",
-          "en": "Do you think you are that kind of friend yourself?"
+          "en": "Do you think you are that kind of friend yourself?",
+          "model": {
+            "ja": "まだ じゅうぶんじゃ ないと 思[おも]います。話[はな]を 聞[き]く 前[まえ]に 自分[じぶん]の 考[かんが]えを 言[い]ってしまうからです。",
+            "en": "Not enough yet, I think, because I give my own opinion before I have listened."
+          }
         }
       ],
       "model_responses": {
@@ -1106,11 +1242,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "どうやって なかなおりしましたか。",
-          "en": "How did you make up?"
+          "en": "How did you make up?",
+          "model": {
+            "ja": "私[わたし]から 「ごめん」と 言[い]いました。その 後[あと]、いっしょに ひるごはんを 食[た]べて、前[まえ]と 同[おな]じに なりました。",
+            "en": "I said sorry first. After that we had lunch together and things went back to how they were."
+          }
         },
         {
           "ja": "その 時[とき]、どう かんじましたか。",
-          "en": "How did you feel at the time?"
+          "en": "How did you feel at the time?",
+          "model": {
+            "ja": "さびしかったです。話[はな]す 友[とも]だちが いないと、学校[がっこう]が 長[なが]く かんじました。",
+            "en": "I felt lonely. With no friend to talk to, school felt long."
+          }
         }
       ],
       "model_responses": {
@@ -1171,11 +1315,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "日本語[にほんご]で 話[はな]すのは しんぱいですか。",
-          "en": "Would speaking in Japanese worry you?"
+          "en": "Would speaking in Japanese worry you?",
+          "model": {
+            "ja": "少[すこ]し しんぱいです。でも、まちがえても いいと 思[おも]うように しています。",
+            "en": "A little. But I try to tell myself that making mistakes is fine."
+          }
         },
         {
           "ja": "どんな ことを 聞[き]いてみたいですか。",
-          "en": "What would you like to ask them about?"
+          "en": "What would you like to ask them about?",
+          "model": {
+            "ja": "ぶかつに ついて 聞[き]きたいです。毎日[まいにち] れんしゅうして、しゅくだいの 時間[じかん]が あるのか 知[し]りたいです。",
+            "en": "I would like to ask about club activities. They train every day, and I want to know whether they still have time for homework."
+          }
         }
       ],
       "model_responses": {
@@ -1235,15 +1387,27 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "いつから その しゅみを 始[はじ]めましたか。",
-          "en": "When did you start that hobby?"
+          "en": "When did you start that hobby?",
+          "model": {
+            "ja": "十才[じゅっさい]の 時[とき]から 始[はじ]めました。もう 八年[はちねん]に なります。",
+            "en": "I started when I was ten, so it has been eight years."
+          }
         },
         {
           "ja": "週[しゅう]に 何回[なんかい] しますか。",
-          "en": "How many times a week do you do it?"
+          "en": "How many times a week do you do it?",
+          "model": {
+            "ja": "週[しゅう]に 三回[さんかい] れんしゅうします。しあいも 月[つき]に 二回[にかい]ぐらい あります。",
+            "en": "I train three times a week. We also have matches about twice a month."
+          }
         },
         {
           "ja": "どうして その しゅみが 好[す]きなのですか。",
-          "en": "Why do you like that hobby?"
+          "en": "Why do you like that hobby?",
+          "model": {
+            "ja": "チームの 友[とも]だちに 会[あ]えるからです。体[からだ]を 動[うご]かすと、気持[きも]ちも 元気[げんき]に なります。",
+            "en": "Because I get to see my team friends. Moving about makes me feel better as well."
+          }
         }
       ],
       "model_responses": {
@@ -1302,11 +1466,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "いつから ならっていますか。",
-          "en": "How long have you been learning?"
+          "en": "How long have you been learning?",
+          "model": {
+            "ja": "七才[ななさい]から ならっているので、もう 十年[じゅうねん]ぐらいに なります。",
+            "en": "I have been learning since I was seven, so it is about ten years now."
+          }
         },
         {
           "ja": "どんな きょくを ひきますか。",
-          "en": "What kind of pieces do you play?"
+          "en": "What kind of pieces do you play?",
+          "model": {
+            "ja": "クラシックの きょくが 多[おお]いですが、さいきんは 日本[にほん]の アニメの きょくも ひきます。",
+            "en": "Mostly classical pieces, but lately I play Japanese anime music as well."
+          }
         }
       ],
       "model_responses": {
@@ -1370,11 +1542,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "月[つき]に 何[なん]さつ 読[よ]みますか。",
-          "en": "How many books do you read a month?"
+          "en": "How many books do you read a month?",
+          "model": {
+            "ja": "月[つき]に 二[に]さつぐらい 読[よ]みます。テストの 前[まえ]は 読[よ]む 時間[じかん]が ありません。",
+            "en": "About two a month. Before a test I have no time to read."
+          }
         },
         {
           "ja": "好[す]きな さっかは だれですか。",
-          "en": "Who is your favourite author?"
+          "en": "Who is your favourite author?",
+          "model": {
+            "ja": "オーストラリアの ミステリーの さっかが 好[す]きです。さいきんは 日本語[にほんご]の やさしい 本[ほん]も 読[よ]んでいます。",
+            "en": "I like an Australian mystery writer. Lately I am also reading easy books in Japanese."
+          }
         }
       ],
       "model_responses": {
@@ -1434,11 +1614,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "時間[じかん]が ない 時[とき]、どう しますか。",
-          "en": "What do you do when you have no time?"
+          "en": "What do you do when you have no time?",
+          "model": {
+            "ja": "少[すこ]しだけでも します。十五分[じゅうごふん] ピアノを ひくだけで、気持[きも]ちが かわります。",
+            "en": "I still do a little. Fifteen minutes at the piano changes how I feel."
+          }
         },
         {
           "ja": "しゅみと 勉強[べんきょう]、どちらが たいせつですか。",
-          "en": "Which matters more, hobbies or study?"
+          "en": "Which matters more, hobbies or study?",
+          "model": {
+            "ja": "どちらも たいせつだと 思[おも]います。しゅみの 時間[じかん]が あると、勉強[べんきょう]も よく できるからです。",
+            "en": "Both matter, I think, because having time for a hobby makes my study go better."
+          }
         }
       ],
       "model_responses": {
@@ -1498,11 +1686,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "夜[よる]、何時[なんじ]に ねますか。",
-          "en": "What time do you go to bed?"
+          "en": "What time do you go to bed?",
+          "model": {
+            "ja": "たいてい 十時[じゅうじ]に ねます。テストの 前[まえ]は 十一時[じゅういちじ]ごろに なります。",
+            "en": "Usually at ten. Before a test it becomes about eleven."
+          }
         },
         {
           "ja": "一番[いちばん] いそがしい 日[ひ]は 何曜日[なんようび]ですか。",
-          "en": "Which day of the week is your busiest?"
+          "en": "Which day of the week is your busiest?",
+          "model": {
+            "ja": "月曜日[げつようび]が 一番[いちばん] いそがしいです。学校[がっこう]の 後[あと]に サッカーの れんしゅうが あるからです。",
+            "en": "Monday is my busiest, because I have soccer training after school."
+          }
         }
       ],
       "model_responses": {
@@ -1561,15 +1757,27 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "アルバイトの お金[かね]で 何[なに]を しますか。",
-          "en": "What do you do with the money from your job?"
+          "en": "What do you do with the money from your job?",
+          "model": {
+            "ja": "はんぶんは ためて、はんぶんは 友[とも]だちと 出[で]かける 時[とき]に 使[つか]います。来年[らいねん]の ために ためています。",
+            "en": "I save half and spend half when I go out with friends. I am saving for next year."
+          }
         },
         {
           "ja": "アルバイトで 一番[いちばん] たいへんなことは 何[なん]ですか。",
-          "en": "What is the hardest part of the job?"
+          "en": "What is the hardest part of the job?",
+          "model": {
+            "ja": "土曜日[どようび]は おきゃくさんが とても 多[おお]くて、四時間[よじかん] ずっと 立[た]っています。",
+            "en": "On Saturdays there are a great many customers and I am on my feet for the whole four hours."
+          }
         },
         {
           "ja": "アルバイトと 勉強[べんきょう]の りょうほうが できますか。",
-          "en": "Can you manage both the job and your study?"
+          "en": "Can you manage both the job and your study?",
+          "model": {
+            "ja": "できますが、けいかくが ひつようです。日曜日[にちようび]の 夜[よる]に しゅくだいを します。",
+            "en": "I can, but it takes planning. I do my homework on Sunday night."
+          }
         }
       ],
       "model_responses": {
@@ -1637,11 +1845,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "いい点[てん]と わるい点[てん]は 何[なん]ですか。",
-          "en": "What are the good points and the bad points?"
+          "en": "What are the good points and the bad points?",
+          "model": {
+            "ja": "いい点[てん]は、お金[かね]の つかい方[かた]が わかる ことです。わるい点[てん]は、勉強[べんきょう]の 時間[じかん]が 少[すく]なく なる ことです。",
+            "en": "The good point is that you learn how to use money. The bad point is that you have less time to study."
+          }
         },
         {
           "ja": "日本[にほん]の 高校生[こうこうせい]は どうだと 思[おも]いますか。",
-          "en": "What do you think it is like for Japanese senior students?"
+          "en": "What do you think it is like for Japanese senior students?",
+          "model": {
+            "ja": "日本[にほん]の 高校生[こうこうせい]は アルバイトを しない 人[ひと]が 多[おお]いと 聞[き]きました。ぶかつと じゅくが あって、時間[じかん]が ないからだと 思[おも]います。",
+            "en": "I have heard that many Japanese senior students do not have a job. I think clubs and cram school leave them no time."
+          }
         }
       ],
       "model_responses": {
@@ -1699,11 +1915,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "どちらの 生活[せいかつ]が いいと 思[おも]いますか。",
-          "en": "Which do you think is better?"
+          "en": "Which do you think is better?",
+          "model": {
+            "ja": "オーストラリアの 生活[せいかつ]の ほうが いいと 思[おも]います。じゆうな 時間[じかん]が 多[おお]いからです。",
+            "en": "I think the Australian one is better, because there is more free time."
+          }
         },
         {
           "ja": "どうして そう 思[おも]いますか。",
-          "en": "Why do you think that?"
+          "en": "Why do you think that?",
+          "model": {
+            "ja": "毎日[まいにち] ぶかつと じゅくが あったら、友[とも]だちと 話[はな]す 時間[じかん]も、ねる 時間[じかん]も 少[すく]なく なるからです。",
+            "en": "Because with clubs and cram school every day you have less time to talk with friends and less time to sleep."
+          }
         }
       ],
       "model_responses": {
@@ -1762,11 +1986,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "どうして 日本語[にほんご]を えらびましたか。",
-          "en": "Why did you choose Japanese?"
+          "en": "Why did you choose Japanese?",
+          "model": {
+            "ja": "中学[ちゅうがく]一年生[いちねんせい]の 時[とき]、日本[にほん]の アニメが 好[す]きだったからです。今[いま]は ぶんかにも きょうみが あります。",
+            "en": "Because in Year 7 I liked Japanese anime. Now I am interested in the culture as well."
+          }
         },
         {
           "ja": "日本語[にほんご]の 中[なか]で 何[なに]が 一番[いちばん] むずかしいですか。",
-          "en": "What is the hardest part of Japanese?"
+          "en": "What is the hardest part of Japanese?",
+          "model": {
+            "ja": "漢字[かんじ]が 一番[いちばん] むずかしいです。読[よ]めますが、書[か]くのを よく わすれます。",
+            "en": "Kanji are the hardest. I can read them, but I often forget how to write them."
+          }
         }
       ],
       "model_responses": {
@@ -1824,11 +2056,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "どうやって れんしゅうしていますか。",
-          "en": "How do you practise?"
+          "en": "How do you practise?",
+          "model": {
+            "ja": "毎晩[まいばん] 十[じゅっ]こずつ 書[か]いて、次[つぎ]の 日[ひ]に もう 一回[いっかい] 書[か]きます。",
+            "en": "I write ten of them every night and write them again the next day."
+          }
         },
         {
           "ja": "一番[いちばん] 楽[たの]しいことは 何[なん]ですか。",
-          "en": "What is the most enjoyable part?"
+          "en": "What is the most enjoyable part?",
+          "model": {
+            "ja": "日本[にほん]の 人[ひと]と 話[はな]せた 時[とき]が 一番[いちばん] 楽[たの]しいです。わかって もらえると、うれしく なります。",
+            "en": "Talking with a Japanese person is the best part. When they understand me it makes my day."
+          }
         }
       ],
       "model_responses": {
@@ -1887,15 +2127,27 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "どこで 日本[にほん]の ものを 買[か]えますか。",
-          "en": "Where can you buy Japanese things?"
+          "en": "Where can you buy Japanese things?",
+          "model": {
+            "ja": "町[まち]の 日本[にほん]の 食[た]べ物[もの]の お店[みせ]で 買[か]えます。日本[にほん]の おかしも 売[う]っています。",
+            "en": "At the Japanese grocery shops in the city. They sell Japanese sweets as well."
+          }
         },
         {
           "ja": "日本[にほん]の 食[た]べ物[もの]を 食[た]べたことが ありますか。",
-          "en": "Have you eaten Japanese food?"
+          "en": "Have you eaten Japanese food?",
+          "model": {
+            "ja": "はい、あります。すしや ラーメンを よく 食[た]べます。去年[きょねん]は わがしも 食[た]べました。",
+            "en": "Yes. I often eat sushi and ramen. Last year I ate wagashi too."
+          }
         },
         {
           "ja": "それは どうでしたか。",
-          "en": "How was it?"
+          "en": "How was it?",
+          "model": {
+            "ja": "とても おいしかったです。わがしは ケーキより あまくなくて、おちゃと よく あいました。",
+            "en": "It was very good. Wagashi are less sweet than cake and went well with tea."
+          }
         }
       ],
       "model_responses": {
@@ -1953,11 +2205,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "どんな ところが かわりましたか。",
-          "en": "In what way have you changed?"
+          "en": "In what way have you changed?",
+          "model": {
+            "ja": "まちがえるのが こわく なくなりました。前[まえ]は 手[て]を あげるのが はずかしかったです。",
+            "en": "I stopped being afraid of mistakes. I used to find putting my hand up embarrassing."
+          }
         },
         {
           "ja": "日本語[にほんご]が できると、どんな いい ことが ありますか。",
-          "en": "What is good about being able to speak Japanese?"
+          "en": "What is good about being able to speak Japanese?",
+          "model": {
+            "ja": "話[はな]せる 人[ひと]が ふえます。しょうらい、日本[にほん]から 来[き]た 子[こ]どもに 教[おし]えることも できます。",
+            "en": "You can talk with more people. In the future I could also teach children who have come from Japan."
+          }
         }
       ],
       "model_responses": {
@@ -2017,11 +2277,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "どうして そう 思[おも]いますか。",
-          "en": "Why do you think that?"
+          "en": "Why do you think that?",
+          "model": {
+            "ja": "ことばを 習[なら]うと、その 国[くに]の 考[かんが]え方[かた]も 少[すこ]しずつ わかるように なるからです。",
+            "en": "Because learning a language gradually teaches you how that country thinks."
+          }
         },
         {
           "ja": "どの ことばが 一番[いちばん] やくに 立[た]つと 思[おも]いますか。",
-          "en": "Which language do you think is the most useful?"
+          "en": "Which language do you think is the most useful?",
+          "model": {
+            "ja": "学校[がっこう]に よると 思[おも]います。オーストラリアには いろいろな 国[くに]の 人[ひと]が 住[す]んでいるので、どの ことばでも やくに 立[た]ちます。",
+            "en": "I think it depends on the school. People from many countries live in Australia, so any language earns its place."
+          }
         }
       ],
       "model_responses": {
@@ -2080,15 +2348,27 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "日本[にほん]の どこに 行[い]きたいですか。",
-          "en": "Where in Japan would you like to go?"
+          "en": "Where in Japan would you like to go?",
+          "model": {
+            "ja": "京都[きょうと]に 一番[いちばん] 行[い]きたいです。古[ふる]い お寺[てら]や 神社[じんじゃ]が 多[おお]いからです。",
+            "en": "Kyoto most of all, because it has so many old temples and shrines."
+          }
         },
         {
           "ja": "どうしてですか。",
-          "en": "Why is that?"
+          "en": "Why is that?",
+          "model": {
+            "ja": "春[はる]は さくらも きれいだと 聞[き]きました。それに、わがしの 古[ふる]い お店[みせ]も 見[み]たいです。",
+            "en": "I have heard the cherry blossom is beautiful in spring. I would also like to see the old wagashi shops."
+          }
         },
         {
           "ja": "だれと 行[い]きたいですか。",
-          "en": "Who would you like to go with?"
+          "en": "Who would you like to go with?",
+          "model": {
+            "ja": "家族[かぞく]と 行[い]きたいです。妹[いもうと]も 日本[にほん]の アニメが 好[す]きなので、よろこぶと 思[おも]います。",
+            "en": "With my family. My sister likes Japanese anime too, so I think she would enjoy it."
+          }
         }
       ],
       "model_responses": {
@@ -2152,11 +2432,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "それに ついて もっと せつめいしてください。",
-          "en": "Please explain more about that."
+          "en": "Please explain more about that.",
+          "model": {
+            "ja": "夏[なつ]の おまつりでは、人[ひと]が ゆかたを 着[き]て、やたいで たこやきや かきごおりを 買[か]います。おみこしを かつぐ おまつりも あります。",
+            "en": "At summer festivals people wear yukata and buy takoyaki and shaved ice from the stalls. Some festivals carry a portable shrine as well."
+          }
         },
         {
           "ja": "どこで それを 知[し]りましたか。",
-          "en": "Where did you learn that?"
+          "en": "Where did you learn that?",
+          "model": {
+            "ja": "学校[がっこう]の じゅぎょうで ビデオを 見[み]ました。インターネットでも しらべました。",
+            "en": "I watched a video in class. I looked it up on the internet as well."
+          }
         }
       ],
       "model_responses": {
@@ -2215,11 +2503,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "どちらの 学校[がっこう]に 行[い]きたいですか。",
-          "en": "Which school would you rather attend?"
+          "en": "Which school would you rather attend?",
+          "model": {
+            "ja": "一年[いちねん]だけ 日本[にほん]の 学校[がっこう]に 行[い]ってみたいです。でも、毎日[まいにち] ぶかつが あるのは たいへんだと 思[おも]います。",
+            "en": "I would like to try a Japanese school for one year. But club activities every day would be hard."
+          }
         },
         {
           "ja": "オーストラリアの 学校[がっこう]でも やってみたい 日本[にほん]の しゅうかんは ありますか。",
-          "en": "Is there a Japanese practice you would bring into Australian schools?"
+          "en": "Is there a Japanese practice you would bring into Australian schools?",
+          "model": {
+            "ja": "そうじが いいと 思[おも]います。自分[じぶん]たちで そうじすると、学校[がっこう]を たいせつに する 気持[きも]ちに なるからです。",
+            "en": "Cleaning, I think. When you clean it yourself you start looking after the school."
+          }
         }
       ],
       "model_responses": {
@@ -2277,15 +2573,27 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "どうしてですか。",
-          "en": "Why?"
+          "en": "Why?",
+          "model": {
+            "ja": "メルボルンは カフェが ゆうめいだからです。コーヒーを 持[も]っている コアラなら、すぐに おぼえられると 思[おも]います。",
+            "en": "Because Melbourne is famous for cafes. I think a koala holding a coffee would stick in people's minds."
+          }
         },
         {
           "ja": "名前[なまえ]は 何[なん]に しますか。",
-          "en": "What would you call it?"
+          "en": "What would you call it?",
+          "model": {
+            "ja": "「コアラッテ」に します。コアラと ラッテを いっしょに した 名前[なまえ]です。",
+            "en": "I would call it Koalatte. The name puts koala and latte together."
+          }
         },
         {
           "ja": "どこで 使[つか]いますか。",
-          "en": "Where would it be used?"
+          "en": "Where would it be used?",
+          "model": {
+            "ja": "トラムや 駅[えき]の ポスターに 使[つか]いたいです。子[こ]どもも すぐに おぼえると 思[おも]います。",
+            "en": "On trams and on station posters. I think children would pick it up quickly."
+          }
         }
       ],
       "model_responses": {
@@ -2345,11 +2653,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "どうして その 仕事[しごと]を えらびましたか。",
-          "en": "Why did you choose that job?"
+          "en": "Why did you choose that job?",
+          "model": {
+            "ja": "子[こ]どもと 話[はな]すのが 好[す]きだからです。アルバイトで 小[ちい]さい 子[こ]どもに サッカーを 教[おし]えたことも あります。",
+            "en": "Because I like talking with children. I have also taught soccer to young children in a part-time job."
+          }
         },
         {
           "ja": "大学[だいがく]で 何[なに]を 勉強[べんきょう]したいですか。",
-          "en": "What would you like to study at university?"
+          "en": "What would you like to study at university?",
+          "model": {
+            "ja": "きょういくを 勉強[べんきょう]したいです。日本語[にほんご]も つづけたいと 思[おも]っています。",
+            "en": "I want to study education. I would like to continue Japanese as well."
+          }
         }
       ],
       "model_responses": {
@@ -2407,11 +2723,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "どうしてですか。",
-          "en": "Why?"
+          "en": "Why?",
+          "model": {
+            "ja": "六年間[ろくねんかん] 勉強[べんきょう]したので、ここで やめたら、きっと わすれてしまうからです。",
+            "en": "Because I have studied for six years, and if I stop here I will certainly forget it."
+          }
         },
         {
           "ja": "日本語[にほんご]を 使[つか]う 仕事[しごと]を したいですか。",
-          "en": "Would you like a job that uses Japanese?"
+          "en": "Would you like a job that uses Japanese?",
+          "model": {
+            "ja": "はい。日本[にほん]から 来[き]た 子[こ]どもが いる 学校[がっこう]で 教[おし]えたいです。",
+            "en": "Yes. I would like to teach at a school with children who have come from Japan."
+          }
         }
       ],
       "model_responses": {
@@ -2470,11 +2794,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "ほかに どんな 道[みち]が ありますか。",
-          "en": "What other paths are there?"
+          "en": "What other paths are there?",
+          "model": {
+            "ja": "仕事[しごと]の 場所[ばしょ]で 習[なら]う 道[みち]も あります。私[わたし]の いとこは 大学[だいがく]に 行[い]かないで、カフェで 働[はたら]いています。",
+            "en": "There is the path of learning on the job. My cousin did not go to university and works in a cafe."
+          }
         },
         {
           "ja": "お金[かね]の ことを どう 思[おも]いますか。",
-          "en": "What do you think about the cost?"
+          "en": "What do you think about the cost?",
+          "model": {
+            "ja": "大学[だいがく]は お金[かね]が かかるので、アルバイトを しながら 行[い]く 学生[がくせい]が 多[おお]いです。それは たいへんだと 思[おも]います。",
+            "en": "University costs a lot, so many students work while they study. I think that is hard."
+          }
         }
       ],
       "model_responses": {
@@ -2534,11 +2866,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "十年後[じゅうねんご]、どこに 住[す]んでいると 思[おも]いますか。",
-          "en": "Where do you think you will be living in ten years?"
+          "en": "Where do you think you will be living in ten years?",
+          "model": {
+            "ja": "たぶん メルボルンに 住[す]んでいると 思[おも]います。でも、一年[いちねん]ぐらい 日本[にほん]に 住[す]んでみたいです。",
+            "en": "Probably in Melbourne. But I would like to try living in Japan for about a year."
+          }
         },
         {
           "ja": "今[いま]の 自分[じぶん]に 言[い]いたいことは ありますか。",
-          "en": "Is there anything you would say to yourself now?"
+          "en": "Is there anything you would say to yourself now?",
+          "model": {
+            "ja": "「しんぱいしすぎないで」と 言[い]いたいです。テストの 前[まえ]は いつも しんぱいに なるからです。",
+            "en": "I would say, do not worry so much, because I always get anxious before a test."
+          }
         }
       ],
       "model_responses": {
@@ -2597,11 +2937,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "自分[じぶん]は 何[なに]が できますか。",
-          "en": "What can you do yourself?"
+          "en": "What can you do yourself?",
+          "model": {
+            "ja": "車[くるま]の かわりに 電車[でんしゃ]や じてんしゃを 使[つか]うように しています。小[ちい]さい ことですが、みんなが すれば かわると 思[おも]います。",
+            "en": "I try to use the train or my bike instead of the car. It is a small thing, but if everyone did it things would change."
+          }
         },
         {
           "ja": "学校[がっこう]では 何[なに]を していますか。",
-          "en": "What does your school do?"
+          "en": "What does your school do?",
+          "model": {
+            "ja": "学校[がっこう]に ごみを 分[わ]ける 場所[ばしょ]が できました。学生[がくせい]の グループも 木[き]を うえています。",
+            "en": "The school has set up places to sort rubbish. A student group plants trees as well."
+          }
         }
       ],
       "model_responses": {
@@ -2665,15 +3013,27 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "いい点[てん]と わるい点[てん]を 教[おし]えてください。",
-          "en": "Please tell me the good points and the bad points."
+          "en": "Please tell me the good points and the bad points.",
+          "model": {
+            "ja": "いい点[てん]は、日本[にほん]の 高校生[こうこうせい]にも メッセージが おくれる ことです。わるい点[てん]は、うその ニュースを しんじてしまう 人[ひと]が いる ことです。",
+            "en": "The good point is that I can message a Japanese senior student. The bad point is that some people believe false news."
+          }
         },
         {
           "ja": "自分[じぶん]は どのぐらい 使[つか]いますか。",
-          "en": "How much do you use it yourself?"
+          "en": "How much do you use it yourself?",
+          "model": {
+            "ja": "一日[いちにち]に 一時間[いちじかん]ぐらい 使[つか]います。テストの 前[まえ]は スマホを べつの へやに おきます。",
+            "en": "About an hour a day. Before a test I leave my phone in another room."
+          }
         },
         {
           "ja": "どうしたら もっと よく なると 思[おも]いますか。",
-          "en": "How do you think it could be improved?"
+          "en": "How do you think it could be improved?",
+          "model": {
+            "ja": "学校[がっこう]で 「この ニュースは ほんとうか」と 考[かんが]える じゅぎょうが あったら いいと 思[おも]います。",
+            "en": "I think it would help to have lessons at school on asking whether a piece of news is true."
+          }
         }
       ],
       "model_responses": {
@@ -2732,11 +3092,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "日本[にほん]の わかものと オーストラリアの わかものは ちがいますか。",
-          "en": "Are young people in Japan different from young people in Australia?"
+          "en": "Are young people in Japan different from young people in Australia?",
+          "model": {
+            "ja": "生活[せいかつ]は ちがいますが、気持[きも]ちは にていると 思[おも]います。どちらも しょうらいの ことを しんぱいしています。",
+            "en": "Their daily lives differ, but I think they feel much the same. Both worry about the future."
+          }
         },
         {
           "ja": "どこで その ことを 知[し]りましたか。",
-          "en": "Where did you learn about that?"
+          "en": "Where did you learn about that?",
+          "model": {
+            "ja": "ユーチューブで 日本[にほん]の 高校生[こうこうせい]の ビデオを 見[み]ました。日本語[にほんご]の じゅぎょうでも 読[よ]みました。",
+            "en": "I watched videos by Japanese senior students on YouTube. We read about it in Japanese class as well."
+          }
         }
       ],
       "model_responses": {
@@ -2794,15 +3162,27 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "どこで とった しゃしんですか。",
-          "en": "Where was the photo taken?"
+          "en": "Where was the photo taken?",
+          "model": {
+            "ja": "メルボルンの 日本[にほん]の お店[みせ]で とりました。去年[きょねん]、わがしを 買[か]った 時[とき]の しゃしんです。",
+            "en": "I took it at a Japanese shop in Melbourne, when I bought wagashi last year."
+          }
         },
         {
           "ja": "いつの しゃしんですか。",
-          "en": "When is the photo from?"
+          "en": "When is the photo from?",
+          "model": {
+            "ja": "去年[きょねん]の 春[はる]の しゃしんです。さくらの かたちの わがしが ありました。",
+            "en": "It is from last spring. There were wagashi shaped like cherry blossom."
+          }
         },
         {
           "ja": "どうして この しゃしんを えらびましたか。",
-          "en": "Why did you choose this photo?"
+          "en": "Why did you choose this photo?",
+          "model": {
+            "ja": "わがしが きせつと かんけいが あることを 見[み]せたかったからです。春[はる]の かたちが よく わかります。",
+            "en": "Because I wanted to show that wagashi go with the seasons. The spring shapes show it clearly."
+          }
         }
       ],
       "model_responses": {
@@ -2866,11 +3246,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "どうして そう 思[おも]いますか。",
-          "en": "Why do you think that?"
+          "en": "Why do you think that?",
+          "model": {
+            "ja": "色[いろ]も かたちも ていねいに 作[つく]ってあって、おさらの 上[うえ]に 少[すこ]しだけ ならべてあるからです。",
+            "en": "Because the colours and the shapes are made so carefully, and only a few sit on the plate."
+          }
         },
         {
           "ja": "しゃしんに ない ことも せつめいできますか。",
-          "en": "Can you explain something the photo does not show?"
+          "en": "Can you explain something the photo does not show?",
+          "model": {
+            "ja": "はい。わがしは 目[め]で 楽[たの]しむ おかしですが、あじは あまり あまくないです。おちゃと いっしょに 食[た]べます。",
+            "en": "Yes. Wagashi are sweets you enjoy with your eyes, but they do not taste very sweet. You eat them with tea."
+          }
         }
       ],
       "model_responses": {
@@ -2929,11 +3317,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "どうして その トピックを えらびましたか。",
-          "en": "Why did you choose that topic?"
+          "en": "Why did you choose that topic?",
+          "model": {
+            "ja": "きれいで、見[み]るのが 好[す]きだからです。それに、わがしから 日本[にほん]の きせつの ぶんかが わかります。",
+            "en": "Because they are beautiful and I like looking at them. They also show you Japan's culture of the seasons."
+          }
         },
         {
           "ja": "一番[いちばん] だいじな ことばを 教[おし]えてください。",
-          "en": "Tell me the most important word in your topic."
+          "en": "Tell me the most important word in your topic.",
+          "model": {
+            "ja": "「きせつ」が 一番[いちばん] だいじな ことばだと 思[おも]います。わがしの かたちも 名前[なまえ]も きせつで かわるからです。",
+            "en": "I think the most important word is kisetsu, the seasons, because both the shapes and the names change with them."
+          }
         }
       ],
       "model_responses": {
@@ -2992,11 +3388,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "ほかに どんな ことばが ありますか。",
-          "en": "What other key words are there?"
+          "en": "What other key words are there?",
+          "model": {
+            "ja": "「ようがし」と 「あんこ」です。「ようがし」は 西洋[せいよう]の おかしで、「あんこ」は まめから 作[つく]る あまい ものです。",
+            "en": "Yougashi and anko. Yougashi are western sweets, and anko is a sweet paste made from beans."
+          }
         },
         {
           "ja": "はじめて 聞[き]いた 人[ひと]に どう せつめいしますか。",
-          "en": "How would you explain it to someone hearing it for the first time?"
+          "en": "How would you explain it to someone hearing it for the first time?",
+          "model": {
+            "ja": "「日本[にほん]の 古[ふる]い おかしで、おもちや あんこで 作[つく]ります」と せつめいします。それから、ケーキより あまくないと 言[い]います。",
+            "en": "I would say they are traditional Japanese sweets made from rice cake and bean paste. Then I would say they are less sweet than cake."
+          }
         }
       ],
       "model_responses": {
@@ -3056,11 +3460,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "だれが 始[はじ]めましたか。",
-          "en": "Who started it?"
+          "en": "Who started it?",
+          "model": {
+            "ja": "一人[ひとり]の 人[ひと]が 始[はじ]めたのでは ないと 思[おも]います。中国[ちゅうごく]から おちゃが 入[はい]ってきてから、少[すこ]しずつ 広[ひろ]がりました。",
+            "en": "I do not think one person started it. It spread little by little after tea came in from China."
+          }
         },
         {
           "ja": "どうして 始[はじ]まったと 思[おも]いますか。",
-          "en": "Why do you think it started?"
+          "en": "Why do you think it started?",
+          "model": {
+            "ja": "おちゃを 飲[の]む 時[とき]に 少[すこ]し あまい ものが ひつようだったからだと 思[おも]います。",
+            "en": "Because people wanted something a little sweet to go with tea, I think."
+          }
         }
       ],
       "model_responses": {
@@ -3120,11 +3532,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "ほかの 国[くに]にも ありますか。",
-          "en": "Is there nothing like it in other countries?"
+          "en": "Is there nothing like it in other countries?",
+          "model": {
+            "ja": "中国[ちゅうごく]にも おちゃと いっしょに 食[た]べる おかしが あります。でも、きせつで かたちが かわるのは 日本[にほん]だけだと 思[おも]います。",
+            "en": "China has sweets you eat with tea as well. But I think only Japan changes the shapes with the seasons."
+          }
         },
         {
           "ja": "日本[にほん]の 天気[てんき]や 場所[ばしょ]と かんけいが ありますか。",
-          "en": "Is it connected with Japan's climate or geography?"
+          "en": "Is it connected with Japan's climate or geography?",
+          "model": {
+            "ja": "あると 思[おも]います。日本[にほん]は きせつが はっきり 分[わ]かれていて、おこめも よく できる 国[くに]だからです。",
+            "en": "I think so. Japan has four clear seasons and grows rice well."
+          }
         }
       ],
       "model_responses": {
@@ -3183,11 +3603,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "わかい 人[ひと]も しますか。",
-          "en": "Do young people do it too?"
+          "en": "Do young people do it too?",
+          "model": {
+            "ja": "わかい 人[ひと]は ケーキの ほうが 好[す]きだと 思[おも]います。でも、お正月[しょうがつ]には 家族[かぞく]みんなで 食[た]べます。",
+            "en": "I think young people prefer cake. But at New Year the whole family eats them."
+          }
         },
         {
           "ja": "一年[いちねん]の 中[なか]で いつ 一番[いちばん] 多[おお]いですか。",
-          "en": "When in the year is it most common?"
+          "en": "When in the year is it most common?",
+          "model": {
+            "ja": "お正月[しょうがつ]と おまつりの 時[とき]が 一番[いちばん] 多[おお]いです。春[はる]は さくらの かたちの わがしも 売[う]っています。",
+            "en": "New Year and festival time are the busiest. In spring the shops also sell wagashi shaped like cherry blossom."
+          }
         }
       ],
       "model_responses": {
@@ -3246,11 +3674,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "町[まち]に よって ちがいますか。",
-          "en": "Does it differ from place to place?"
+          "en": "Does it differ from place to place?",
+          "model": {
+            "ja": "はい、ちがいます。その 町[まち]だけの わがしも あって、おみやげに 買[か]う 人[ひと]が 多[おお]いです。",
+            "en": "Yes. Some wagashi belong to one town only, and plenty of people buy them to take home."
+          }
         },
         {
           "ja": "メルボルンでも 見[み]られますか。",
-          "en": "Can it be seen in Melbourne too?"
+          "en": "Can it be seen in Melbourne too?",
+          "model": {
+            "ja": "日本[にほん]の 食[た]べ物[もの]の お店[みせ]で 少[すこ]し 買[か]えます。でも、しゅるいは 多[おお]くないです。",
+            "en": "You can buy a few at the Japanese food shops. But there is not much variety."
+          }
         }
       ],
       "model_responses": {
@@ -3309,11 +3745,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "どんな ところが かわりましたか。",
-          "en": "In what way has it changed?"
+          "en": "In what way has it changed?",
+          "model": {
+            "ja": "前[まえ]は おちゃの 時[とき]だけ 食[た]べていましたが、今[いま]は コンビニでも 買[か]えます。チョコレートの わがしも あります。",
+            "en": "In the past people ate them only with tea, but now you can buy them at convenience stores. There are even chocolate ones."
+          }
         },
         {
           "ja": "いい かわり方[かた]だと 思[おも]いますか。",
-          "en": "Do you think it is a good change?"
+          "en": "Do you think it is a good change?",
+          "model": {
+            "ja": "いいと 思[おも]います。新[あたら]しい わがしが あると、わかい 人[ひと]も 買[か]うからです。でも、古[ふる]い わがしも のこして ほしいです。",
+            "en": "I think it is good, because new wagashi bring young buyers. But I hope the old ones stay as well."
+          }
         }
       ],
       "model_responses": {
@@ -3373,11 +3817,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "どうして そう 思[おも]いますか。",
-          "en": "Why do you think that?"
+          "en": "Why do you think that?",
+          "model": {
+            "ja": "インスタグラムで きれいな わがしの しゃしんが 人気[にんき]に なったからです。しゃしんを とってから 食[た]べる 人[ひと]が 多[おお]いです。",
+            "en": "Because photographs of beautiful wagashi have become popular on Instagram. Plenty of people take a photo before they eat."
+          }
         },
         {
           "ja": "もっと 人気[にんき]に する ために 何[なに]が できますか。",
-          "en": "What could be done to make it more popular?"
+          "en": "What could be done to make it more popular?",
+          "model": {
+            "ja": "お店[みせ]が 新[あたら]しい 色[いろ]や かたちを 作[つく]ると いいと 思[おも]います。学校[がっこう]で 作[つく]り方[かた]を 教[おし]えるのも いいです。",
+            "en": "Shops could make new colours and shapes. Teaching how to make them at school would help as well."
+          }
         }
       ],
       "model_responses": {
@@ -3437,11 +3889,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "どんな 考[かんが]え方[かた]ですか。",
-          "en": "What sort of thinking?"
+          "en": "What sort of thinking?",
+          "model": {
+            "ja": "「多[おお]い ほうが いい」ではなく、「ちょうど いいのが 一番[いちばん] いい」という 考[かんが]え方[かた]だと 思[おも]います。",
+            "en": "Not more is better, but just enough is best."
+          }
         },
         {
           "ja": "オーストラリアの 考[かんが]え方[かた]と ちがいますか。",
-          "en": "Is it different from the Australian way of thinking?"
+          "en": "Is it different from the Australian way of thinking?",
+          "model": {
+            "ja": "ちがうと 思[おも]います。オーストラリアの ケーキは 大[おお]きくて あまいので、ここが 一番[いちばん] 大[おお]きい ちがいです。",
+            "en": "I think so. Australian cake is big and sweet, and that is the biggest difference."
+          }
         }
       ],
       "model_responses": {
@@ -3500,15 +3960,27 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "いい えいきょうですか、わるい えいきょうですか。",
-          "en": "Is the effect good or bad?"
+          "en": "Is the effect good or bad?",
+          "model": {
+            "ja": "いい えいきょうだと 思[おも]います。わがしの お店[みせ]は 小[ちい]さい 町[まち]にも あって、町[まち]の 仕事[しごと]を 作[つく]っているからです。",
+            "en": "Good, I think, because wagashi shops are in the small towns too and make local work."
+          }
         },
         {
           "ja": "もんだいも ありますか。",
-          "en": "Are there problems as well?"
+          "en": "Are there problems as well?",
+          "model": {
+            "ja": "あります。わがしを 作[つく]れる 人[ひと]が だんだん 少[すく]なく なって、古[ふる]い お店[みせ]が しまっています。",
+            "en": "Yes. Fewer and fewer people can make them, and the old shops are closing."
+          }
         },
         {
           "ja": "その もんだいは どうしたら いいと 思[おも]いますか。",
-          "en": "How could that problem be fixed?"
+          "en": "How could that problem be fixed?",
+          "model": {
+            "ja": "学校[がっこう]で わがしの 作[つく]り方[かた]を 教[おし]えた ほうが いいと 思[おも]います。わかい 人[ひと]が つづけられるからです。",
+            "en": "I think schools should teach how to make them, so that young people can carry it on."
+          }
         }
       ],
       "model_responses": {
@@ -3567,11 +4039,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "どこが 同[おな]じですか。",
-          "en": "What is the same?"
+          "en": "What is the same?",
+          "model": {
+            "ja": "どちらも おちゃや コーヒーと いっしょに 食[た]べます。おきゃくさんが 来[き]た 時[とき]にも 出[だ]します。",
+            "en": "Both go with tea or coffee. You serve both when guests come, too."
+          }
         },
         {
           "ja": "どこが ちがいますか。",
-          "en": "What is different?"
+          "en": "What is different?",
+          "model": {
+            "ja": "大[おお]きさと あまさが ちがいます。わがしは 小[ちい]さくて、あまさも 少[すこ]しです。",
+            "en": "The size and the sweetness. Wagashi are small and only a little sweet."
+          }
         }
       ],
       "model_responses": {
@@ -3631,15 +4111,27 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "どうしてですか。",
-          "en": "Why?"
+          "en": "Why?",
+          "model": {
+            "ja": "メルボルンの 人[ひと]は カフェが 好[す]きで、新[あたら]しい 食[た]べ物[もの]を ためすのが 好[す]きだからです。",
+            "en": "Because people in Melbourne like cafes and like trying new food."
+          }
         },
         {
           "ja": "何[なに]を かえた ほうが いいですか。",
-          "en": "What would need to change?"
+          "en": "What would need to change?",
+          "model": {
+            "ja": "ねだんと あじだと 思[おも]います。あんこが あわない 人[ひと]も いるので、いちごや レモンの わがしから 始[はじ]めた ほうが いいです。",
+            "en": "The price and the flavour. Bean paste does not suit everyone, so it would be better to start with strawberry or lemon."
+          }
         },
         {
           "ja": "だれが 買[か]うと 思[おも]いますか。",
-          "en": "Who do you think would buy it?"
+          "en": "Who do you think would buy it?",
+          "model": {
+            "ja": "カフェに よく 行[い]く わかい 人[ひと]だと 思[おも]います。しゃしんを とる 人[ひと]も 買[か]うと 思[おも]います。",
+            "en": "Young people who go to cafes a lot. People who like taking photographs would buy them as well."
+          }
         }
       ],
       "model_responses": {
@@ -3698,15 +4190,27 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "どこで けいけんしましたか。",
-          "en": "Where was that?"
+          "en": "Where was that?",
+          "model": {
+            "ja": "去年[きょねん]、メルボルンの 日本[にほん]の お店[みせ]で わがしを 買[か]って、家族[かぞく]と 食[た]べました。",
+            "en": "Last year I bought wagashi at a Japanese shop in Melbourne and ate them with my family."
+          }
         },
         {
           "ja": "どうでしたか。",
-          "en": "How was it?"
+          "en": "How was it?",
+          "model": {
+            "ja": "きれいで、「食[た]べるのが もったいない」と 思[おも]いました。あじは ケーキより あまくなくて、おちゃと よく あいました。",
+            "en": "They were beautiful, and I thought it was almost a shame to eat them. They were less sweet than cake and went well with tea."
+          }
         },
         {
           "ja": "また したいですか。",
-          "en": "Would you do it again?"
+          "en": "Would you do it again?",
+          "model": {
+            "ja": "はい、また 食[た]べたいです。つぎは 日本[にほん]で 食[た]べてみたいです。",
+            "en": "Yes, I would like to eat them again. Next time I want to eat them in Japan."
+          }
         }
       ],
       "model_responses": {
@@ -3765,11 +4269,19 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "ほかに どんな トピックを 考[かんが]えましたか。",
-          "en": "What other topics did you consider?"
+          "en": "What other topics did you consider?",
+          "model": {
+            "ja": "はじめは おまつりに しようと 思[おも]いましたが、大[おお]きすぎて、八分[はっぷん]で 話[はな]すのが むずかしいと 思[おも]いました。",
+            "en": "At first I thought about festivals, but the topic was too big to cover in eight minutes."
+          }
         },
         {
           "ja": "しらべて 一番[いちばん] おどろいたことは 何[なん]ですか。",
-          "en": "What surprised you most in your research?"
+          "en": "What surprised you most in your research?",
+          "model": {
+            "ja": "わがしが 千年[せんねん]ぐらい 前[まえ]から あることに おどろきました。さとうが 安[やす]く なったのは 四百年[よんひゃくねん]ぐらい 前[まえ]だそうです。",
+            "en": "I was surprised that wagashi go back about a thousand years. Sugar apparently became cheap only about four hundred years ago."
+          }
         }
       ],
       "model_responses": {
@@ -3830,15 +4342,27 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "十年後[じゅうねんご]は どうですか。",
-          "en": "What about in ten years?"
+          "en": "What about in ten years?",
+          "model": {
+            "ja": "十年後[じゅうねんご]も あると 思[おも]いますが、新[あたら]しい あじの わがしが ふえると 思[おも]います。",
+            "en": "I think they will still be here in ten years, but with more new flavours."
+          }
         },
         {
           "ja": "なくなると 思[おも]いますか。",
-          "en": "Do you think it will disappear?"
+          "en": "Do you think it will disappear?",
+          "model": {
+            "ja": "なくなるとは 思[おも]いません。でも、古[ふる]い お店[みせ]は へるかも しれません。",
+            "en": "I do not think they will disappear. But the old shops may grow fewer."
+          }
         },
         {
           "ja": "だれが まもると 思[おも]いますか。",
-          "en": "Who do you think will protect it?"
+          "en": "Who do you think will protect it?",
+          "model": {
+            "ja": "古[ふる]い お店[みせ]と 学校[がっこう]だと 思[おも]います。作[つく]り方[かた]を 教[おし]えたら、わかい 人[ひと]が つづけられます。",
+            "en": "The old shops and the schools. If they teach how to make them, young people can carry it on."
+          }
         }
       ],
       "model_responses": {
@@ -3897,15 +4421,27 @@ window.ORAL_QUESTIONS = {
       "followups": [
         {
           "ja": "だれが まもりますか。",
-          "en": "Who should protect it?"
+          "en": "Who should protect it?",
+          "model": {
+            "ja": "お店[みせ]の 人[ひと]だけでは むずかしいと 思[おも]います。学校[がっこう]や 町[まち]も いっしょに まもった ほうが いいです。",
+            "en": "The shopkeepers alone would struggle. Schools and local councils should help."
+          }
         },
         {
           "ja": "お金[かね]が かかっても まもりますか。",
-          "en": "Should it be protected even if it costs money?"
+          "en": "Should it be protected even if it costs money?",
+          "model": {
+            "ja": "はい。ぶんかが なくなると、その 国[くに]の れきしも わからなく なるからです。",
+            "en": "Yes, because when a culture disappears you lose that country's history with it."
+          }
         },
         {
           "ja": "新[あたら]しい ぶんかの ほうが たいせつですか。",
-          "en": "Is new culture more important?"
+          "en": "Is new culture more important?",
+          "model": {
+            "ja": "どちらも たいせつだと 思[おも]います。古[ふる]い ぶんかを 使[つか]いながら、新[あたら]しい ものを 作[つく]るのが 一番[いちばん] いいと 思[おも]います。",
+            "en": "Both matter. The best thing is to make new things while still using the old culture."
+          }
         }
       ],
       "model_responses": {

@@ -588,7 +588,7 @@
 (function(){
   "use strict";
 
-  var BUILD = "Version 24, 12 October 2026";
+  var BUILD = "Version 25, 12 October 2026";
 
   var CRIT  = window.ORAL_CRITERIA,
       REP   = window.ORAL_REPORTS,
@@ -1951,10 +1951,17 @@
     if (grp && grp.advice)
       h += '<p class="lede"><b>' + esc(grp.en) + ':</b> ' + esc(grp.advice) + '</p>';
 
+    /* Each follow-up carries its own answer, folded away. The three bands
+       above are answers to the question at the top; a follow-up asks
+       something else and needs something else, which is the whole point
+       of giving it a model of its own. */
     h += '<h3>If they follow it up</h3><div class="card">'
        + q.followups.map(function(f, i){
            return (i ? '<div style="height:9px"></div>' : "")
-                + jaLine(f.ja) + enLine(f.en);
+                + jaLine(f.ja) + enLine(f.en)
+                + (f.model ? '<details><summary>An answer to this one</summary>'
+                    + '<div class="dbody">' + jaLine(f.model.ja)
+                    + enLine(f.model.en) + '</div></details>' : "");
          }).join("") + '</div>';
 
     h += '<h3>Three ways to answer it</h3>';
@@ -2658,11 +2665,21 @@
       }
       /* A topic question carries no model answer, because the student
          researched the topic and this app did not. Inventing one would be
-         putting words in their mouth. */
-      if (q.model_responses)
-        h += '<details><summary>A developed answer, if you are stuck</summary>'
-           + '<div class="dbody">' + jaLine(q.model_responses.developed.ja)
-           + enLine(q.model_responses.developed.en) + '</div></details>';
+         putting words in their mouth.
+
+         Whichever question is on screen is the one the answer is for. This
+         used to show the parent question's answer under a follow-up, so a
+         student asked what their brother and sister DO was handed an answer
+         that began by saying how many of them there are. */
+      var onScreen = (MOCK.fu >= 0 && q.followups && q.followups[MOCK.fu]
+                      && q.followups[MOCK.fu].model)
+                   ? q.followups[MOCK.fu].model
+                   : (q.model_responses ? q.model_responses.developed : null);
+      if (onScreen)
+        h += '<details><summary>A developed answer'
+           + (MOCK.fu >= 0 ? ' to the follow-up' : '') + ', if you are stuck'
+           + '</summary><div class="dbody">' + jaLine(onScreen.ja)
+           + enLine(onScreen.en) + '</div></details>';
       else
         h += '<p class="note">No model answer here: this one is yours. If the '
            + 'question is not one you prepared, say so in Japanese and keep '
