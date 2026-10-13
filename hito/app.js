@@ -440,9 +440,25 @@
         box.classList.remove("spinning");
         if (onLand) onLand(items[at()], at());
       }
-      function frame(now){
-        var dt = last ? Math.min(0.05, (now - last) / 1000) : 0.016;
-        last = now;
+      /* ---- a fixed step ----
+         The physics used to advance by however long the last frame took,
+         which is the ordinary way to animate and the wrong way to do this.
+         The speed that lands on a given slot is worked out by running the
+         same sums forward at a sixtieth of a second a step; if the drum
+         itself then advances in steps of whatever the browser gave it,
+         1/60 here and 1/120 on a tablet and 1/40 under load, it travels a
+         slightly different distance and stops a slot or two from where it
+         was sent. Nothing looked wrong, which is the worst kind of wrong:
+         the drum simply landed on a different topic from the one the deck
+         had dealt, and the deck then dealt that topic again.
+
+         So time is accumulated and spent in whole steps of a sixtieth,
+         and what is left over waits for the next frame. The drum now lands
+         exactly where it was thrown, on any screen, under any load. The
+         guard stops a tab that has been asleep for a minute from
+         fast-forwarding through a thousand steps when it wakes. */
+      var STEP = 1 / 60, acc = 0;
+      function step(dt){
         if (target === null){
           var sgn = v < 0 ? -1 : 1;
           v -= (SLOW * v + DRAG * sgn) * dt;
@@ -452,8 +468,15 @@
         } else {
           v += (-K * (pos - target) - C * v) * dt;
           pos += v * dt;
-          if (Math.abs(pos - target) < 0.4 && Math.abs(v) < 8){
-            pos = target; v = 0;
+        }
+      }
+      function frame(now){
+        acc += last ? Math.min(0.25, (now - last) / 1000) : STEP;
+        last = now;
+        for (var guard = 0; acc >= STEP && guard < 30; guard++){
+          step(STEP); acc -= STEP;
+          if (target !== null && Math.abs(pos - target) < 0.4 && Math.abs(v) < 8){
+            pos = target; v = 0; acc = 0;
             paint(); done(); return;
           }
         }
@@ -462,7 +485,7 @@
       }
       function launch(v0){
         cancel();
-        target = null; v = v0; last = 0;
+        target = null; v = v0; last = 0; acc = 0;
         spinning = true;
         box.classList.add("spinning");
         /* A device asking for reduced motion gets a short plain glide

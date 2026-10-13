@@ -588,7 +588,7 @@
 (function(){
   "use strict";
 
-  var BUILD = "Version 26, 13 October 2026";
+  var BUILD = "Version 27, 13 October 2026";
 
   var CRIT  = window.ORAL_CRITERIA,
       REP   = window.ORAL_REPORTS,
@@ -723,7 +723,7 @@
      one saved choice, once. Notes, ticks and drafts are untouched. */
   var VOICEPICK = 2;
   var S = { furi:true, rate:1, voice:"clips", voicePick:VOICEPICK, band:"mixed",
-            topic:"", click:true,
+            topic:"", click:true, deck:null,
             notes:{}, assess:{}, disc:{}, weak:{}, seen:{} };
   var saved = null;
   try {
@@ -742,6 +742,16 @@
       try { localStorage.setItem(KEY, JSON.stringify(S)); }
       catch (e){ flash("Your phone would not save that. The image may be too large."); }
     }, 250);
+  }
+  /* The quarter second of waiting is there so that typing a note does not
+     write the whole store on every keystroke. A few things cannot afford
+     it: the drum's deck is written the moment a topic is dealt, because a
+     student who closes the tab straight after a spin would otherwise come
+     back to the deck as it was before that spin and be given the same
+     topic again. */
+  function saveNow(){
+    clearTimeout(saveTimer);
+    try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e){}
   }
   if (voiceReset) save();
   function flash(msg){
@@ -1037,9 +1047,25 @@
         box.classList.remove("spinning");
         if (onLand) onLand(items[at()], at());
       }
-      function frame(now){
-        var dt = last ? Math.min(0.05, (now - last) / 1000) : 0.016;
-        last = now;
+      /* ---- a fixed step ----
+         The physics used to advance by however long the last frame took,
+         which is the ordinary way to animate and the wrong way to do this.
+         The speed that lands on a given slot is worked out by running the
+         same sums forward at a sixtieth of a second a step; if the drum
+         itself then advances in steps of whatever the browser gave it,
+         1/60 here and 1/120 on a tablet and 1/40 under load, it travels a
+         slightly different distance and stops a slot or two from where it
+         was sent. Nothing looked wrong, which is the worst kind of wrong:
+         the drum simply landed on a different topic from the one the deck
+         had dealt, and the deck then dealt that topic again.
+
+         So time is accumulated and spent in whole steps of a sixtieth,
+         and what is left over waits for the next frame. The drum now lands
+         exactly where it was thrown, on any screen, under any load. The
+         guard stops a tab that has been asleep for a minute from
+         fast-forwarding through a thousand steps when it wakes. */
+      var STEP = 1 / 60, acc = 0;
+      function step(dt){
         if (target === null){
           var sgn = v < 0 ? -1 : 1;
           v -= (SLOW * v + DRAG * sgn) * dt;
@@ -1049,8 +1075,15 @@
         } else {
           v += (-K * (pos - target) - C * v) * dt;
           pos += v * dt;
-          if (Math.abs(pos - target) < 0.4 && Math.abs(v) < 8){
-            pos = target; v = 0;
+        }
+      }
+      function frame(now){
+        acc += last ? Math.min(0.25, (now - last) / 1000) : STEP;
+        last = now;
+        for (var guard = 0; acc >= STEP && guard < 30; guard++){
+          step(STEP); acc -= STEP;
+          if (target !== null && Math.abs(pos - target) < 0.4 && Math.abs(v) < 8){
+            pos = target; v = 0; acc = 0;
             paint(); done(); return;
           }
         }
@@ -1059,7 +1092,7 @@
       }
       function launch(v0){
         cancel();
-        target = null; v = v0; last = 0;
+        target = null; v = v0; last = 0; acc = 0;
         spinning = true;
         box.classList.add("spinning");
         /* A device asking for reduced motion gets a short plain glide
@@ -1979,7 +2012,7 @@
   var spun = null;
   function drawSpin(){
     var CT = QD.conversation_topics;
-    if (!SPINDECK.order.length) spinDeal(CT);
+    if (!SPINDECK.order.length) spinRestore(CT);
     setHead([{ ja:"しつもん", r:"browse" }, { ja:"ルーレット", r:"browse:spin" }],
             "Spin for a topic, then answer it cold");
     $("main").innerHTML =
@@ -2404,15 +2437,42 @@
              asked:{}, q2:null, started:0, left:0 };
   }
   /* ---- the drum's deck ----
-     Ten topics and a random throw meant the same topic could come up twice
-     running and another could sit there all lesson. A deck deals each one
-     before any of them comes round again, and reshuffles when it is spent,
-     never starting the new order on the topic the old one ended with. */
+     Ten topics and a random throw meant one could come up twice running and
+     another could sit there all lesson. A deck deals each one before any
+     comes round again, and never opens a new deck on the one the last one
+     ended with.
+
+     It survives a reload, a closed tab and a flat battery, because a
+     student who comes back to the drum in the same lesson should carry on
+     through the deck rather than start it again and meet the same two
+     topics they have just done. It does NOT survive the gap to the next
+     lesson: after six hours the deck is spent and the next spin deals a
+     fresh one, which is what "across a lesson" means and is long enough
+     for a double period with a break in the middle. The Reset button
+     clears it with everything else. */
+  var LESSON = 6 * 60 * 60 * 1000;
   var SPINDECK = { order: [], at: 0 };
+  function spinKeep(){
+    S.deck = { order: SPINDECK.order.slice(), at: SPINDECK.at, when: Date.now() };
+    saveNow();
+  }
   function spinDeal(list){
     SPINDECK.order = list.map(function(t){ return t.id; });
     shuffle(SPINDECK.order);
     SPINDECK.at = 0;
+    spinKeep();
+  }
+  /* A saved deck is only any use if it is this lesson's and it is still
+     about these topics: a deck saved before a topic was added or renamed
+     would deal a topic the drum no longer carries. */
+  function spinRestore(list){
+    var d = S.deck, ids = list.map(function(t){ return t.id; });
+    var fresh = d && d.order && d.order.length === ids.length
+      && Date.now() - (d.when || 0) < LESSON
+      && d.order.every(function(id){ return ids.indexOf(id) >= 0; });
+    if (!fresh) return spinDeal(list);
+    SPINDECK.order = d.order.slice();
+    SPINDECK.at = Math.min(Math.max(0, d.at | 0), d.order.length - 1);
   }
   function spinNext(){
     SPINDECK.at++;
@@ -2422,6 +2482,7 @@
       while (SPINDECK.order.length > 1 && SPINDECK.order[0] === last && tries < 20);
       SPINDECK.at = 0;
     }
+    spinKeep();
   }
   function shuffle(a){
     for (var i = a.length - 1; i > 0; i--){
