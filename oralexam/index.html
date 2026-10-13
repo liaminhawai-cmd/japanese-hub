@@ -588,7 +588,7 @@
 (function(){
   "use strict";
 
-  var BUILD = "Version 27, 13 October 2026";
+  var BUILD = "Version 28, 13 October 2026";
 
   var CRIT  = window.ORAL_CRITERIA,
       REP   = window.ORAL_REPORTS,
@@ -1018,7 +1018,7 @@
       strip.innerHTML = three;
 
       var SLOW = 0.8, DRAG = 45, CATCH = 300, K = 150, C = 16;
-      var pos = 0, v = 0, target = null, last = 0, lastTick = 0, lastDetent = 0;
+      var pos = 0, v = 0, target = null, last = 0;
       var spinning = false;
 
       function wrap(x){ return ((x % SPAN) + SPAN) % SPAN; }
@@ -1027,22 +1027,17 @@
           "translate3d(0," + (H - SPAN - wrap(pos)).toFixed(2) + "px,0)";
       }
       function at(){ return Math.round(wrap(pos) / H) % L; }
-      /* The pawl hits every notch it passes, and at speed that is several
-         in one frame. One tick a frame gave a flat sixty a second that did
-         not change as the drum slowed. */
-      var MINGAP = 0.013;          /* seconds; faster than this is a buzz */
-      function ticks(now){
-        var d = Math.floor(wrap(pos) / H);
-        if (d === lastDetent) return;
-        var crossed = Math.abs(d - lastDetent);
-        if (crossed > L / 2) crossed = 1;        /* it wrapped round */
-        lastDetent = d;
-        var span = Math.max(0.001, (now - lastTick) / 1000);
-        lastTick = now;
-        var n = Math.min(crossed, 5);
-        CLICK.clatter(n, Math.max(MINGAP, span / n), Math.abs(v));
+      /* The sound is the speed, so it is taken from the speed rather than
+         from counting notches after they have gone past: the gap between
+         clicks is the time a notch takes to cross the window, H over the
+         speed. CLICK.ratchet lays them on one cursor in order, so they
+         slow with the drum instead of piling up on each other. */
+      function ticks(speed){
+        if (!(speed > 1)) return;
+        CLICK.ratchet(H / speed, speed);
       }
       function done(){
+        CLICK.clunk();
         spinning = false;
         box.classList.remove("spinning");
         if (onLand) onLand(items[at()], at());
@@ -1087,7 +1082,7 @@
             paint(); done(); return;
           }
         }
-        paint(); ticks(now);
+        paint(); ticks(Math.abs(v));
         raf = requestAnimationFrame(frame);
       }
       function launch(v0){
@@ -1137,7 +1132,7 @@
           grab.ly = ev.clientY; grab.lt = now;
           grab.mouse = ev.pointerType === "mouse";
         }
-        paint(); ticks(now);
+        paint(); ticks(Math.abs(grab.v));
       });
       function release(){
         if (!grab) return;
@@ -1286,20 +1281,55 @@
       o.connect(g2); g2.connect(c.destination);
       o.start(at); o.stop(at + 0.04);
     }
-    /* n notches went past in one frame, gap seconds apart. Booking them
-       ahead on the audio clock is what turns sixty ticks a second into a
-       ratchet that slows as the drum does. */
-    function clatter(n, gap, speed){
+    /* ---- the ratchet ----
+       The first attempt counted the notches a frame had crossed and
+       booked that many clicks, each batch starting at "now" on the audio
+       clock, so every frame started a batch on top of the one still
+       playing and the lot ran together into a mush that did not change as
+       the drum slowed. Which is the point of the sound: you should hear
+       it slowing before you see it.
+
+       One cursor, then, and the clicks go on it in order. The spacing is
+       the time a notch actually takes to cross the window, H over the
+       speed, so the rate falls away exactly as the drum does. The floor
+       is there because a click every five milliseconds is a buzz, and the
+       ceiling because a drum that has all but stopped should fall silent
+       rather than tick once more a second later. */
+    var FLOOR = 0.016, CEIL = 0.5, cursor = 0;
+    function ratchet(gap, speed){
+      if (!S.click || !(gap > 0) || gap > CEIL) return;
+      try {
+        var c = build(); if (!c) return;
+        if (c.state === "suspended") c.resume();
+        var t = c.currentTime;
+        if (cursor < t) cursor = t + 0.004;
+        if (gap < FLOOR) gap = FLOOR;
+        var loud = 0.34 - Math.min(0.19, (speed || 0) / 34000);
+        for (var guard = 0; cursor < t + 0.05 && guard < 6; guard++){
+          clack(cursor, loud);
+          cursor += gap;
+        }
+      } catch (e){}
+    }
+    /* the one at the end, when it drops into the slot */
+    function clunk(){
       if (!S.click) return;
       try {
         var c = build(); if (!c) return;
         if (c.state === "suspended") c.resume();
-        var t = c.currentTime + 0.002;
-        var loud = 0.30 - Math.min(0.17, (speed || 0) / 42000);
-        for (var i = 0; i < n; i++) clack(t + i * gap, loud);
+        var t = Math.max(c.currentTime + 0.004, cursor);
+        clack(t, 0.4);
+        cursor = t + 0.02;
       } catch (e){}
     }
-    return { play: play, clatter: clatter };
+    /* Built inside the press that starts the spin rather than inside the
+       frame loop after it: a browser is readier to start an audio engine
+       during a gesture than a tenth of a second later. */
+    function wakeAudio(){
+      try { var c = build(); if (c && c.state === "suspended") c.resume(); }
+      catch (e){}
+    }
+    return { play: play, ratchet: ratchet, clunk: clunk, wake: wakeAudio };
   })();
   /* The things that look pressable: the home panes, the tab row, and the
      tiles and move buttons inside a section. Not every button in the app:
@@ -2046,6 +2076,7 @@
     });
     function go1(){
       if (R.spinning()) return;
+      CLICK.wake();          /* start the audio engine inside the gesture */
       SAY.stop();
       $("spinOut").innerHTML = "";
       R.spinTo(SPINDECK.order[SPINDECK.at]);

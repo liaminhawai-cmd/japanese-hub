@@ -408,7 +408,7 @@
          a flick, not a spin. At 0.8 and 45 the same throw runs for three
          to four seconds, which is what a wheel does. */
       var SLOW = 0.8, DRAG = 45, CATCH = 300, K = 150, C = 16;
-      var pos = 0, v = 0, target = null, last = 0, lastTick = 0, lastDetent = 0;
+      var pos = 0, v = 0, target = null, last = 0;
       var spinning = false;
 
       function wrap(x){ return ((x % SPAN) + SPAN) % SPAN; }
@@ -417,25 +417,17 @@
           "translate3d(0," + (H - SPAN - wrap(pos)).toFixed(2) + "px,0)";
       }
       function at(){ return Math.round(wrap(pos) / H) % L; }
-      /* The pawl hits every notch it passes, and at speed that is several
-         in one frame. Playing one tick a frame gave a flat 60-a-second
-         rattle that did not change as the drum slowed, which is the one
-         thing a spinner's sound is supposed to tell you. So the frame
-         counts the notches it crossed and books that many clicks, spread
-         across the frame, and the rate falls away with the drum. */
-      var MINGAP = 0.013;          /* seconds; faster than this is a buzz */
-      function ticks(now){
-        var d = Math.floor(wrap(pos) / H);
-        if (d === lastDetent) return;
-        var crossed = Math.abs(d - lastDetent);
-        if (crossed > L / 2) crossed = 1;        /* it wrapped round */
-        lastDetent = d;
-        var span = Math.max(0.001, (now - lastTick) / 1000);
-        lastTick = now;
-        var n = Math.min(crossed, 5);
-        CLICK.clatter(n, Math.max(MINGAP, span / n), Math.abs(v));
+      /* The sound is the speed, so it is taken from the speed rather than
+         from counting notches after they have gone past: the gap between
+         clicks is the time a notch takes to cross the window, H over the
+         speed. CLICK.ratchet lays them on one cursor in order, so they
+         slow down with the drum instead of piling up on each other. */
+      function ticks(speed){
+        if (!(speed > 1)) return;
+        CLICK.ratchet(H / speed, speed);
       }
       function done(){
+        CLICK.clunk();
         spinning = false;
         box.classList.remove("spinning");
         if (onLand) onLand(items[at()], at());
@@ -480,7 +472,7 @@
             paint(); done(); return;
           }
         }
-        paint(); ticks(now);
+        paint(); ticks(Math.abs(v));
         raf = requestAnimationFrame(frame);
       }
       function launch(v0){
@@ -530,7 +522,7 @@
           grab.ly = ev.clientY; grab.lt = now;
           grab.mouse = ev.pointerType === "mouse";
         }
-        paint(); ticks(now);
+        paint(); ticks(Math.abs(grab.v));
       });
       function release(){
         if (!grab) return;
@@ -677,23 +669,64 @@
       o.connect(g2); g2.connect(c.destination);
       o.start(at); o.stop(at + 0.04);
     }
-    /* n notches went past in one frame, gap seconds apart. Booking them
-       ahead on the audio clock rather than playing one per frame is what
-       turns 60 ticks a second into a ratchet that slows down as the drum
-       does, because the gap is what the ear is listening to. */
-    function clatter(n, gap, speed){
+    /* ---- the ratchet ----
+       The first attempt counted the notches a frame had crossed and
+       booked that many clicks, each batch starting at "now" on the audio
+       clock. Every frame therefore started a new batch on top of the one
+       still playing, and at speed the batches overlapped into a mush that
+       did not change as the drum slowed. Which is the whole point of the
+       sound: you should hear it slowing before you see it.
+
+       So there is one cursor on the audio clock and the clicks go on it
+       in order, never on top of each other. The spacing is the time it
+       actually takes a notch to pass the window, H over the speed, which
+       is why the rate falls away exactly as the drum does: at 6000 a
+       second that is a click every eleven milliseconds, at 600 a second
+       one every hundred, and at walking pace they come one at a time.
+
+       The floor is there because a notch every five milliseconds is a
+       buzz rather than a ratchet, and the ceiling because a drum that
+       has all but stopped should fall silent rather than tick once more
+       a second later. */
+    var FLOOR = 0.016, CEIL = 0.5, cursor = 0;
+    function ratchet(gap, speed){
+      if (!S.sfx || !(gap > 0) || gap > CEIL) return;
+      try {
+        var c = build(); if (!c) return;
+        if (c.state === "suspended") c.resume();
+        var t = c.currentTime;
+        if (cursor < t) cursor = t + 0.004;
+        if (gap < FLOOR) gap = FLOOR;
+        /* quieter when it is flying, fuller as it comes to rest: a wheel
+           is loudest at the end, which is where the ear is anyway */
+        var loud = 0.34 - Math.min(0.19, (speed || 0) / 34000);
+        /* only ever a frame or two ahead, so a drum that stops does not
+           leave a queue of clicks still to play */
+        for (var guard = 0; cursor < t + 0.05 && guard < 6; guard++){
+          clack(cursor, loud);
+          cursor += gap;
+        }
+      } catch (e){}
+    }
+    /* the one at the end, when it drops into the slot */
+    function clunk(){
       if (!S.sfx) return;
       try {
         var c = build(); if (!c) return;
         if (c.state === "suspended") c.resume();
-        var t = c.currentTime + 0.002;
-        /* quieter when it is flying, fuller as it comes to rest: a wheel
-           is loudest at the end, which is where the ear is anyway */
-        var loud = 0.30 - Math.min(0.17, (speed || 0) / 42000);
-        for (var i = 0; i < n; i++) clack(t + i * gap, loud);
+        var t = Math.max(c.currentTime + 0.004, cursor);
+        clack(t, 0.4);
+        cursor = t + 0.02;
       } catch (e){}
     }
-    function play(){ clatter(1, 0.02, 0); }
+    /* Built inside the press that starts the spin, not inside the frame
+       loop that follows it: a browser is readier to start an audio engine
+       during a gesture than a tenth of a second afterwards. */
+    function wakeAudio(){
+      try { var c = build(); if (c && c.state === "suspended") c.resume(); }
+      catch (e){}
+    }
+    function play(){ ratchet(0.02, 0); }
     /* ---- the whoosh and the groan ----
        Both synthesised rather than fetched: the page has to work on a
        tram, and two more files to download for two sound effects is not
@@ -756,7 +789,8 @@
         o1.stop(t + D + 0.02); lfo.stop(t + D + 0.02);
       } catch (e){}
     }
-    return { play: play, clatter: clatter, whoosh: whoosh, groan: groan };
+    return { play: play, ratchet: ratchet, clunk: clunk, wake: wakeAudio,
+             whoosh: whoosh, groan: groan };
   })();
   /* The things that look pressable: the home panes, the tab row, and the
      tiles and move buttons inside a section. Not every button in the app:
@@ -1634,6 +1668,7 @@
       $("tip").textContent = "Spinning\u2026";
     }
     $("rgo").onclick = function(){
+      CLICK.wake();          /* start the audio engine inside the gesture */
       clearAsk();
       /* dealt, not drawn at random: a word that has come up waits for the
          rest of them before it comes up again */
@@ -1764,7 +1799,14 @@
           + 'descriptions in one sentence with くて or で.</div>');
       $("fb").innerHTML = out.join("");
       $("sc").innerHTML = '<b>' + right + '</b> true of ' + esc(p.name) + 'さん';
-      if (right >= 3 && joined) done("write");
+      /* This screen marks the whole thing at once rather than line by
+         line, so it gets one creature rather than three: the ninja when
+         the three sentences are there and joined, the zombie when the
+         student has written something and none of it is true of this
+         person. Nothing at all for a half-finished answer, because a
+         zombie every time somebody pauses to think is a nag. */
+      if (right >= 3 && joined){ ninja($("sc")); done("write"); }
+      else if (lines.length && !right) zombie($("sc"));
     };
   };
 

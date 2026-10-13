@@ -118,7 +118,8 @@
 
   /* ---- what the page remembers ---- */
   var KEY = "jinbutsu-v1";
-  var S = { furi:true, en:true, rate:1, pts:0, spent:0, done:{}, best:{}, wrote:{} };
+  var S = { furi:true, en:true, rate:1, sfx:true,
+            pts:0, spent:0, done:{}, best:{}, wrote:{} };
   try { S = Object.assign(S, JSON.parse(localStorage.getItem(KEY) || "{}")); } catch(e){}
   var saveT = null;
   function save(){
@@ -133,6 +134,7 @@
     $("furiBtn").classList.toggle("off", !S.furi);
     $("enBtn").classList.toggle("off", !S.en);
     $("rateLabel").textContent = "×" + S.rate;
+    $("sfxBtn").classList.toggle("off", !S.sfx);
     $("rateBtn").classList.toggle("off", S.rate !== 1);
     $("ptsn").textContent = S.pts;
     $("pts").title = S.spent
@@ -141,6 +143,10 @@
   }
   $("furiBtn").onclick = function(){ S.furi = !S.furi; save(); paintToggles(); };
   $("enBtn").onclick = function(){ S.en = !S.en; save(); paintToggles(); };
+  $("sfxBtn").onclick = function(){
+    S.sfx = !S.sfx; save(); paintToggles();
+    if (S.sfx) ninja($("sfxBtn"));      /* so you can see what you turned on */
+  };
   var RATES = [0.7, 1, 1.2];
   $("rateBtn").onclick = function(){
     S.rate = RATES[(RATES.indexOf(S.rate)+1) % RATES.length] || 1;
@@ -151,7 +157,8 @@
   };
   $("resetBtn").onclick = function(){
     if (!confirm("Clear your score, your records and anything typed on this device?")) return;
-    S = { furi:true, en:true, rate:1, pts:0, spent:0, done:{}, best:{}, wrote:{} };
+    S = { furi:true, en:true, rate:1, sfx:true,
+          pts:0, spent:0, done:{}, best:{}, wrote:{} };
     try { localStorage.removeItem(KEY); } catch(e){}
     draw();
   };
@@ -184,6 +191,158 @@
       + line + "\n\nNothing is sent anywhere. This is the only record there is.");
     setTimeout(function(){ ta.remove(); }, 20000);
   };
+
+  /* ---- the ninja and the かさおばけ ----
+     Andrew asked for these in the brief for this unit: "yokai and ninjas
+     popping up". A right answer sends a ninja across the screen; a wrong
+     one floats a かさおばけ up past it.
+
+     They are drawn here rather than fetched, like everything else in this
+     suite: two more files to download for two bits of fun is not a trade
+     worth making on a school connection. Both are off in one press, both
+     respect a device that has asked for less movement, and neither
+     carries any information the marking has not already given, so a
+     student who turns them off loses nothing but the joke. */
+  var sfxLast = 0;
+  function creature(kind, near, build){
+    try {
+      if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    } catch (e){}
+    var now = Date.now();
+    if (now - sfxLast < 420) return;      /* no pile-ups on a fast run */
+    sfxLast = now;
+    var box = document.createElement("div");
+    box.className = kind;
+    box.setAttribute("aria-hidden", "true");
+    var r = near && near.getBoundingClientRect ? near.getBoundingClientRect() : null;
+    box.style.left = (r ? r.left + r.width / 2 : innerWidth / 2) + "px";
+    box.style.top  = (r ? r.top + r.height / 2 - 26 : innerHeight * 0.5) + "px";
+    box.innerHTML = build();
+    document.body.appendChild(box);
+    box.addEventListener("animationend", function(){ box.remove(); });
+    setTimeout(function(){ if (box.parentNode) box.remove(); }, 1800);
+  }
+  function ninja(near){
+    if (!S.sfx) return;
+    SFX.whoosh();
+    creature("ninj", near, function(){
+      return '<svg viewBox="0 0 64 52" width="64" height="52">'
+        /* the scarf, trailing behind the direction of travel */
+        + '<path d="M30 16 q-12 -4 -24 2 q10 1 14 4 q-9 1 -13 5 q12 -1 21 -3 z"'
+        + ' fill="#a83232" opacity=".92"/>'
+        + '<path d="M28 18 q12 -3 19 6 q4 7 -3 11 q-9 5 -17 -1 q-6 -5 1 -16 z"'
+        + ' fill="#16375e"/>'
+        + '<path d="M34 34 q-6 7 -14 8 q6 -8 8 -12 z" fill="#16375e"/>'
+        + '<path d="M44 22 q9 -2 14 3" stroke="#16375e" stroke-width="5"'
+        + ' stroke-linecap="round" fill="none"/>'
+        + '<circle cx="44" cy="17" r="10" fill="#1b2b40"/>'
+        + '<path d="M38 15 h13 v4 h-13 z" fill="#f4efe6"/>'
+        + '<circle cx="42" cy="17" r="1.7" fill="#16375e"/>'
+        + '<circle cx="48" cy="17" r="1.7" fill="#16375e"/>'
+        + '<path d="M2 24 h14 M6 31 h10" stroke="#16375e" stroke-width="2"'
+        + ' stroke-linecap="round" opacity=".5"/>'
+        + '</svg>';
+    });
+  }
+  function yokai(near){
+    if (!S.sfx) return;
+    SFX.warble();
+    creature("yoka", near, function(){
+      /* かさおばけ: a paper umbrella with one eye, one tongue and one
+         wooden leg. Drawn friendly rather than frightening, because a
+         student who has just got something wrong does not need a fright
+         as well. */
+      return '<svg viewBox="0 0 56 72" width="56" height="72">'
+        /* the canopy */
+        + '<path d="M6 30 q22 -28 44 0 z" fill="#a83232"/>'
+        + '<path d="M6 30 q22 -28 44 0" fill="none" stroke="#7a2525"'
+        + ' stroke-width="1.5"/>'
+        + '<path d="M28 4 v26 M14 20 v10 M42 20 v10" stroke="#f4efe6"'
+        + ' stroke-width="1.6" opacity=".8"/>'
+        /* the body of the umbrella, folded */
+        + '<path d="M18 30 h20 l-3 16 h-14 z" fill="#c9a227"/>'
+        /* one eye, which is the whole character of the thing */
+        + '<circle cx="28" cy="37" r="6.5" fill="#f4efe6"/>'
+        + '<circle cx="28" cy="37.5" r="3.2" fill="#15191f"/>'
+        + '<circle cx="29.4" cy="36.2" r="1.1" fill="#fff"/>'
+        /* the tongue, out and to one side, where the leg cannot hide it */
+        + '<path d="M23 44 q5 11 10 1 q-5 4 -10 -1 z" fill="#d4647a"/>'
+        /* one leg, one geta */
+        + '<path d="M28 50 v10" stroke="#8a6d1f" stroke-width="4"'
+        + ' stroke-linecap="round"/>'
+        + '<rect x="18" y="60" width="20" height="5" rx="1.5" fill="#6b5417"/>'
+        + '<rect x="21" y="65" width="3.5" height="5" fill="#6b5417"/>'
+        + '<rect x="32" y="65" width="3.5" height="5" fill="#6b5417"/>'
+        + '</svg>';
+    });
+  }
+  /* Two sounds, synthesised for the same reason the drawings are drawn.
+     The whoosh is noise through a band-pass that sweeps up and falls
+     away, which is what a thing passing your ear does to the spectrum.
+     The warble is the yokai: two detuned triangles sliding down with a
+     wobble on top, which is a cartoon ghost and not a horror film. */
+  var SFX = (function(){
+    var ctx = null, noise = null;
+    function build(){
+      if (ctx) return ctx;
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return null;
+      ctx = new AC();
+      var n = Math.floor(ctx.sampleRate * 0.4);
+      noise = ctx.createBuffer(1, n, ctx.sampleRate);
+      var d = noise.getChannelData(0);
+      for (var i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / n);
+      return ctx;
+    }
+    function whoosh(){
+      try {
+        var c = build(); if (!c) return;
+        if (c.state === "suspended") c.resume();
+        var t = c.currentTime;
+        var src = c.createBufferSource(); src.buffer = noise; src.loop = true;
+        var bp = c.createBiquadFilter();
+        bp.type = "bandpass"; bp.Q.value = 1.4;
+        bp.frequency.setValueAtTime(700, t);
+        bp.frequency.exponentialRampToValueAtTime(4200, t + 0.085);
+        bp.frequency.exponentialRampToValueAtTime(600, t + 0.22);
+        var g = c.createGain();
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.exponentialRampToValueAtTime(0.2, t + 0.04);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
+        src.connect(bp); bp.connect(g); g.connect(c.destination);
+        src.start(t); src.stop(t + 0.24);
+      } catch (e){}
+    }
+    function warble(){
+      try {
+        var c = build(); if (!c) return;
+        if (c.state === "suspended") c.resume();
+        var t = c.currentTime, D = 0.7;
+        var g = c.createGain();
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.exponentialRampToValueAtTime(0.17, t + 0.07);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + D);
+        var lp = c.createBiquadFilter();
+        lp.type = "lowpass"; lp.frequency.value = 1400;
+        var lfo = c.createOscillator(), lg = c.createGain();
+        lfo.frequency.value = 6.5; lg.gain.value = 14;
+        lfo.connect(lg);
+        [0, 4].forEach(function(detune, i){
+          var o = c.createOscillator();
+          o.type = "triangle";
+          o.detune.value = detune * 5;
+          o.frequency.setValueAtTime(430 - i * 6, t);
+          o.frequency.exponentialRampToValueAtTime(230 - i * 6, t + D);
+          lg.connect(o.frequency);
+          o.connect(lp);
+          o.start(t); o.stop(t + D + 0.05);
+        });
+        lp.connect(g); g.connect(c.destination);
+        lfo.start(t); lfo.stop(t + D + 0.05);
+      } catch (e){}
+    }
+    return { whoosh: whoosh, warble: warble };
+  })();
 
   /* ---- the score ----
      spend() is the only way points leave. Every support calls it, which
@@ -506,12 +665,14 @@
         return x.replace(/[\s\u3000〜]/g,""); });
       if (want.indexOf(got) >= 0){
         award(2); kbump(v, 1);
+        ninja($("kin"));
         $("kfb").innerHTML = '<div class="mark yes"><b>Yes</b><span class="jp">'
           + ruby(v.ja) + '</span> ' + saybtn(v.ja) + '</div>';
         wireSay();
         setTimeout(function(){ kAt++; draw(); }, 900);
       } else {
         kbump(v, -1);
+        yokai($("kin"));
         $("kfb").innerHTML = '<div class="mark no"><b>Not yet</b>'
           + '<span class="jp">' + esc(got) + '</span> is not it. '
           + 'Go back to みる and meet it again.</div>';
@@ -688,6 +849,7 @@
         award(2);
         gap.innerHTML = ruby(it.answer);
         gap.classList.remove("bad"); gap.classList.add("ok");
+        ninja(gap);
         each($("gits"), '[data-tray="' + i + '"] .tile', function(x){ x.remove(); });
         fb.innerHTML = '<div class="mark yes"><b>Yes</b><span class="jp">'
           + ruby(String(it.ja).replace(/＿+/, plain(it.answer))) + '</span></div>';
@@ -695,6 +857,7 @@
         if (gdone(g)) draw();
       } else {
         gap.classList.add("bad");
+        yokai(gap);
         tile.classList.remove("armed");
         setTimeout(function(){ gap.classList.remove("bad"); }, 700);
         fb.innerHTML = '<div class="mark no"><b>Not that one</b>'
@@ -857,7 +1020,13 @@
         }
       });
       $("sc").innerHTML = '<b>'+right+'</b> of '+qs.length;
-      if (right === qs.length) done();
+      /* The whole page is marked in one press, so one creature for the
+         lot rather than eight at once: the ninja when every question is
+         right, the yokai when a student has answered and none of them
+         is. Nothing in between, because a creature every time somebody
+         checks their working halfway is a nag. */
+      if (right === qs.length){ ninja($("sc")); done(); }
+      else if (asked && !right) yokai($("sc"));
       wireSay();
     }
     $("chk").onclick = check;
@@ -1112,6 +1281,7 @@
       }
       if (!missing.length){
         if (!S.done["jb:" + i]){ S.done["jb:" + i] = 1; award(3); save(); }
+        ninja(fb);
         fb.innerHTML = '<div class="mark yes"><b>The pattern is there</b>'
           + '<span class="jp">' + esc(got) + '</span><br>'
           + 'That is the grammar this slot wanted. Whether it is true, and '
@@ -1123,6 +1293,7 @@
           S.done["jibun"] = 1; award(4); save(); paintSteps();
         }
       } else {
+        yokai(fb);
         fb.innerHTML = '<div class="mark no"><b>Not yet</b>'
           + 'There is no <span class="jp">' + esc(plain(missing[0])) + '</span> '
           + 'in your sentence' + (missing.length > 1 ? ', and ' + (missing.length - 1)

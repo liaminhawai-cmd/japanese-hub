@@ -171,6 +171,36 @@
   h3.sub{font-size:13px;letter-spacing:.08em;text-transform:uppercase;
        color:var(--muted);margin:16px 0 4px}
 
+  /* ---- the ninja and the かさおばけ ----
+     Andrew asked for these in the brief for this unit and the first build
+     did not have them. A right answer sends a ninja across the screen in
+     0.7s: acknowledged, then out of the way, because being right is the
+     thing you want to be unremarkable and repeatable. A wrong one floats
+     a かさおばけ up past the answer over 1.6s, long enough to be funny and
+     short enough not to be a telling-off. One eye, one leg, one tongue:
+     the friendliest yokai there is, and Year 9 know it on sight.
+
+     Neither is load-bearing. The marking says everything they say. */
+  .yoka,.ninj{position:fixed;z-index:60;pointer-events:none}
+  .ninj{transform:translate(-50%,-50%);
+        animation:ndash .7s cubic-bezier(.2,.8,.3,1) forwards}
+  .ninj svg{display:block;filter:drop-shadow(0 2px 5px rgba(20,25,32,.3))}
+  @keyframes ndash{
+    0%{opacity:0;transform:translate(-190%,-50%) scale(.9)}
+    22%{opacity:1}
+    70%{opacity:1;transform:translate(-20%,-54%) scale(1)}
+    100%{opacity:0;transform:translate(120%,-58%) scale(.96)}
+  }
+  .yoka{transform:translate(-50%,0);animation:yfloat 1.6s ease-out forwards}
+  .yoka svg{display:block;filter:drop-shadow(0 2px 6px rgba(20,25,32,.25))}
+  @keyframes yfloat{
+    0%{opacity:0;transform:translate(-50%,10px) scale(.84) rotate(-5deg)}
+    18%{opacity:.95}
+    55%{transform:translate(-44%,-72px) scale(1) rotate(6deg)}
+    100%{opacity:0;transform:translate(-56%,-152px) scale(1.02) rotate(-4deg)}
+  }
+  @media (prefers-reduced-motion:reduce){ .ninj,.yoka{display:none} }
+
   .mark{border-left:4px solid var(--line);padding:5px 10px;margin:6px 0;font-size:14px}
   .mark.yes{border-color:var(--ok)} .mark.no{border-color:var(--accent)}
   .mark.hm{border-color:#b8860b}
@@ -205,6 +235,17 @@
     .tile{font-size:16px;min-height:34px;padding:3px 9px;line-height:1.5}
     .qrow{margin-bottom:9px}
   }
+  /* Six tools and a score will not sit on one line of a 320px phone, and
+     at full size they took four rows and a quarter of the screen with
+     them. Smaller here: the bar is the least interesting thing on the
+     page and should take the least room. */
+  @media (max-width:420px){
+    .bar{gap:6px;padding:5px 9px}
+    .bar h1{font-size:17px}
+    .tool{min-height:32px;padding:0 7px;font-size:11.5px}
+    .pts{min-height:32px;padding:0 8px;font-size:11.5px}
+    .pts b{font-size:15px}
+  }
   @media (max-width:760px){
     .gidx{flex-wrap:nowrap}
     .bar{padding:6px 10px} .tool{padding:0 8px;font-size:12px}
@@ -221,6 +262,7 @@
   <button class="tool" id="furiBtn">ふりがな</button>
   <button class="tool" id="enBtn">EN</button>
   <button class="tool" id="rateBtn" title="How fast the voice speaks"><span id="rateLabel">×1</span></button>
+  <button class="tool" id="sfxBtn" title="The ninja and the yokai">にん者</button>
   <button class="tool" id="saveBtn" title="Save your score to show someone">Save</button>
   <button class="tool" id="resetBtn">Reset</button>
 </div>
