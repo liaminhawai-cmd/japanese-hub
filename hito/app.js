@@ -14,6 +14,7 @@
 "use strict";
 (function(){
   var W = window.HITO_WORDS, P = window.HITO_PEOPLE,
+      OF = window.HITO_OUTFITS || { outfits: [] },
       CLIPS = (window.HITO_AUDIO || {}).clips || {};
   var $ = function(id){ return document.getElementById(id); };
   function esc(s){
@@ -76,17 +77,27 @@
     });
   }
   function speakable(t){ return particles(plain(t)).replace(/[\s　]+/g, ""); }
-  function say(text){
+  /* onEnd is how the きせかえ step plays a whole outfit: one line, then
+     the next when the first has finished. */
+  function say(text, onEnd){
     var clip = CLIPS[speakable(text)];
-    if (!clip) return;
     var a = sound();
     try { a.pause(); } catch (e){}
+    a.onended = null;
+    if (!clip) return false;
+    if (onEnd) a.onended = onEnd;
     a.src = "audio/" + clip;
     /* After the src and not before: changing the source resets the rate
        on Safari, which is most of the phones this runs on. */
     try { a.playbackRate = S.rate; } catch (e){}
     var r = a.play();
     if (r && r.catch) r.catch(function(){});
+    return true;
+  }
+  function hush(){
+    var a = sound();
+    a.onended = null;
+    try { a.pause(); } catch (e){}
   }
   document.body.classList.toggle("hasvoice", !!Object.keys(CLIPS).length);
   function saybtn(text){
@@ -167,16 +178,30 @@
      same person at two sizes rather than two different builds. The clothing
      slots take a colour each and default to plain grey. */
   var SKIN = "#f2d9c0", SKINL = "#d9b89a";
-  function figure(p, h){
-    var f = p.facts;
+  /* opts.bare    an empty slot is drawn as an empty outline rather than
+                   a grey garment, so a figure with nothing on reads as
+                   undressed and not as dressed in grey.
+     opts.zones    the six places something can be put, as hit targets
+                   inside the drawing. A label goes on the ones that hold
+                   something, because シャツ, Tシャツ and セーター draw the
+                   same and no drawing is going to tell them apart. */
+  function figure(p, h, opts){
+    var f = p.facts, O = opts || {};
     var hair = f.colour === "black" ? "#2d2a28" : "#7a5230";
     var HEX = W.colour_hex || {};
     var c = f.clothes || {};
     function col(slot, fallback){
       return (c[slot] && HEX[c[slot][1]]) || fallback;
     }
-    var top = col("top", "#9aa9b8"), legs = col("bottom", "#55606e"),
-        shoe = col("shoes", "#363d47");
+    var EMPTY = "#ffffff";
+    var top = col("top", O.bare && !c.top ? EMPTY : "#9aa9b8"),
+        legs = col("bottom", O.bare && !c.bottom ? EMPTY : "#55606e"),
+        shoe = col("shoes", O.bare && !c.shoes ? EMPTY : "#363d47");
+    /* An empty outline is dashed, so it reads as a place for something
+       rather than as a white garment. しろい is a colour in this unit. */
+    function dash(slot){
+      return (O.bare && !c[slot]) ? ' stroke-dasharray="5 4"' : "";
+    }
     /* Every garment is outlined. Without it しろい disappears into the
        card and a white shirt cannot be described, let alone marked. */
     var E = ' stroke="rgba(20,25,32,.3)" stroke-width="1.2"';
@@ -192,20 +217,27 @@
     }
     /* legs, then shoes */
     if (skirt){
-      g.push('<path d="M44 138 h32 l10 38 h-52 z" fill="' + legs + '"' + E + '/>');
+      g.push('<path d="M44 138 h32 l10 38 h-52 z" fill="' + legs + '"' + E
+        + dash("bottom") + '/>');
       g.push('<rect x="48" y="174" width="9" height="50" rx="4.5" fill="'
         + SKIN + '"/>');
       g.push('<rect x="63" y="174" width="9" height="50" rx="4.5" fill="'
         + SKIN + '"/>');
     } else {
-      g.push('<rect x="45" y="138" width="12" height="86" rx="6" fill="' + legs + '"' + E + '/>');
-      g.push('<rect x="63" y="138" width="12" height="86" rx="6" fill="' + legs + '"' + E + '/>');
+      g.push('<rect x="45" y="138" width="12" height="86" rx="6" fill="' + legs + '"'
+        + E + dash("bottom") + '/>');
+      g.push('<rect x="63" y="138" width="12" height="86" rx="6" fill="' + legs + '"'
+        + E + dash("bottom") + '/>');
     }
-    g.push('<ellipse cx="49" cy="' + foot + '" rx="11" ry="6" fill="' + shoe + '"' + E + '/>');
-    g.push('<ellipse cx="71" cy="' + foot + '" rx="11" ry="6" fill="' + shoe + '"' + E + '/>');
+    g.push('<ellipse cx="49" cy="' + foot + '" rx="11" ry="6" fill="' + shoe + '"'
+      + E + dash("shoes") + '/>');
+    g.push('<ellipse cx="71" cy="' + foot + '" rx="11" ry="6" fill="' + shoe + '"'
+      + E + dash("shoes") + '/>');
     /* arms outside the body, not behind it, or all you see is hands */
-    g.push('<rect x="24" y="84" width="11" height="60" rx="5.5" fill="' + top + '"' + E + '/>');
-    g.push('<rect x="85" y="84" width="11" height="60" rx="5.5" fill="' + top + '"' + E + '/>');
+    g.push('<rect x="24" y="84" width="11" height="60" rx="5.5" fill="' + top + '"'
+      + E + dash("top") + '/>');
+    g.push('<rect x="85" y="84" width="11" height="60" rx="5.5" fill="' + top + '"'
+      + E + dash("top") + '/>');
     g.push('<circle cx="29.5" cy="148" r="6" fill="' + SKIN + '" stroke="'
       + SKINL + '" stroke-width="1"/>');
     g.push('<circle cx="90.5" cy="148" r="6" fill="' + SKIN + '" stroke="'
@@ -214,7 +246,7 @@
     g.push('<rect x="54" y="63" width="12" height="20" fill="' + SKIN
       + '" stroke="' + SKINL + '" stroke-width="1"/>');
     g.push('<path d="M37 142 q-1 -48 5 -55 q9 -5 18 -5 q9 0 18 5 q6 7 5 55 z"'
-      + ' fill="' + top + '"' + E + '/>');
+      + ' fill="' + top + '"' + E + dash("top") + '/>');
     /* head */
     g.push('<circle cx="' + cx + '" cy="44" r="25" fill="' + SKIN
       + '" stroke="' + SKINL + '" stroke-width="1.5"/>');
@@ -258,6 +290,37 @@
       g.push('<rect x="84" y="138" width="13" height="7" rx="2" fill="#2f3b47"/>'
         + '<circle cx="90.5" cy="141.5" r="3.4" fill="#d9dee4" stroke="#2f3b47"'
         + ' stroke-width="1"/>');
+
+    /* ---- the six places something can go ----
+       Inside the drawing rather than floating over it, so they scale with
+       it and a finger lands where it looks like it is landing. The wrist
+       comes last: it sits over the edge of the body and whichever is last
+       is the one a drop finds. */
+    if (O.zones){
+      var Z = [
+        { k:"body",  x:22, y:72,  w:76, h:66 },
+        { k:"legs",  x:36, y:139, w:48, h:40 },
+        { k:"feet",  x:31, y:219, w:58, h:24 },
+        { k:"head",  x:28, y:13,  w:64, h:26 },
+        { k:"eyes",  x:36, y:37,  w:48, h:22 },
+        { k:"wrist", x:79, y:131, w:28, h:22 }
+      ];
+      var L = O.labels || {};
+      Z.forEach(function(z){
+        g.push('<rect class="zone' + (L[z.k] ? " full" : "") + '" data-zone="'
+          + z.k + '" x="' + z.x + '" y="' + z.y + '" width="' + z.w
+          + '" height="' + z.h + '" rx="7" fill="#16375e" fill-opacity="0"/>');
+      });
+      Z.forEach(function(z){
+        if (!L[z.k]) return;
+        var cxz = z.x + z.w / 2, cyz = z.y + z.h / 2;
+        var wpx = Math.max(26, String(L[z.k]).length * 11 + 8);
+        g.push('<rect class="ztag" x="' + (cxz - wpx / 2) + '" y="' + (cyz - 8)
+          + '" width="' + wpx + '" height="16" rx="8"/>'
+          + '<text class="ztxt" x="' + cxz + '" y="' + (cyz + 4) + '">'
+          + esc(L[z.k]) + '</text>');
+      });
+    }
 
     /* tall and not tall are the same figure at two sizes, pinned at the
        feet so both stand on the same ground */
@@ -949,16 +1012,18 @@
     { id:"join",  ja:"〜くて",     en:"Joining" },
     { id:"colour",ja:"いろ",       en:"Colours" },
     { id:"wear",  ja:"きています", en:"Wearing" },
+    { id:"dress", ja:"きせかえ",   en:"Dress them" },
     { id:"spin",  ja:"ルーレット", en:"Spin a word" },
     { id:"write", ja:"かいて",     en:"Write it" }
   ];
   var at = 0, DRAW = {};
 
-  function ruleFor(id){
+  function ruleFor(id, cls){
     var r = null;
     P.rules.forEach(function(x){ if (x.step === id) r = x; });
     if (!r) return "";
-    return '<div class="rule"><b>' + esc(r.title_en) + '</b>' + esc(r.rule)
+    return '<div class="rule ' + (cls || "") + '"><b>' + esc(r.title_en) + '</b>'
+      + esc(r.rule)
       + r.eg.map(function(e){
           return '<div class="eg">' + ruby(e.ja) + '<em>' + esc(e.en) + '</em></div>';
         }).join("") + '</div>';
@@ -988,6 +1053,94 @@
   $("legend").innerHTML =
     '<s class="k-i">い</s><s class="k-na">な</s><s class="k-noun">noun</s>';
 
+  /* ---- drag a chip onto a slot, or tap the chip and then the slot ----
+     A school iPad does not do HTML5 drag-and-drop at all and a mouse is
+     clumsy at tapping twice, so both gestures run one handler: if the
+     pointer never travelled, it was a tap.
+
+     This was written inside the ことば step and is out here because the
+     きせかえ step needs the same gesture over an SVG. Two copies of a drag
+     is two places for a thumb to stop working.
+
+       grab(chip)        called the moment a chip is taken hold of
+       open(slot)        false for a slot that will not take anything
+       land(chip, slot)  the drop, however it was made
+     The slot selector is matched with closest(), so it works on an SVG
+     element as readily as on a div. */
+  function dragdrop(scope, chipSel, slotSel, cfg){
+    function clearOver(){
+      each(scope, slotSel + ".over", function(x){ x.classList.remove("over"); });
+    }
+    function open(slot){ return !cfg.open || cfg.open(slot); }
+    function clearPick(){
+      each(scope, chipSel + ".pick", function(c){ c.classList.remove("pick"); });
+    }
+    each(scope, chipSel, function(chip){
+      /* きせかえ redraws the figure after every drop, so the slots are new
+         elements and have to be wired again while the chips are the same
+         ones. Wiring a chip twice is worse than not wiring it: the second
+         handler sees the class the first just added and takes it straight
+         back off, so the chip can never stay armed and tap-then-tap stops
+         working after the first drop. */
+      if (chip.__dragWired) return;
+      chip.__dragWired = true;
+      var drag = null;
+      chip.addEventListener("pointerdown", function(ev){
+        if (cfg.grab) cfg.grab(chip);
+        var r = chip.getBoundingClientRect();
+        drag = { x:ev.clientX, y:ev.clientY, dx:ev.clientX - r.left,
+                 dy:ev.clientY - r.top, w:r.width, h:r.height, moved:0 };
+        try { chip.setPointerCapture(ev.pointerId); } catch (e){}
+      });
+      chip.addEventListener("pointermove", function(ev){
+        if (!drag) return;
+        drag.moved = Math.max(drag.moved,
+          Math.abs(ev.clientX - drag.x) + Math.abs(ev.clientY - drag.y));
+        if (drag.moved < 7) return;
+        ev.preventDefault();
+        chip.classList.add("dragging");
+        chip.style.width = drag.w + "px";
+        chip.style.height = drag.h + "px";
+        chip.style.left = (ev.clientX - drag.dx) + "px";
+        chip.style.top = (ev.clientY - drag.dy) + "px";
+        var over = document.elementFromPoint(ev.clientX, ev.clientY);
+        over = over && over.closest ? over.closest(slotSel) : null;
+        clearOver();
+        if (over && open(over)) over.classList.add("over");
+      });
+      function drop(ev){
+        if (!drag) return;
+        var moved = drag.moved;
+        drag = null;
+        clearOver();
+        if (moved < 7){
+          /* a tap: arm this chip, and the next tap on a slot drops it */
+          var was = chip.classList.contains("pick");
+          clearPick();
+          if (!was) chip.classList.add("pick");
+          return;
+        }
+        chip.classList.remove("dragging");
+        chip.style.cssText = "";
+        var el = document.elementFromPoint(ev.clientX, ev.clientY);
+        var slot = el && el.closest ? el.closest(slotSel) : null;
+        if (slot && open(slot)) cfg.land(chip, slot);
+      }
+      chip.addEventListener("pointerup", drop);
+      chip.addEventListener("pointercancel", drop);
+    });
+    each(scope, slotSel, function(slot){
+      if (slot.__dragWired) return;
+      slot.__dragWired = true;
+      slot.addEventListener("click", function(){
+        var armed = scope.querySelector(chipSel + ".pick");
+        if (!armed || !open(slot)) return;
+        clearPick();
+        cfg.land(armed, slot);
+      });
+    });
+  }
+
   /* ---- ことば ----
      The chip does not say what it is. It plays. A student has to listen,
      decide, and put it somewhere, which is a different job from reading
@@ -1013,7 +1166,7 @@
     var set = mOrder.slice(mRound * per, mRound * per + per);
     var silent = !Object.keys(CLIPS).length;
     var chips = shuffle(set), slots = shuffle(set);
-    var left = set.length, miss = {}, pick = null;
+    var left = set.length, miss = {};
 
     $("main").innerHTML = ruleFor("match")
       + '<div class="work"><div class="wslots" id="slots"></div></div>'
@@ -1071,61 +1224,10 @@
         }
       }
     }
-    function clearPick(){
-      each($("main"), ".wchip.pick", function(c){ c.classList.remove("pick"); });
-      pick = null;
-    }
-    each($("main"), ".wchip", function(chip){
-      var drag = null;
-      chip.addEventListener("pointerdown", function(ev){
-        say(wordOf(chip.dataset.w).ja);
-        var r = chip.getBoundingClientRect();
-        drag = { x:ev.clientX, y:ev.clientY, dx:ev.clientX - r.left,
-                 dy:ev.clientY - r.top, w:r.width, h:r.height, moved:0 };
-        try { chip.setPointerCapture(ev.pointerId); } catch (e){}
-      });
-      chip.addEventListener("pointermove", function(ev){
-        if (!drag) return;
-        drag.moved = Math.max(drag.moved,
-          Math.abs(ev.clientX - drag.x) + Math.abs(ev.clientY - drag.y));
-        if (drag.moved < 7) return;
-        ev.preventDefault();
-        chip.classList.add("dragging");
-        chip.style.width = drag.w + "px";
-        chip.style.height = drag.h + "px";
-        chip.style.left = (ev.clientX - drag.dx) + "px";
-        chip.style.top = (ev.clientY - drag.dy) + "px";
-        var over = document.elementFromPoint(ev.clientX, ev.clientY);
-        over = over && over.closest ? over.closest(".wslot") : null;
-        each($("main"), ".wslot.over", function(sx){ sx.classList.remove("over"); });
-        if (over) over.classList.add("over");
-      });
-      function drop(ev){
-        if (!drag) return;
-        var moved = drag.moved;
-        drag = null;
-        each($("main"), ".wslot.over", function(sx){ sx.classList.remove("over"); });
-        if (moved < 7){
-          /* a tap: choose this chip, then tap a meaning */
-          var was = chip.classList.contains("pick");
-          clearPick();
-          if (!was){ chip.classList.add("pick"); pick = chip; }
-          return;
-        }
-        chip.classList.remove("dragging");
-        chip.style.cssText = "";
-        var el = document.elementFromPoint(ev.clientX, ev.clientY);
-        var slot = el && el.closest ? el.closest(".wslot") : null;
-        if (slot && !slot.classList.contains("yes")) land(chip, slot);
-      }
-      chip.addEventListener("pointerup", drop);
-      chip.addEventListener("pointercancel", drop);
-    });
-    each($("main"), ".wslot", function(slot){
-      slot.onclick = function(){
-        if (!pick || slot.classList.contains("yes")) return;
-        var c = pick; clearPick(); land(c, slot);
-      };
+    dragdrop($("main"), ".wchip", ".wslot", {
+      grab: function(chip){ say(wordOf(chip.dataset.w).ja); },
+      open: function(slot){ return !slot.classList.contains("yes"); },
+      land: land
     });
     /* Reshuffle when the cycle is spent, so a second pass through the
        words is six different sets rather than the same seven again. */
@@ -1619,6 +1721,265 @@
       };
     });
     $("next").onclick = function(){ advance("wear", items.length); draw(); };
+  };
+
+  /* ---- きせかえ ----
+     Andrew asked for this one: drag the clothes and the colours onto a
+     figure to match what the voice says. It is the only step where the
+     Japanese arrives by ear alone and has to come back out as something
+     other than a tap, and it is the only one that asks for a whole
+     outfit rather than one phrase.
+
+     Three things it teaches that the other steps cannot.
+
+     1. The verb is the zone. A garment dropped on the wrong part of the
+        body is not a near miss, it is a different verb, and the marking
+        says which.
+     2. An い colour goes straight in front of the thing and a noun colour
+        needs の. A student who hears みどりの セーター and puts a green
+        jumper on has understood both halves.
+     3. What was NOT said. Two of the outfits leave the feet bare, so a
+        student who dresses the whole figure out of habit has added
+        something the voice never mentioned.
+
+     The text is off until it is asked for, because this is listening.
+     The button that turns it on is right next to the one that plays the
+     line, so nobody has to go looking for it, and what it shows is the
+     same sentence the voice said, nothing more.
+
+     The drawing shows position and colour. It cannot show the difference
+     between シャツ, Tシャツ and セーター, which all draw the same, so
+     whatever is on a zone is labelled with its name. The drawing carries
+     what a drawing can carry and the label carries the rest. */
+  var ZONE = {
+    head:  { en:"the head",       slot:"hat",     verb:"kaburu" },
+    eyes:  { en:"the eyes",       slot:"glasses", verb:"kakeru" },
+    body:  { en:"the upper body", slot:"top",     verb:"kiru" },
+    legs:  { en:"the lower body", slot:"bottom",  verb:"haku" },
+    feet:  { en:"the feet",       slot:"shoes",   verb:"haku" },
+    wrist: { en:"the wrist",      slot:"extra",   verb:"suru" }
+  };
+  var dressOn = {}, dressChecked = false;
+
+  function wordBy(ja, kind){
+    var hit = null;
+    W.words.forEach(function(w){
+      if (w.ja === ja && (!kind || w.kind === kind || w.group === kind)) hit = w;
+    });
+    return hit;
+  }
+  /* figure() draws a person. This hands it the outfit a student has
+     built as if it were one, so there is one drawing and not two. */
+  function dressFigure(on, h){
+    var clothes = {}, labels = {};
+    Object.keys(on).forEach(function(z){
+      labels[z] = on[z][0];
+      var slot = ZONE[z].slot;
+      if (slot !== "glasses") clothes[slot] = [on[z][0], on[z][1] || ""];
+    });
+    return figure({ name:"", facts:{ hair:"short", colour:"black", eyes:"big",
+      tall:true, glasses: !!on.eyes, clothes:clothes } },
+      h, { bare:true, zones:true, labels:labels });
+  }
+
+  DRAW.dress = function(){
+    var list = OF.outfits || [];
+    if (!list.length){ $("main").innerHTML = '<div class="work"></div>'; return; }
+    var n = list.length, i = dealt("dress", n), o = list[i];
+    var d = deck("dress", n);
+    var garments = W.words.filter(function(w){ return w.kind === "garment"; });
+    var colours = W.words.filter(function(w){ return w.group === "colour"; });
+
+    $("main").innerHTML = ruleFor("dress", "tight")
+      + '<div class="work"><div class="who dress">'
+      + '<div class="pic dressfig" id="fig"></div>'
+      + '<div class="q">'
+      + '<div class="row listen">'
+      + '<button class="btn sm" id="playAll">▶ ' + o.items.length
+      + (o.items.length === 1 ? ' sentence' : ' sentences') + '</button>'
+      + o.items.map(function(_, k){
+          return '<button class="say" data-line="' + k + '" aria-label="Line '
+            + (k + 1) + '">' + (k + 1) + '</button>';
+        }).join("")
+      + '<span class="sp"></span>'
+      + '<button class="tool" id="textBtn">' + (S.dressText ? "Hide text" : "Show text")
+      + '</button></div>'
+      + '<div id="script"></div>'
+      + '<p class="hint">Drag a word onto the figure, or tap the word and then '
+      + 'the place it goes. Clothes first, then a colour on top of them.</p>'
+      + '<div class="tiles" id="gtray">'
+      + garments.map(function(g){
+          return '<button class="wchip" data-g="' + esc(g.ja) + '">'
+            + '<span class="jp">' + ruby(g.ja) + '</span></button>';
+        }).join("")
+      + '</div>'
+      + '<div class="tiles" id="ctray">'
+      + colours.map(function(c){
+          return '<button class="wchip cchip" data-c="' + esc(c.ja) + '">'
+            + swatch(c.kana) + '<span class="jp">' + ruby(c.ja) + '</span></button>';
+        }).join("")
+      + '</div>'
+      + '<div id="fb"></div>'
+      + '</div></div></div>'
+      + '<div class="foot"><span class="score"><b>'
+      + Object.keys(d.right).length + '</b> of ' + n + ' dressed'
+      + '</span><span class="sp"></span>'
+      + '<button class="btn sm ghost" id="clear">Start again</button>'
+      + '<button class="btn sm" id="check">Check</button>'
+      + '<button class="btn sm" id="next">Next</button></div>';
+
+    function paintScript(){
+      $("textBtn").textContent = S.dressText ? "Hide text" : "Show text";
+      $("script").innerHTML = S.dressText
+        ? o.items.map(function(it, k){
+            return '<p class="jp">' + (k + 1) + '. ' + ruby(it.ja) + ' '
+              + saybtn(it.ja) + '</p>';
+          }).join("")
+        : "";
+      wireSay();
+    }
+    function paintFigure(){
+      $("fig").innerHTML = dressFigure(dressOn, 0);
+      wireZones();
+    }
+    function nudge(zone, msg){
+      zone.classList.add("no");
+      setTimeout(function(){ zone.classList.remove("no"); }, 700);
+      $("fb").innerHTML = '<div class="mark no"><b>Not yet</b>' + esc(msg) + '</div>';
+    }
+    function wireZones(){
+      dragdrop($("main"), ".wchip", "[data-zone]", {
+        open: function(){ return !dressChecked; },
+        land: function(chip, zone){
+          var z = zone.getAttribute("data-zone");
+          if (chip.dataset.g){
+            /* Swapping the garment keeps the colour: a student who hears
+               あかい シャツ, puts out あかい セーター and then fixes the
+               garment should not have to find the colour again. */
+            dressOn[z] = [chip.dataset.g, (dressOn[z] || [])[1] || null];
+          } else {
+            if (!dressOn[z])
+              return nudge(zone, "Put the clothes on first, then the colour.");
+            dressOn[z][1] = chip.dataset.c;
+          }
+          $("fb").innerHTML = "";
+          paintFigure();
+        }
+      });
+    }
+
+    paintScript();
+    paintFigure();
+
+    var seq = 0;
+    function playFrom(k, mine){
+      if (mine !== seq || k >= o.items.length) return;
+      if (!say(o.items[k].ja, function(){
+            setTimeout(function(){ playFrom(k + 1, mine); }, 260);
+          })) playFrom(k + 1, mine);
+    }
+    $("playAll").onclick = function(){ playFrom(0, ++seq); };
+    each($("main"), "[data-line]", function(b){
+      b.onclick = function(){ seq++; hush(); say(o.items[+b.dataset.line].ja); };
+    });
+    $("textBtn").onclick = function(){
+      S.dressText = !S.dressText; save(); paintScript();
+    };
+    $("clear").onclick = function(){
+      dressOn = {}; dressChecked = false;
+      $("fb").innerHTML = ""; paintFigure();
+    };
+    $("next").onclick = function(){
+      seq++; hush();
+      dressOn = {}; dressChecked = false;
+      advance("dress", n); draw();
+    };
+
+    /* ---- the marking ----
+       Every zone the voice named, then every zone it did not. A garment
+       in the wrong place is told what verb it just asked for, because
+       that is the mistake and not the position. */
+    $("check").onclick = function(){
+      dressChecked = true;
+      var V = W.verbs, rows = [], wrong = 0;
+      /* The place you drop a thing IS the verb you have chosen, so a
+         garment in the wrong place is told which verb it just asked for
+         and which one it wanted. That is the whole of this step. */
+      function verbNote(z, garment){
+        var g = wordBy(garment, "garment");
+        if (!g || ZONE[z].verb === g.verb) return "";
+        return " " + esc(garment) + " is " + esc(V[g.verb].ja) + ", for "
+          + esc(V[g.verb].zone_en) + ", and " + esc(ZONE[z].en) + " is "
+          + esc(V[ZONE[z].verb].ja) + ".";
+      }
+      function mark(ok, head, body){
+        rows.push('<div class="mark ' + (ok ? "yes" : "no") + '"><b>'
+          + esc(head) + '</b>' + body + '</div>');
+        if (!ok) wrong++;
+      }
+      o.items.forEach(function(it){
+        var got = dressOn[it.zone], line = ruby(it.ja) + ' ' + saybtn(it.ja);
+        if (!got)
+          return mark(false, "Nothing on " + ZONE[it.zone].en.replace(/^the /, ""),
+            '<div class="jp-in">' + line + '</div>');
+        if (got[0] !== it.garment){
+          return mark(false, "Not that one",
+            esc(got[0]) + " is on " + esc(ZONE[it.zone].en) + ", and the voice said "
+            + esc(it.garment) + "." + verbNote(it.zone, got[0])
+            + '<div class="jp-in">' + line + '</div>');
+        }
+        if ((got[1] || null) !== (it.colour || null)){
+          if (!it.colour)
+            return mark(false, "No colour on this one",
+              esc(it.garment) + " takes no colour here. The voice said "
+              + '<span class="jp-in">' + esc(it.ja) + '</span>.');
+          var c = wordBy(it.colour, "colour");
+          return mark(false, "The right thing, the wrong colour",
+            esc(it.garment) + " is in the right place. The colour is "
+            + esc(it.colour) + (got[1] ? ", not " + esc(got[1]) : "") + "."
+            + (c && c.kind === "noun"
+                ? " " + esc(it.colour) + " is a noun, so it takes の before "
+                  + esc(it.garment) + "."
+                : "")
+            + '<div class="jp-in">' + line + '</div>');
+        }
+        mark(true, "Yes", '<div class="jp-in">' + line + '</div>'
+          + '<p>' + esc(it.garment) + " goes on " + esc(V[wordBy(it.garment, "garment").verb].zone_en)
+          + ", and that is " + esc(V[wordBy(it.garment, "garment").verb].ja) + ".</p>");
+      });
+      /* Anything on a zone the voice never mentioned. */
+      Object.keys(dressOn).forEach(function(z){
+        var named = o.items.some(function(it){ return it.zone === z; });
+        if (named) return;
+        mark(false, "The voice never said this",
+          esc(dressOn[z][0]) + " is on " + esc(ZONE[z].en)
+          + ", and nothing was said about " + esc(ZONE[z].en) + "."
+          + verbNote(z, dressOn[z][0]));
+      });
+      var ok = !wrong;
+      $("fb").innerHTML = rows.join("");
+      each($("main"), "[data-zone]", function(zel){
+        var z = zel.getAttribute("data-zone");
+        var want = null;
+        o.items.forEach(function(it){ if (it.zone === z) want = it; });
+        var got = dressOn[z];
+        var right = want && got && got[0] === want.garment
+          && (got[1] || null) === (want.colour || null);
+        if (want || got) zel.classList.add(right ? "yes" : "no");
+      });
+      if (ok){
+        ninja($("fig"));
+        gotRight("dress", n, i, "dress");
+        /* The readout is in the footer and the footer is not redrawn by a
+           check, so it is moved by hand. A student who has just dressed
+           the figure should see the count go up without pressing Next. */
+        each($("main"), ".score b", function(e){
+          e.textContent = Object.keys(deck("dress", n).right).length;
+        });
+      }
+      else zombie($("fig"));
+      wireSay();
+    };
   };
 
   /* ---- 9. ルーレット ----

@@ -346,6 +346,30 @@ window.HITO_PEOPLE = {
       ]
     },
     {
+      "step": "dress",
+      "title": "きせかえ",
+      "title_en": "Dress them",
+      "rule": "Listen, then put the clothes on the figure and the colour on the clothes. The verb comes from where the thing goes, so the place you drop it is the verb you have chosen. An い colour goes straight in front of the thing; a noun colour needs の. If the voice says nothing about a part of the body, leave it empty.",
+      "eg": [
+        {
+          "ja": "あかい シャツを きています。",
+          "en": "an い colour, straight in front"
+        },
+        {
+          "ja": "みどりの セーターを きています。",
+          "en": "a noun colour, so の"
+        },
+        {
+          "ja": "しろい くつを はいています。",
+          "en": "the feet, so はいています"
+        },
+        {
+          "ja": "とけいを しています。",
+          "en": "no colour on this one"
+        }
+      ]
+    },
+    {
       "step": "wear",
       "title": "きています",
       "title_en": "Wearing",

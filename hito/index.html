@@ -174,6 +174,66 @@
     .wchip{width:62px;height:52px}
   }
 
+
+  /* ---------- きせかえ: drag the clothes onto the figure ----------
+     The drop targets live inside the SVG, so they scale with the drawing
+     and a finger lands where it looks like it is landing. An empty one is
+     a dashed outline, because an empty place has to look like a place. */
+  /* The figure stays put while the trays scroll under it. On a phone the
+     colours are below the fold, and a drag that starts on a chip has to
+     end on a figure that is still on screen. */
+  .dressfig{width:230px;position:sticky;top:0;align-self:flex-start;z-index:1}
+  .dressfig .fig{max-height:360px;height:auto;width:100%}
+  .zone{cursor:pointer;stroke:#8a97a8;stroke-width:1.1;stroke-dasharray:5 4;
+        transition:fill-opacity .12s}
+  .zone.full{stroke:none}
+  .zone.over{fill-opacity:.16;stroke:var(--deep);stroke-width:2;stroke-dasharray:none}
+  .zone.yes{stroke:var(--ok);stroke-width:2.2;stroke-dasharray:none}
+  .zone.no{stroke:var(--accent);stroke-width:2.2;stroke-dasharray:none}
+  /* シャツ, Tシャツ and セーター all draw the same, so whatever is on a
+     zone says its own name. */
+  /* The label sits in the middle of its zone, which is exactly where a
+     thumb aims. Without this it swallows the drop and a colour can never
+     be put on the clothes it is for. */
+  .ztag{fill:#fff;fill-opacity:.82;stroke:rgba(20,25,32,.28);stroke-width:.8;
+        pointer-events:none}
+  .ztxt{font-family:var(--jp);font-size:11px;fill:var(--ink);text-anchor:middle;
+        pointer-events:none}
+  .listen{flex-wrap:wrap;margin-bottom:7px}
+  .listen .say{width:32px;height:32px;font-size:13px;font-weight:700}
+  /* These chips carry a word, not an icon, so they are word-shaped. The
+     fixed square of the ことば step wraps めがね onto two lines and spills
+     it out of its own border. */
+  .dress .wchip{width:auto;min-width:0;height:auto;min-height:44px;
+       padding:4px 11px;white-space:nowrap}
+  .dress .wchip .jp{font-size:18px;white-space:nowrap;line-height:1.3}
+  .cchip{gap:7px}
+  .cchip .sw{width:16px;height:16px;border-radius:3px;flex:none;
+       border:1px solid rgba(20,25,32,.3)}
+  #script p{margin-bottom:3px}
+  /* On a phone the trays and the figure have to be on screen together.
+     A drag cannot cross a scroll: if the chips are below the fold the
+     gesture is impossible, not merely awkward. So this one keeps its two
+     columns at every width and shrinks everything in them instead. */
+  @media (max-width:760px){
+    .who.dress{flex-direction:row;gap:9px}
+    .dressfig{width:116px;margin:0}
+    .dressfig .fig{max-height:238px}
+    .dress .wchip{min-height:38px;padding:3px 8px}
+    .dress .wchip .jp{font-size:16px}
+    .dress .cchip{gap:5px}
+    .dress .cchip .sw{width:13px;height:13px}
+    .dress .tiles{gap:5px;margin-bottom:6px}
+    /* a four-example rule is most of a phone screen, and the task is
+       underneath it */
+    .rule.tight{max-height:7.6em;overflow:auto}
+  }
+  @media (max-width:380px){
+    .dressfig{width:98px}
+    .dress .wchip{min-height:34px;padding:2px 7px}
+    .dress .wchip .jp{font-size:15px}
+  }
+
   .fig{display:block;margin:0 auto;height:100%;max-height:260px}
   .who{display:flex;gap:16px;align-items:flex-start;height:100%}
   .who .q{display:flex;flex-direction:column;min-height:0}
@@ -324,6 +384,7 @@
 <main id="main"></main>
 <script src="data/words.js"></script>
 <script src="data/people.js"></script>
+<script src="data/outfits.js"></script>
 <script src="data/audio.js"></script>
 <script src="app.js"></script>
 </body>
