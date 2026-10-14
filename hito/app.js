@@ -470,7 +470,16 @@
          which brought even the hardest flick to rest in about 1.3 seconds:
          a flick, not a spin. At 0.8 and 45 the same throw runs for three
          to four seconds, which is what a wheel does. */
-      var SLOW = 0.8, DRAG = 45, CATCH = 300, K = 150, C = 16;
+      /* ---- how it winds down ----
+         0.8 and 45 threw away 56% of the speed in the first second and
+         crawled through the rest, which is an air brake and not a wheel.
+         A heavy thing that is spinning loses speed at close to a steady
+         rate, so most of the friction here is the constant and only a
+         quarter of it rises with the speed. From a middling throw the
+         drum now reads 6000, 4050, 3243, 2532, 1904, 1350, 862, 431 at
+         each half second: an even wind-down you can watch, instead of a
+         lurch and a long crawl. */
+      var SLOW = 0.25, DRAG = 700, CATCH = 300, K = 150, C = 16;
       var pos = 0, v = 0, target = null, last = 0;
       var spinning = false;
 
@@ -480,14 +489,13 @@
           "translate3d(0," + (H - SPAN - wrap(pos)).toFixed(2) + "px,0)";
       }
       function at(){ return Math.round(wrap(pos) / H) % L; }
-      /* The sound is the speed, so it is taken from the speed rather than
-         from counting notches after they have gone past: the gap between
-         clicks is the time a notch takes to cross the window, H over the
-         speed. CLICK.ratchet lays them on one cursor in order, so they
-         slow down with the drum instead of piling up on each other. */
+      /* The sound is the speed. The drum hands over the speed and how far
+         apart the notches are, and CLICK works out the rest: one click per
+         two items, because a notch per item at six turns a second is 230
+         clicks a second and the ear hears a tone, not a wheel. */
       function ticks(speed){
         if (!(speed > 1)) return;
-        CLICK.ratchet(H / speed, speed);
+        CLICK.ratchet(speed, 2 * H);
       }
       function done(){
         CLICK.clunk();
@@ -652,19 +660,22 @@
       var MINS = 2.8, MAXS = 5.0;
       function throwTo(slot){
         var from = Math.round(pos / H), want = ((slot % L) + L) % L, hits = [];
-        for (var v0 = 3200; v0 <= 15000; v0 += 25){
+        /* Gentler friction means a four second spin starts slower, so the
+           search starts lower, and in finer steps, because the speeds that
+           stop on one word are rarer when fewer of them are in range. */
+        for (var v0 = 1800; v0 <= 15000; v0 += 10){
           var r = dryRun(v0);
           if (r.secs < MINS || r.secs > MAXS) continue;
           if ((((from + r.slot) % L) + L) % L === want) hits.push(v0);
         }
-        if (!hits.length) return launch(5000 + Math.random() * 6000);
+        if (!hits.length) return launch(3400 + Math.random() * 3000);
         launch(hits[Math.floor(Math.random() * hits.length)]);
       }
 
       paint();
       return {
         /* A free spin, for when nothing has asked for a particular word. */
-        spin: function(){ reorder(); launch(4200 + Math.random() * 7000); },
+        spin: function(){ reorder(); launch(3200 + Math.random() * 3600); },
         /* Spin and land on this one. */
         spinTo: function(id){
           reorder();
@@ -751,15 +762,32 @@
        buzz rather than a ratchet, and the ceiling because a drum that
        has all but stopped should fall silent rather than tick once more
        a second later. */
-    var FLOOR = 0.016, CEIL = 0.5, cursor = 0;
-    function ratchet(gap, speed){
-      if (!S.sfx || !(gap > 0) || gap > CEIL) return;
+    /* ---- how fast the clicks come ----
+       It used to be one click per notch, floored at 62 a second. Two
+       things were wrong with that. 62 a second is above the rate at which
+       an ear stops hearing separate clicks and starts hearing a pitch, so
+       the top of every spin was a buzz. And because the floor was a hard
+       maximum, the rate sat ON it for the first two thirds of the spin and
+       only began to change near the end: the drum visibly slowed for
+       seconds while the sound did not move.
+
+       So the floor is added rather than imposed. The gap is always the
+       time a notch takes to cross the window PLUS a fixed minimum, which
+       means the rate changes the whole way down and never passes about 20
+       a second. From a middling throw it now runs 18, 16, 14, 12, 10, 8,
+       6, 3 clicks a second: you hear it slowing from the first half
+       second, which is the part Andrew asked for and the part that was
+       missing. */
+    var FLOOR = 0.03, CEIL = 0.55, NOTCH = 128, cursor = 0;
+    function ratchet(speed, notch){
+      if (!S.sfx || !(speed > 0)) return;
+      var gap = FLOOR + (notch || NOTCH) / speed;
+      if (gap > CEIL) return;
       try {
         var c = build(); if (!c) return;
         if (c.state === "suspended") c.resume();
         var t = c.currentTime;
         if (cursor < t) cursor = t + 0.004;
-        if (gap < FLOOR) gap = FLOOR;
         /* quieter when it is flying, fuller as it comes to rest: a wheel
            is loudest at the end, which is where the ear is anyway */
         var loud = 0.34 - Math.min(0.19, (speed || 0) / 34000);
@@ -789,7 +817,15 @@
       try { var c = build(); if (c && c.state === "suspended") c.resume(); }
       catch (e){}
     }
-    function play(){ ratchet(0.02, 0); }
+    /* one tap, one click: the UI tick, not the wheel */
+    function play(){
+      if (!S.sfx) return;
+      try {
+        var c = build(); if (!c) return;
+        if (c.state === "suspended") c.resume();
+        clack(c.currentTime + 0.004, 0.26);
+      } catch (e){}
+    }
     /* ---- the whoosh and the groan ----
        Both synthesised rather than fetched: the page has to work on a
        tram, and two more files to download for two sound effects is not
@@ -859,6 +895,15 @@
      tiles and move buttons inside a section. Not every button in the app:
      a clack on Next twenty times in a drill is a different thing. */
 
+  /* One creature at a time. Answer two things quickly and the first one
+     is still drifting up the screen when the second arrives, which leaves
+     a ninja and a zombie side by side and no way to tell which answer
+     either of them is about. */
+  function clearCreatures(){
+    var old = document.querySelectorAll(".ninj,.zomb");
+    for (var i = 0; i < old.length; i++) old[i].remove();
+  }
+
   /* ---- the ninja ----
      The zombie needed an opposite. A ninja crosses rather than rises,
      and is gone in half the time the zombie takes: right is
@@ -877,6 +922,7 @@
     var now = Date.now();
     if (now - nLast < 420) return;
     nLast = now;
+    clearCreatures();
     var box = document.createElement("div");
     box.className = "ninj";
     box.setAttribute("aria-hidden", "true");
@@ -929,6 +975,7 @@
     var now = Date.now();
     if (now - zLast < 900) return;
     zLast = now;
+    clearCreatures();
     var box = document.createElement("div");
     box.className = "zomb";
     box.setAttribute("aria-hidden", "true");

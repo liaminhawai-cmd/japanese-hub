@@ -513,6 +513,36 @@
     .ja{font-size:18px} body{font-size:16.5px}
     .bar{gap:7px;padding-left:10px;padding-right:10px}
   }
+  /* ---- the ninja and the zombie ----
+     ひと and れきしの人 have had these for a while; the drum came across
+     from this app and the creatures never went back the other way, which
+     is what Andrew noticed. Fixed, so they drift over whatever is on
+     screen, and pointer-events none so neither can ever swallow a tap
+     meant for the feedback underneath.
+
+     The ninja crosses and is gone in 0.7s and the zombie takes 1.6s to
+     rise: being right should be acknowledged and then got out of the way
+     of, because it is the thing you want to be unremarkable and
+     repeatable. */
+  .zomb,.ninj{position:fixed;z-index:60;pointer-events:none}
+  .zomb{transform:translate(-50%,0);animation:zrise 1.6s ease-out forwards}
+  .ninj{transform:translate(-50%,-50%);animation:ndash .7s cubic-bezier(.2,.8,.3,1) forwards}
+  .ninj svg{display:block;filter:drop-shadow(0 2px 5px rgba(20,25,32,.3))}
+  @keyframes ndash{
+    0%{opacity:0;transform:translate(-190%,-50%) scale(.9)}
+    22%{opacity:1}
+    70%{opacity:1;transform:translate(-20%,-54%) scale(1)}
+    100%{opacity:0;transform:translate(120%,-58%) scale(.96)}
+  }
+  .zomb svg{display:block;filter:drop-shadow(0 2px 6px rgba(20,25,32,.25))}
+  @keyframes zrise{
+    0%{opacity:0;transform:translate(-50%,10px) scale(.84) rotate(-4deg)}
+    18%{opacity:.95}
+    55%{transform:translate(-42%,-70px) scale(1) rotate(5deg)}
+    100%{opacity:0;transform:translate(-56%,-150px) scale(1.02) rotate(-3deg)}
+  }
+  @media (prefers-reduced-motion:reduce){ .ninj,.zomb{display:none} }
+
 </style>
 </head>
 <body class="hasvoice">
@@ -1017,7 +1047,16 @@
       }
       strip.innerHTML = three;
 
-      var SLOW = 0.8, DRAG = 45, CATCH = 300, K = 150, C = 16;
+      /* ---- how it winds down ----
+         0.8 and 45 threw away 56% of the speed in the first second and
+         crawled through the rest, which is an air brake and not a wheel.
+         A heavy thing that is spinning loses speed at close to a steady
+         rate, so most of the friction here is the constant and only a
+         quarter of it rises with the speed. From a middling throw the
+         drum now reads 6000, 4050, 3243, 2532, 1904, 1350, 862, 431 at
+         each half second: an even wind-down you can watch, instead of a
+         lurch and a long crawl. */
+      var SLOW = 0.25, DRAG = 700, CATCH = 300, K = 150, C = 16;
       var pos = 0, v = 0, target = null, last = 0;
       var spinning = false;
 
@@ -1027,14 +1066,13 @@
           "translate3d(0," + (H - SPAN - wrap(pos)).toFixed(2) + "px,0)";
       }
       function at(){ return Math.round(wrap(pos) / H) % L; }
-      /* The sound is the speed, so it is taken from the speed rather than
-         from counting notches after they have gone past: the gap between
-         clicks is the time a notch takes to cross the window, H over the
-         speed. CLICK.ratchet lays them on one cursor in order, so they
-         slow with the drum instead of piling up on each other. */
+      /* The sound is the speed. The drum hands over the speed and how far
+         apart the notches are, and CLICK works out the rest: one click per
+         two items, because a notch per item at six turns a second is 230
+         clicks a second and the ear hears a tone, not a wheel. */
       function ticks(speed){
         if (!(speed > 1)) return;
-        CLICK.ratchet(H / speed, speed);
+        CLICK.ratchet(speed, 2 * H);
       }
       function done(){
         CLICK.clunk();
@@ -1186,19 +1224,22 @@
       var MINS = 2.8, MAXS = 5.0;
       function throwTo(slot){
         var from = Math.round(pos / H), want = ((slot % L) + L) % L, hits = [];
-        for (var v0 = 3200; v0 <= 15000; v0 += 25){
+        /* Gentler friction means a four second spin starts slower, so the
+           search starts lower, and in finer steps, because the speeds that
+           stop on one word are rarer when fewer of them are in range. */
+        for (var v0 = 1800; v0 <= 15000; v0 += 10){
           var r = dryRun(v0);
           if (r.secs < MINS || r.secs > MAXS) continue;
           if ((((from + r.slot) % L) + L) % L === want) hits.push(v0);
         }
-        if (!hits.length) return launch(5000 + Math.random() * 6000);
+        if (!hits.length) return launch(3400 + Math.random() * 3000);
         launch(hits[Math.floor(Math.random() * hits.length)]);
       }
 
       paint();
       return {
         /* A free spin, for when nothing has asked for a particular one. */
-        spin: function(){ reorder(); launch(4200 + Math.random() * 7000); },
+        spin: function(){ reorder(); launch(3200 + Math.random() * 3600); },
         /* Spin and land on this one. */
         spinTo: function(id){
           reorder();
@@ -1244,7 +1285,7 @@
         src.start(t); src.stop(t + 0.07);
       } catch (e){}
     }
-    /* ---- the drum's clack ----
+  /* ---- the drum's clack ----
        The tile press above keeps its 拍子木: one short band of noise, and
        that is the right sound for a tile. A notch going past a pawl is a
        different thing and needs two sounds at once, the strike with the
@@ -1295,15 +1336,31 @@
        is there because a click every five milliseconds is a buzz, and the
        ceiling because a drum that has all but stopped should fall silent
        rather than tick once more a second later. */
-    var FLOOR = 0.016, CEIL = 0.5, cursor = 0;
-    function ratchet(gap, speed){
-      if (!S.click || !(gap > 0) || gap > CEIL) return;
+    /* ---- how fast the clicks come ----
+       It used to be one click per notch, floored at 62 a second. Two
+       things were wrong with that. 62 a second is above the rate at which
+       an ear stops hearing separate clicks and starts hearing a pitch, so
+       the top of every spin was a buzz. And because the floor was a hard
+       maximum, the rate sat ON it for the first two thirds of the spin and
+       only began to change near the end: the drum visibly slowed for
+       seconds while the sound did not move.
+
+       So the floor is added rather than imposed. The gap is always the
+       time a notch takes to cross the window PLUS a fixed minimum, which
+       means the rate changes the whole way down and never passes about 20
+       a second. From a middling throw it now runs 18, 16, 14, 12, 10, 8,
+       6, 3 clicks a second: you hear it slowing from the first half
+       second, which is the part that was missing. */
+    var FLOOR = 0.03, CEIL = 0.55, NOTCH = 128, cursor = 0;
+    function ratchet(speed, notch){
+      if (!S.click || !(speed > 0)) return;
+      var gap = FLOOR + (notch || NOTCH) / speed;
+      if (gap > CEIL) return;
       try {
         var c = build(); if (!c) return;
         if (c.state === "suspended") c.resume();
         var t = c.currentTime;
         if (cursor < t) cursor = t + 0.004;
-        if (gap < FLOOR) gap = FLOOR;
         var loud = 0.34 - Math.min(0.19, (speed || 0) / 34000);
         for (var guard = 0; cursor < t + 0.05 && guard < 6; guard++){
           clack(cursor, loud);
@@ -1329,8 +1386,182 @@
       try { var c = build(); if (c && c.state === "suspended") c.resume(); }
       catch (e){}
     }
-    return { play: play, ratchet: ratchet, clunk: clunk, wake: wakeAudio };
+    /* ---- the whoosh and the groan ----
+       Both synthesised rather than fetched: the page has to work on a
+       tram, and two more files to download for two sound effects is not
+       a trade worth making.
+
+       The whoosh is noise through a bandpass whose centre frequency
+       sweeps up and then falls away, which is what a thing moving past
+       your ear actually does to the spectrum. Short, 220ms, because a
+       ninja that takes a second is not a ninja.
+
+       The groan is a triangle sagging from 150Hz to 65 with a slow
+       wobble on top and everything above 600Hz taken off. Triangle
+       rather than sawtooth: a saw at that pitch is a horror film and
+       this is a Year 8 classroom. */
+    function whoosh(){
+      if (!S.click) return;
+      try {
+        var c = build(); if (!c) return;
+        if (c.state === "suspended") c.resume();
+        var t = c.currentTime;
+        var src = c.createBufferSource();
+        /* a longer piece of noise than the tick needs, looped */
+        src.buffer = noise; src.loop = true;
+        var bp = c.createBiquadFilter();
+        bp.type = "bandpass"; bp.Q.value = 1.4;
+        bp.frequency.setValueAtTime(700, t);
+        bp.frequency.exponentialRampToValueAtTime(4200, t + 0.085);
+        bp.frequency.exponentialRampToValueAtTime(600, t + 0.22);
+        var g = c.createGain();
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.exponentialRampToValueAtTime(0.2, t + 0.04);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
+        src.connect(bp); bp.connect(g); g.connect(c.destination);
+        src.start(t); src.stop(t + 0.24);
+      } catch (e){}
+    }
+    function groan(){
+      if (!S.click) return;
+      try {
+        var c = build(); if (!c) return;
+        if (c.state === "suspended") c.resume();
+        var t = c.currentTime, D = 0.75;
+        var o1 = c.createOscillator();
+        o1.type = "triangle";
+        o1.frequency.setValueAtTime(150, t);
+        o1.frequency.exponentialRampToValueAtTime(65, t + D);
+        /* the wobble, or it is a foghorn rather than a groan */
+        var lfo = c.createOscillator(), lg = c.createGain();
+        lfo.frequency.value = 5.5; lg.gain.value = 7;
+        lfo.connect(lg); lg.connect(o1.frequency);
+        var lp = c.createBiquadFilter();
+        lp.type = "lowpass"; lp.frequency.value = 600;
+        var g = c.createGain();
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.exponentialRampToValueAtTime(0.17, t + 0.12);
+        g.gain.setValueAtTime(0.17, t + 0.34);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + D);
+        o1.connect(lp); lp.connect(g); g.connect(c.destination);
+        o1.start(t); lfo.start(t);
+        o1.stop(t + D + 0.02); lfo.stop(t + D + 0.02);
+      } catch (e){}
+    }
+    return { play: play, ratchet: ratchet, clunk: clunk, wake: wakeAudio,
+             whoosh: whoosh, groan: groan };
   })();
+  /* One creature at a time. Answer two things quickly and the first one
+     is still drifting up the screen when the second arrives, which leaves
+     a ninja and a zombie side by side and no way to tell which answer
+     either of them is about. */
+  function clearCreatures(){
+    var old = document.querySelectorAll(".ninj,.zomb");
+    for (var i = 0; i < old.length; i++) old[i].remove();
+  }
+
+  /* ---- the ninja ----
+     The zombie needed an opposite. A ninja crosses rather than rises,
+     and is gone in half the time the zombie takes: right is
+     acknowledged and then got out of the way of, which is the right
+     proportion when being right is the thing you want to be unremarkable
+     and repeatable.
+
+     Same guards as the zombie. It cannot be tapped, it never covers the
+     feedback, and reduced motion gets the sound without the dash. */
+  var nLast = 0;
+  function ninja(near){
+    CLICK.whoosh();
+    try {
+      if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    } catch (e){}
+    var now = Date.now();
+    if (now - nLast < 420) return;
+    nLast = now;
+    clearCreatures();
+    var box = document.createElement("div");
+    box.className = "ninj";
+    box.setAttribute("aria-hidden", "true");
+    var r = near && near.getBoundingClientRect ? near.getBoundingClientRect() : null;
+    box.style.left = (r ? r.left + r.width / 2 : innerWidth / 2) + "px";
+    box.style.top  = (r ? r.top + r.height / 2 - 26 : innerHeight * 0.5) + "px";
+    box.innerHTML =
+        '<svg viewBox="0 0 64 52" width="64" height="52">'
+      /* the scarf, trailing behind the direction of travel */
+      + '<path d="M30 16 q-12 -4 -24 2 q10 1 14 4 q-9 1 -13 5 q12 -1 21 -3 z"'
+      + ' fill="#b23a3a" opacity=".92"/>'
+      /* a body folded forward, mid-dash */
+      + '<path d="M28 18 q12 -3 19 6 q4 7 -3 11 q-9 5 -17 -1 q-6 -5 1 -16 z"'
+      + ' fill="#20262f"/>'
+      /* back leg kicked out */
+      + '<path d="M34 34 q-6 7 -14 8 q6 -8 8 -12 z" fill="#20262f"/>'
+      /* arm thrown forward */
+      + '<path d="M44 22 q9 -2 14 3" stroke="#20262f" stroke-width="5"'
+      + ' stroke-linecap="round" fill="none"/>'
+      /* the head, and the eye slit that makes it a ninja */
+      + '<circle cx="44" cy="17" r="10" fill="#262d37"/>'
+      + '<path d="M38 15 h13 v4 h-13 z" fill="#f2e9d8"/>'
+      + '<circle cx="42" cy="17" r="1.7" fill="#20262f"/>'
+      + '<circle cx="48" cy="17" r="1.7" fill="#20262f"/>'
+      /* two speed lines, which is the whole of the whoosh made visible */
+      + '<path d="M2 24 h14 M6 31 h10" stroke="#20262f" stroke-width="2"'
+      + ' stroke-linecap="round" opacity=".5"/>'
+      + '</svg>';
+    document.body.appendChild(box);
+    box.addEventListener("animationend", function(){ box.remove(); });
+    setTimeout(function(){ if (box.parentNode) box.remove(); }, 1400);
+  }
+
+  /* ---- the zombie ----
+     The pair that ひと and れきしの人 have. Andrew asked where they had
+     got to in this app, and the answer was that the drum came across
+     from here and the creatures never went back the other way.
+
+     So it is built to be hard to farm. It rises once, takes a second
+     and a half, never blocks the feedback that names the rule, and does
+     not fire twice for the same mistake in quick succession. A device
+     asking for reduced motion gets nothing at all. */
+  var zLast = 0;
+  function zombie(near){
+    CLICK.groan();
+    try {
+      if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    } catch (e){}
+    var now = Date.now();
+    if (now - zLast < 900) return;
+    zLast = now;
+    clearCreatures();
+    var box = document.createElement("div");
+    box.className = "zomb";
+    box.setAttribute("aria-hidden", "true");
+    var r = near && near.getBoundingClientRect ? near.getBoundingClientRect() : null;
+    box.style.left = (r ? r.left + r.width / 2 : innerWidth / 2) + "px";
+    box.style.top  = (r ? r.top : innerHeight * 0.6) + "px";
+    box.innerHTML =
+      '<svg viewBox="0 0 48 64" width="48" height="64">'
+      /* one arm out in front, the other trailing */
+      + '<path d="M10 30 q-7 2 -8 10" stroke="#6f9a4e" stroke-width="5"'
+      + ' stroke-linecap="round" fill="none"/>'
+      + '<path d="M38 30 q8 -1 10 4" stroke="#6f9a4e" stroke-width="5"'
+      + ' stroke-linecap="round" fill="none"/>'
+      /* a tattered sheet of a body, so it reads as floating */
+      + '<path d="M13 26 h22 v24 l-4 -4 l-4 5 l-4 -5 l-4 5 l-4 -5 l-2 3 z"'
+      + ' fill="#7fae59"/>'
+      + '<circle cx="24" cy="18" r="12" fill="#8fbf66"/>'
+      /* stitches, which is what makes it a zombie and not a frog */
+      + '<path d="M15 10 l4 4 M17 8 l-1 3 M21 11 l-1 3" stroke="#5d8440"'
+      + ' stroke-width="1.4" stroke-linecap="round" fill="none"/>'
+      + '<circle cx="19" cy="17" r="2.6" fill="#1f2a18"/>'
+      + '<circle cx="29" cy="17" r="2.6" fill="#1f2a18"/>'
+      + '<path d="M19 24 q5 3 10 0" stroke="#1f2a18" stroke-width="1.6"'
+      + ' stroke-linecap="round" fill="none"/>'
+      + '<path d="M21 24 v3 M26 24 v3" stroke="#1f2a18" stroke-width="1.2"/>'
+      + '</svg>';
+    document.body.appendChild(box);
+    box.addEventListener("animationend", function(){ box.remove(); });
+    setTimeout(function(){ if (box.parentNode) box.remove(); }, 2600);
+  }
+
   /* The things that look pressable: the home panes, the tab row, and the
      tiles and move buttons inside a section. Not every button in the app:
      a clack on Next twenty times in a drill is a different thing. */
@@ -1862,7 +2093,13 @@
         if (st.picked !== null) return;
         st.picked = b.dataset.o;
         st.done++;
-        opts.forEach(function(o){ if (o.key === st.picked && o.ok) st.right++; });
+        var won = false;
+        opts.forEach(function(o){
+          if (o.key === st.picked && o.ok){ st.right++; won = true; }
+        });
+        /* The creature goes off the tile that was pressed, before the
+           round is redrawn and that tile stops existing. */
+        if (won) ninja(b); else zombie(b);
         drawRound(id);
       };
     });
@@ -3175,9 +3412,11 @@
       st.open = true; drawDrill(id, only);
     };
     if ($("got")) $("got").onclick = function(){
+      ninja($("got"));
       st.hit++; markWeak(it.error_id, true); advance();
     };
     if ($("not")) $("not").onclick = function(){
+      zombie($("not"));
       st.miss++; markWeak(it.error_id, false); advance();
     };
     if ($("skip")) $("skip").onclick = advance;
