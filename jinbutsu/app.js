@@ -964,9 +964,9 @@
                 ["kaku","かく","Write them", met.length]];
     if (kPhase === "miru" && !unmet.length) kPhase = "erabu";
     $("main").innerHTML =
-        '<div class="rule"><b>The words</b>Meet a word before you are asked '
-      + 'to match it, and write it after. Guessing your way through a '
-      + 'matching task is not learning a word.</div>'
+        '<div class="rule"><b>The words</b>Meet each word first, then match '
+      + 'it, then write it. Guessing through a matching task does not teach '
+      + 'you the word.</div>'
       + '<div class="row" style="margin-bottom:9px" id="ph">'
       + tabs.map(function(t){
           return '<button class="btn ' + (kPhase === t[0] ? "sm" : "ghost sm")
@@ -1209,10 +1209,10 @@
     gAt = ((gAt % G.length) + G.length) % G.length;
     var g = G[gAt], finished = G.filter(gdone).length;
     $("main").innerHTML =
-        '<div class="rule"><b>Grammar</b>' + G.length + ' patterns, and between '
-      + 'them they build every sentence in this unit. The examples are the '
-      + 'articles&rsquo; own sentences, so you will meet them again on the page. '
-      + 'Drag a tile into the gap, or tap the tile and then the gap.</div>'
+        '<div class="rule"><b>Grammar</b>Drag a tile into the gap, or tap the '
+      + 'tile and then the gap. These ' + G.length + ' patterns build every '
+      + 'sentence in the unit, and the examples come from the six '
+      + 'articles.</div>'
       + '<div class="row gidx" id="gidx">'
       + G.map(function(x, i){
           return '<button data-g="' + i + '"' + (i === gAt ? ' aria-current="true"' : '')
@@ -1420,10 +1420,10 @@
   DRAW.yomu = function(){
     var p = P();
     $("main").innerHTML =
-        '<div class="rule"><b>Read it</b>Tap any word for its meaning. Tap a '
-      + 'single kana for the chart. Both cost a point, and nothing stops you '
-      + 'using them. The underlined parts are the ones the paper asks you to '
-      + 'translate.</div>'
+        '<div class="rule"><b>Read it</b>Tap any word for its meaning, or a '
+      + 'single kana for the kana chart. Each one costs 1 point, and you can '
+      + 'use as many as you need. The paper asks you to translate the '
+      + 'underlined parts.</div>'
       + '<div class="work"><div class="col">'
       + portrait(p, "wide")
       + '<p class="score" style="margin-bottom:8px">' + esc(p.name_en)
@@ -1463,9 +1463,9 @@
   DRAW.toi = function(){
     var p = P(), qs = p.questions;
     $("main").innerHTML =
-        '<div class="rule"><b>Questions</b>Answer in the language the question '
-      + 'is asked in, the way the paper does. Show the article if you need '
-      + 'it, and that costs a point.</div>'
+        '<div class="rule"><b>Questions</b>Answer each question in the '
+      + 'language it asks you in, the way the paper does. Show the article '
+      + 'if you need it: that costs 2 points.</div>'
       + '<div class="work"><div class="col" id="qs"></div></div>'
       + '<div id="tip"></div>'
       + foot('<span class="score" id="sc"></span>'
@@ -1557,16 +1557,15 @@
     var p = P(), sp = spans(p);
     if (!sp.length){
       $("main").innerHTML = '<div class="rule"><b>Translate</b>The worksheet '
-        + 'does not underline anything in this article, so there is nothing '
-        + 'here to translate. The CAT asks for the Iwasaki passage.</div>'
+        + 'underlines nothing in this article, so there is nothing to '
+        + 'translate here. The CAT asks for the Iwasaki passage.</div>'
         + '<div class="work"></div>' + foot("");
       return;
     }
     $("main").innerHTML =
-        '<div class="rule"><b>Translate</b>These are the parts the paper '
-      + 'underlines. Write your English, then open the words and mark it '
-      + 'yourself. No machine can mark a translation honestly, so this one '
-      + 'does not pretend to.</div>'
+        '<div class="rule"><b>Translate</b>The paper underlines these parts. '
+      + 'Write your English, open the words, then mark it yourself. No app '
+      + 'can mark a translation honestly, so this one does not try.</div>'
       + '<div class="work"><div class="col" id="sp"></div></div>'
       + foot('<button class="btn sm" id="dn">Done</button>');
     $("sp").innerHTML = sp.map(function(t,i){
@@ -1621,10 +1620,10 @@
     var ready = !!S.done["toi:" + p.id];
     $("main").innerHTML =
         '<div class="rule"><b>Read it again</b>' + (ready
-          ? 'Now you know what it says, read it again as fast as you can '
-            + 'still understand it. The line is your own best run. Beat it.'
-          : 'This one is for after the questions. Go and answer them first, '
-            + 'then come back and race yourself.')
+          ? 'Read the article again, as fast as you can still understand '
+            + 'it. The line shows your best run. Beat it.'
+          : 'Answer the questions first, then come back and race '
+            + 'yourself.')
         + '</div>'
       + '<div class="work"><div class="col readwrap" id="rw">'
       + '<div class="pacer" id="pacer" style="display:none;top:0"></div>'
@@ -1788,11 +1787,11 @@
     if (!G.length){ $("main").innerHTML = '<div class="work"></div>'; return; }
     var done13 = G.filter(function(g){ return S.done["rl:" + g.id]; }).length;
     $("main").innerHTML =
-        '<div class="rule"><b>Spin a pattern</b>The wheel gives you one of '
-      + 'the thirteen patterns and one of the six people. Write one sentence '
-      + 'about that person using that pattern. The page checks the pattern '
-      + 'and nothing else: whether what you wrote is TRUE of them is for you '
-      + 'and your teacher.</div>'
+        '<div class="rule"><b>Spin a pattern</b>Spin for a pattern and a '
+      + 'person, then write one sentence about that person using that '
+      + 'pattern.<br>The app checks grammar patterns only. Check the '
+      + 'meaning, vocabulary and accuracy yourself or with your '
+      + 'teacher.</div>'
       + '<div class="work fit"><div class="col">'
       + '<div class="reel" id="reel">'
       + '<div class="rwin"><div class="rstrip"></div><div class="rmark"></div></div>'
@@ -1899,11 +1898,10 @@
     var F = K.frame || [];
     var okCount = F.filter(function(_, i){ return S.done["jb:" + i]; }).length;
     $("main").innerHTML =
-        '<div class="rule"><b>Write your own</b>Twelve sentences, the same '
-      + 'frame the six articles use, about you. The page checks the pattern '
-      + 'only: it can see whether your sentence has the right grammar in it, '
-      + 'and it cannot see whether what you wrote is true or whether the words '
-      + 'are the right words. That part is yours and your teacher&rsquo;s.</div>'
+        '<div class="rule"><b>Write your own</b>Write 12 sentences about '
+      + 'yourself using patterns from the six historical-figure articles.'
+      + '<br>The app checks grammar patterns only. Check the meaning, '
+      + 'vocabulary and accuracy yourself or with your teacher.</div>'
       + '<div class="work"><div class="col" id="fw"></div></div>'
       + '<div id="tip"></div>'
       + foot('<span class="score" id="fsc"><b>' + okCount + '</b> of ' + F.length
@@ -1985,9 +1983,9 @@
       $("tip").innerHTML = '<div class="work fit" style="max-height:38vh">'
         + '<div class="col"><p class="para">' + esc(para) + '</p>'
         + '<p class="hint">' + lines.length + ' of ' + F.length
-        + ' sentences. This is your own writing, exactly as you typed it, with '
-        + 'nothing corrected. Nothing is saved anywhere but this device, so '
-        + 'copy it or take a photograph if you want to keep it.</p>'
+        + ' sentences, exactly as you typed them, uncorrected. This device '
+        + 'is the only place they exist, so copy them or take a photo to '
+        + 'keep them.</p>'
         + '<div class="row"><button class="btn ghost sm" id="fcopy">Copy it</button>'
         + '</div></div></div>';
       $("fcopy").onclick = function(){
@@ -2024,9 +2022,10 @@
                   .replace(RUN,"$1")) : "—") + '</td></tr>';
     }).join("");
     $("main").innerHTML =
-        '<div class="rule"><b>All six</b>The same frame six times over. Once '
-      + 'you can see the slots, a new person is only new facts in slots you '
-      + 'already know. Fill the gaps from the videos as you watch them.</div>'
+        '<div class="rule"><b>All six</b>All six people in one frame. Fill '
+      + 'the gaps from the videos as you watch them. Once you know the '
+      + 'slots, a new person is only new facts in slots you already '
+      + 'know.</div>'
       + '<div class="work"><table class="cmp"><tr>'
       + '<th>だれ</th><th>生まれた年</th><th>今どこ</th>'
       + '<th class="en">What they are</th><th>しょうらい</th></tr>'

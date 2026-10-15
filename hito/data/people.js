@@ -261,7 +261,7 @@ window.HITO_PEOPLE = {
       "step": "sort",
       "title": "い か な",
       "title_en": "い or な",
-      "rule": "An い adjective ends in い and changes its own ending. A な adjective needs な before a noun and does not change. きれい and ゆうめい end in い and are still な adjectives, which is why the kind is worth learning with the word.",
+      "rule": "An い adjective ends in い and changes its own ending. A な adjective takes な before a noun and does not change. Watch out: きれい and ゆうめい end in い but are な adjectives, so learn the kind along with the word.",
       "eg": [
         {
           "ja": "やさしい 人[ひと]",
@@ -277,7 +277,7 @@ window.HITO_PEOPLE = {
       "step": "part",
       "title": "〜が 〜です",
       "title_en": "Part by part",
-      "rule": "To describe one part of a person, name the part with が, then the adjective. The person is still the topic, so は and が appear in the same sentence.",
+      "rule": "Name the part with が, then the adjective. The person stays the topic, so は and が both appear in the sentence.",
       "eg": [
         {
           "ja": "ゆうきさんは かみが 長[なが]いです。",
@@ -297,7 +297,7 @@ window.HITO_PEOPLE = {
       "step": "join",
       "title": "〜くて・〜で",
       "title_en": "Joining two",
-      "rule": "To put two descriptions in one sentence, change the first one. An い adjective drops い and takes くて. A な adjective takes で.",
+      "rule": "Join two descriptions by changing the first one. An い adjective drops い and takes くて. A な adjective takes で.",
       "eg": [
         {
           "ja": "やさしくて おもしろいです。",
@@ -313,27 +313,27 @@ window.HITO_PEOPLE = {
       "step": "who",
       "title": "だれですか",
       "title_en": "Who is it?",
-      "rule": "Read the description and find the person. Every sentence is true of exactly one of them, and everything you are told is something you can see in the picture.",
+      "rule": "Read the description and find the person. Each set of clues fits exactly one of the six, and you can see every clue in the picture.",
       "eg": []
     },
     {
       "step": "spin",
       "title_en": "Spin a word",
-      "rule": "Flick the drum or press the button. It stops on an English meaning: write that word in Japanese. Kana or kanji, either is fine.",
+      "rule": "Flick the drum or press the button, then write the English word it lands on in Japanese. Kana or kanji, either is fine.",
       "eg": []
     },
     {
       "step": "write",
       "title": "かいてみよう",
       "title_en": "Write it",
-      "rule": "Three sentences about the person on screen. No words are given. Use が for a part, and join two descriptions with くて or で at least once. The picture cannot show what someone is like, so that part is written underneath it in English.",
+      "rule": "Write 3 sentences about the person on screen, with no words given. Use が for one part, and join two descriptions with くて or で at least once. The picture cannot show what someone is like, so that is written underneath it in English.",
       "eg": []
     },
     {
       "step": "colour",
       "title": "いろ",
       "title_en": "Colours",
-      "rule": "Some colour words are い adjectives and go straight in front of the thing. The rest are nouns and need の first. There is no rule for telling which is which: it comes with the word, like い and な.",
+      "rule": "Some colours are い adjectives and go straight in front of the thing. The rest are nouns and take の first. No rule tells you which is which, so learn it along with the word.",
       "eg": [
         {
           "ja": "あかい シャツ",
@@ -349,7 +349,7 @@ window.HITO_PEOPLE = {
       "step": "dress",
       "title": "きせかえ",
       "title_en": "Dress them",
-      "rule": "Listen, then put the clothes on the figure and the colour on the clothes. The verb comes from where the thing goes, so the place you drop it is the verb you have chosen. An い colour goes straight in front of the thing; a noun colour needs の. If the voice says nothing about a part of the body, leave it empty.",
+      "rule": "Listen, then drag the clothes onto the figure and a colour onto the clothes. Where you drop a thing chooses the verb. Leave a part of the body empty if the voice says nothing about it.",
       "eg": [
         {
           "ja": "あかい シャツを きています。",
@@ -373,7 +373,7 @@ window.HITO_PEOPLE = {
       "step": "wear",
       "title": "きています",
       "title_en": "Wearing",
-      "rule": "Japanese picks the verb by where on the body the thing goes, not by what it is. All five are in the ています form here, which is what you use for what someone has on right now.",
+      "rule": "Japanese picks the verb by where on the body the thing goes, not by what it is. All five use the ています form, for what someone has on right now.",
       "eg": [
         {
           "ja": "あかい シャツを きています。",

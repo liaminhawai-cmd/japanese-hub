@@ -2243,9 +2243,9 @@
             + esc(ln) + '</div>');
         } else {
           out.push('<div class="mark hm"><b>Cannot check this one</b>'
-            + esc(ln) + ' — this page only knows the hair, the eyes, the '
-            + 'height, the glasses and what they are like. Whether this is '
-            + 'good Japanese is a question for your teacher.</div>');
+            + esc(ln) + '<p>This app knows the hair, eyes, height, glasses '
+            + 'and personality, and nothing else. Ask your teacher whether '
+            + 'this is good Japanese.</p></div>');
         }
       });
       if (!lines.length) out.push('<div class="mark no"><b>Nothing yet</b>'
