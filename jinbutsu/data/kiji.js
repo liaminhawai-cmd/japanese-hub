@@ -139,8 +139,9 @@ window.KIJI = {
       ],
       "art": {
         "file": "iwasaki.webp",
-        "alt": "Iwasaki Yatarō in a dark Meiji-era suit over a kimono, standing on a wharf with a steamship behind him and the three-diamond mark on its funnel.",
-        "ready": false
+        "alt": "Iwasaki Yatarō on the wharf at Nagasaki in a black frock coat over a kimono, a ledger under his arm, a steamship behind him with the red three-diamond Mitsubishi mark on its funnel.",
+        "ready": true,
+        "thumb": "iwasaki-t.webp"
       },
       "first_person": true
     },
@@ -233,8 +234,9 @@ window.KIJI = {
       ],
       "art": {
         "file": "sakamoto.webp",
-        "alt": "Sakamoto Ryōma in a dark hakama with a sword at his hip and Western leather boots, one hand resting on a revolver, a ship's rigging behind him.",
-        "ready": false
+        "alt": "Sakamoto Ryōma on the deck of a ship, in a dark kimono and grey hakama with a sword through his sash, his hair loose, looking away to one side.",
+        "ready": true,
+        "thumb": "sakamoto-t.webp"
       },
       "first_person": true
     },
@@ -356,8 +358,9 @@ window.KIJI = {
       ],
       "art": {
         "file": "musashi.webp",
-        "alt": "Miyamoto Musashi standing with a long sword and a short sword held in two hands, an ink brush and a scroll on the rock beside him.",
-        "ready": false
+        "alt": "Miyamoto Musashi seated on a rock holding a long sword in one hand and a short sword in the other, an ink brush and a rolled scroll on the rock beside him.",
+        "ready": true,
+        "thumb": "musashi-t.webp"
       },
       "first_person": true
     },
@@ -470,8 +473,9 @@ window.KIJI = {
       ],
       "art": {
         "file": "hirooka.webp",
-        "alt": "Hirooka Asako in a Meiji-era kimono at a desk, an abacus and a ledger in front of her and a miner's lamp at her elbow.",
-        "ready": false
+        "alt": "Hirooka Asako at a desk in a navy kimono, writing in a ruled ledger, an abacus in front of her and a brass miner's lamp alight at her elbow.",
+        "ready": true,
+        "thumb": "hirooka-t.webp"
       },
       "first_person": true
     },
@@ -581,8 +585,9 @@ window.KIJI = {
       ],
       "art": {
         "file": "saigo.webp",
-        "alt": "Saigō Takamori in a dark Satsuma uniform with a large dog at his side, the hills of Kagoshima behind him.",
-        "ready": false
+        "alt": "Saigō Takamori in a dark military tunic with his hand on a large Satsuma dog, the hills and bay of Kagoshima behind him.",
+        "ready": true,
+        "thumb": "saigo-t.webp"
       },
       "first_person": true
     },
@@ -685,10 +690,10 @@ window.KIJI = {
       ],
       "art": {
         "file": "led.webp",
-        "alt": "A laboratory bench with a single blue LED lit on a wafer, a white LED lamp glowing beside it, and a notebook of diagrams.",
-        "no_portrait": true,
-        "why": "This article is about an invention, not a self-introduction, and two of its three scientists are living people. The card shows the blue LED rather than their faces.",
-        "ready": false
+        "alt": "Shuji Nakamura in a white laboratory coat, holding up a lit blue LED between his fingers, optical equipment on the bench in front of him. One of the three scientists in this article; Isamu Akasaki and Hiroshi Amano shared the 2014 Nobel Prize with him.",
+        "ready": true,
+        "caption": "Pictured: Shuji Nakamura, one of the three.",
+        "thumb": "led-t.webp"
       },
       "first_person": false
     }

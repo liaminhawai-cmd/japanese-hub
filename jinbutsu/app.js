@@ -1393,9 +1393,19 @@
        with six 404s. The slot stays empty and silent until the picture
        exists. */
     if (!a || !a.file || !a.ready) return "";
+    /* A caption only where the picture needs one. The LED article names
+       three scientists and the picture is of one of them, so the page
+       says which rather than letting one face stand for three. */
+    /* The table gets its own square, cut to the face. Six faces sit at
+       six different heights in six pictures, so one crop rule could not
+       frame them all, and a 54px thumbnail has no business downloading a
+       900px portrait six times over. The squares are 4KB each. */
+    var file = (cls === "thumb" && a.thumb) ? a.thumb : a.file;
     return '<figure class="art ' + (cls || "") + '">'
-      + '<img src="art/' + esc(a.file) + '" alt="' + esc(a.alt || "") + '"'
+      + '<img src="art/' + esc(file) + '" alt="' + esc(a.alt || "") + '"'
       + ' loading="lazy" decoding="async" data-art="' + esc(p.id) + '">'
+      + (a.caption && cls !== "thumb"
+          ? '<figcaption>' + esc(a.caption) + '</figcaption>' : "")
       + '</figure>';
   }
   /* A file that is not there takes its own frame with it. */
