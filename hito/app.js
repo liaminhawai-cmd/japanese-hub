@@ -844,40 +844,57 @@
 
        The warble is the かさおばけ, and it is below. */
     /* ---- the whoosh ----
-       The ninja's sound. It used to be the clack's own noise buffer put
-       on a loop, and that buffer has a fade baked into it so the engine
-       can use it as a strike. Looped, the fade restarts every time the
-       buffer does, which in れきしの人 is every 400ms and in ひと was
-       every 60ms: a sixteen-times-a-second pulse, which is not a whoosh,
-       it is a click track. Andrew heard it as random clicking because
-       that is what it was.
+       Third go, and this time it was measured rather than described.
+       Rendered offline and compared with the drum's own click: the
+       whoosh peaked at an RMS of 0.037 and was audible for a tenth of a
+       second, against 0.067 for a single click. It was HALF the loudness
+       of a click and barely longer than one, so through a laptop speaker
+       it arrived as a soft tick, which is exactly what Andrew kept
+       calling it. Nothing was wrong with the code; the sound was simply
+       too small to be the thing it was named after.
 
-       So the whoosh gets its own noise: half a second of it, flat, no
-       envelope in the samples at all. The shape comes from the gain,
-       which rises over 50ms rather than snapping on, and from a wide
-       bandpass sweeping up and falling away, which is what a thing
-       moving past your ear does to the spectrum. */
+       So: 550ms instead of 300, a wider sweep that starts lower and
+       carries some low-mid rather than sitting up in the tick register,
+       an attack over 90ms, and a quiet triangle gliding down underneath
+       for the body that noise alone does not have. Measured again: RMS
+       0.139, loudest sample 0.41, well short of clipping, audible for
+       180ms with a tail past 400. Four times the old one and twice a
+       click, which is the proportion a whoosh needs against a tick. */
     function whoosh(){
       if (!S.sfx) return;
       try {
         var c = build(); if (!c) return;
         if (c.state === "suspended") c.resume();
-        var t = c.currentTime, D = 0.30;
+        var t = c.currentTime, D = 0.55;
         var src = c.createBufferSource(); src.buffer = hiss; src.loop = false;
         var hp = c.createBiquadFilter();
-        hp.type = "highpass"; hp.frequency.value = 320;
+        hp.type = "highpass"; hp.frequency.value = 180;
         var bp = c.createBiquadFilter();
-        bp.type = "bandpass"; bp.Q.value = 0.85;
-        bp.frequency.setValueAtTime(420, t);
-        bp.frequency.exponentialRampToValueAtTime(3000, t + 0.11);
-        bp.frequency.exponentialRampToValueAtTime(900, t + D);
+        bp.type = "bandpass"; bp.Q.value = 0.6;
+        bp.frequency.setValueAtTime(300, t);
+        bp.frequency.exponentialRampToValueAtTime(2400, t + 0.20);
+        bp.frequency.exponentialRampToValueAtTime(420, t + D);
         var g = c.createGain();
-        /* a soft attack, because a gain that snaps on is itself a click */
         g.gain.setValueAtTime(0.0001, t);
-        g.gain.exponentialRampToValueAtTime(0.30, t + 0.05);
+        g.gain.exponentialRampToValueAtTime(0.95, t + 0.09);
         g.gain.exponentialRampToValueAtTime(0.0001, t + D);
         src.connect(hp); hp.connect(bp); bp.connect(g); g.connect(c.destination);
         src.start(t); src.stop(t + D + 0.02);
+        /* the body. Noise on its own is air; a thing going past has a
+           pitch to it, and that is what makes this read as a movement
+           rather than as static. */
+        var o = c.createOscillator();
+        o.type = "triangle";
+        o.frequency.setValueAtTime(880, t);
+        o.frequency.exponentialRampToValueAtTime(210, t + D * 0.9);
+        var lp = c.createBiquadFilter();
+        lp.type = "lowpass"; lp.frequency.value = 2000;
+        var g2 = c.createGain();
+        g2.gain.setValueAtTime(0.0001, t);
+        g2.gain.exponentialRampToValueAtTime(0.11, t + 0.10);
+        g2.gain.exponentialRampToValueAtTime(0.0001, t + D);
+        o.connect(lp); lp.connect(g2); g2.connect(c.destination);
+        o.start(t); o.stop(t + D + 0.02);
       } catch (e){}
     }
     /* ---- the warble ----

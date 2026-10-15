@@ -136,7 +136,13 @@ window.KIJI = {
           "model": "Cars, ships, aircraft, electronics and heavy machinery.",
           "note": "Not in the article: this one is general knowledge, and the app says so."
         }
-      ]
+      ],
+      "art": {
+        "file": "iwasaki.webp",
+        "alt": "Iwasaki Yatarō in a dark Meiji-era suit over a kimono, standing on a wharf with a steamship behind him and the three-diamond mark on its funnel.",
+        "ready": false
+      },
+      "first_person": true
     },
     {
       "id": "sakamoto",
@@ -224,7 +230,13 @@ window.KIJI = {
             "better"
           ]
         }
-      ]
+      ],
+      "art": {
+        "file": "sakamoto.webp",
+        "alt": "Sakamoto Ryōma in a dark hakama with a sword at his hip and Western leather boots, one hand resting on a revolver, a ship's rigging behind him.",
+        "ready": false
+      },
+      "first_person": true
     },
     {
       "id": "musashi",
@@ -341,7 +353,13 @@ window.KIJI = {
             "か"
           ]
         }
-      ]
+      ],
+      "art": {
+        "file": "musashi.webp",
+        "alt": "Miyamoto Musashi standing with a long sword and a short sword held in two hands, an ink brush and a scroll on the rock beside him.",
+        "ready": false
+      },
+      "first_person": true
     },
     {
       "id": "hirooka",
@@ -449,7 +467,13 @@ window.KIJI = {
             "とも"
           ]
         }
-      ]
+      ],
+      "art": {
+        "file": "hirooka.webp",
+        "alt": "Hirooka Asako in a Meiji-era kimono at a desk, an abacus and a ledger in front of her and a miner's lamp at her elbow.",
+        "ready": false
+      },
+      "first_person": true
     },
     {
       "id": "saigo",
@@ -554,7 +578,13 @@ window.KIJI = {
             "walk"
           ]
         }
-      ]
+      ],
+      "art": {
+        "file": "saigo.webp",
+        "alt": "Saigō Takamori in a dark Satsuma uniform with a large dog at his side, the hills of Kagoshima behind him.",
+        "ready": false
+      },
+      "first_person": true
     },
     {
       "id": "led",
@@ -652,7 +682,15 @@ window.KIJI = {
             "nobel"
           ]
         }
-      ]
+      ],
+      "art": {
+        "file": "led.webp",
+        "alt": "A laboratory bench with a single blue LED lit on a wafer, a white LED lamp glowing beside it, and a notebook of diagrams.",
+        "no_portrait": true,
+        "why": "This article is about an invention, not a self-introduction, and two of its three scientists are living people. The card shows the blue LED rather than their faces.",
+        "ready": false
+      },
+      "first_person": false
     }
   ],
   "vocab": [
@@ -1120,6 +1158,11 @@ window.KIJI = {
             "じゃないです"
           ]
         }
+      ],
+      "need": [
+        [
+          "です"
+        ]
       ]
     },
     {
@@ -1158,6 +1201,15 @@ window.KIJI = {
             "なりました"
           ]
         }
+      ],
+      "need": [
+        [
+          "生まれ",
+          "うまれ"
+        ],
+        [
+          "ました"
+        ]
       ]
     },
     {
@@ -1195,6 +1247,16 @@ window.KIJI = {
             "住[す]みたいです"
           ]
         }
+      ],
+      "need": [
+        [
+          "住ん",
+          "すん"
+        ],
+        [
+          "います",
+          "いました"
+        ]
       ]
     },
     {
@@ -1234,6 +1296,14 @@ window.KIJI = {
             "食[た]べて"
           ]
         }
+      ],
+      "need": [
+        [
+          "た後",
+          "たあと",
+          "だ後",
+          "だあと"
+        ]
       ]
     },
     {
@@ -1273,7 +1343,17 @@ window.KIJI = {
             "いきます"
           ]
         }
-      ]
+      ],
+      "need": [
+        [
+          "たり"
+        ],
+        [
+          "します",
+          "しました"
+        ]
+      ],
+      "re": "たり[^。]*たり"
     },
     {
       "id": "suki",
@@ -1315,6 +1395,15 @@ window.KIJI = {
             "したいです"
           ]
         }
+      ],
+      "need": [
+        [
+          "ことが"
+        ],
+        [
+          "好き",
+          "すき"
+        ]
       ]
     },
     {
@@ -1353,6 +1442,15 @@ window.KIJI = {
             "作[つく]ります"
           ]
         }
+      ],
+      "need": [
+        [
+          "を"
+        ],
+        [
+          "作りました",
+          "つくりました"
+        ]
       ]
     },
     {
@@ -1392,7 +1490,13 @@ window.KIJI = {
             "と"
           ]
         }
-      ]
+      ],
+      "need": [
+        [
+          "しかし"
+        ]
+      ],
+      "re": "。[\\s　]*しかし"
     },
     {
       "id": "shourai",
@@ -1430,6 +1534,14 @@ window.KIJI = {
             "住[す]んでいました"
           ]
         }
+      ],
+      "need": [
+        [
+          "しょうらい"
+        ],
+        [
+          "たいです"
+        ]
       ]
     },
     {
@@ -1472,6 +1584,15 @@ window.KIJI = {
             "行[い]っています"
           ]
         }
+      ],
+      "need": [
+        [
+          "に"
+        ],
+        [
+          "行きたい",
+          "いきたい"
+        ]
       ]
     },
     {
@@ -1515,6 +1636,15 @@ window.KIJI = {
             "います"
           ]
         }
+      ],
+      "need": [
+        [
+          "に"
+        ],
+        [
+          "なりたい",
+          "なりました"
+        ]
       ]
     },
     {
@@ -1555,6 +1685,15 @@ window.KIJI = {
             "行[い]きたい"
           ]
         }
+      ],
+      "need": [
+        [
+          "ことが"
+        ],
+        [
+          "ありません",
+          "あります"
+        ]
       ]
     },
     {
@@ -1593,6 +1732,11 @@ window.KIJI = {
             "おぼえたいです"
           ]
         }
+      ],
+      "need": [
+        [
+          "わすれたい"
+        ]
       ]
     }
   ],

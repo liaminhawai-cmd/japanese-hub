@@ -305,41 +305,188 @@
       for (var j = 0; j < hn; j++) hd[j] = Math.random() * 2 - 1;
       return ctx;
     }
-    /* ---- the whoosh ----
-       The ninja's sound. It used to be the clack's own noise buffer put
-       on a loop, and that buffer has a fade baked into it so the engine
-       can use it as a strike. Looped, the fade restarts every time the
-       buffer does, which in れきしの人 is every 400ms and in ひと was
-       every 60ms: a sixteen-times-a-second pulse, which is not a whoosh,
-       it is a click track. Andrew heard it as random clicking because
-       that is what it was.
+    /* ---- the clack ----
+       One notch going past a pawl. It was a single band of noise at
+       1750Hz, which is a hiss, not a click, and every one of them was
+       identical, which is a machine and not a wheel.
 
-       So the whoosh gets its own noise: half a second of it, flat, no
-       envelope in the samples at all. The shape comes from the gain,
-       which rises over 50ms rather than snapping on, and from a wide
-       bandpass sweeping up and falling away, which is what a thing
-       moving past your ear does to the spectrum. */
+       A real one is two things at once: the strike, which is a very short
+       burst of noise with the low end taken off, and the body, which is
+       the rim ringing for a few hundredths of a second after it. Both are
+       needed. The strike alone is a tick on a watch; the body alone is a
+       marimba.
+
+       Every click is a little different. The pitch moves by up to a tone
+       either way and the level by a fifth, because thirty identical clicks
+       in a row stop sounding like wood and start sounding like a buzzer. */
+    function clack(at, loud){
+      var c = ctx; if (!c) return;
+      /* Andrew could not hear these twice over. The first cause was the
+         rate, and this is the other half: a 16ms click at 2600Hz through
+         a laptop speaker at a third of full scale is not much. Half of
+         full scale, and a clack decays long before the next one is due,
+         so nothing stacks. */
+      var vol = Math.max(0.08, Math.min(0.5, loud));
+      var jit = 0.88 + Math.random() * 0.26;
+
+      var src = c.createBufferSource(); src.buffer = noise;
+      var hp = c.createBiquadFilter();
+      hp.type = "bandpass"; hp.frequency.value = 2600 * jit; hp.Q.value = 2.2;
+      var g1 = c.createGain();
+      g1.gain.setValueAtTime(0.0001, at);
+      g1.gain.exponentialRampToValueAtTime(vol, at + 0.001);
+      g1.gain.exponentialRampToValueAtTime(0.0001, at + 0.016);
+      src.connect(hp); hp.connect(g1); g1.connect(c.destination);
+      src.start(at); src.stop(at + 0.02);
+
+      var o = c.createOscillator();
+      o.type = "triangle";
+      o.frequency.setValueAtTime(1150 * jit, at);
+      o.frequency.exponentialRampToValueAtTime(820 * jit, at + 0.03);
+      var g2 = c.createGain();
+      g2.gain.setValueAtTime(0.0001, at);
+      g2.gain.exponentialRampToValueAtTime(vol * 0.7, at + 0.002);
+      g2.gain.exponentialRampToValueAtTime(0.0001, at + 0.034);
+      o.connect(g2); g2.connect(c.destination);
+      o.start(at); o.stop(at + 0.04);
+    }
+    /* ---- the ratchet ----
+       The first attempt counted the notches a frame had crossed and
+       booked that many clicks, each batch starting at "now" on the audio
+       clock. Every frame therefore started a new batch on top of the one
+       still playing, and at speed the batches overlapped into a mush that
+       did not change as the drum slowed. Which is the whole point of the
+       sound: you should hear it slowing before you see it.
+
+       So there is one cursor on the audio clock and the clicks go on it
+       in order, never on top of each other. The spacing is the time it
+       actually takes a notch to pass the window, H over the speed, which
+       is why the rate falls away exactly as the drum does: at 6000 a
+       second that is a click every eleven milliseconds, at 600 a second
+       one every hundred, and at walking pace they come one at a time.
+
+       The floor is there because a notch every five milliseconds is a
+       buzz rather than a ratchet, and the ceiling because a drum that
+       has all but stopped should fall silent rather than tick once more
+       a second later. */
+    /* ---- how fast the clicks come ----
+       It used to be one click per notch, floored at 62 a second. Two
+       things were wrong with that. 62 a second is above the rate at which
+       an ear stops hearing separate clicks and starts hearing a pitch, so
+       the top of every spin was a buzz. And because the floor was a hard
+       maximum, the rate sat ON it for the first two thirds of the spin and
+       only began to change near the end: the drum visibly slowed for
+       seconds while the sound did not move.
+
+       So the floor is added rather than imposed. The gap is always the
+       time a notch takes to cross the window PLUS a fixed minimum, which
+       means the rate changes the whole way down and never passes about 20
+       a second. From a middling throw it now runs 18, 16, 14, 12, 10, 8,
+       6, 3 clicks a second: you hear it slowing from the first half
+       second, which is the part Andrew asked for and the part that was
+       missing. */
+    var FLOOR = 0.03, CEIL = 0.55, NOTCH = 128, cursor = 0;
+    function ratchet(speed, notch){
+      if (!S.sfx || !(speed > 0)) return;
+      var gap = FLOOR + (notch || NOTCH) / speed;
+      if (gap > CEIL) return;
+      try {
+        var c = build(); if (!c) return;
+        if (c.state === "suspended") c.resume();
+        var t = c.currentTime;
+        if (cursor < t) cursor = t + 0.004;
+        /* quieter when it is flying, fuller as it comes to rest: a wheel
+           is loudest at the end, which is where the ear is anyway */
+        var loud = 0.5 - Math.min(0.22, (speed || 0) / 34000);
+        /* only ever a frame or two ahead, so a drum that stops does not
+           leave a queue of clicks still to play */
+        for (var guard = 0; cursor < t + 0.05 && guard < 6; guard++){
+          clack(cursor, loud);
+          cursor += gap;
+        }
+      } catch (e){}
+    }
+    /* the one at the end, when it drops into the slot */
+    function clunk(){
+      if (!S.sfx) return;
+      try {
+        var c = build(); if (!c) return;
+        if (c.state === "suspended") c.resume();
+        var t = Math.max(c.currentTime + 0.004, cursor);
+        clack(t, 0.4);
+        cursor = t + 0.02;
+      } catch (e){}
+    }
+    /* Built inside the press that starts the spin, not inside the frame
+       loop that follows it: a browser is readier to start an audio engine
+       during a gesture than a tenth of a second afterwards. */
+    function wakeAudio(){
+      try { var c = build(); if (c && c.state === "suspended") c.resume(); }
+      catch (e){}
+    }
+    /* ---- the whoosh and the warble ----
+       Both synthesised rather than fetched: the page has to work on a
+       tram, and two more files to download for two sound effects is not
+       a trade worth making.
+
+       The whoosh is noise through a bandpass whose centre frequency
+       sweeps up and then falls away, which is what a thing moving past
+       your ear actually does to the spectrum. Short, 220ms, because a
+       ninja that takes a second is not a ninja.
+
+       The warble is the かさおばけ, and it is below. */
+    /* ---- the whoosh ----
+       Third go, and this time it was measured rather than described.
+       Rendered offline and compared with the drum's own click: the
+       whoosh peaked at an RMS of 0.037 and was audible for a tenth of a
+       second, against 0.067 for a single click. It was HALF the loudness
+       of a click and barely longer than one, so through a laptop speaker
+       it arrived as a soft tick, which is exactly what Andrew kept
+       calling it. Nothing was wrong with the code; the sound was simply
+       too small to be the thing it was named after.
+
+       So: 550ms instead of 300, a wider sweep that starts lower and
+       carries some low-mid rather than sitting up in the tick register,
+       an attack over 90ms, and a quiet triangle gliding down underneath
+       for the body that noise alone does not have. Measured again: RMS
+       0.139, loudest sample 0.41, well short of clipping, audible for
+       180ms with a tail past 400. Four times the old one and twice a
+       click, which is the proportion a whoosh needs against a tick. */
     function whoosh(){
       if (!S.sfx) return;
       try {
         var c = build(); if (!c) return;
         if (c.state === "suspended") c.resume();
-        var t = c.currentTime, D = 0.30;
+        var t = c.currentTime, D = 0.55;
         var src = c.createBufferSource(); src.buffer = hiss; src.loop = false;
         var hp = c.createBiquadFilter();
-        hp.type = "highpass"; hp.frequency.value = 320;
+        hp.type = "highpass"; hp.frequency.value = 180;
         var bp = c.createBiquadFilter();
-        bp.type = "bandpass"; bp.Q.value = 0.85;
-        bp.frequency.setValueAtTime(420, t);
-        bp.frequency.exponentialRampToValueAtTime(3000, t + 0.11);
-        bp.frequency.exponentialRampToValueAtTime(900, t + D);
+        bp.type = "bandpass"; bp.Q.value = 0.6;
+        bp.frequency.setValueAtTime(300, t);
+        bp.frequency.exponentialRampToValueAtTime(2400, t + 0.20);
+        bp.frequency.exponentialRampToValueAtTime(420, t + D);
         var g = c.createGain();
-        /* a soft attack, because a gain that snaps on is itself a click */
         g.gain.setValueAtTime(0.0001, t);
-        g.gain.exponentialRampToValueAtTime(0.30, t + 0.05);
+        g.gain.exponentialRampToValueAtTime(0.95, t + 0.09);
         g.gain.exponentialRampToValueAtTime(0.0001, t + D);
         src.connect(hp); hp.connect(bp); bp.connect(g); g.connect(c.destination);
         src.start(t); src.stop(t + D + 0.02);
+        /* the body. Noise on its own is air; a thing going past has a
+           pitch to it, and that is what makes this read as a movement
+           rather than as static. */
+        var o = c.createOscillator();
+        o.type = "triangle";
+        o.frequency.setValueAtTime(880, t);
+        o.frequency.exponentialRampToValueAtTime(210, t + D * 0.9);
+        var lp = c.createBiquadFilter();
+        lp.type = "lowpass"; lp.frequency.value = 2000;
+        var g2 = c.createGain();
+        g2.gain.setValueAtTime(0.0001, t);
+        g2.gain.exponentialRampToValueAtTime(0.11, t + 0.10);
+        g2.gain.exponentialRampToValueAtTime(0.0001, t + D);
+        o.connect(lp); lp.connect(g2); g2.connect(c.destination);
+        o.start(t); o.stop(t + D + 0.02);
       } catch (e){}
     }
     function warble(){
@@ -370,7 +517,8 @@
         lfo.start(t); lfo.stop(t + D + 0.05);
       } catch (e){}
     }
-    return { whoosh: whoosh, warble: warble };
+    return { whoosh: whoosh, warble: warble,
+             ratchet: ratchet, clunk: clunk, wake: wakeAudio };
   })();
 
   /* ---- the score ----
@@ -463,6 +611,246 @@
      the last three are about the unit and stand on their own. Grammar
      sat second, in the middle of the person's own sequence, which read
      as though it belonged to that person. It does not. */
+  var REEL = (function(){
+    var H = 64, raf = 0;
+    function cancel(){ if (raf) cancelAnimationFrame(raf); raf = 0; }
+
+    function mount(box, items, onLand){
+      var L = items.length, SPAN = L * H;
+      var win = box.querySelector(".rwin"), strip = box.querySelector(".rstrip");
+      var three = "";
+      for (var c = 0; c < 3; c++){
+        three += items.map(function(it){
+          return '<div class="ritem"><b>' + it.html + '</b>'
+               + (it.sub ? '<i>' + it.sub + '</i>' : '') + '</div>';
+        }).join("");
+      }
+      strip.innerHTML = three;
+
+      /* How long the drum runs is this pair of numbers and nothing else.
+         It used to lose speed at 2.4 a second with 90 of friction on top,
+         which brought even the hardest flick to rest in about 1.3 seconds:
+         a flick, not a spin. At 0.8 and 45 the same throw runs for three
+         to four seconds, which is what a wheel does. */
+      /* ---- how it winds down ----
+         0.8 and 45 threw away 56% of the speed in the first second and
+         crawled through the rest, which is an air brake and not a wheel.
+         A heavy thing that is spinning loses speed at close to a steady
+         rate, so most of the friction here is the constant and only a
+         quarter of it rises with the speed. From a middling throw the
+         drum now reads 6000, 4050, 3243, 2532, 1904, 1350, 862, 431 at
+         each half second: an even wind-down you can watch, instead of a
+         lurch and a long crawl. */
+      var SLOW = 0.25, DRAG = 700, CATCH = 300, K = 150, C = 16;
+      var pos = 0, v = 0, target = null, last = 0;
+      var spinning = false;
+
+      function wrap(x){ return ((x % SPAN) + SPAN) % SPAN; }
+      function paint(){
+        strip.style.transform =
+          "translate3d(0," + (H - SPAN - wrap(pos)).toFixed(2) + "px,0)";
+      }
+      function at(){ return Math.round(wrap(pos) / H) % L; }
+      /* The sound is the speed. The drum hands over the speed and how far
+         apart the notches are, and CLICK works out the rest: one click per
+         two items, because a notch per item at six turns a second is 230
+         clicks a second and the ear hears a tone, not a wheel. */
+      function ticks(speed){
+        if (!(speed > 1)) return;
+        SFX.ratchet(speed, 2 * H);
+      }
+      function done(){
+        SFX.clunk();
+        spinning = false;
+        box.classList.remove("spinning");
+        if (onLand) onLand(items[at()], at());
+      }
+      /* ---- a fixed step ----
+         The physics used to advance by however long the last frame took,
+         which is the ordinary way to animate and the wrong way to do this.
+         The speed that lands on a given slot is worked out by running the
+         same sums forward at a sixtieth of a second a step; if the drum
+         itself then advances in steps of whatever the browser gave it,
+         1/60 here and 1/120 on a tablet and 1/40 under load, it travels a
+         slightly different distance and stops a slot or two from where it
+         was sent. Nothing looked wrong, which is the worst kind of wrong:
+         the drum simply landed on a different topic from the one the deck
+         had dealt, and the deck then dealt that topic again.
+
+         So time is accumulated and spent in whole steps of a sixtieth,
+         and what is left over waits for the next frame. The drum now lands
+         exactly where it was thrown, on any screen, under any load. The
+         guard stops a tab that has been asleep for a minute from
+         fast-forwarding through a thousand steps when it wakes. */
+      var STEP = 1 / 60, acc = 0;
+      function step(dt){
+        if (target === null){
+          var sgn = v < 0 ? -1 : 1;
+          v -= (SLOW * v + DRAG * sgn) * dt;
+          if (v * sgn < 0) v = 0;
+          pos += v * dt;
+          if (Math.abs(v) < CATCH) target = Math.round(pos / H) * H;
+        } else {
+          v += (-K * (pos - target) - C * v) * dt;
+          pos += v * dt;
+        }
+      }
+      function frame(now){
+        acc += last ? Math.min(0.25, (now - last) / 1000) : STEP;
+        last = now;
+        for (var guard = 0; acc >= STEP && guard < 30; guard++){
+          step(STEP); acc -= STEP;
+          if (target !== null && Math.abs(pos - target) < 0.4 && Math.abs(v) < 8){
+            pos = target; v = 0; acc = 0;
+            paint(); done(); return;
+          }
+        }
+        paint(); ticks(Math.abs(v));
+        raf = requestAnimationFrame(frame);
+      }
+      function launch(v0){
+        cancel();
+        target = null; v = v0; last = 0; acc = 0;
+        spinning = true;
+        box.classList.add("spinning");
+        /* ---- the drum spins for everybody ----
+           This used to hand a device with reduced motion a three slot
+           glide lasting under half a second. That one branch was why
+           Andrew could not see a spin or hear the clicks however many
+           times the physics and the sound were fixed: the branch never
+           ran either of them. On a school laptop with the setting on
+           system wide, the whole class gets the same dead control.
+
+           Reduced motion is about movement a person did not ask for and
+           cannot predict. A drum is a control whose entire function is
+           to spin, and it moves because the student pressed it. So the
+           spin stays, for everybody, with its clicks. The decoration
+           that setting is actually for — the ninja and the かさおばけ
+           crossing the screen — is where this app answers it, by fading
+           them in place rather than flying them past. */
+        raf = requestAnimationFrame(frame);
+      }
+
+      /* A flick, for a finger. The velocity is taken from the last few
+         milliseconds rather than the whole gesture, so a slow drag that
+         ends in a snap throws the drum and a slow drag that ends still
+         does not. */
+      var grab = null;
+      win.addEventListener("pointerdown", function(ev){
+        cancel(); spinning = false; box.classList.remove("spinning");
+        v = 0; target = null;
+        grab = { y:ev.clientY, pos:pos, t:performance.now(),
+                 ly:ev.clientY, lt:performance.now(), v:0, moved:0 };
+        try { win.setPointerCapture(ev.pointerId); } catch (e){}
+      });
+      win.addEventListener("pointermove", function(ev){
+        if (!grab) return;
+        ev.preventDefault();
+        pos = grab.pos - (ev.clientY - grab.y);
+        grab.moved += Math.abs(ev.clientY - grab.ly);
+        var now = performance.now(), dt = now - grab.lt;
+        if (dt > 4){
+          grab.v = -(ev.clientY - grab.ly) / dt * 1000;
+          grab.ly = ev.clientY; grab.lt = now;
+          grab.mouse = ev.pointerType === "mouse";
+        }
+        paint(); ticks(Math.abs(grab.v));
+      });
+      function release(){
+        if (!grab) return;
+        /* A hand can flick; a mouse cannot. The same gesture drags a
+           cursor at perhaps a third the speed of a thumb, so a mouse
+           throw is scaled up to land in the same range. The button on the
+           rim is there because even scaled, dragging a mouse is a poor way
+           to throw anything. */
+        var fling = grab.v * (grab.mouse ? 2.2 : 1);
+        var stale = performance.now() - grab.lt > 130;
+        grab = null;
+        if (stale || Math.abs(fling) < 130){ launch(0); return; }
+        launch(Math.max(-7000, Math.min(7000, fling)));
+      }
+      win.addEventListener("pointerup", release);
+      win.addEventListener("pointercancel", release);
+
+      /* ---- which word it stops on ----
+         The button used to throw a random amount of energy from wherever
+         the drum happened to be sitting, which is not the same thing as
+         picking a word. The distance a throw covers barely varied, so one
+         spin landed a fairly predictable way along from the last, a word
+         could come up twice running, and a word could sit there all lesson
+         and never come up at all.
+
+         Two things fix that. The order of the drum is rebuilt at the start
+         of every button spin, while it is already moving and nobody can
+         read it. And the caller names the word it wants, which it takes
+         from a deck, so every word comes up before any comes up twice.
+
+         The throw is then solved rather than guessed: run the same physics
+         forward for a few hundred candidate speeds, keep the ones that stop
+         on the wanted word after three to four and a half seconds, and pick
+         one of those at random. The drum is not steered or stopped early;
+         it is thrown at exactly the speed that lands it there, the way a
+         croupier learns to. */
+      function reorder(){
+        shuffle(items);
+        var three = "";
+        for (var c = 0; c < 3; c++){
+          three += items.map(function(it){
+            return '<div class="ritem"><b>' + it.html + '</b>'
+                 + (it.sub ? '<i>' + it.sub + '</i>' : '') + '</div>';
+          }).join("");
+        }
+        strip.innerHTML = three;
+        paint();
+      }
+      /* the same integration as frame(), run forward with no drawing */
+      function dryRun(v0){
+        var p = 0, u = v0, t = 0, dt = 1 / 60;
+        while (u > CATCH && t < 12){
+          u -= (SLOW * u + DRAG) * dt;
+          if (u < 0) u = 0;
+          p += u * dt;
+          t += dt;
+        }
+        return { slot: Math.round(p / H), secs: t + 0.3 };   /* 0.3 to settle */
+      }
+      /* The window the throw has to land in. Wide, because the speeds that
+         stop on a given word come in clusters, one per extra turn of the
+         drum: a narrow window leaves two or three of them and every spin
+         takes the same time as the last. */
+      var MINS = 2.8, MAXS = 5.0;
+      function throwTo(slot){
+        var from = Math.round(pos / H), want = ((slot % L) + L) % L, hits = [];
+        /* Gentler friction means a four second spin starts slower, so the
+           search starts lower, and in finer steps, because the speeds that
+           stop on one word are rarer when fewer of them are in range. */
+        for (var v0 = 1800; v0 <= 15000; v0 += 10){
+          var r = dryRun(v0);
+          if (r.secs < MINS || r.secs > MAXS) continue;
+          if ((((from + r.slot) % L) + L) % L === want) hits.push(v0);
+        }
+        if (!hits.length) return launch(3400 + Math.random() * 3000);
+        launch(hits[Math.floor(Math.random() * hits.length)]);
+      }
+
+      paint();
+      return {
+        /* A free spin, for when nothing has asked for a particular word. */
+        spin: function(){ reorder(); launch(3200 + Math.random() * 3600); },
+        /* Spin and land on this one. */
+        spinTo: function(id){
+          reorder();
+          var i = 0;
+          items.forEach(function(it, n){ if (it.id === id) i = n; });
+          throwTo(i);
+        },
+        at: at,
+        spinning: function(){ return spinning; }
+      };
+    }
+    return { mount: mount, cancel: cancel };
+  })();
+
   var STEPS = [
     { id:"kotoba", ja:"ことば",   en:"The words" },
     { id:"yomu",   ja:"よむ",     en:"Read it" },
@@ -470,6 +858,7 @@
     { id:"yaku",   ja:"やくす",   en:"Translate" },
     { id:"hayaku", ja:"はやく",   en:"Read it again" },
     { id:"bunpou", ja:"ぶんぽう", en:"Grammar", whole:true },
+    { id:"roulette", ja:"ルーレット", en:"Spin a pattern", whole:true },
     { id:"jibun",  ja:"じぶんで", en:"Write your own", whole:true },
     { id:"kuraberu", ja:"くらべる", en:"All six", whole:true }
   ];
@@ -984,6 +1373,40 @@
       };
     });
   }
+  /* ---- the portrait ----
+     Andrew's idea, and a good one: six names on a page are six names,
+     and a face makes them six people. The files live in art/ and each
+     card in kiji.js names its own, so the page works with none of them,
+     some of them, or all six. A file that is not there hides its own
+     frame rather than leaving a broken-image icon on a classroom
+     screen, which is the one way a missing picture could make the page
+     look broken rather than plain.
+
+     Not on だれですか, deliberately. That rung asks a student to tell six
+     people apart by reading Japanese, and a portrait beside the clues
+     turns a reading task into a picture-matching one. */
+  function portrait(p, cls){
+    var a = p.art;
+    /* ready is false until the file is actually in art/. Naming a file
+       that is not there would have every student's browser ask for six
+       pictures that do not exist, on every page view, and answer itself
+       with six 404s. The slot stays empty and silent until the picture
+       exists. */
+    if (!a || !a.file || !a.ready) return "";
+    return '<figure class="art ' + (cls || "") + '">'
+      + '<img src="art/' + esc(a.file) + '" alt="' + esc(a.alt || "") + '"'
+      + ' loading="lazy" decoding="async" data-art="' + esc(p.id) + '">'
+      + '</figure>';
+  }
+  /* A file that is not there takes its own frame with it. */
+  document.addEventListener("error", function(ev){
+    var t = ev.target;
+    if (t && t.tagName === "IMG" && t.hasAttribute("data-art")){
+      var f = t.closest("figure");
+      if (f) f.remove();
+    }
+  }, true);
+
   DRAW.yomu = function(){
     var p = P();
     $("main").innerHTML =
@@ -992,6 +1415,7 @@
       + 'using them. The underlined parts are the ones the paper asks you to '
       + 'translate.</div>'
       + '<div class="work"><div class="col">'
+      + portrait(p, "wide")
       + '<p class="score" style="margin-bottom:8px">' + esc(p.name_en)
       + ' · <span class="en">' + esc(p.what_en) + '</span></p>'
       + article(p) + '</div></div>'
@@ -1290,6 +1714,177 @@
     });
     return missing;
   }
+  /* ---- ルーレット ----
+     Andrew asked for a wheel here, and the thing this page is missing is
+     not more vocabulary practice: ことば already spins words in its かく
+     mode. What ぶんぽう cannot do is ask a student to PRODUCE a pattern.
+     Choosing the right tile out of three is recognition, and a student
+     can clear every pattern in the unit without once writing one.
+
+     So the drum carries the thirteen patterns and the page names a
+     person, and the student writes one sentence about that person using
+     that pattern. Two things come off decks rather than at random: the
+     pattern, so all thirteen come up before any comes up twice, and the
+     person, so nobody writes six sentences about さかもと.
+
+     What the marker checks is the SHAPE AND NOTHING ELSE, the same rule
+     じぶんで runs on, and it says so every time. It can see whether a
+     sentence has に and 生まれました in it. It cannot see whether the year
+     is the right year, and no checker could, so it does not pretend to. */
+  function gmiss(g, got){
+    var missing = fmiss(g, got);
+    if (missing === null || missing.length) return missing;
+    /* A couple of the patterns are about a shape rather than a word:
+       〜たり〜たり needs two of them, and しかし needs a sentence in front
+       of it. Those carry a regular expression as well as a word list. */
+    if (g.re && !new RegExp(g.re).test(plain(got))) return [g.pat];
+    return [];
+  }
+  /* ---- a deck, so nothing comes up in the order it is written down ----
+     Lifted from ひと. The wheel deals the pattern it is about to be
+     thrown at, and a second deck deals the person, so all thirteen
+     patterns and all six people come up before any of them comes up
+     twice. */
+  var DECKS = {};
+  function deck(key, n){
+    var d = DECKS[key];
+    if (!d || d.n !== n){
+      var order = [];
+      for (var i = 0; i < n; i++) order.push(i);
+      d = DECKS[key] = { n:n, order:shuffle(order), at:0, right:{} };
+    }
+    return d;
+  }
+  function dealt(key, n){ return deck(key, n).order[deck(key, n).at]; }
+  function advance(key, n){
+    var d = deck(key, n);
+    d.at++;
+    if (d.at >= d.n){
+      var last = d.order[d.n - 1], tries = 0;
+      do { d.order = shuffle(d.order); tries++; }
+      while (d.n > 1 && d.order[0] === last && tries < 20);
+      d.at = 0;
+    }
+  }
+
+  var spinR = null, spunG = null;
+  DRAW.roulette = function(){
+    var G = K.grammar || [];
+    /* Five of the six articles are first-person じこしょうかい; the LED one
+       is third-person and about an invention. "Write about the inventors
+       of the blue LED using 〜に生まれました" is not a sentence anybody can
+       write, so the wheel's people are the five who introduce themselves. */
+    var PEOPLE = (K.people || []).filter(function(x){ return x.first_person; });
+    if (!G.length){ $("main").innerHTML = '<div class="work"></div>'; return; }
+    var done13 = G.filter(function(g){ return S.done["rl:" + g.id]; }).length;
+    $("main").innerHTML =
+        '<div class="rule"><b>Spin a pattern</b>The wheel gives you one of '
+      + 'the thirteen patterns and one of the six people. Write one sentence '
+      + 'about that person using that pattern. The page checks the pattern '
+      + 'and nothing else: whether what you wrote is TRUE of them is for you '
+      + 'and your teacher.</div>'
+      + '<div class="work fit"><div class="col">'
+      + '<div class="reel" id="reel">'
+      + '<div class="rwin"><div class="rstrip"></div><div class="rmark"></div></div>'
+      + '<button class="rspin" id="rgo" aria-label="Spin the wheel">'
+      + '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none"'
+      + ' stroke="currentColor" stroke-width="2" stroke-linecap="round">'
+      + '<path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 3v4h-4"/>'
+      + '</svg></button></div>'
+      + '<div id="ask"></div></div></div>'
+      + '<div id="rfb" class="fbslot"></div>'
+      + foot('<span class="score"><b>' + done13 + '</b> of ' + G.length
+          + ' written</span>'
+        + '<span id="rtip" class="hint">Flick the drum, or press the button.</span>');
+
+    spinR = REEL.mount($("reel"), G.map(function(g){
+      return { id: g.id, html: ruby(g.pat), sub: esc(g.title_en) };
+    }), function(it){ landed(it.id); });
+
+    function clearAsk(){
+      $("rfb").innerHTML = ""; $("ask").innerHTML = "";
+      $("rtip").textContent = "Spinning…";
+    }
+    $("rgo").onclick = function(){
+      SFX.wake();                       /* the engine starts inside the press */
+      clearAsk();
+      spinR.spinTo(G[dealt("rl", G.length)].id);
+    };
+    $("reel").querySelector(".rwin").addEventListener("pointerdown", clearAsk);
+
+    function landed(id){
+      var g = null;
+      G.forEach(function(x){ if (x.id === id) g = x; });
+      if (!g) return;
+      spunG = g;
+      /* The deck moves on only when the drum stopped where it was sent: a
+         student who throws it by hand lands where the physics put them. */
+      if (G[dealt("rl", G.length)] === g) advance("rl", G.length);
+      var who2 = PEOPLE[dealt("rlp", PEOPLE.length)];
+      advance("rlp", PEOPLE.length);
+      $("rtip").textContent = "Write one sentence.";
+      $("ask").setAttribute("data-pat", g.id);
+      $("ask").setAttribute("data-who", who2.id);
+      $("ask").innerHTML =
+          '<div class="mark yes"><b>the shape</b><span class="jp">'
+        + ruby(g.form) + '</span></div>'
+        + '<p class="ask-en">Write about <b>' + esc(plain(who2.name_ja))
+        + '</b> using <span class="jp">' + ruby(g.pat) + '</span></p>'
+        + '<div class="row"><input id="rin" type="text" autocomplete="off"'
+        + ' autocapitalize="off" spellcheck="false" lang="ja" class="ans"'
+        + ' aria-label="Your sentence"></div>'
+        + '<div class="row" style="margin-top:7px">'
+        + '<button class="btn sm" id="rchk">Check</button>'
+        + '<button class="btn ghost sm" id="reg">Show an example</button></div>';
+      $("rin").focus();
+      $("rin").onkeydown = function(ev){ if (ev.key === "Enter") check(); };
+      $("rchk").onclick = check;
+      $("reg").onclick = function(){
+        spend(1, "example shown");
+        var e = (g.egs || [])[0] || { ja:"", en:"" };
+        $("rfb").innerHTML = '<div class="mark hm"><b>one from the articles</b>'
+          + '<span class="jp">' + ruby(e.ja) + '</span> ' + saybtn(e.ja)
+          + '<p>' + esc(e.en) + '</p></div>';
+        $("reg").disabled = true;
+        wireSay();
+      };
+
+      function check(){
+        var got = ($("rin").value || "");
+        var missing = gmiss(g, got);
+        if (missing === null){
+          $("rfb").innerHTML = '<div class="mark hm"><b>Nothing there yet</b>'
+            + 'Write the sentence first.</div>';
+          return;
+        }
+        if (!missing.length){
+          if (!S.done["rl:" + g.id]){ S.done["rl:" + g.id] = 1; award(3); save(); }
+          ninja($("rfb"));
+          $("rfb").innerHTML = '<div class="mark yes"><b>The pattern is there</b>'
+            + '<span class="jp">' + esc(got) + '</span>'
+            + '<p>That is the grammar the wheel asked for. Whether it is true '
+            + 'of ' + esc(plain(who2.name_ja)) + ', and whether the words are '
+            + 'the right words, this page cannot tell you.</p></div>';
+          var n = G.filter(function(x){ return S.done["rl:" + x.id]; }).length;
+          var sc = $("main").querySelector(".score b");
+          if (sc) sc.textContent = n;
+          if (n === G.length && !S.done["roulette"]){
+            S.done["roulette"] = 1; award(4); save(); paintSteps();
+          }
+        } else {
+          yokai($("rfb"));
+          $("rfb").innerHTML = '<div class="mark no"><b>Not yet</b>'
+            + 'There is no <span class="jp">' + esc(plain(missing[0]))
+            + '</span> in your sentence'
+            + (missing.length > 1 ? ', and ' + (missing.length - 1) + ' other part'
+                + (missing.length > 2 ? 's are' : ' is') + ' missing too' : '')
+            + '. The shape is <span class="jp">' + esc(plain(g.form))
+            + '</span>.</div>';
+        }
+      }
+    }
+  };
+
   DRAW.jibun = function(){
     var F = K.frame || [];
     var okCount = F.filter(function(_, i){ return S.done["jb:" + i]; }).length;
@@ -1408,7 +2003,7 @@
     var rows = K.people.map(function(p){
       var whole = p.paras.join("");
       function grab(re){ var m = re.exec(whole); return m ? m[1] : "—"; }
-      return '<tr><td class="jp">' + ruby(p.name_ja) + '<br>'
+      return '<tr><td class="jp">' + portrait(p, "thumb") + ruby(p.name_ja) + '<br>'
         + '<span class="en" style="font-size:12px;color:var(--muted)">'
         + esc(p.name_en) + '</span></td>'
         + '<td>' + (p.born || "—") + '</td>'
