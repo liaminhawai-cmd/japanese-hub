@@ -199,15 +199,20 @@
 
      They are drawn here rather than fetched, like everything else in this
      suite: two more files to download for two bits of fun is not a trade
-     worth making on a school connection. Both are off in one press, both
-     respect a device that has asked for less movement, and neither
-     carries any information the marking has not already given, so a
-     student who turns them off loses nothing but the joke. */
+     worth making on a school connection. Both are off in one press, and
+     neither carries any information the marking has not already given,
+     so a student who turns them off loses nothing but the joke.
+
+     A device asking for less movement gets them faded in place rather
+     than crossing the screen. It used to get nothing at all, which is
+     how a feature Andrew asked for three times stayed invisible on the
+     machine he was asking from. */
   var sfxLast = 0;
   function creature(kind, near, build){
-    try {
-      if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    } catch (e){}
+    /* No reduced-motion check here any more: it returned before either
+       creature was drawn, so a device with that setting on got the sound
+       and nothing else. The stylesheet answers the setting instead, by
+       fading them in place rather than flying them past. */
     var now = Date.now();
     if (now - sfxLast < 420) return;      /* no pile-ups on a fast run */
     sfxLast = now;

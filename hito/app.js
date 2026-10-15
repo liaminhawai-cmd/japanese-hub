@@ -447,10 +447,6 @@
      stay horizontal and full size. */
   var REEL = (function(){
     var H = 64, raf = 0;
-    function reduced(){
-      try { return matchMedia("(prefers-reduced-motion: reduce)").matches; }
-      catch (e){ return false; }
-    }
     function cancel(){ if (raf) cancelAnimationFrame(raf); raf = 0; }
 
     function mount(box, items, onLand){
@@ -551,22 +547,21 @@
         target = null; v = v0; last = 0; acc = 0;
         spinning = true;
         box.classList.add("spinning");
-        /* A device asking for reduced motion gets a short plain glide
-           rather than a jump: landing with no movement at all reads as
-           broken, and three slots of travel is not what that setting is
-           protecting anybody from. */
-        if (reduced()){
-          var from = pos, to = Math.round((pos + 3 * H) / H) * H, t0 = 0;
-          (function ease(now){
-            if (!t0) t0 = now;
-            var k = Math.min(1, (now - t0) / 480);
-            pos = from + (to - from) * (1 - Math.pow(1 - k, 3));
-            paint();
-            if (k < 1) raf = requestAnimationFrame(ease);
-            else { pos = to; paint(); done(); }
-          })(performance.now());
-          return;
-        }
+        /* ---- the drum spins for everybody ----
+           This used to hand a device with reduced motion a three slot
+           glide lasting under half a second. That one branch was why
+           Andrew could not see a spin or hear the clicks however many
+           times the physics and the sound were fixed: the branch never
+           ran either of them. On a school laptop with the setting on
+           system wide, the whole class gets the same dead control.
+
+           Reduced motion is about movement a person did not ask for and
+           cannot predict. A drum is a control whose entire function is
+           to spin, and it moves because the student pressed it. So the
+           spin stays, for everybody, with its clicks. The decoration
+           that setting is actually for — the ninja and the zombie
+           crossing the screen — is where this app answers it, by fading
+           them in place rather than flying them past. */
         raf = requestAnimationFrame(frame);
       }
 
@@ -719,7 +714,12 @@
        in a row stop sounding like wood and start sounding like a buzzer. */
     function clack(at, loud){
       var c = ctx; if (!c) return;
-      var vol = Math.max(0.05, Math.min(0.34, loud));
+      /* Andrew could not hear these twice over. The first cause was the
+         rate, and this is the other half: a 16ms click at 2600Hz through
+         a laptop speaker at a third of full scale is not much. Half of
+         full scale, and a clack decays long before the next one is due,
+         so nothing stacks. */
+      var vol = Math.max(0.08, Math.min(0.5, loud));
       var jit = 0.88 + Math.random() * 0.26;
 
       var src = c.createBufferSource(); src.buffer = noise;
@@ -790,7 +790,7 @@
         if (cursor < t) cursor = t + 0.004;
         /* quieter when it is flying, fuller as it comes to rest: a wheel
            is loudest at the end, which is where the ear is anyway */
-        var loud = 0.34 - Math.min(0.19, (speed || 0) / 34000);
+        var loud = 0.5 - Math.min(0.22, (speed || 0) / 34000);
         /* only ever a frame or two ahead, so a drum that stops does not
            leave a queue of clicks still to play */
         for (var guard = 0; cursor < t + 0.05 && guard < 6; guard++){
@@ -904,6 +904,11 @@
     for (var i = 0; i < old.length; i++) old[i].remove();
   }
 
+  /* Neither creature checks for reduced motion any more. It used to
+     return before either was drawn, which is why Andrew never saw one:
+     a device with that setting on got the sound and nothing else. The
+     setting is answered in the stylesheet instead, where the pair fade
+     in place rather than crossing the screen. */
   /* ---- the ninja ----
      The zombie needed an opposite. A ninja crosses rather than rises,
      and is gone in half the time the zombie takes: right is
@@ -916,9 +921,6 @@
   var nLast = 0;
   function ninja(near){
     CLICK.whoosh();
-    try {
-      if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    } catch (e){}
     var now = Date.now();
     if (now - nLast < 420) return;
     nLast = now;
@@ -969,9 +971,6 @@
   var zLast = 0;
   function zombie(near){
     CLICK.groan();
-    try {
-      if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    } catch (e){}
     var now = Date.now();
     if (now - zLast < 900) return;
     zLast = now;

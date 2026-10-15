@@ -513,36 +513,6 @@
     .ja{font-size:18px} body{font-size:16.5px}
     .bar{gap:7px;padding-left:10px;padding-right:10px}
   }
-  /* ---- the ninja and the zombie ----
-     ひと and れきしの人 have had these for a while; the drum came across
-     from this app and the creatures never went back the other way, which
-     is what Andrew noticed. Fixed, so they drift over whatever is on
-     screen, and pointer-events none so neither can ever swallow a tap
-     meant for the feedback underneath.
-
-     The ninja crosses and is gone in 0.7s and the zombie takes 1.6s to
-     rise: being right should be acknowledged and then got out of the way
-     of, because it is the thing you want to be unremarkable and
-     repeatable. */
-  .zomb,.ninj{position:fixed;z-index:60;pointer-events:none}
-  .zomb{transform:translate(-50%,0);animation:zrise 1.6s ease-out forwards}
-  .ninj{transform:translate(-50%,-50%);animation:ndash .7s cubic-bezier(.2,.8,.3,1) forwards}
-  .ninj svg{display:block;filter:drop-shadow(0 2px 5px rgba(20,25,32,.3))}
-  @keyframes ndash{
-    0%{opacity:0;transform:translate(-190%,-50%) scale(.9)}
-    22%{opacity:1}
-    70%{opacity:1;transform:translate(-20%,-54%) scale(1)}
-    100%{opacity:0;transform:translate(120%,-58%) scale(.96)}
-  }
-  .zomb svg{display:block;filter:drop-shadow(0 2px 6px rgba(20,25,32,.25))}
-  @keyframes zrise{
-    0%{opacity:0;transform:translate(-50%,10px) scale(.84) rotate(-4deg)}
-    18%{opacity:.95}
-    55%{transform:translate(-42%,-70px) scale(1) rotate(5deg)}
-    100%{opacity:0;transform:translate(-56%,-150px) scale(1.02) rotate(-3deg)}
-  }
-  @media (prefers-reduced-motion:reduce){ .ninj,.zomb{display:none} }
-
 </style>
 </head>
 <body class="hasvoice">
@@ -1027,10 +997,6 @@
      is the thing the ear is listening to. */
   var REEL = (function(){
     var H = 64, raf = 0;
-    function reduced(){
-      try { return matchMedia("(prefers-reduced-motion: reduce)").matches; }
-      catch (e){ return false; }
-    }
     function cancel(){ if (raf) cancelAnimationFrame(raf); raf = 0; }
 
     function mount(box, items, onLand){
@@ -1128,22 +1094,18 @@
         target = null; v = v0; last = 0; acc = 0;
         spinning = true;
         box.classList.add("spinning");
-        /* A device asking for reduced motion gets a short plain glide
-           rather than a jump: landing with no movement at all reads as
-           broken, and three slots of travel is not what that setting is
-           protecting anybody from. */
-        if (reduced()){
-          var from = pos, to = Math.round((pos + 3 * H) / H) * H, t0 = 0;
-          (function ease(now){
-            if (!t0) t0 = now;
-            var k = Math.min(1, (now - t0) / 480);
-            pos = from + (to - from) * (1 - Math.pow(1 - k, 3));
-            paint();
-            if (k < 1) raf = requestAnimationFrame(ease);
-            else { pos = to; paint(); done(); }
-          })(performance.now());
-          return;
-        }
+        /* ---- the drum spins for everybody ----
+           This used to hand a device with reduced motion a three slot
+           glide lasting under half a second. That one branch was why
+           Andrew could not see a spin or hear the clicks however many
+           times the physics and the sound were fixed: the branch never
+           ran either of them. On a school laptop with the setting on
+           system wide, the whole class gets the same dead control.
+
+           Reduced motion is about movement a person did not ask for and
+           cannot predict. A drum is a control whose entire function is
+           to spin, and it moves because the student pressed it. So the
+           spin stays, for everybody, with its clicks. */
         raf = requestAnimationFrame(frame);
       }
 
@@ -1298,7 +1260,12 @@
        sounding like wood and start sounding like a buzzer. */
     function clack(at, loud){
       var c = ctx; if (!c) return;
-      var vol = Math.max(0.05, Math.min(0.34, loud));
+      /* Andrew could not hear these twice over. The first cause was the
+         rate, and this is the other half: a 16ms click at 2600Hz through
+         a laptop speaker at a third of full scale is not much. Half of
+         full scale, and a clack decays long before the next one is due,
+         so nothing stacks. */
+      var vol = Math.max(0.08, Math.min(0.5, loud));
       var jit = 0.88 + Math.random() * 0.26;
 
       var src = c.createBufferSource(); src.buffer = noise;
@@ -1361,7 +1328,7 @@
         if (c.state === "suspended") c.resume();
         var t = c.currentTime;
         if (cursor < t) cursor = t + 0.004;
-        var loud = 0.34 - Math.min(0.19, (speed || 0) / 34000);
+        var loud = 0.5 - Math.min(0.22, (speed || 0) / 34000);
         for (var guard = 0; cursor < t + 0.05 && guard < 6; guard++){
           clack(cursor, loud);
           cursor += gap;
@@ -1386,182 +1353,9 @@
       try { var c = build(); if (c && c.state === "suspended") c.resume(); }
       catch (e){}
     }
-    /* ---- the whoosh and the groan ----
-       Both synthesised rather than fetched: the page has to work on a
-       tram, and two more files to download for two sound effects is not
-       a trade worth making.
+    return { play: play, ratchet: ratchet, clunk: clunk, wake: wakeAudio };
 
-       The whoosh is noise through a bandpass whose centre frequency
-       sweeps up and then falls away, which is what a thing moving past
-       your ear actually does to the spectrum. Short, 220ms, because a
-       ninja that takes a second is not a ninja.
-
-       The groan is a triangle sagging from 150Hz to 65 with a slow
-       wobble on top and everything above 600Hz taken off. Triangle
-       rather than sawtooth: a saw at that pitch is a horror film and
-       this is a Year 8 classroom. */
-    function whoosh(){
-      if (!S.click) return;
-      try {
-        var c = build(); if (!c) return;
-        if (c.state === "suspended") c.resume();
-        var t = c.currentTime;
-        var src = c.createBufferSource();
-        /* a longer piece of noise than the tick needs, looped */
-        src.buffer = noise; src.loop = true;
-        var bp = c.createBiquadFilter();
-        bp.type = "bandpass"; bp.Q.value = 1.4;
-        bp.frequency.setValueAtTime(700, t);
-        bp.frequency.exponentialRampToValueAtTime(4200, t + 0.085);
-        bp.frequency.exponentialRampToValueAtTime(600, t + 0.22);
-        var g = c.createGain();
-        g.gain.setValueAtTime(0.0001, t);
-        g.gain.exponentialRampToValueAtTime(0.2, t + 0.04);
-        g.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
-        src.connect(bp); bp.connect(g); g.connect(c.destination);
-        src.start(t); src.stop(t + 0.24);
-      } catch (e){}
-    }
-    function groan(){
-      if (!S.click) return;
-      try {
-        var c = build(); if (!c) return;
-        if (c.state === "suspended") c.resume();
-        var t = c.currentTime, D = 0.75;
-        var o1 = c.createOscillator();
-        o1.type = "triangle";
-        o1.frequency.setValueAtTime(150, t);
-        o1.frequency.exponentialRampToValueAtTime(65, t + D);
-        /* the wobble, or it is a foghorn rather than a groan */
-        var lfo = c.createOscillator(), lg = c.createGain();
-        lfo.frequency.value = 5.5; lg.gain.value = 7;
-        lfo.connect(lg); lg.connect(o1.frequency);
-        var lp = c.createBiquadFilter();
-        lp.type = "lowpass"; lp.frequency.value = 600;
-        var g = c.createGain();
-        g.gain.setValueAtTime(0.0001, t);
-        g.gain.exponentialRampToValueAtTime(0.17, t + 0.12);
-        g.gain.setValueAtTime(0.17, t + 0.34);
-        g.gain.exponentialRampToValueAtTime(0.0001, t + D);
-        o1.connect(lp); lp.connect(g); g.connect(c.destination);
-        o1.start(t); lfo.start(t);
-        o1.stop(t + D + 0.02); lfo.stop(t + D + 0.02);
-      } catch (e){}
-    }
-    return { play: play, ratchet: ratchet, clunk: clunk, wake: wakeAudio,
-             whoosh: whoosh, groan: groan };
   })();
-  /* One creature at a time. Answer two things quickly and the first one
-     is still drifting up the screen when the second arrives, which leaves
-     a ninja and a zombie side by side and no way to tell which answer
-     either of them is about. */
-  function clearCreatures(){
-    var old = document.querySelectorAll(".ninj,.zomb");
-    for (var i = 0; i < old.length; i++) old[i].remove();
-  }
-
-  /* ---- the ninja ----
-     The zombie needed an opposite. A ninja crosses rather than rises,
-     and is gone in half the time the zombie takes: right is
-     acknowledged and then got out of the way of, which is the right
-     proportion when being right is the thing you want to be unremarkable
-     and repeatable.
-
-     Same guards as the zombie. It cannot be tapped, it never covers the
-     feedback, and reduced motion gets the sound without the dash. */
-  var nLast = 0;
-  function ninja(near){
-    CLICK.whoosh();
-    try {
-      if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    } catch (e){}
-    var now = Date.now();
-    if (now - nLast < 420) return;
-    nLast = now;
-    clearCreatures();
-    var box = document.createElement("div");
-    box.className = "ninj";
-    box.setAttribute("aria-hidden", "true");
-    var r = near && near.getBoundingClientRect ? near.getBoundingClientRect() : null;
-    box.style.left = (r ? r.left + r.width / 2 : innerWidth / 2) + "px";
-    box.style.top  = (r ? r.top + r.height / 2 - 26 : innerHeight * 0.5) + "px";
-    box.innerHTML =
-        '<svg viewBox="0 0 64 52" width="64" height="52">'
-      /* the scarf, trailing behind the direction of travel */
-      + '<path d="M30 16 q-12 -4 -24 2 q10 1 14 4 q-9 1 -13 5 q12 -1 21 -3 z"'
-      + ' fill="#b23a3a" opacity=".92"/>'
-      /* a body folded forward, mid-dash */
-      + '<path d="M28 18 q12 -3 19 6 q4 7 -3 11 q-9 5 -17 -1 q-6 -5 1 -16 z"'
-      + ' fill="#20262f"/>'
-      /* back leg kicked out */
-      + '<path d="M34 34 q-6 7 -14 8 q6 -8 8 -12 z" fill="#20262f"/>'
-      /* arm thrown forward */
-      + '<path d="M44 22 q9 -2 14 3" stroke="#20262f" stroke-width="5"'
-      + ' stroke-linecap="round" fill="none"/>'
-      /* the head, and the eye slit that makes it a ninja */
-      + '<circle cx="44" cy="17" r="10" fill="#262d37"/>'
-      + '<path d="M38 15 h13 v4 h-13 z" fill="#f2e9d8"/>'
-      + '<circle cx="42" cy="17" r="1.7" fill="#20262f"/>'
-      + '<circle cx="48" cy="17" r="1.7" fill="#20262f"/>'
-      /* two speed lines, which is the whole of the whoosh made visible */
-      + '<path d="M2 24 h14 M6 31 h10" stroke="#20262f" stroke-width="2"'
-      + ' stroke-linecap="round" opacity=".5"/>'
-      + '</svg>';
-    document.body.appendChild(box);
-    box.addEventListener("animationend", function(){ box.remove(); });
-    setTimeout(function(){ if (box.parentNode) box.remove(); }, 1400);
-  }
-
-  /* ---- the zombie ----
-     The pair that ひと and れきしの人 have. Andrew asked where they had
-     got to in this app, and the answer was that the drum came across
-     from here and the creatures never went back the other way.
-
-     So it is built to be hard to farm. It rises once, takes a second
-     and a half, never blocks the feedback that names the rule, and does
-     not fire twice for the same mistake in quick succession. A device
-     asking for reduced motion gets nothing at all. */
-  var zLast = 0;
-  function zombie(near){
-    CLICK.groan();
-    try {
-      if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    } catch (e){}
-    var now = Date.now();
-    if (now - zLast < 900) return;
-    zLast = now;
-    clearCreatures();
-    var box = document.createElement("div");
-    box.className = "zomb";
-    box.setAttribute("aria-hidden", "true");
-    var r = near && near.getBoundingClientRect ? near.getBoundingClientRect() : null;
-    box.style.left = (r ? r.left + r.width / 2 : innerWidth / 2) + "px";
-    box.style.top  = (r ? r.top : innerHeight * 0.6) + "px";
-    box.innerHTML =
-      '<svg viewBox="0 0 48 64" width="48" height="64">'
-      /* one arm out in front, the other trailing */
-      + '<path d="M10 30 q-7 2 -8 10" stroke="#6f9a4e" stroke-width="5"'
-      + ' stroke-linecap="round" fill="none"/>'
-      + '<path d="M38 30 q8 -1 10 4" stroke="#6f9a4e" stroke-width="5"'
-      + ' stroke-linecap="round" fill="none"/>'
-      /* a tattered sheet of a body, so it reads as floating */
-      + '<path d="M13 26 h22 v24 l-4 -4 l-4 5 l-4 -5 l-4 5 l-4 -5 l-2 3 z"'
-      + ' fill="#7fae59"/>'
-      + '<circle cx="24" cy="18" r="12" fill="#8fbf66"/>'
-      /* stitches, which is what makes it a zombie and not a frog */
-      + '<path d="M15 10 l4 4 M17 8 l-1 3 M21 11 l-1 3" stroke="#5d8440"'
-      + ' stroke-width="1.4" stroke-linecap="round" fill="none"/>'
-      + '<circle cx="19" cy="17" r="2.6" fill="#1f2a18"/>'
-      + '<circle cx="29" cy="17" r="2.6" fill="#1f2a18"/>'
-      + '<path d="M19 24 q5 3 10 0" stroke="#1f2a18" stroke-width="1.6"'
-      + ' stroke-linecap="round" fill="none"/>'
-      + '<path d="M21 24 v3 M26 24 v3" stroke="#1f2a18" stroke-width="1.2"/>'
-      + '</svg>';
-    document.body.appendChild(box);
-    box.addEventListener("animationend", function(){ box.remove(); });
-    setTimeout(function(){ if (box.parentNode) box.remove(); }, 2600);
-  }
-
   /* The things that look pressable: the home panes, the tab row, and the
      tiles and move buttons inside a section. Not every button in the app:
      a clack on Next twenty times in a drill is a different thing. */
@@ -2093,13 +1887,7 @@
         if (st.picked !== null) return;
         st.picked = b.dataset.o;
         st.done++;
-        var won = false;
-        opts.forEach(function(o){
-          if (o.key === st.picked && o.ok){ st.right++; won = true; }
-        });
-        /* The creature goes off the tile that was pressed, before the
-           round is redrawn and that tile stops existing. */
-        if (won) ninja(b); else zombie(b);
+        opts.forEach(function(o){ if (o.key === st.picked && o.ok) st.right++; });
         drawRound(id);
       };
     });
@@ -3412,11 +3200,9 @@
       st.open = true; drawDrill(id, only);
     };
     if ($("got")) $("got").onclick = function(){
-      ninja($("got"));
       st.hit++; markWeak(it.error_id, true); advance();
     };
     if ($("not")) $("not").onclick = function(){
-      zombie($("not"));
       st.miss++; markWeak(it.error_id, false); advance();
     };
     if ($("skip")) $("skip").onclick = advance;

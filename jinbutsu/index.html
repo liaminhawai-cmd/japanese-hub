@@ -199,7 +199,18 @@
     55%{transform:translate(-44%,-72px) scale(1) rotate(6deg)}
     100%{opacity:0;transform:translate(-56%,-152px) scale(1.02) rotate(-4deg)}
   }
-  @media (prefers-reduced-motion:reduce){ .ninj,.yoka{display:none} }
+  /* ---- reduced motion ----
+     Not hidden. Hiding them was the whole reason Andrew could not see
+     either one. What that setting is for is movement across the screen,
+     so under it the pair simply fade in where they are and fade out
+     again, and the feedback survives. */
+  @media (prefers-reduced-motion:reduce){
+    .ninj,.yoka{animation-name:cfade;animation-duration:1.1s;
+      animation-timing-function:ease-out}
+    @keyframes cfade{
+      0%{opacity:0} 18%{opacity:1} 70%{opacity:1} 100%{opacity:0}
+    }
+  }
 
   .mark{border-left:4px solid var(--line);padding:5px 10px;margin:6px 0;font-size:14px}
   .mark.yes{border-color:var(--ok)} .mark.no{border-color:var(--accent)}
@@ -269,8 +280,9 @@
 <nav class="steps" id="steps"></nav>
 <div class="whobar" id="whobar"></div>
 <main id="main"></main>
-<script src="data/kiji.js"></script>
-<script src="data/audio.js"></script>
-<script src="app.js"></script>
+<script src="data/kiji.js?v=20261015"></script>
+<script src="data/audio.js?v=20261015"></script>
+<script src="app.js?v=20261015"></script>
+<div class="build" aria-hidden="true">build 2026-10-15</div>
 </body>
 </html>

@@ -295,6 +295,12 @@
      none so it can never swallow a tap meant for the feedback under it.
      Floats up and fades; the small sway stops it reading as a sprite on
      a rail. */
+  /* Which build is on screen. Without it there is no way to tell a
+     change that did not work from a change that never arrived, and that
+     question cost Andrew three rounds of asking for the same thing. */
+  .build{position:fixed;right:4px;bottom:2px;z-index:70;pointer-events:none;
+     font-family:var(--font);font-size:9px;letter-spacing:.04em;
+     color:var(--line);user-select:none}
   .zomb,.ninj{position:fixed;z-index:60;pointer-events:none}
   .zomb{transform:translate(-50%,0);animation:zrise 1.6s ease-out forwards}
   /* The ninja crosses and is gone in 0.7s. Right should be acknowledged
@@ -309,7 +315,6 @@
     70%{opacity:1;transform:translate(-20%,-54%) scale(1)}
     100%{opacity:0;transform:translate(120%,-58%) scale(.96)}
   }
-  @media (prefers-reduced-motion:reduce){ .ninj{display:none} }
   .zomb svg{display:block;filter:drop-shadow(0 2px 6px rgba(20,25,32,.25))}
   @keyframes zrise{
     0%{opacity:0;transform:translate(-50%,10px) scale(.84) rotate(-4deg)}
@@ -317,7 +322,18 @@
     55%{transform:translate(-42%,-70px) scale(1) rotate(5deg)}
     100%{opacity:0;transform:translate(-56%,-150px) scale(1.02) rotate(-3deg)}
   }
-  @media (prefers-reduced-motion:reduce){ .zomb{display:none} }
+  /* ---- reduced motion ----
+     Not hidden. Hiding them was the whole reason Andrew could not see
+     either one. What that setting is for is movement across the screen,
+     so under it the pair simply fade in where they are and fade out
+     again, and the feedback survives. */
+  @media (prefers-reduced-motion:reduce){
+    .ninj,.zomb{animation-name:cfade;animation-duration:1.1s;
+      animation-timing-function:ease-out}
+    @keyframes cfade{
+      0%{opacity:0} 18%{opacity:1} 70%{opacity:1} 100%{opacity:0}
+    }
+  }
 
   /* ---- the drum, lifted with the module from the oral app ---- */
   .rwin{position:relative;flex:1;min-width:0;height:192px;overflow:hidden;
@@ -382,10 +398,11 @@
 <nav class="steps" id="steps"></nav>
 <div class="legend" id="legend"></div>
 <main id="main"></main>
-<script src="data/words.js"></script>
-<script src="data/people.js"></script>
-<script src="data/outfits.js"></script>
-<script src="data/audio.js"></script>
-<script src="app.js"></script>
+<script src="data/words.js?v=20261015"></script>
+<script src="data/people.js?v=20261015"></script>
+<script src="data/outfits.js?v=20261015"></script>
+<script src="data/audio.js?v=20261015"></script>
+<script src="app.js?v=20261015"></script>
+<div class="build" aria-hidden="true">build 2026-10-15</div>
 </body>
 </html>
