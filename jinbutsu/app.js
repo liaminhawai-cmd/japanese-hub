@@ -287,7 +287,7 @@
      The warble is the yokai: two detuned triangles sliding down with a
      wobble on top, which is a cartoon ghost and not a horror film. */
   var SFX = (function(){
-    var ctx = null, noise = null;
+    var ctx = null, noise = null, hiss = null;
     function build(){
       if (ctx) return ctx;
       var AC = window.AudioContext || window.webkitAudioContext;
@@ -297,25 +297,49 @@
       noise = ctx.createBuffer(1, n, ctx.sampleRate);
       var d = noise.getChannelData(0);
       for (var i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / n);
+      /* The clack's buffer has a fade baked in so it can be a strike.
+         The whoosh needs the opposite: flat noise it can shape itself. */
+      var hn = Math.floor(ctx.sampleRate * 0.5);
+      hiss = ctx.createBuffer(1, hn, ctx.sampleRate);
+      var hd = hiss.getChannelData(0);
+      for (var j = 0; j < hn; j++) hd[j] = Math.random() * 2 - 1;
       return ctx;
     }
+    /* ---- the whoosh ----
+       The ninja's sound. It used to be the clack's own noise buffer put
+       on a loop, and that buffer has a fade baked into it so the engine
+       can use it as a strike. Looped, the fade restarts every time the
+       buffer does, which in れきしの人 is every 400ms and in ひと was
+       every 60ms: a sixteen-times-a-second pulse, which is not a whoosh,
+       it is a click track. Andrew heard it as random clicking because
+       that is what it was.
+
+       So the whoosh gets its own noise: half a second of it, flat, no
+       envelope in the samples at all. The shape comes from the gain,
+       which rises over 50ms rather than snapping on, and from a wide
+       bandpass sweeping up and falling away, which is what a thing
+       moving past your ear does to the spectrum. */
     function whoosh(){
+      if (!S.sfx) return;
       try {
         var c = build(); if (!c) return;
         if (c.state === "suspended") c.resume();
-        var t = c.currentTime;
-        var src = c.createBufferSource(); src.buffer = noise; src.loop = true;
+        var t = c.currentTime, D = 0.30;
+        var src = c.createBufferSource(); src.buffer = hiss; src.loop = false;
+        var hp = c.createBiquadFilter();
+        hp.type = "highpass"; hp.frequency.value = 320;
         var bp = c.createBiquadFilter();
-        bp.type = "bandpass"; bp.Q.value = 1.4;
-        bp.frequency.setValueAtTime(700, t);
-        bp.frequency.exponentialRampToValueAtTime(4200, t + 0.085);
-        bp.frequency.exponentialRampToValueAtTime(600, t + 0.22);
+        bp.type = "bandpass"; bp.Q.value = 0.85;
+        bp.frequency.setValueAtTime(420, t);
+        bp.frequency.exponentialRampToValueAtTime(3000, t + 0.11);
+        bp.frequency.exponentialRampToValueAtTime(900, t + D);
         var g = c.createGain();
+        /* a soft attack, because a gain that snaps on is itself a click */
         g.gain.setValueAtTime(0.0001, t);
-        g.gain.exponentialRampToValueAtTime(0.2, t + 0.04);
-        g.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
-        src.connect(bp); bp.connect(g); g.connect(c.destination);
-        src.start(t); src.stop(t + 0.24);
+        g.gain.exponentialRampToValueAtTime(0.30, t + 0.05);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + D);
+        src.connect(hp); hp.connect(bp); bp.connect(g); g.connect(c.destination);
+        src.start(t); src.stop(t + D + 0.02);
       } catch (e){}
     }
     function warble(){
@@ -710,6 +734,14 @@
      between two tenses, not between a verb and a particle, so guessing
      gets them a coin toss and not a pass. */
   var gAt = 0;
+  /* ---- practised, not finished ----
+     This records that a gap has been answered right once, which is what
+     the tick in the index and the count in the footer are for. It is NOT
+     a reason to stop offering the exercise. The screen used to read this
+     and hand the answer straight back: three patterns in, every gap a
+     student returned to was already filled in and its tiles were gone,
+     so the rung could be done once and never again. A pattern a student
+     wants a second go at is the whole point of a grammar drill. */
   function gkey(g, i){ return "g:" + g.id + ":" + i; }
   function gdone(g){
     return (g.items || []).length > 0
@@ -828,30 +860,35 @@
       + '<h3 class="sub">Now you</h3>'
       + '<div id="gits"></div>';
 
+    /* Every gap starts empty and every tray starts full, whether or not
+       this one has been answered before. A tick in the index says which
+       patterns have been done; the exercise itself is always offered. */
     $("gits").innerHTML = (g.items || []).map(function(it, i){
       var parts = String(it.ja).split(/＿+/);
-      var got = S.wrote[gkey(g, i)];
       return '<div class="qrow" data-it="' + i + '">'
         + '<div class="q">' + ruby(parts[0] || "")
-        + '<span class="gap' + (got ? ' ok' : '') + '" data-gap="' + i + '">'
-        + (got ? ruby(it.answer) : '　') + '</span>'
+        + '<span class="gap" data-gap="' + i + '">　</span>'
         + ruby(parts.slice(1).join("")) + '</div>'
         + '<div class="row" style="flex-wrap:wrap;margin-top:6px" data-tray="' + i
-        + '">' + (got ? "" : shuffle((it.options || []).slice()).map(function(o){
+        + '">' + shuffle((it.options || []).slice()).map(function(o){
             return '<button class="tile" data-tile="' + esc(plain(o)) + '" data-for="'
               + i + '">' + ruby(o) + '</button>';
-          }).join("")) + '</div>'
+          }).join("") + '</div>'
         + '<div data-gfb="' + i + '"></div></div>';
     }).join("");
 
     dragdrop($("gits"), function(tile, gap){
       var i = +gap.dataset.gap, it = g.items[i];
       if (String(tile.dataset.for) !== String(i)) return;   /* another item's tile */
-      if (S.wrote[gkey(g, i)]) return;
+      if (gap.classList.contains("ok")) return;             /* already answered here */
       var fb = $("gits").querySelector('[data-gfb="' + i + '"]');
       if (tile.dataset.tile === plain(it.answer)){
+        /* The points are for getting it right the first time. A second go
+           at a pattern is welcome and free; it is not worth two more
+           points, or the score becomes a measure of patience. */
+        var first = !S.wrote[gkey(g, i)];
         S.wrote[gkey(g, i)] = 1; save();
-        award(2);
+        if (first) award(2);
         gap.innerHTML = ruby(it.answer);
         gap.classList.remove("bad"); gap.classList.add("ok");
         ninja(gap);
@@ -859,7 +896,21 @@
         fb.innerHTML = '<div class="mark yes"><b>Yes</b><span class="jp">'
           + ruby(String(it.ja).replace(/＿+/, plain(it.answer))) + '</span></div>';
         wireSay();
-        if (gdone(g)) draw();
+        /* The tick and the count move without redrawing. A redraw here
+           used to wipe the gaps the student had just filled, which on the
+           last item of a pattern looked like the screen giving up. */
+        if (gdone(g)){
+          var tick = $("gidx").querySelector('[data-g="' + gAt + '"]');
+          if (tick && !tick.classList.contains("done")){
+            tick.classList.add("done");
+            tick.innerHTML = ruby(g.pat) + " \u2714";
+          }
+          var sc = $("main").querySelector(".score b");
+          if (sc) sc.textContent = G.filter(gdone).length;
+          if (G.every(gdone) && !S.done["bunpou"]){
+            S.done["bunpou"] = 1; save(); paintSteps();
+          }
+        }
       } else {
         gap.classList.add("bad");
         yokai(gap);
@@ -1000,6 +1051,15 @@
       inp.oninput = function(){ S.wrote[p.id+":"+inp.dataset.q] = inp.value; save(); };
       inp.onkeydown = function(ev){ if (ev.key === "Enter") check(); };
     });
+    /* ---- what counts as finished ----
+       A question carrying `note` is one the article does not answer, and
+       judge() always returns "not in the article" for it, on purpose. It
+       therefore can never be right, and counting it towards the total
+       made いわさき's set impossible to finish: seven of eight for ever,
+       no tick, and はやく locked behind it saying go and answer the
+       questions you have already answered. A question the page will not
+       mark is not a question the student has to get right. */
+    var markable = qs.filter(function(q){ return !q.note; }).length;
     function check(){
       var right = 0, asked = 0;
       qs.forEach(function(q,i){
@@ -1024,13 +1084,15 @@
             + 'The answer is in the article.</div>';
         }
       });
-      $("sc").innerHTML = '<b>'+right+'</b> of '+qs.length;
+      $("sc").innerHTML = '<b>'+right+'</b> of '+markable
+        + (markable < qs.length ? ' <span class="hint">(one of them is not in '
+           + 'the article, so it is not counted)</span>' : '');
       /* The whole page is marked in one press, so one creature for the
          lot rather than eight at once: the ninja when every question is
          right, the yokai when a student has answered and none of them
          is. Nothing in between, because a creature every time somebody
          checks their working halfway is a nag. */
-      if (right === qs.length){ ninja($("sc")); done(); }
+      if (markable && right === markable){ ninja($("sc")); done(); }
       else if (asked && !right) yokai($("sc"));
       wireSay();
     }

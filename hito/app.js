@@ -435,7 +435,7 @@
   /* だれですか opens, because the problem should arrive before the method:
      a student meets the six and tries to tell them apart before anybody
      has taught them a word. The writing step stays last. */
-  /* ================= the drum, and the zombie =================
+  /* ================= the drum, and the creatures =================
      Both lifted from the oral examination app, which is where the drum
      was written and tuned. Nothing here is a second implementation: the
      physics, the tick and the reduced-motion path are the same code, so
@@ -559,7 +559,7 @@
            cannot predict. A drum is a control whose entire function is
            to spin, and it moves because the student pressed it. So the
            spin stays, for everybody, with its clicks. The decoration
-           that setting is actually for — the ninja and the zombie
+           that setting is actually for — the ninja and the かさおばけ
            crossing the screen — is where this app answers it, by fading
            them in place rather than flying them past. */
         raf = requestAnimationFrame(frame);
@@ -686,7 +686,7 @@
   })();
 
   var CLICK = (function(){
-    var ctx = null, noise = null;
+    var ctx = null, noise = null, hiss = null;
     function build(){
       if (ctx) return ctx;
       var AC = window.AudioContext || window.webkitAudioContext;
@@ -696,6 +696,12 @@
       noise = ctx.createBuffer(1, n, ctx.sampleRate);
       var d = noise.getChannelData(0);
       for (var i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / n);
+      /* The clack's buffer has a fade baked in so it can be a strike.
+         The whoosh needs the opposite: flat noise it can shape itself. */
+      var hn = Math.floor(ctx.sampleRate * 0.5);
+      hiss = ctx.createBuffer(1, hn, ctx.sampleRate);
+      var hd = hiss.getChannelData(0);
+      for (var j = 0; j < hn; j++) hd[j] = Math.random() * 2 - 1;
       return ctx;
     }
     /* ---- the clack ----
@@ -826,7 +832,7 @@
         clack(c.currentTime + 0.004, 0.26);
       } catch (e){}
     }
-    /* ---- the whoosh and the groan ----
+    /* ---- the whoosh and the warble ----
        Both synthesised rather than fetched: the page has to work on a
        tram, and two more files to download for two sound effects is not
        a trade worth making.
@@ -836,60 +842,81 @@
        your ear actually does to the spectrum. Short, 220ms, because a
        ninja that takes a second is not a ninja.
 
-       The groan is a triangle sagging from 150Hz to 65 with a slow
-       wobble on top and everything above 600Hz taken off. Triangle
-       rather than sawtooth: a saw at that pitch is a horror film and
-       this is a Year 8 classroom. */
+       The warble is the かさおばけ, and it is below. */
+    /* ---- the whoosh ----
+       The ninja's sound. It used to be the clack's own noise buffer put
+       on a loop, and that buffer has a fade baked into it so the engine
+       can use it as a strike. Looped, the fade restarts every time the
+       buffer does, which in れきしの人 is every 400ms and in ひと was
+       every 60ms: a sixteen-times-a-second pulse, which is not a whoosh,
+       it is a click track. Andrew heard it as random clicking because
+       that is what it was.
+
+       So the whoosh gets its own noise: half a second of it, flat, no
+       envelope in the samples at all. The shape comes from the gain,
+       which rises over 50ms rather than snapping on, and from a wide
+       bandpass sweeping up and falling away, which is what a thing
+       moving past your ear does to the spectrum. */
     function whoosh(){
       if (!S.sfx) return;
       try {
         var c = build(); if (!c) return;
         if (c.state === "suspended") c.resume();
-        var t = c.currentTime;
-        var src = c.createBufferSource();
-        /* a longer piece of noise than the tick needs, looped */
-        src.buffer = noise; src.loop = true;
+        var t = c.currentTime, D = 0.30;
+        var src = c.createBufferSource(); src.buffer = hiss; src.loop = false;
+        var hp = c.createBiquadFilter();
+        hp.type = "highpass"; hp.frequency.value = 320;
         var bp = c.createBiquadFilter();
-        bp.type = "bandpass"; bp.Q.value = 1.4;
-        bp.frequency.setValueAtTime(700, t);
-        bp.frequency.exponentialRampToValueAtTime(4200, t + 0.085);
-        bp.frequency.exponentialRampToValueAtTime(600, t + 0.22);
+        bp.type = "bandpass"; bp.Q.value = 0.85;
+        bp.frequency.setValueAtTime(420, t);
+        bp.frequency.exponentialRampToValueAtTime(3000, t + 0.11);
+        bp.frequency.exponentialRampToValueAtTime(900, t + D);
         var g = c.createGain();
+        /* a soft attack, because a gain that snaps on is itself a click */
         g.gain.setValueAtTime(0.0001, t);
-        g.gain.exponentialRampToValueAtTime(0.2, t + 0.04);
-        g.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
-        src.connect(bp); bp.connect(g); g.connect(c.destination);
-        src.start(t); src.stop(t + 0.24);
+        g.gain.exponentialRampToValueAtTime(0.30, t + 0.05);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + D);
+        src.connect(hp); hp.connect(bp); bp.connect(g); g.connect(c.destination);
+        src.start(t); src.stop(t + D + 0.02);
       } catch (e){}
     }
-    function groan(){
+    /* ---- the warble ----
+       The かさおばけ's voice: two detuned triangles sliding down with a
+       slow wobble on top and everything above 1400Hz taken off.
+       Triangles rather than saws, because a saw at that pitch is a
+       horror film and this is a Year 8 classroom. Lifted from れきしの人,
+       where the same yokai lives, so the two pages sound like one suite. */
+    function warble(){
       if (!S.sfx) return;
       try {
         var c = build(); if (!c) return;
         if (c.state === "suspended") c.resume();
-        var t = c.currentTime, D = 0.75;
-        var o1 = c.createOscillator();
-        o1.type = "triangle";
-        o1.frequency.setValueAtTime(150, t);
-        o1.frequency.exponentialRampToValueAtTime(65, t + D);
-        /* the wobble, or it is a foghorn rather than a groan */
-        var lfo = c.createOscillator(), lg = c.createGain();
-        lfo.frequency.value = 5.5; lg.gain.value = 7;
-        lfo.connect(lg); lg.connect(o1.frequency);
-        var lp = c.createBiquadFilter();
-        lp.type = "lowpass"; lp.frequency.value = 600;
+        var t = c.currentTime, D = 0.7;
         var g = c.createGain();
         g.gain.setValueAtTime(0.0001, t);
-        g.gain.exponentialRampToValueAtTime(0.17, t + 0.12);
-        g.gain.setValueAtTime(0.17, t + 0.34);
+        g.gain.exponentialRampToValueAtTime(0.17, t + 0.07);
         g.gain.exponentialRampToValueAtTime(0.0001, t + D);
-        o1.connect(lp); lp.connect(g); g.connect(c.destination);
-        o1.start(t); lfo.start(t);
-        o1.stop(t + D + 0.02); lfo.stop(t + D + 0.02);
+        var lp = c.createBiquadFilter();
+        lp.type = "lowpass"; lp.frequency.value = 1400;
+        var lfo = c.createOscillator(), lg = c.createGain();
+        lfo.frequency.value = 6.5; lg.gain.value = 14;
+        lfo.connect(lg);
+        [0, 4].forEach(function(detune, i){
+          var o = c.createOscillator();
+          o.type = "triangle";
+          o.detune.value = detune * 5;
+          o.frequency.setValueAtTime(430 - i * 6, t);
+          o.frequency.exponentialRampToValueAtTime(230 - i * 6, t + D);
+          lg.connect(o.frequency);
+          o.connect(lp);
+          o.start(t); o.stop(t + D + 0.05);
+        });
+        lp.connect(g); g.connect(c.destination);
+        lfo.start(t); lfo.stop(t + D + 0.05);
       } catch (e){}
     }
     return { play: play, ratchet: ratchet, clunk: clunk, wake: wakeAudio,
-             whoosh: whoosh, groan: groan };
+             whoosh: whoosh, warble: warble };
   })();
   /* The things that look pressable: the home panes, the tab row, and the
      tiles and move buttons inside a section. Not every button in the app:
@@ -897,10 +924,10 @@
 
   /* One creature at a time. Answer two things quickly and the first one
      is still drifting up the screen when the second arrives, which leaves
-     a ninja and a zombie side by side and no way to tell which answer
+     a ninja and a かさおばけ side by side and no way to tell which answer
      either of them is about. */
   function clearCreatures(){
-    var old = document.querySelectorAll(".ninj,.zomb");
+    var old = document.querySelectorAll(".ninj,.yoka");
     for (var i = 0; i < old.length; i++) old[i].remove();
   }
 
@@ -910,13 +937,13 @@
      setting is answered in the stylesheet instead, where the pair fade
      in place rather than crossing the screen. */
   /* ---- the ninja ----
-     The zombie needed an opposite. A ninja crosses rather than rises,
-     and is gone in half the time the zombie takes: right is
+     The かさおばけ needed an opposite. A ninja crosses rather than rises,
+     and is gone in half the time the かさおばけ takes: right is
      acknowledged and then got out of the way of, which is the right
      proportion when being right is the thing you want to be unremarkable
      and repeatable.
 
-     Same guards as the zombie. It cannot be tapped, it never covers the
+     Same guards as the かさおばけ. It cannot be tapped, it never covers the
      feedback, and reduced motion gets the sound without the dash. */
   var nLast = 0;
   function ninja(near){
@@ -958,48 +985,53 @@
     setTimeout(function(){ if (box.parentNode) box.remove(); }, 1400);
   }
 
-  /* ---- the zombie ----
-     Andrew asked for this twice. I argued once that a celebration or a
-     creature on a wrong answer makes being wrong the most interesting
-     thing on the screen and that a Year 8 will farm it; he has heard
-     that and decided, and it is his room.
+  /* ---- the かさおばけ ----
+     Andrew asked for a creature on a wrong answer, and then asked for
+     this one rather than a zombie: a yokai is Japanese, and a Year 8
+     Japanese page that reaches for an American monster has passed up
+     the better joke. It is the same umbrella that haunts れきしの人, so
+     a student who meets it on one page knows it on the other.
 
-     So it is built to be hard to farm. It rises once, takes a second
-     and a half, never blocks the feedback that names the rule, and does
-     not fire twice for the same mistake in quick succession. A device
-     asking for reduced motion gets nothing at all. */
+     Drawn friendly rather than frightening, because a student who has
+     just got something wrong does not need a fright as well. Built to
+     be hard to farm: it rises once, takes a second and a half, never
+     blocks the feedback that names the rule, and does not fire twice
+     for the same mistake in quick succession. */
   var zLast = 0;
-  function zombie(near){
-    CLICK.groan();
+  function yokai(near){
+    CLICK.warble();
     var now = Date.now();
     if (now - zLast < 900) return;
     zLast = now;
     clearCreatures();
     var box = document.createElement("div");
-    box.className = "zomb";
+    box.className = "yoka";
     box.setAttribute("aria-hidden", "true");
     var r = near && near.getBoundingClientRect ? near.getBoundingClientRect() : null;
     box.style.left = (r ? r.left + r.width / 2 : innerWidth / 2) + "px";
     box.style.top  = (r ? r.top : innerHeight * 0.6) + "px";
     box.innerHTML =
-      '<svg viewBox="0 0 48 64" width="48" height="64">'
-      /* one arm out in front, the other trailing */
-      + '<path d="M10 30 q-7 2 -8 10" stroke="#6f9a4e" stroke-width="5"'
-      + ' stroke-linecap="round" fill="none"/>'
-      + '<path d="M38 30 q8 -1 10 4" stroke="#6f9a4e" stroke-width="5"'
-      + ' stroke-linecap="round" fill="none"/>'
-      /* a tattered sheet of a body, so it reads as floating */
-      + '<path d="M13 26 h22 v24 l-4 -4 l-4 5 l-4 -5 l-4 5 l-4 -5 l-2 3 z"'
-      + ' fill="#7fae59"/>'
-      + '<circle cx="24" cy="18" r="12" fill="#8fbf66"/>'
-      /* stitches, which is what makes it a zombie and not a frog */
-      + '<path d="M15 10 l4 4 M17 8 l-1 3 M21 11 l-1 3" stroke="#5d8440"'
-      + ' stroke-width="1.4" stroke-linecap="round" fill="none"/>'
-      + '<circle cx="19" cy="17" r="2.6" fill="#1f2a18"/>'
-      + '<circle cx="29" cy="17" r="2.6" fill="#1f2a18"/>'
-      + '<path d="M19 24 q5 3 10 0" stroke="#1f2a18" stroke-width="1.6"'
-      + ' stroke-linecap="round" fill="none"/>'
-      + '<path d="M21 24 v3 M26 24 v3" stroke="#1f2a18" stroke-width="1.2"/>'
+      '<svg viewBox="0 0 56 72" width="56" height="72">'
+      /* the canopy */
+      + '<path d="M6 30 q22 -28 44 0 z" fill="#a83232"/>'
+      + '<path d="M6 30 q22 -28 44 0" fill="none" stroke="#7a2525"'
+      + ' stroke-width="1.5"/>'
+      + '<path d="M28 4 v26 M14 20 v10 M42 20 v10" stroke="#f4efe6"'
+      + ' stroke-width="1.6" opacity=".8"/>'
+      /* the body of the umbrella, folded */
+      + '<path d="M18 30 h20 l-3 16 h-14 z" fill="#c9a227"/>'
+      /* one eye, which is the whole character of the thing */
+      + '<circle cx="28" cy="37" r="6.5" fill="#f4efe6"/>'
+      + '<circle cx="28" cy="37.5" r="3.2" fill="#15191f"/>'
+      + '<circle cx="29.4" cy="36.2" r="1.1" fill="#fff"/>'
+      /* the tongue, out and to one side, where the leg cannot hide it */
+      + '<path d="M23 44 q5 11 10 1 q-5 4 -10 -1 z" fill="#d4647a"/>'
+      /* one leg, one geta */
+      + '<path d="M28 50 v10" stroke="#8a6d1f" stroke-width="4"'
+      + ' stroke-linecap="round"/>'
+      + '<rect x="18" y="60" width="20" height="5" rx="1.5" fill="#6b5417"/>'
+      + '<rect x="21" y="65" width="3.5" height="5" fill="#6b5417"/>'
+      + '<rect x="32" y="65" width="3.5" height="5" fill="#6b5417"/>'
       + '</svg>';
     document.body.appendChild(box);
     box.addEventListener("animationend", function(){ box.remove(); });
@@ -1257,7 +1289,7 @@
         if (!left) done("match");
       } else {
         slot.classList.add("no");
-        zombie(slot);
+        yokai(slot);
         setTimeout(function(){ slot.classList.remove("no"); }, 700);
         miss[kana] = (miss[kana] || 0) + 1;
         /* Stuck twice on the same word: show the spelling. The rung is
@@ -1393,7 +1425,7 @@
         tip(cfg.hint);
       } else {
         c.classList.add("no");
-        zombie(c);
+        yokai(c);
         again[w.kana] = 1;
         var asked = cfg.wrong(w, key);
         /* No heading line: the red edge and the two labels already say it,
@@ -1516,7 +1548,7 @@
           x.classList.toggle("yes", x.dataset.o === want);
           if (x === b && !ok) x.classList.add("no");
         });
-        if (ok) ninja(b); else zombie(b);
+        if (ok) ninja(b); else yokai(b);
         $("fb").innerHTML = '<div class="mark ' + (ok ? "yes" : "no") + '">'
           + '<b>' + (ok ? "Yes" : "Not that one") + '</b>'
           + (ok ? "" : "Look at " + esc(it.f.look) + " again. ")
@@ -1581,7 +1613,7 @@
       var ok = got === want;
       var joined = /くて|で$|で /.test(got);
       if (ok) ninja($("fb"));
-      else if (line.length === parts.length) zombie($("fb"));
+      else if (line.length === parts.length) yokai($("fb"));
       $("fb").innerHTML = '<div class="mark ' + (ok ? "yes" : "no") + '">'
         + '<b>' + (ok ? "Yes" : "Not yet") + '</b>'
         + (ok ? ruby(b.ja) + " " + saybtn(b.ja)
@@ -1653,7 +1685,7 @@
       b.onclick = function(){
         var ok = b.dataset.p === p.id;
         b.classList.add(ok ? "yes" : "no");
-        if (ok) ninja(b); else zombie(b);
+        if (ok) ninja(b); else yokai(b);
         $("fb").innerHTML = '<div class="mark ' + (ok ? "yes" : "no") + '">'
           + '<b>' + (ok ? "Yes" : "Not that one") + '</b>'
           + (ok ? esc(p.name) + "さん." : "Check " + esc(clues[0].look)
@@ -1752,7 +1784,7 @@
           x.classList.toggle("yes", x.dataset.v === it.v);
           if (x === b && !ok) x.classList.add("no");
         });
-        if (ok) ninja(b); else zombie(b);
+        if (ok) ninja(b); else yokai(b);
         var line = it.p.name + "さんは " + it.item + "を " + V[it.v].ja + "。";
         $("fb").innerHTML = '<div class="mark ' + (ok ? "yes" : "no") + '">'
           + '<b>' + (ok ? "Yes" : "Not that one") + '</b>'
@@ -2023,7 +2055,7 @@
           e.textContent = Object.keys(deck("dress", n).right).length;
         });
       }
-      else zombie($("fig"));
+      else yokai($("fig"));
       wireSay();
     };
   };
@@ -2116,7 +2148,7 @@
         wireSay();
         draw9();
       } else {
-        zombie($("sin"));
+        yokai($("sin"));
         $("fb").innerHTML = '<div class="mark no">'
           + '<div class="ph bad"><i>not</i>' + esc(got) + '</div>'
           + '<div class="ph"><i>yes</i>' + ruby(w.ja) + ' ' + saybtn(w.ja)
@@ -2208,12 +2240,12 @@
       $("sc").innerHTML = '<b>' + right + '</b> true of ' + esc(p.name) + 'さん';
       /* This screen marks the whole thing at once rather than line by
          line, so it gets one creature rather than three: the ninja when
-         the three sentences are there and joined, the zombie when the
+         the three sentences are there and joined, the かさおばけ when the
          student has written something and none of it is true of this
          person. Nothing at all for a half-finished answer, because a
-         zombie every time somebody pauses to think is a nag. */
+         creature every time somebody pauses to think is a nag. */
       if (right >= 3 && joined){ ninja($("sc")); done("write"); }
-      else if (lines.length && !right) zombie($("sc"));
+      else if (lines.length && !right) yokai($("sc"));
     };
   };
 
