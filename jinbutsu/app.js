@@ -122,12 +122,21 @@
             pts:0, spent:0, done:{}, best:{}, wrote:{} };
   try { S = Object.assign(S, JSON.parse(localStorage.getItem(KEY) || "{}")); } catch(e){}
   var saveT = null;
-  function save(){
-    clearTimeout(saveT);
-    saveT = setTimeout(function(){
-      try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){}
-    }, 250);
+  function write(){
+    clearTimeout(saveT); saveT = null;
+    try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){}
   }
+  function save(){ clearTimeout(saveT); saveT = setTimeout(write, 250); }
+  /* The write waits 250ms so that typing does not hit localStorage on
+     every keystroke, which means a student who closes the tab the moment
+     the score moves loses the point they just earned. So the wait is cut
+     short on the way out. pagehide fires on a real navigation and
+     visibilitychange is the one an iPad sends when the app is swiped
+     away, so both are listened for. */
+  window.addEventListener("pagehide", write);
+  document.addEventListener("visibilitychange", function(){
+    if (document.visibilityState === "hidden") write();
+  });
   function paintToggles(){
     document.body.classList.toggle("nofuri", !S.furi);
     document.body.classList.toggle("noen", !S.en);

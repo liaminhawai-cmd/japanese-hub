@@ -107,17 +107,28 @@
 
   /* ---- what the device remembers, on this device only ---- */
   var KEY = "hito-v1";
-  var S = { furi:true, en:true, sfx:true, rate:1, done:{}, wrote:{} };
+  var S = { furi:true, en:true, sfx:true, rate:1, dressText:false,
+            pts:0, spent:0, done:{}, won:{}, wrote:{} };
   try { var raw = localStorage.getItem(KEY); if (raw){
     var o = JSON.parse(raw); for (var k in S) if (o[k] !== undefined) S[k] = o[k];
   } } catch (e){}
   var saveT = null;
-  function save(){
-    clearTimeout(saveT);
-    saveT = setTimeout(function(){
-      try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e){}
-    }, 200);
+  function write(){
+    clearTimeout(saveT); saveT = null;
+    try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e){}
   }
+  function save(){ clearTimeout(saveT); saveT = setTimeout(write, 200); }
+  /* The write waits 200ms so that typing does not hit localStorage on
+     every keystroke. That was harmless when the only thing at stake was
+     a tick; with a score on the page it means a student who closes the
+     tab the moment the number moves loses the point they just earned.
+     So the wait is cut short on the way out. pagehide fires on a real
+     navigation and visibilitychange is the one an iPad sends when the
+     app is swiped away, so both are listened for. */
+  window.addEventListener("pagehide", write);
+  document.addEventListener("visibilitychange", function(){
+    if (document.visibilityState === "hidden") write();
+  });
   function paintToggles(){
     /* Twenty-five devices groaning at once is a classroom problem, so
        the noise has a switch. It governs the drum tick as well. */
@@ -129,6 +140,51 @@
     document.body.classList.toggle("noen", !S.en);
     $("furiBtn").classList.toggle("off", !S.furi);
     $("enBtn").classList.toggle("off", !S.en);
+    $("ptsn").textContent = S.pts;
+    $("pts").title = S.spent
+      ? S.pts + " points. " + S.spent + " spent on support."
+      : S.pts + " points, nothing spent on support yet.";
+  }
+
+  /* ---- the score ----
+     The same rules as れきしの人, so a student who has used that app
+     already knows this one: a point is paid for the first time an item
+     is answered right and never again, every support costs, and nothing
+     is ever locked. Points only leave through spend().
+
+     Awarding once per item is the whole of it. The steps here deal from
+     a deck and run forever, so a score that counted every right answer
+     would measure patience and not Japanese: the fastest way to the top
+     would be to answer the same six words all lesson.
+
+     NOTHING IS RECORDED AND NOTHING IS SENT. The score lives in this
+     browser. Save writes a line of text they can screenshot. */
+  var tipT = null;
+  function flash(cls, text){
+    var t = $("ptstip");
+    if (!t) return;
+    t.className = cls;
+    t.textContent = text;
+    clearTimeout(tipT);
+    tipT = setTimeout(function(){ t.textContent = ""; }, 4000);
+  }
+  function award(n, why){
+    S.pts += n; save(); paintToggles();
+    flash("up", "+" + n + (why ? " " + why : ""));
+  }
+  function spend(n, why){
+    S.pts = Math.max(0, S.pts - n); S.spent += n; save(); paintToggles();
+    flash("down", "\u2212" + n + " " + why);
+  }
+  /* Paid once, on the first time this exact item goes right. The ledger
+     is saved, so a reload does not hand the same points over again. */
+  function first(key, n, why){
+    if (S.won[key]) return false;
+    S.won[key] = 1; award(n, why); return true;
+  }
+  function once(key, n, why){
+    if (S.won[key]) return false;
+    S.won[key] = 1; spend(n, why); return true;
   }
   $("furiBtn").onclick = function(){ S.furi = !S.furi; paintToggles(); save(); };
   $("enBtn").onclick = function(){ S.en = !S.en; paintToggles(); save(); };
@@ -153,7 +209,29 @@
     if (S.sfx) CLICK.whoosh();          /* so you can hear what you turned on */
   };
   $("resetBtn").onclick = function(){
-    S.done = {}; S.wrote = {}; save(); draw();
+    if (!confirm("Clear your score, your ticks and anything typed on this device?")) return;
+    S.pts = 0; S.spent = 0; S.done = {}; S.won = {}; S.wrote = {};
+    save(); draw();
+  };
+  /* Nothing is recorded anywhere, so the only way to show somebody is to
+     take it with you. A line of text they can screenshot or paste. */
+  $("saveBtn").onclick = function(){
+    var rungs = 0;
+    STEPS.forEach(function(st){ if (S.done[st.id]) rungs++; });
+    var line = "\u3072\u3068 \u00b7 " + S.pts + " points"
+      + (S.spent ? " (" + S.spent + " spent on support)" : " with no support used")
+      + " \u00b7 " + rungs + " of " + STEPS.length + " steps done"
+      + " \u00b7 " + new Date().toLocaleDateString("en-AU");
+    var ta = document.createElement("textarea");
+    ta.value = line;
+    ta.style.cssText = "position:fixed;inset:auto 10px 10px 10px;z-index:90;"
+      + "height:72px;font-size:15px;padding:9px;border:2px solid #16375e;border-radius:9px";
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); } catch (e){}
+    alert("Copied, and shown at the bottom of the screen so you can screenshot it:\n\n"
+      + line + "\n\nNothing is sent anywhere. This is the only record there is.");
+    setTimeout(function(){ ta.remove(); }, 20000);
   };
 
   function shuffle(a){
@@ -1133,7 +1211,13 @@
       b.onclick = function(){ at = +b.dataset.i; draw(); };
     });
   }
-  function done(id){ S.done[id] = 1; save(); paintSteps(); }
+  /* Finishing a step pays once. It is worth more than any single item in
+     it, so the last word of a set is worth staying for. */
+  function done(id){
+    var fresh = !S.done[id];
+    S.done[id] = 1; save(); paintSteps();
+    if (fresh) award(5, "step done");
+  }
   function wireSay(){
     each($("main"), "[data-say]", function(b){
       b.onclick = function(ev){ ev.stopPropagation(); say(b.dataset.say); };
@@ -1303,6 +1387,7 @@
         chip.remove();
         left--; score();
         wireSay();
+        first("match:" + kana, 1, "word");
         if (!left) done("match");
       } else {
         slot.classList.add("no");
@@ -1310,7 +1395,10 @@
         setTimeout(function(){ slot.classList.remove("no"); }, 700);
         miss[kana] = (miss[kana] || 0) + 1;
         /* Stuck twice on the same word: show the spelling. The rung is
-           generous early and it comes off as soon as it is not needed. */
+           generous early and it comes off as soon as it is not needed.
+           This one costs nothing, unlike the supports in the other steps,
+           because the student did not ask for it: charging for help that
+           arrives uninvited would make the score dishonest. */
         if (miss[kana] >= 2 && !silent && !chip.dataset.shown){
           chip.dataset.shown = "1";
           chip.innerHTML = '<span class="num">' + chip.querySelector(".num").textContent
@@ -1435,6 +1523,9 @@
         ninja(c);
         col.querySelector(".in").appendChild(c);
         left--; score();
+        /* Keyed on the word, not the round: いろ and いかな both deal a
+           fresh handful every round out of a list of nine or twelve. */
+        first(cfg.id + ":" + w.kana, 1, "sorted");
         $("fb").innerHTML = '<div class="mark yes"><b>Yes</b>'
           + '<div class="ph">' + cfg.right(w) + '</div></div>';
         /* an empty dashed box is not worth the room it takes */
@@ -1572,7 +1663,10 @@
           + ruby(p.name + "さんは " + it.f.ja) + ' ' + saybtn(p.name + "さんは " + it.f.ja)
           + '</div>';
         wireSay();
-        if (ok) gotRight("part", items.length, i, "part");
+        if (ok){
+          first("part:" + p.id + ":" + it.f.id, 1, "right");
+          gotRight("part", items.length, i, "part");
+        }
       };
     });
     $("next").onclick = function(){ advance("part", items.length); draw(); };
@@ -1640,7 +1734,10 @@
                             : "The first description has to change before it can join the second: い becomes くて, な becomes で.")))
         + '</div>';
       wireSay();
-      if (ok) gotRight("join", nb, i, "join");
+      if (ok){
+        first("join:" + b.person + ":" + i, 3, "sentence");
+        gotRight("join", nb, i, "join");
+      }
     };
   };
 
@@ -1707,7 +1804,10 @@
           + '<b>' + (ok ? "Yes" : "Not that one") + '</b>'
           + (ok ? esc(p.name) + "さん." : "Check " + esc(clues[0].look)
                   + " and " + esc(clues[1].look) + ".") + '</div>';
-        if (ok) gotRight("who", n, i, "who");
+        if (ok){
+          first("who:" + p.id, 2, "found");
+          gotRight("who", n, i, "who");
+        }
       };
     });
     $("next").onclick = function(){ advance("who", n); draw(); };
@@ -1812,7 +1912,10 @@
           + '<div class="jp" style="margin-top:4px">' + ruby(line) + ' '
           + saybtn(line) + '</div></div>';
         wireSay();
-        if (ok) gotRight("wear", items.length, i, "wear");
+        if (ok){
+          first("wear:" + it.p.id + ":" + it.item, 1, "right");
+          gotRight("wear", items.length, i, "wear");
+        }
       };
     });
     $("next").onclick = function(){ advance("wear", items.length); draw(); };
@@ -1925,6 +2028,12 @@
 
     function paintScript(){
       $("textBtn").textContent = S.dressText ? "Hide text" : "Show text";
+      /* This step is the only listening in the app, so the script is the
+         answer and not a hint. Charged once per outfit, however many
+         times it is turned on and off, and charged on the outfit being
+         read rather than on the button, because the switch stays on when
+         you press Next. */
+      if (S.dressText) once("dtext:" + i, 2, "text shown");
       $("script").innerHTML = S.dressText
         ? o.items.map(function(it, k){
             return '<p class="jp">' + (k + 1) + '. ' + ruby(it.ja) + ' '
@@ -2064,6 +2173,7 @@
       });
       if (ok){
         ninja($("fig"));
+        first("dress:" + i, 4, "outfit");
         gotRight("dress", n, i, "dress");
         /* The readout is in the footer and the footer is not redrawn by a
            check, so it is moved by hand. A student who has just dressed
@@ -2144,10 +2254,20 @@
         + '<div class="row"><input id="sin" type="text" autocomplete="off"'
         + ' autocapitalize="off" spellcheck="false" lang="ja"'
         + ' aria-label="Write it in Japanese">'
+        + '<button class="btn ghost sm" id="shint">First letter</button>'
         + '<button class="btn sm" id="sgo">Check</button></div>';
       $("sin").focus();
       $("sin").onkeydown = function(ev){ if (ev.key === "Enter") check(); };
       $("sgo").onclick = check;
+      /* The one support in this step. A first kana is enough to unstick
+         a word you half know and no help at all with one you do not, so
+         it costs a point and the word is still typed by hand. */
+      $("shint").onclick = function(){
+        spend(1, "first letter");
+        $("sin").value = w.kana.slice(0, 1);
+        $("sin").focus();
+        $("shint").disabled = true;
+      };
     }
     function check(){
       var w = spinWord, got = ($("sin").value || "").replace(/[\s\u3000]+/g, "");
@@ -2155,6 +2275,7 @@
       var ok = got === w.kana || got === plain(w.ja);
       if (ok){
         t.right++;
+        first("spin:" + w.kana, 1, "word");
         if (t.right >= 8) done("spin");
         ninja($("sin"));
         $("fb").innerHTML = '<div class="mark yes"><b>Yes</b>'
@@ -2261,7 +2382,11 @@
          student has written something and none of it is true of this
          person. Nothing at all for a half-finished answer, because a
          creature every time somebody pauses to think is a nag. */
-      if (right >= 3 && joined){ ninja($("sc")); done("write"); }
+      if (right >= 3 && joined){
+        ninja($("sc"));
+        first("write:" + p.id, 3, "person");
+        done("write");
+      }
       else if (lines.length && !right) yokai($("sc"));
     };
   };
