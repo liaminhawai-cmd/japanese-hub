@@ -261,7 +261,7 @@ window.ORAL_FLOW = {
   },
   "ui": {
     "rate": {
-      "ja": "この スピードは どうですか。",
+      "ja": "はなすスピード",
       "en": "How is this speed?",
       "note": "Spoken when the speed button is pressed, so the student hears the new speed on a line that says what it is."
     },

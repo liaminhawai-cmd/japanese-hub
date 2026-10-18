@@ -258,6 +258,12 @@ window.HITO_PEOPLE = {
   },
   "rules": [
     {
+      "step": "katch",
+      "title_en": "Catch the word",
+      "rule": "Read the English at the top, then catch the word that means it. Let the others fall. Every word you catch makes the next one fall faster. Drag the bar, or use the arrow keys.",
+      "eg": []
+    },
+    {
       "step": "sort",
       "title": "い か な",
       "title_en": "い or な",

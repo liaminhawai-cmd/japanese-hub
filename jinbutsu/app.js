@@ -119,7 +119,7 @@
   /* ---- what the page remembers ---- */
   var KEY = "jinbutsu-v1";
   var S = { furi:true, en:true, rate:1, sfx:true,
-            pts:0, spent:0, done:{}, best:{}, wrote:{} };
+            pts:0, spent:0, arcade:0, done:{}, best:{}, wrote:{} };
   try { S = Object.assign(S, JSON.parse(localStorage.getItem(KEY) || "{}")); } catch(e){}
   var saveT = null;
   function write(){
@@ -160,14 +160,17 @@
   $("rateBtn").onclick = function(){
     S.rate = RATES[(RATES.indexOf(S.rate)+1) % RATES.length] || 1;
     save(); paintToggles();
-    var v = null;
-    (K.vocab||[]).forEach(function(x){ if (!v && hasvoice(x.ja)) v = x; });
-    if (v) say(v.ja);
+    /* It used to say whichever unit word sat first in the list, which
+       told a student the speed had changed but not what for. はなすスピード
+       names the thing it is demonstrating, and it is the same line in
+       ひと and the oral exam app. */
+    var line = ((K.ui || [])[0] || {}).ja;
+    if (line) say(line);
   };
   $("resetBtn").onclick = function(){
     if (!confirm("Clear your score, your records and anything typed on this device?")) return;
     S = { furi:true, en:true, rate:1, sfx:true,
-          pts:0, spent:0, done:{}, best:{}, wrote:{} };
+          pts:0, spent:0, arcade:0, done:{}, best:{}, wrote:{} };
     try { localStorage.removeItem(KEY); } catch(e){}
     draw();
   };
@@ -430,8 +433,11 @@
        loop that follows it: a browser is readier to start an audio engine
        during a gesture than a tenth of a second afterwards. */
     function wakeAudio(){
-      try { var c = build(); if (c && c.state === "suspended") c.resume(); }
-      catch (e){}
+      try {
+        var c = build();
+        if (c && c.state === "suspended") c.resume();
+        return c;
+      } catch (e){ return null; }
     }
     /* ---- the whoosh and the warble ----
        Both synthesised rather than fetched: the page has to work on a
@@ -526,8 +532,63 @@
         lfo.start(t); lfo.stop(t + D + 0.05);
       } catch (e){}
     }
+    /* ---- the slurp ----
+       Andrew asked for "a bit of a sucking sound" when the bat absorbs a
+       word. A suck is a swallow, which is the opposite shape to every
+       other sound in here: the pitch RISES as the thing disappears and
+       the noise closes rather than opens, so the ear hears something
+       being drawn in rather than struck. A sharp little pop at the end
+       is the mouth shutting. */
+    function slurp(){
+      if (!S.sfx) return;
+      try {
+        var c = build(); if (!c) return;
+        var t = c.currentTime, D = 0.22;
+        var src = c.createBufferSource(); src.buffer = hiss;
+        var bp = c.createBiquadFilter();
+        bp.type = "bandpass"; bp.Q.value = 5;
+        bp.frequency.setValueAtTime(320, t);
+        bp.frequency.exponentialRampToValueAtTime(2200, t + D);
+        var g = c.createGain();
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.exponentialRampToValueAtTime(0.22, t + 0.03);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + D);
+        src.connect(bp); bp.connect(g); g.connect(c.destination);
+        src.start(t); src.stop(t + D + 0.02);
+
+        var o = c.createOscillator();
+        o.type = "sine";
+        o.frequency.setValueAtTime(180, t);
+        o.frequency.exponentialRampToValueAtTime(1400, t + D * 0.9);
+        var g2 = c.createGain();
+        g2.gain.setValueAtTime(0.0001, t);
+        g2.gain.exponentialRampToValueAtTime(0.16, t + 0.04);
+        g2.gain.exponentialRampToValueAtTime(0.0001, t + D);
+        o.connect(g2); g2.connect(c.destination);
+        o.start(t); o.stop(t + D + 0.02);
+      } catch (e){}
+    }
+    /* A wrong catch, or a right word let through: the 1980 cabinet's
+       "no", which is a square wave falling a fourth. */
+    function buzz(){
+      if (!S.sfx) return;
+      try {
+        var c = build(); if (!c) return;
+        var t = c.currentTime;
+        var o = c.createOscillator(), g = c.createGain();
+        o.type = "square";
+        o.frequency.setValueAtTime(200, t);
+        o.frequency.setValueAtTime(150, t + 0.09);
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.exponentialRampToValueAtTime(0.13, t + 0.01);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + 0.2);
+        o.connect(g); g.connect(c.destination);
+        o.start(t); o.stop(t + 0.22);
+      } catch (e){}
+    }
     return { whoosh: whoosh, warble: warble,
-             ratchet: ratchet, clunk: clunk, wake: wakeAudio };
+             ratchet: ratchet, clunk: clunk, wake: wakeAudio,
+             slurp: slurp, buzz: buzz, ctx: function(){ return ctx; } };
   })();
 
   /* ---- the score ----
@@ -1007,6 +1068,327 @@
     return { mount: mount, cancel: cancel };
   })();
 
+  /* ================= ことばキャッチ =========================================
+     Andrew asked for this one: "random topic vocabulary falls from the sky
+     one word at a time in random order in Japanese script. Players have to
+     recognise the correct word and move a horizontally moving bar at the
+     bottom of the screen to absorb the word with a bit of a sucking sound.
+     After they get a word correct, the words fall ever so slightly faster.
+     The graphics are deliberately pixelated like 80s tabletop graphics
+     games with a black background and the music is chiptune."
+
+     The one thing a falling-word game has to get right is that catching is
+     a DECISION and not a reflex. A word falls, and above it is an English
+     meaning: catch the word if it is that meaning, let it fall if it is
+     not. Reading is the whole of the game. Without the target the bat is
+     just a thing you park under whatever is coming, which trains nothing.
+
+     So: a life for catching the wrong word, a life for letting the right
+     one land, three lives, and a fraction more speed every time a word is
+     absorbed. The speed is the reward and the pressure at once.
+
+     The pixels are real pixels. The canvas is 240 by 320 however big it is
+     drawn, smoothing is off, and the browser blows each one up into a
+     square. Nothing is a picture of a pixel; the text really is that
+     coarse, which is why the kyokasho strokes come out blocky instead of
+     smooth, and why it looks like the thing Andrew asked for rather than a
+     filter over a modern page. */
+  var JPFONT = getComputedStyle(document.documentElement)
+    .getPropertyValue("--jp").trim() || "sans-serif";
+  var PIXW = 180, PIXH = 240;
+  var SEMI = Math.pow(2, 1 / 12);
+  function hz(n){
+    /* "A4" or "F#3" to a frequency, so the tune in the data file reads as
+       notes rather than as numbers nobody can check against a score. */
+    var m = /^([A-G])(#|b)?(-?\d)$/.exec(n || "");
+    if (!m) return 0;
+    var base = { C:0, D:2, E:4, F:5, G:7, A:9, B:11 }[m[1]];
+    if (m[2] === "#") base++;
+    if (m[2] === "b") base--;
+    return 440 * Math.pow(SEMI, base - 9 + (+m[3] - 4) * 12);
+  }
+
+  /* ---- the chiptune ----
+     Two square waves and a bass pulse, scheduled on the audio clock a bar
+     at a time rather than on a timer, because a setInterval melody wobbles
+     audibly the moment the main thread is busy drawing. Nothing is
+     downloaded: the tune is a list of notes in the data file.
+
+     It is quiet on purpose. Twenty-five of these in a classroom is the
+     thing that gets a game banned, so the music sits under the sound
+     effects and the ♪ button turns the lot off. */
+  var MUSIC = (function(){
+    var timer = null, at = 0, i = 0, bi = 0, on = false, T = null;
+    function voice(c, note, start, dur, type, vol, detune){
+      if (!note) return;
+      var o = c.createOscillator(), g = c.createGain();
+      o.type = type;
+      o.frequency.value = hz(note);
+      if (detune) o.detune.value = detune;
+      g.gain.setValueAtTime(0.0001, start);
+      g.gain.exponentialRampToValueAtTime(vol, start + 0.012);
+      g.gain.setValueAtTime(vol, start + dur * 0.72);
+      g.gain.exponentialRampToValueAtTime(0.0001, start + dur * 0.96);
+      o.connect(g); g.connect(c.destination);
+      o.start(start); o.stop(start + dur);
+    }
+    function pump(){
+      try { pumpNow(); } catch (e){ stop(); }
+    }
+    function pumpNow(){
+      var c = SFX.ctx(); if (!c || !on || !T) return;
+      var beat = 60 / (T.tempo || 100);
+      /* keep about a second and a half of music in front of the clock */
+      while (at < c.currentTime + 1.5){
+        if (at < c.currentTime) at = c.currentTime + 0.05;
+        var n = T.melody[i % T.melody.length], d = n[1] * beat;
+        voice(c, n[0], at, d, "square", 0.045, 0);
+        var b = (T.bass || [])[bi % ((T.bass || []).length || 1)];
+        if (b) voice(c, b[0], at, Math.min(d, b[1] * beat), "triangle", 0.05, 0);
+        at += d;
+        i++; bi++;
+      }
+    }
+    function start(tune){
+      if (on) return;
+      /* Everything about the music is optional. A browser that refuses
+         an AudioContext, a device with the output muted, an iPad that
+         has not had its gesture yet: none of it may stop the game
+         starting. The test harness found this by wrapping AudioContext
+         and throwing inside it, and the game never dealt its first
+         word. */
+      try {
+        var c = SFX.wake(); if (!c) return;
+        T = tune; on = true; at = c.currentTime + 0.08; i = 0; bi = 0;
+        pump();
+        timer = setInterval(pump, 400);
+      } catch (e){ on = false; T = null; }
+    }
+    function stop(){
+      on = false; T = null;
+      clearInterval(timer); timer = null;
+    }
+    return { start: start, stop: stop, playing: function(){ return on; } };
+  })();
+
+  /* ---- the game ----
+     Fixed 1/60 timestep with an accumulator, the same way the drum runs,
+     so a word falls at the same speed on a 60Hz laptop and a 120Hz iPad
+     and the difficulty is the difficulty rather than the refresh rate. */
+  function arcade(cfg){
+    var cv = cfg.canvas, g = cv.getContext("2d");
+    cv.width = PIXW; cv.height = PIXH;
+    var FONT = 17;
+    g.imageSmoothingEnabled = false;
+    var POOL = cfg.words;
+    var stars = [];
+    for (var s = 0; s < 20; s++)
+      stars.push([Math.floor(Math.random() * PIXW), Math.floor(Math.random() * PIXH),
+                  Math.random() < 0.3 ? 2 : 1]);
+
+    var G = { mode:"ready", score:0, lives:3, best:cfg.best || 0,
+              speed:26, bat:PIXW / 2, batW:40, word:null, y:0, x:0,
+              target:null, flash:0, flashOk:false, caught:{} };
+    var raf = 0, last = 0, acc = 0, alive = true;
+
+    function pick(){
+      /* Half the words that fall are the one being asked for. Much below
+         that and the game is mostly dodging; much above and there is no
+         reading to do because catching everything works. */
+      var want = POOL[Math.floor(Math.random() * POOL.length)];
+      G.target = want;
+      var isIt = Math.random() < 0.5;
+      var w = want;
+      if (!isIt && POOL.length > 1){
+        var tries = 0;
+        do { w = POOL[Math.floor(Math.random() * POOL.length)]; tries++; }
+        while (w.en === want.en && tries < 20);
+      }
+      G.word = w;
+      /* above the top edge, so a word falls in from off screen rather
+         than appearing in the middle of the question */
+      G.y = -4;
+      g.font = "bold " + FONT + "px " + JPFONT;
+      var half = g.measureText(cfg.label(w)).width / 2 + 3;
+      var span = Math.max(8, PIXW - 2 * half);
+      G.x = Math.round(half + Math.random() * span);
+    }
+    function newTarget(){
+      /* The target only changes when a word is dealt with, so a student
+         who is still reading is not chasing a moving question. */
+      pick();
+    }
+    function hit(ok){
+      G.flash = 14; G.flashOk = ok;
+      if (ok){
+        G.score++;
+        G.speed = Math.min(132, G.speed * 1.05);
+        if (cfg.onCatch) cfg.onCatch(G.word);
+        if (S.sfx) SFX.slurp();
+      } else {
+        G.lives--;
+        if (S.sfx) SFX.buzz();
+        if (G.lives <= 0) return over();
+      }
+      newTarget();
+    }
+    function over(){
+      G.mode = "over";
+      G.best = Math.max(G.best, G.score);
+      MUSIC.stop();
+      if (cfg.onOver) cfg.onOver(G.score);
+    }
+    function begin(){
+      G.mode = "play"; G.score = 0; G.lives = 3; G.speed = 30;
+      SFX.wake();
+      if (S.sfx && cfg.tune) MUSIC.start(cfg.tune);
+      newTarget();
+    }
+    function step(){
+      if (G.mode !== "play") return;
+      G.y += G.speed / 60;
+      if (G.flash > 0) G.flash--;
+      var floor = PIXH - 20;
+      if (G.y >= floor){
+        var onBat = Math.abs(G.x - G.bat) < G.batW / 2 + 12;
+        var right = G.word.en === G.target.en;
+        if (onBat) hit(right);
+        else if (right){
+          G.lives--;
+          G.flash = 14; G.flashOk = false;
+          if (S.sfx) SFX.buzz();
+          if (G.lives <= 0) return over();
+          newTarget();
+        } else newTarget();
+      }
+    }
+
+    function text(t, x, y, px, col, align){
+      g.fillStyle = col;
+      g.font = "bold " + px + "px " + JPFONT;
+      g.textAlign = align || "center";
+      g.textBaseline = "alphabetic";
+      g.fillText(t, x, y);
+    }
+    function paint(){
+      g.fillStyle = "#000";
+      g.fillRect(0, 0, PIXW, PIXH);
+      g.fillStyle = "#1b3b1b";
+      stars.forEach(function(st){ g.fillRect(st[0], st[1], st[2], st[2]); });
+
+      if (G.mode === "ready" || G.mode === "over"){
+        text(G.mode === "over" ? "GAME OVER" : "ことばキャッチ",
+             PIXW / 2, 84, G.mode === "over" ? 17 : 18,
+             G.mode === "over" ? "#ff6a4a" : "#6cf06c");
+        if (G.mode === "over"){
+          text("SCORE " + G.score, PIXW / 2, 110, 12, "#fff");
+          text("BEST " + G.best, PIXW / 2, 126, 9, "#8a8a8a");
+        } else {
+          text("Catch the word that means", PIXW / 2, 110, 8, "#9a9a9a");
+          text("the English at the top.", PIXW / 2, 121, 8, "#9a9a9a");
+          text("Let the others fall.", PIXW / 2, 132, 8, "#9a9a9a");
+        }
+        text("PRESS START", PIXW / 2, 162, 11,
+             (Math.floor(Date.now() / 420) % 2) ? "#6cf06c" : "#1d4a1d");
+        text("move: drag, or ← →", PIXW / 2, 184, 8, "#5a5a5a");
+      }
+
+      if (G.mode === "play" && G.word){
+        var col = "#fff";
+        if (G.flash > 0) col = G.flashOk ? "#6cf06c" : "#ff6a4a";
+        text(cfg.label(G.word), G.x, Math.round(G.y), FONT, col);
+      }
+      /* The question is painted AFTER the word, in the amber of a 1980
+         cabinet, so a word falls out from behind the band rather than
+         landing on top of the question. */
+      if (G.mode === "play"){
+        g.fillStyle = "#1a1407";
+        g.fillRect(0, 0, PIXW, 26);
+        text(G.target.en, PIXW / 2, 12, 10, "#ffb43a");
+        text("CATCH IT IF IT MEANS THIS", PIXW / 2, 22, 6, "#7a5a1e");
+        g.fillStyle = "#2b2b2b";
+        g.fillRect(0, 26, PIXW, 1);
+      }
+
+      /* the bat: a slab with a lighter lip, and a mouth when it eats */
+      var by = PIXH - 14, bx = Math.round(G.bat - G.batW / 2);
+      g.fillStyle = G.flash > 0 && G.flashOk ? "#aaffaa" : "#6cf06c";
+      g.fillRect(bx, by, G.batW, 6);
+      g.fillStyle = "#2f8f2f";
+      g.fillRect(bx, by + 6, G.batW, 3);
+      g.fillStyle = "#000";
+      g.fillRect(Math.round(bx + G.batW / 2 - 4), by, 8, 2);
+
+      if (G.mode === "play"){
+        g.fillStyle = "#2b2b2b";
+        g.fillRect(0, PIXH - 8, PIXW, 1);
+        text("SCORE " + G.score, 3, PIXH - 1, 8, "#6cf06c", "left");
+        var hearts = "";
+        for (var L = 0; L < G.lives; L++) hearts += "■";
+        text(hearts, PIXW - 3, PIXH - 1, 8, "#ff6a4a", "right");
+      }
+    }
+    function loop(t){
+      if (!alive) return;
+      if (!last) last = t;
+      acc += Math.min(0.25, (t - last) / 1000);
+      last = t;
+      while (acc >= 1 / 60){ step(); acc -= 1 / 60; }
+      paint();
+      raf = requestAnimationFrame(loop);
+    }
+
+    /* ---- the bat ---- */
+    function moveTo(clientX){
+      var r = cv.getBoundingClientRect();
+      var x = (clientX - r.left) / r.width * PIXW;
+      G.bat = Math.max(G.batW / 2, Math.min(PIXW - G.batW / 2, x));
+    }
+    var dragging = false;
+    function down(ev){
+      cv.focus();
+      if (G.mode !== "play"){ begin(); return; }
+      dragging = true; moveTo(ev.clientX); ev.preventDefault();
+    }
+    function move(ev){ if (dragging) moveTo(ev.clientX); }
+    function up(){ dragging = false; }
+    cv.addEventListener("pointerdown", down);
+    cv.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+    var keys = {};
+    function keydown(ev){
+      if (ev.key === "ArrowLeft" || ev.key === "ArrowRight"){
+        keys[ev.key] = 1; ev.preventDefault();
+      }
+      if ((ev.key === " " || ev.key === "Enter") && G.mode !== "play"){
+        begin(); ev.preventDefault();
+      }
+    }
+    function keyup(ev){ keys[ev.key] = 0; }
+    cv.addEventListener("keydown", keydown);
+    cv.addEventListener("keyup", keyup);
+    var kt = setInterval(function(){
+      if (G.mode !== "play") return;
+      if (keys.ArrowLeft) G.bat = Math.max(G.batW / 2, G.bat - 5);
+      if (keys.ArrowRight) G.bat = Math.min(PIXW - G.batW / 2, G.bat + 5);
+    }, 1000 / 60);
+
+    raf = requestAnimationFrame(loop);
+    return {
+      state: G,
+      start: begin,
+      stop: function(){
+        alive = false;
+        cancelAnimationFrame(raf);
+        clearInterval(kt);
+        MUSIC.stop();
+        cv.removeEventListener("pointerdown", down);
+        cv.removeEventListener("pointermove", move);
+        window.removeEventListener("pointerup", up);
+      }
+    };
+  }
+
   var STEPS = [
     { id:"kotoba", ja:"ことば",   en:"The words" },
     { id:"yomu",   ja:"よむ",     en:"Read it" },
@@ -1015,6 +1397,7 @@
     { id:"hayaku", ja:"はやく",   en:"Read it again" },
     { id:"bunpou", ja:"ぶんぽう", en:"Grammar", whole:true },
     { id:"roulette", ja:"ルーレット", en:"Spin a pattern", whole:true },
+    { id:"katch", ja:"ことばキャッチ", en:"Catch the kanji", whole:true },
     { id:"jibun",  ja:"じぶんで", en:"Write your own", whole:true },
     { id:"kuraberu", ja:"くらべる", en:"All six", whole:true }
   ];
@@ -1061,6 +1444,9 @@
   }
   function draw(){
     paintToggles(); paintSteps();
+    /* The game runs on its own clock and its own audio. Leaving the rung
+       has to stop both, or さくらさくら follows you round the app. */
+    if (GAME){ GAME.stop(); GAME = null; }
     $("main").innerHTML = "";
     DRAW[STEPS[at].id]();
     wireSay();
@@ -2234,6 +2620,58 @@
      that shows the frame as a frame, one slot per column, which is the
      thing that makes the sixth article easy once the first five are
      known. */
+  /* ---- ことばキャッチ ----
+     The same game as ひと, over the thirty topic kanji rather than the
+     Year 8 word list, because recognising 住[す]んでいます at a glance is
+     exactly what this unit's reading asks for and exactly what a falling
+     word drills. The kanji fall bare: furigana on a falling word would
+     make it a kana-reading game, which is a different and easier one. */
+  var GAME = null;
+  DRAW.katch = function(){
+    var pool = (K.kanji || []).filter(function(w){ return w.en; });
+    $("main").innerHTML =
+        '<div class="rule"><b>Catch the kanji</b>Read the English at the '
+      + 'top, then catch the word that means it. Let the others fall. '
+      + 'Every word you catch makes the next one fall faster. Drag the '
+      + 'bar, or use the arrow keys.</div>'
+      + '<div class="work fit arcadewrap">'
+      + '<canvas id="arc" class="arcade" width="180" height="240"'
+      + ' tabindex="0" aria-label="Catch the kanji: a word game"></canvas>'
+      + '</div>'
+      + foot('<span class="score" id="asc"></span>'
+        + '<span class="sp"></span>'
+        + '<button class="btn sm" id="go">Start</button>');
+    function tally(){
+      var n = 0;
+      pool.forEach(function(w){ if (S.done["catch:" + plain(w.ja)]) n++; });
+      $("asc").innerHTML = '<b>' + n + '</b> of ' + pool.length + ' caught';
+      return n;
+    }
+    tally();
+    if (GAME) GAME.stop();
+    GAME = arcade({
+      canvas: $("arc"),
+      words: pool,
+      tune: K.tune,
+      best: S.arcade || 0,
+      label: function(w){ return plain(w.ja); },
+      onCatch: function(w){
+        var key = "catch:" + plain(w.ja);
+        if (!S.done[key]){ S.done[key] = 1; award(1); save(); }
+        if (tally() >= 10 && !S.done["katch"]){
+          S.done["katch"] = 1; award(4); save(); paintSteps();
+        }
+      },
+      onOver: function(score){
+        if (score > (S.arcade || 0)){ S.arcade = score; save(); }
+      }
+    });
+    $("go").onclick = function(){ $("arc").focus(); GAME.start(); };
+    /* the one test seam, as in ひと: a game loop cannot be driven
+       through the DOM. Reading it changes nothing. */
+    window.KIJI_GAME = GAME;
+  };
+
   DRAW.kuraberu = function(){
     var rows = K.people.map(function(p){
       var whole = p.paras.join("");

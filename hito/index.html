@@ -390,6 +390,17 @@
        padding:0 10px;color:var(--muted)}
   .chip .gl{display:block;font-family:var(--font);font-size:11.5px;
        font-style:normal;font-weight:600;color:var(--muted);margin-top:1px}
+  /* ことばキャッチ: the canvas is 180 by 240 whatever size it is drawn at,
+     and the browser is told not to smooth it, so every pixel arrives as a
+     square. The coarseness is the point, not a filter over it. */
+  .arcadewrap{display:flex;align-items:center;justify-content:center;
+       padding:6px 0;min-height:0}
+  .arcade{display:block;height:min(70vh,520px);width:auto;max-width:100%;
+       aspect-ratio:180/240;background:#000;border:3px solid #2f8f2f;
+       border-radius:6px;cursor:none;touch-action:none;
+       image-rendering:pixelated;image-rendering:crisp-edges}
+  .arcade:focus{outline:2px solid #6cf06c;outline-offset:2px}
+  @media (max-width:700px){ .arcade{height:min(60vh,420px)} }
   .score{font-size:13px;color:var(--muted)}
   .score b{color:var(--ink);font-size:16px}
   /* Seven tools and a score will not sit on one line of a 320px phone,
@@ -429,11 +440,11 @@
 <nav class="steps" id="steps"></nav>
 <div class="legend" id="legend"></div>
 <main id="main"></main>
-<script src="data/words.js?v=20261018b"></script>
-<script src="data/people.js?v=20261018b"></script>
-<script src="data/outfits.js?v=20261018b"></script>
-<script src="data/audio.js?v=20261018b"></script>
-<script src="app.js?v=20261018b"></script>
-<div class="build" aria-hidden="true">build 2026-10-18b</div>
+<script src="data/words.js?v=20261018d"></script>
+<script src="data/people.js?v=20261018d"></script>
+<script src="data/outfits.js?v=20261018d"></script>
+<script src="data/audio.js?v=20261018d"></script>
+<script src="app.js?v=20261018d"></script>
+<div class="build" aria-hidden="true">build 2026-10-18d</div>
 </body>
 </html>
