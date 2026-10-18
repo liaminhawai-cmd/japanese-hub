@@ -16,6 +16,7 @@
     --bg:#eef1f5; --paper:#fff; --ink:#15191f; --muted:#4a5464;
     --line:#ccd5e0; --line-soft:#e3e9f0;
     --deep:#16375e; --accent:#a83232; --ok:#2f6a3e; --warm:#8a6d1f;
+    --gram:#7a4a86;        /* grammar, the same purple ひと uses for な */
     --font:Calibri,Carlito,'Segoe UI',Tahoma,Verdana,sans-serif;
     --jp:'UD Digi Kyokasho N-R','UD Digi Kyokasho NP-R','UD Digi Kyokasho NK-R','UD デジタル教科書体 N-R','UDデジタル教科書体N-R','HGP教科書体','HG教科書体','YuKyokasho Yoko',YuKyokasho,'Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic',YuGothic,Meiryo,sans-serif;
   }
@@ -102,9 +103,21 @@
   .para{font-family:var(--jp);font-size:20px;line-height:2.05;margin:0 0 14px;
         text-align:justify}
   body.big .para{font-size:24px;line-height:2.15}
+  /* What a span looks like says what a tap will get you, so that a
+     student never taps hoping. An underline means there is a meaning
+     behind it; a dotted underline in the grammar colour means one of
+     Andrew's own rules is behind it; a particle is dimmed, because it
+     has a job rather than a meaning; plain text has nothing and is not
+     dressed up as though it had. */
   .w{cursor:pointer;border-radius:3px;padding:0 1px}
   .w:hover,.w.lit{background:#fdf3c9}
   .w.known{box-shadow:inset 0 -2px 0 #d8cfbb}
+  .w.gram{box-shadow:inset 0 -2px 0 var(--gram);text-decoration:underline;
+          text-decoration-style:dotted;text-decoration-color:var(--gram);
+          text-underline-offset:3px}
+  .w.part{color:var(--muted)}
+  .w.part:hover,.w.part.lit{background:#eef1f5}
+  .pt{color:var(--muted)}
   /* an underlined span is a span the paper asks them to translate */
   .ul{border-bottom:2px solid var(--deep)}
   ruby rt{font-size:.46em;font-weight:400;color:var(--muted)}
@@ -327,9 +340,9 @@
 <nav class="steps" id="steps"></nav>
 <div class="whobar" id="whobar"></div>
 <main id="main"></main>
-<script src="data/kiji.js?v=20261016a"></script>
-<script src="data/audio.js?v=20261016a"></script>
-<script src="app.js?v=20261016a"></script>
-<div class="build" aria-hidden="true">build 2026-10-16a</div>
+<script src="data/kiji.js?v=20261018a"></script>
+<script src="data/audio.js?v=20261018a"></script>
+<script src="app.js?v=20261018a"></script>
+<div class="build" aria-hidden="true">build 2026-10-18a</div>
 </body>
 </html>

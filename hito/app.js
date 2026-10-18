@@ -1673,72 +1673,184 @@
   };
 
   /* ---- 4. 〜くて・〜で ---- */
+  /* ---- 4. 〜くて・〜で ----
+     Andrew, on the version before this one: "the くて tab I think gives
+     away the answer once students notice the ending word has です."
+
+     He found one of three. The step laid out three tiles and asked for
+     them in order, and two of the three announced their own position:
+     the person tile ended in は and the last tile ended in です. Worse
+     than either, the middle tile arrived ALREADY CONJUGATED — あかるくて
+     was printed on it — so the one thing this step exists to teach was
+     done for the student before they touched it. What was left was
+     putting the only unlabelled tile in the only empty slot.
+
+     So the conjugating is now the task, in his own words: "Maybe don't
+     conjugate. Ask the students to choose the correct conjugation from a
+     few choices?"
+
+     Two decisions a round, both of them real, both driven by reading the
+     English rather than by reading the endings:
+
+       1. WHICH ONE COMES FIRST. Both adjectives are offered in their
+          dictionary form. Japanese is happy either way round — あかるくて
+          親切です and 親切で あかるいです are both correct — so only the
+          English settles it, and the student has to read it.
+       2. WHICH FORM IT TAKES. Four forms of the word they chose. For an
+          い adjective the stem plus くて against three near misses; for a
+          な adjective, で against the くて a student reaches for out of
+          habit.
+
+     The frame carries は and です so that nothing on a tile gives away
+     where it goes, and the distractors are built from the chosen word
+     rather than listed in the data, so they cannot drift apart from it. */
+  function joinForms(w){
+    /* い adjectives drop the い and take くて; な adjectives take で. The
+       wrong answers are the three mistakes a Year 8 actually makes, not
+       noise: the two rules swapped, the two rules stacked, and no change
+       at all. */
+    var stem = w.ja.replace(/い$/, "");
+    return w.kind === "i"
+      ? [{ ja: stem + "くて", ok: true },
+         { ja: w.ja + "で",   ok: false, why: "で joins a な adjective. "
+             + w.kana + " ends in い." },
+         { ja: stem + "くで",  ok: false, why: "Not くで. The い becomes くて." },
+         { ja: w.ja,          ok: false, why: w.kana + " has to change before "
+             + "it can join the next word." }]
+      : [{ ja: w.ja + "で",    ok: true },
+         { ja: w.ja + "くて",  ok: false, why: "くて joins an い adjective. "
+             + w.kana + " is a な adjective." },
+         { ja: w.ja + "いで",  ok: false, why: "Nothing is added to "
+             + w.kana + " before で." },
+         { ja: w.ja,          ok: false, why: w.kana + " has to change before "
+             + "it can join the next word." }];
+  }
   DRAW.join = function(){
     var nb = P.builder.length, i = dealt("join", nb);
     var b = P.builder[i];
     var p = null;
     P.people.forEach(function(x){ if (x.id === b.person) p = x; });
+    /* The sentence in the data is the finished one. The two adjectives
+       are taken back out of it in their dictionary form, so the data
+       stays the thing Andrew wrote and the step does the undoing. */
     var parts = b.ja.replace(/。$/, "").split(" ");
-    var bank = shuffle(parts);
+    var joinedWord = parts[1], tailWord = parts[2].replace(/です$/, "");
+    var first1 = null, second = null;
+    W.words.forEach(function(w){
+      if (w.ja === tailWord) second = w;
+      if (joinedWord.indexOf(w.ja.replace(/い$/, "")) === 0
+          && (w.kind === "i" || w.kind === "na")
+          && (!first1 || w.ja.length > first1.ja.length)) first1 = w;
+    });
+    if (!first1 || !second){
+      $("main").innerHTML = ruleFor("join") + '<div class="work"></div>';
+      return;
+    }
+    var pair = shuffle([first1, second]);
+    var chosen = null, formOk = false;
+
     $("main").innerHTML = ruleFor("join")
       + '<div class="work"><div class="who">'
       + '<div class="pic">' + figure(p, 190) + '</div>'
       + '<div class="q"><p class="en">' + esc(b.en) + '</p>'
-      + '<div class="slot" id="line"></div>'
-      + '<div class="tiles" id="bank"></div><div id="fb"></div></div>'
+      + '<div class="jline" id="line"></div>'
+      + '<p class="hint" id="ask">Which one comes first? Read the English.</p>'
+      + '<div class="tiles" id="pick"></div>'
+      + '<div id="fb"></div></div>'
       + '</div></div>'
       + '<div class="foot"><span class="score"><b>'
       + Object.keys(deck("join", nb).right).length + '</b> of '
       + nb + '</span><span class="sp"></span>'
-      + '<button class="btn ghost sm" id="clear">Clear</button>'
-      + '<button class="btn sm" id="check">Check</button>'
+      + '<button class="btn ghost sm" id="clear">Start again</button>'
       + '<button class="btn ghost sm" id="next">Next</button></div>';
-    function paintBank(){
-      $("bank").innerHTML = bank.map(function(t, i){
-        return '<button class="chip" data-t="' + i + '">' + ruby(t) + '</button>';
-      }).join("");
-      each($("bank"), "[data-t]", function(x){
-        x.onclick = function(){
-          var t = bank.splice(+x.dataset.t, 1)[0];
-          line.push(t); paintBank(); paintLine();
-        };
-      });
-    }
-    var line = [];
+
     function paintLine(){
-      $("line").innerHTML = line.map(function(t, i){
-        return '<button class="chip" data-l="' + i + '">' + ruby(t) + '</button>';
+      var a = chosen && formOk ? ruby(chosen.form)
+            : (chosen ? '<u class="gap">' + ruby(chosen.w.ja) + ' ?</u>'
+                      : '<u class="gap">　　　</u>');
+      var c = chosen && formOk ? ruby(other(chosen.w).ja) : '<u class="gap">　　　</u>';
+      $("line").innerHTML = '<span class="jp">' + esc(p.name) + 'さんは '
+        + a + ' ' + c + 'です。</span>';
+    }
+    function other(w){ return w === first1 ? second : first1; }
+
+    /* ---- decision 1: which adjective leads ---- */
+    var glossed = false;
+    function askWhich(){
+      $("ask").textContent = "Which one comes first? Read the English.";
+      /* The meanings are held back on the first go. Printing them next to
+         the words turns reading the English into matching two words, and
+         ことば is the step for meanings. They come out the moment a
+         student gets it wrong, which is when they are help rather than
+         the answer, and they cost nothing. */
+      $("pick").innerHTML = pair.map(function(w, k){
+        return '<button class="chip" data-w="' + k + '">' + ruby(w.ja)
+          + (glossed ? '<i class="gl">' + esc(w.en) + '</i>' : '') + '</button>';
       }).join("");
-      each($("line"), "[data-l]", function(x){
+      each($("pick"), "[data-w]", function(x){
         x.onclick = function(){
-          var t = line.splice(+x.dataset.l, 1)[0];
-          bank.push(t); paintBank(); paintLine();
+          var w = pair[+x.dataset.w];
+          if (w !== first1){
+            yokai(x);
+            $("fb").innerHTML = '<div class="mark no"><b>The other way round</b>'
+              + 'The English says <b>' + esc(b.en) + '</b> So '
+              + esc(other(w).en.split(",")[0]) + ' comes first.</div>';
+            glossed = true; askWhich();
+            return;
+          }
+          chosen = { w: w, form: null };
+          $("fb").innerHTML = "";
+          paintLine(); askForm();
         };
       });
     }
-    paintBank(); paintLine();
-    $("clear").onclick = function(){ bank = shuffle(parts); line = []; paintBank(); paintLine(); };
+    /* ---- decision 2: what it turns into ---- */
+    function askForm(){
+      var opts = shuffle(joinForms(chosen.w));
+      $("ask").innerHTML = 'Now join <b class="jp">' + ruby(chosen.w.ja)
+        + '</b> to the next word. Which form?';
+      $("pick").innerHTML = opts.map(function(o, k){
+        return '<button class="chip" data-f="' + k + '">' + ruby(o.ja) + '</button>';
+      }).join("");
+      each($("pick"), "[data-f]", function(x){
+        x.onclick = function(){
+          var o = opts[+x.dataset.f];
+          if (!o.ok){
+            x.classList.add("no");
+            yokai(x);
+            $("fb").innerHTML = '<div class="mark no"><b>Not that form</b>'
+              + esc(o.why) + '</div>';
+            setTimeout(function(){ x.classList.remove("no"); }, 1200);
+            return;
+          }
+          chosen.form = o.ja; formOk = true;
+          paintLine();
+          ninja($("line"));
+          $("ask").textContent = "";
+          $("pick").innerHTML = "";
+          $("fb").innerHTML = '<div class="mark yes"><b>Yes</b>'
+            + ruby(b.ja) + ' ' + saybtn(b.ja)
+            + '<p>' + esc(chosen.w.kana) + ' is '
+            + (chosen.w.kind === "i" ? 'an い adjective, so the い becomes くて.'
+                                     : 'a な adjective, so it takes で.')
+            + '</p></div>';
+          wireSay();
+          first("join:" + b.person + ":" + i, 3, "sentence");
+          gotRight("join", nb, i, "join");
+          each($("main"), ".score b", function(e){
+            e.textContent = Object.keys(deck("join", nb).right).length;
+          });
+        };
+      });
+    }
+    function restart(){
+      chosen = null; formOk = false;
+      $("fb").innerHTML = "";
+      paintLine(); askWhich();
+    }
+    restart();
+    $("clear").onclick = restart;
     $("next").onclick = function(){ advance("join", nb); draw(); };
-    $("check").onclick = function(){
-      var got = line.join(" "), want = b.ja.replace(/。$/, "");
-      var ok = got === want;
-      var joined = /くて|で$|で /.test(got);
-      if (ok) ninja($("fb"));
-      else if (line.length === parts.length) yokai($("fb"));
-      $("fb").innerHTML = '<div class="mark ' + (ok ? "yes" : "no") + '">'
-        + '<b>' + (ok ? "Yes" : "Not yet") + '</b>'
-        + (ok ? ruby(b.ja) + " " + saybtn(b.ja)
-              : (line.length < parts.length
-                  ? "Every tile has to be used."
-                  : (joined ? "The right pieces, the wrong order. The person comes first, then the two descriptions."
-                            : "The first description has to change before it can join the second: い becomes くて, な becomes で.")))
-        + '</div>';
-      wireSay();
-      if (ok){
-        first("join:" + b.person + ":" + i, 3, "sentence");
-        gotRight("join", nb, i, "join");
-      }
-    };
   };
 
   /* ---- 5. だれですか ----
@@ -1985,6 +2097,13 @@
     if (!list.length){ $("main").innerHTML = '<div class="work"></div>'; return; }
     var n = list.length, i = dealt("dress", n), o = list[i];
     var d = deck("dress", n);
+    /* dressOn and dressChecked outlive the step, which is what lets a
+       half-dressed figure survive a repaint. It also froze the figure
+       solid: check an outfit, go to another step, come back, and the
+       zones still refused every drop because dressChecked was still
+       true from last time and nothing clears it but Next and Start
+       again. Coming back to a marked figure starts a fresh go at it. */
+    if (dressChecked){ dressOn = {}; dressChecked = false; }
     var garments = W.words.filter(function(w){ return w.kind === "garment"; });
     var colours = W.words.filter(function(w){ return w.group === "colour"; });
 

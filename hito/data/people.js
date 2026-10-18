@@ -297,7 +297,7 @@ window.HITO_PEOPLE = {
       "step": "join",
       "title": "〜くて・〜で",
       "title_en": "Joining two",
-      "rule": "Join two descriptions by changing the first one. An い adjective drops い and takes くて. A な adjective takes で.",
+      "rule": "Read the English, then pick the adjective that comes first. Change it so it can join the next one: drop い and add くて for an い adjective, add で for a な adjective.",
       "eg": [
         {
           "ja": "やさしくて おもしろいです。",

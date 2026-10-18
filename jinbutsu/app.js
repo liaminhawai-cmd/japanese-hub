@@ -600,18 +600,165 @@
     each(box, "[data-say]", function(b){ b.onclick = function(){ say(b.dataset.say); }; });
   }
 
-  /* ---- the words of this unit, looked up from the article ---- */
+  /* ---- the words of this unit, looked up from the article ----
+
+     Andrew, on the old version: "The selected sections tend to not match
+     clauses, words or phrases exactly. Instead they start mid-sentence,
+     mid-clause or mid idea and often bleed into the next idea."
+
+     He was right, and the cause was in two lines. A tappable span was
+     everything between two spaces, and Andrew's articles are spaced for
+     reading breath, not for words: he does not put a space after a full
+     stop. So 41 per cent of the spans ran straight past the end of a
+     sentence — 生[う]まれました。とさに was ONE tappable thing — and 62
+     more ran past a comma.
+
+     Then lookup() glossed a span by its longest matching PREFIX, so that
+     one span lit up and answered "was born". Worse, the prefix could
+     come from a different word entirely: しょう来[らい]、外国[がいこく]に
+     answered "prize", because ノーベルしょう is on the list and しょう is
+     a prefix of しょう来. お金[かね]を answered "to write", because the
+     span it had been glued to began 書[か]きます。
+
+     Three rules replace it.
+
+       1. PUNCTUATION ENDS A SPAN. 。、！？「」 are rendered between
+          spans, never inside one, so nothing a student can tap crosses
+          into the next idea.
+       2. NO PREFIX GUESSING. A span is matched whole, or matched as a
+          word plus ONE known trailing particle, or it is not matched.
+          An unmatched span is drawn as ordinary text and says so when
+          tapped: a wrong meaning is worse than no meaning.
+       3. A GRAMMAR ENDING ANSWERS WITH THE GRAMMAR. 話[はな]したり is
+          not a word and never will be on a word list, so it answers
+          with Andrew's own 〜たり entry instead of with nothing.
+
+     The old loop also stopped at two characters, so 人[ひと]、今[いま]、
+     本[ほん]、父[ちち] and 時[とき] could never be found at all once a
+     particle was attached to them. Single characters match now. */
   var VBY = {};
-  (K.vocab || []).forEach(function(v){
-    VBY[plain(v.ja).replace(/[\s　〜]/g,"")] = v;
-  });
+  function enrol(list, kind){
+    (list || []).forEach(function(v){
+      var k = plain(v.ja).replace(/[\s　〜]/g,"");
+      if (k && !VBY[k]) VBY[k] = { ja:v.ja, en:v.en, note:v.note, kind:kind };
+    });
+  }
+  /* Unit vocabulary first: where a word is on Andrew's own list, his
+     gloss is the one that shows. */
+  enrol(K.vocab, "word");
+  enrol(K.kanji, "kanji");
+  enrol(K.names, "name");
+  enrol(K.extras, "word");
+  enrol(K.counters, "counter");
+  var PBY = {};
+  (K.particles || []).forEach(function(v){ PBY[v.ja] = v; });
+  /* Endings that are not particles and not words: the copula, the
+     politeness tail and the name suffix. They get their own class
+     because what a student needs to be told about です is not a
+     meaning but which of Andrew's patterns it belongs to. */
+  var TAILW = {};
+  (K.endings || []).forEach(function(v){ TAILW[v.ja] = v; });
+  /* longest first, so から is tried before か */
+  var PKEYS = Object.keys(PBY).sort(function(a, b){ return b.length - a.length; });
+
   function lookup(word){
-    var w = plain(word).replace(/[\s　、。]/g,"");
-    if (VBY[w]) return VBY[w];
-    for (var i = w.length; i >= 2; i--){
-      if (VBY[w.slice(0,i)]) return VBY[w.slice(0,i)];
+    var w = plain(word).replace(/[\s　、。！？]/g,"");
+    return VBY[w] || null;
+  }
+  /* The grammar entry a word's ending names, if any. The sentence it sits
+     in is passed too, because ことが is 〜ことが好[す]きです in five of the
+     articles and 〜たことがありません in one, and only the rest of the
+     sentence tells them apart. */
+  function patternOf(word, sentence){
+    var w = plain(word).replace(/[\s　、。！？]/g,"");
+    var hit = null;
+    (K.patterns || []).some(function(pt){
+      if (pt.sentence && !new RegExp(pt.sentence).test(plain(sentence || ""))) return false;
+      return (pt.ends || []).some(function(e){
+        if (w.length > e.length && w.slice(-e.length) === e){ hit = pt.id; return true; }
+        return false;
+      });
+    });
+    if (!hit) return null;
+    var g = null;
+    (K.grammar || []).forEach(function(x){ if (x.id === hit) g = x; });
+    return g;
+  }
+  /* ---- covering a span ----
+     A bit of text between two boundaries is split only when EVERY piece
+     of it is something the page can name: a unit word, a kanji, a name,
+     a particle, a copula ending, a counter or a number. All of it, or
+     none of it.
+
+     That is the whole safety rule. A parser that covers four fifths of a
+     word and guesses the rest is how しょう来[らい] came to mean "prize";
+     one that must account for every character either succeeds honestly
+     or stands back and says nothing. 青[あお]いLEDを comes apart into
+     青[あお]い・LED・を because all three are on a list. むずかしかった
+     からです does not come apart at all, and is drawn as plain text.
+
+     Four pieces is the ceiling, which is enough for 千八百四十九年に
+     (number・年・に) and for 赤崎[あかさき]さんと (name・さん・と) and
+     stops the search from wandering. */
+  var NUMBER = /^[0-9０-９一二三四五六七八九十百千万]+$/;
+  var NUMK = /^[0-9０-９一二三四五六七八九十百千万]+/;
+  function atoms(bit){
+    /* 漢字[よみ] travels as one atom so that a split never lands inside
+       a furigana bracket and leaves half of it on the screen.
+
+       With one exception, which cost an hour: Andrew writes a year as
+       千八百四十九年[ねん], and the kanji run in front of the bracket is
+       greedy, so the whole of 千八百四十九年 arrived as a single atom and
+       nothing could be made of it. The reading belongs to 年 alone. So a
+       run that starts in numerals and does not end in them is cut at the
+       join: the numerals become their own atoms and the bracket stays
+       with the character it reads. */
+    var out = [], i = 0;
+    while (i < bit.length){
+      var m = /^([一-鿿々]+)\[([ぁ-ゟー]+)\]/.exec(bit.slice(i));
+      if (m){
+        var run = m[1], lead = NUMK.exec(run);
+        if (lead && lead[0].length < run.length){
+          for (var k = 0; k < lead[0].length; k++) out.push({ raw:lead[0][k], p:lead[0][k] });
+          var rest = run.slice(lead[0].length);
+          out.push({ raw: rest + "[" + m[2] + "]", p: rest });
+        } else {
+          out.push({ raw:m[0], p:run });
+        }
+        i += m[0].length;
+      }
+      else { out.push({ raw:bit[i], p:bit[i] }); i++; }
     }
+    return out;
+  }
+  function namePiece(w){
+    if (VBY[w]) return { kind:"w", v:VBY[w] };
+    if (PBY[w]) return { kind:"p", v:PBY[w] };
+    if (TAILW[w]) return { kind:"t", v:TAILW[w] };
+    if (NUMBER.test(w)) return { kind:"n", v:{ ja:w, en:"a number" } };
     return null;
+  }
+  function cover(bit){
+    var A = atoms(bit), N = A.length, best = null;
+    function plainOf(a, b){
+      var t = ""; for (var k = a; k < b; k++) t += A[k].p; return t;
+    }
+    function rawOf(a, b){
+      var t = ""; for (var k = a; k < b; k++) t += A[k].raw; return t;
+    }
+    (function walk(i, acc){
+      if (best || acc.length > 4) return;
+      if (i >= N){ if (acc.length > 1) best = acc.slice(); return; }
+      for (var j = N; j > i; j--){
+        var hit = namePiece(plainOf(i, j));
+        if (!hit) continue;
+        acc.push({ raw: rawOf(i, j), kind: hit.kind, v: hit.v });
+        walk(j, acc);
+        acc.pop();
+        if (best) return;
+      }
+    })(0, []);
+    return best;
   }
 
   /* ---- the rungs ---- */
@@ -1332,53 +1479,124 @@
   function article(p, opts){
     opts = opts || {};
     var learnt = {};
+    /* Punctuation is laid down BETWEEN spans and never inside one. Andrew
+       spaces his articles for reading breath rather than for words and
+       does not put a space after a full stop, so whitespace alone used to
+       hand a student 生[う]まれました。とさに as one tappable thing. */
+    var PUNCT = /[、。！？!?「」『』]/;
     return p.paras.map(function(para){
-      var out = "", i = 0, ul = false;
-      while (i < para.length){
-        var ch = para[i];
-        if (ch === "《"){ ul = true; out += '<span class="ul">'; i++; continue; }
-        if (ch === "》"){ ul = false; out += '</span>'; i++; continue; }
-        /* a run is a word-ish chunk: Andrew spaces his text at the
-           phrase boundaries, which is the only record of where one word
-           stops and the next starts once the kanji are bare */
-        var m = /^[^\s　《》]+/.exec(para.slice(i));
-        if (!m){ out += esc(ch); i++; continue; }
-        var chunk = m[0];
-        out += '<span class="w' + (lookup(chunk) ? ' known' : '') + '" data-word="'
-             + esc(chunk) + '">' + rubify(chunk, learnt) + '</span>';
-        i += chunk.length;
+      var out = "", ul = false;
+      /* sentence first, because ことが needs to see the rest of its own
+         sentence before it can say which pattern it is. Split by hand
+         rather than with a lookbehind: a school iPad may be on an iOS
+         older than the one that learnt them, and a regex that throws
+         takes the whole article with it. */
+      var sentences = [], from = 0, c;
+      for (c = 0; c < para.length; c++){
+        if ("。！？".indexOf(para[c]) >= 0){
+          sentences.push(para.slice(from, c + 1)); from = c + 1;
+        }
       }
+      if (from < para.length) sentences.push(para.slice(from));
+      sentences.forEach(function(sentence){
+        var i = 0;
+        while (i < sentence.length){
+          var ch = sentence[i];
+          if (ch === "《"){ ul = true; out += '<span class="ul">'; i++; continue; }
+          if (ch === "》"){ ul = false; out += '</span>'; i++; continue; }
+          if (PUNCT.test(ch)){ out += '<span class="pt">' + esc(ch) + '</span>'; i++; continue; }
+          if (/[\s　]/.test(ch)){ out += ch; i++; continue; }
+          var m = /^[^\s　《》、。！？!?「」『』]+/.exec(sentence.slice(i));
+          if (!m){ out += esc(ch); i++; continue; }
+          out += span(m[0], sentence);
+          i += m[0].length;
+        }
+      });
       if (ul) out += '</span>';
       return '<p class="para">' + out + '</p>';
     }).join("");
+
+    /* One bit of text between two boundaries, drawn as what it actually
+       is: a word, a word with its particle, a grammar ending, or nothing
+       the page can name. Only the first three are lit. */
+    function span(bit, sentence){
+      if (lookup(bit)) return one(bit, "known", "w");
+      /* です on its own is a whole span in three places */
+      if (TAILW[plain(bit)] || PBY[plain(bit)]) return one(bit, "part", "p");
+      /* A grammar ending is read before the pieces are: 話[はな]したり
+         would otherwise come apart into 話[はな]し・たり and lose the
+         pattern that is the point of it. */
+      if (patternOf(bit, sentence)) return one(bit, "gram", "g");
+      var cv = cover(bit);
+      if (cv) return cv.map(function(piece){
+        return piece.kind === "w" || piece.kind === "n"
+          ? one(piece.raw, "known", "w")
+          : one(piece.raw, "part", "p");
+      }).join("");
+      return one(bit, "", "w");
+    }
+    function one(text, cls, kind){
+      return '<span class="w' + (cls ? " " + cls : "") + '" data-word="'
+        + esc(text) + '" data-kind="' + kind + '">' + rubify(text, learnt) + '</span>';
+    }
   }
+  /* ---- tapping a word ----
+     Four answers, and the span says in advance which one is coming: a
+     lit word has a meaning, a dimmed particle has a job, a grammar
+     ending has one of Andrew's rules behind it, and plain text has
+     nothing and says so. A student should never tap hoping. */
   function wireArticle(scope){
     each(scope, "[data-word]", function(sp){
       sp.onclick = function(ev){
         ev.stopPropagation();
-        var word = sp.dataset.word;
+        var word = sp.dataset.word, kind = sp.dataset.kind;
         /* Tapping a single kana asks about that kana; tapping a word
            asks about the word. A student does one or the other and the
            page should not make them choose from a menu. */
         var bare = plain(word).replace(/[、。]/g,"");
-        if (bare.length === 1 && /[ぁ-ヿ]/.test(bare)) return kanaChart(bare);
-        var v = lookup(word);
+        if (kind !== "p" && bare.length === 1 && /[ぁ-ヿ]/.test(bare)) return kanaChart(bare);
         each(scope, ".w.lit", function(x){ x.classList.remove("lit"); });
         sp.classList.add("lit");
         var tip = $("tip");
         if (!tip) return;
+        if (kind === "p"){
+          /* A particle is free. It is one character, it is the same
+             character every time, and charging a point for it would
+             teach a student to guess it rather than ask. */
+          var pa = PBY[plain(word)] || TAILW[plain(word)];
+          tip.innerHTML = '<div class="mark hm"><b>' + esc(plain(word)) + '</b>'
+            + esc(pa ? pa.en : "a particle")
+            + (pa && pa.note ? ' <i>' + esc(pa.note) + '</i>' : '') + '</div>';
+          return;
+        }
+        var v = lookup(word);
         if (v){
           spend(1, "word meaning");
           tip.innerHTML = '<div class="mark yes"><b>' + esc(plain(v.ja)) + '</b>'
             + esc(v.en) + ' ' + saybtn(v.ja) + '</div>';
-        } else {
-          /* Not in the unit list. Say so rather than inventing a gloss:
-             a wrong meaning is worse than no meaning. */
-          tip.innerHTML = '<div class="mark hm"><b>Not on the word list</b>'
-            + esc(plain(word)) + ' — this one is not one of the unit words. '
-            + 'Tap a single kana for the chart, or ask your teacher.</div>';
+          wireSay();
+          return;
         }
-        wireSay();
+        var g = patternOf(word, word);
+        if (!g){
+          /* the sentence is not to hand here, so ask again with the
+             paragraph the span sits in */
+          var para = sp.closest(".para");
+          g = patternOf(word, para ? para.textContent : "");
+        }
+        if (g){
+          spend(1, "grammar shown");
+          tip.innerHTML = '<div class="mark yes"><b>' + esc(plain(g.pat)) + '</b>'
+            + esc(g.title_en) + '. ' + esc(g.form)
+            + '<p>Open <b>ぶんぽう</b> for the rule and the practice.</p></div>';
+          return;
+        }
+        /* Not on any list. Say so rather than inventing a gloss: a wrong
+           meaning is worse than no meaning, and the old prefix guess was
+           answering しょう来[らい] with "prize". */
+        tip.innerHTML = '<div class="mark hm"><b>Not on the word list</b>'
+          + esc(plain(word)) + ' is not one of the unit words. '
+          + 'Tap a single kana for the chart, or ask your teacher.</div>';
       };
     });
   }
