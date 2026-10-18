@@ -1662,6 +1662,8 @@
     /* The game runs on its own clock and its own audio. Leaving the rung
        has to stop both, or the chiptune follows you round the app. */
     if (GAME){ GAME.stop(); GAME = null; }
+    if (onResize){ window.removeEventListener("resize", onResize); onResize = null; }
+    document.body.classList.remove("gamefull");
     $("main").innerHTML = "";
     DRAW[STEPS[at].id]();
     wireSay();
@@ -2859,7 +2861,7 @@
     }
   };
 
-  var GAME = null;
+  var GAME = null, onResize = null;
   DRAW.katch = function(){
     /* Every word with an English meaning, which is all of them bar the
        wearing verbs: "to wear on the head" falling out of the sky is a
@@ -2908,7 +2910,49 @@
         if (score > (S.best || 0)){ S.best = score; save(); }
       }
     });
-    $("go").onclick = function(){ $("arc").focus(); GAME.start(); };
+    document.body.classList.add("gamefull");
+    /* ---- how big the screen can be ----
+       The game is given exactly the room that is left once the rung bar,
+       the question and the footer have taken theirs, and the width
+       follows from that rather than the other way round. Measured, not
+       guessed: the bars wrap differently at different widths and with
+       different fonts, and a calc() with three estimated heights put the
+       bat and the score behind the footer on half the sizes tried.
+
+       The explanation above the screen is left where it is and scrolls
+       away, which is what Andrew asked for: the wrap is made exactly one
+       screenful tall, so scrolling to the end of it brings the whole
+       game into view and stops. */
+    function fitGame(){
+      var cv = $("arc"); if (!cv) return;
+      var main = document.querySelector("main");
+      var wrap = $("arc").parentNode;
+      var foot = main.querySelector(".foot");
+      var pr = $("prompt");
+      if (!main || !wrap || !foot) return;
+      var footH = foot.offsetHeight;
+      var promptH = pr ? pr.offsetHeight + 8 : 0;
+      wrap.style.minHeight = Math.max(160, main.clientHeight - footH) + "px";
+      /* 16px of slack: the screen has a 3px border on each side, the
+         wrap has padding, and a measurement that lands exactly on the
+         footer puts the bat under it. Being a few pixels small is
+         invisible; being a few pixels large hides the score. */
+      var room = main.clientHeight - footH - promptH - 16;
+      var w = Math.min(wrap.clientWidth, 900, Math.max(220, room * 1.6));
+      cv.style.width = Math.floor(w) + "px";
+    }
+    fitGame();
+    onResize = fitGame;
+    window.addEventListener("resize", fitGame);
+
+    $("go").onclick = function(){
+      $("arc").focus();
+      /* put the whole screen in view: the explanation above it has done
+         its job by the time anybody presses this */
+      var box = $("prompt");
+      if (box && box.scrollIntoView) box.scrollIntoView({ block: "start" });
+      GAME.start();
+    };
     /* The only test seam in this app. Everything else here is driven
        through the real DOM, but a game loop cannot be: a test has to be
        able to put a known word at a known height and see what the rules

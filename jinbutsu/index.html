@@ -295,7 +295,13 @@
   .prompt b{font-size:23px;line-height:1.25;color:var(--muted)}
   .prompt.live{border-color:#8a6d1f;background:#fffbe9}
   .prompt.live b{color:var(--ink)}
-  .arcade{display:block;width:min(100%,780px);height:auto;
+  /* The width is set in JS from the height that is actually free, because
+     the chrome above and below this is three bars whose heights depend on
+     the font, the wrapping and whether there is a legend row. Guessing
+     them in a calc() put the bat and the score behind the pinned footer
+     on two of the four sizes tested. The CSS keeps a sane default for the
+     moment before the measurement lands. */
+  .arcade{display:block;height:auto;width:min(100%,900px);
        aspect-ratio:320/200;background:#000;border:3px solid #2f8f2f;
        border-radius:6px;cursor:none;touch-action:none;
        image-rendering:pixelated;image-rendering:crisp-edges}
@@ -303,6 +309,21 @@
   @media (max-width:700px){
     .prompt b{font-size:19px} .arcade{width:100%}
   }
+  /* On the game step the page scrolls, which it does nowhere else here.
+     Andrew: "The explanation of the game in the yellow box is getting in
+     the way on a laptop browser. Let it scroll out of view to maximise
+     the view of game play."
+
+     So main becomes the scroller, the game is given a whole screenful of
+     its own below the explanation, and the footer is pinned to the
+     bottom so Start and the score stay reachable wherever you have
+     scrolled to. Pressing Start scrolls the screen up for you, because
+     the first thing a student does is press Start and the next thing
+     they need is all of the screen. */
+  body.gamefull main{overflow-y:auto;overscroll-behavior:contain}
+  body.gamefull .arcadewrap{flex:none;overflow:visible}
+  body.gamefull .foot{position:sticky;bottom:0;z-index:3;margin-top:0;
+       padding:7px 0 2px;background:var(--bg)}
   .score{font-size:13px;color:var(--muted)}
   .score b{color:var(--ink);font-size:16px}
   .hint{font-size:12.5px;color:var(--muted)}
@@ -365,9 +386,9 @@
 <nav class="steps" id="steps"></nav>
 <div class="whobar" id="whobar"></div>
 <main id="main"></main>
-<script src="data/kiji.js?v=20261018e"></script>
-<script src="data/audio.js?v=20261018e"></script>
-<script src="app.js?v=20261018e"></script>
-<div class="build" aria-hidden="true">build 2026-10-18e</div>
+<script src="data/kiji.js?v=20261018f"></script>
+<script src="data/audio.js?v=20261018f"></script>
+<script src="app.js?v=20261018f"></script>
+<div class="build" aria-hidden="true">build 2026-10-18f</div>
 </body>
 </html>
