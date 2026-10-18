@@ -390,17 +390,31 @@
        padding:0 10px;color:var(--muted)}
   .chip .gl{display:block;font-family:var(--font);font-size:11.5px;
        font-style:normal;font-weight:600;color:var(--muted);margin-top:1px}
-  /* ことばキャッチ: the canvas is 180 by 240 whatever size it is drawn at,
+  /* ことばキャッチ: the canvas is 320 by 200 whatever size it is drawn at,
      and the browser is told not to smooth it, so every pixel arrives as a
-     square. The coarseness is the point, not a filter over it. */
-  .arcadewrap{display:flex;align-items:center;justify-content:center;
-       padding:6px 0;min-height:0}
-  .arcade{display:block;height:min(70vh,520px);width:auto;max-width:100%;
-       aspect-ratio:180/240;background:#000;border:3px solid #2f8f2f;
+     square. The coarseness is the point, not a filter over it.
+
+     Landscape, because several words have to be in the air at once and a
+     portrait screen only fits one. The question sits above the screen in
+     ordinary page text, not in the pixels: it is the one thing here that
+     is not meant to be a game. */
+  .arcadewrap{display:flex;flex-direction:column;align-items:center;
+       justify-content:center;gap:8px;padding:4px 0;min-height:0}
+  .prompt{display:flex;align-items:baseline;gap:10px;padding:5px 16px;
+       border:2px solid var(--line);border-radius:999px;background:var(--paper)}
+  .prompt .lab{font-size:10.5px;font-weight:700;letter-spacing:.14em;
+       color:var(--muted)}
+  .prompt b{font-size:23px;line-height:1.25;color:var(--muted)}
+  .prompt.live{border-color:#8a6d1f;background:#fffbe9}
+  .prompt.live b{color:var(--ink)}
+  .arcade{display:block;width:min(100%,780px);height:auto;
+       aspect-ratio:320/200;background:#000;border:3px solid #2f8f2f;
        border-radius:6px;cursor:none;touch-action:none;
        image-rendering:pixelated;image-rendering:crisp-edges}
   .arcade:focus{outline:2px solid #6cf06c;outline-offset:2px}
-  @media (max-width:700px){ .arcade{height:min(60vh,420px)} }
+  @media (max-width:700px){
+    .prompt b{font-size:19px} .arcade{width:100%}
+  }
   .score{font-size:13px;color:var(--muted)}
   .score b{color:var(--ink);font-size:16px}
   /* Seven tools and a score will not sit on one line of a 320px phone,
@@ -440,11 +454,11 @@
 <nav class="steps" id="steps"></nav>
 <div class="legend" id="legend"></div>
 <main id="main"></main>
-<script src="data/words.js?v=20261018d"></script>
-<script src="data/people.js?v=20261018d"></script>
-<script src="data/outfits.js?v=20261018d"></script>
-<script src="data/audio.js?v=20261018d"></script>
-<script src="app.js?v=20261018d"></script>
-<div class="build" aria-hidden="true">build 2026-10-18d</div>
+<script src="data/words.js?v=20261018e"></script>
+<script src="data/people.js?v=20261018e"></script>
+<script src="data/outfits.js?v=20261018e"></script>
+<script src="data/audio.js?v=20261018e"></script>
+<script src="app.js?v=20261018e"></script>
+<div class="build" aria-hidden="true">build 2026-10-18e</div>
 </body>
 </html>

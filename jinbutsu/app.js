@@ -1095,7 +1095,7 @@
      filter over a modern page. */
   var JPFONT = getComputedStyle(document.documentElement)
     .getPropertyValue("--jp").trim() || "sans-serif";
-  var PIXW = 180, PIXH = 240;
+  var PIXW = 320, PIXH = 200;
   var SEMI = Math.pow(2, 1 / 12);
   function hz(n){
     /* "A4" or "F#3" to a frequency, so the tune in the data file reads as
@@ -1178,88 +1178,149 @@
   function arcade(cfg){
     var cv = cfg.canvas, g = cv.getContext("2d");
     cv.width = PIXW; cv.height = PIXH;
-    var FONT = 17;
+    var FONT = 15;
     g.imageSmoothingEnabled = false;
     var POOL = cfg.words;
     var stars = [];
-    for (var s = 0; s < 20; s++)
+    for (var s = 0; s < 26; s++)
       stars.push([Math.floor(Math.random() * PIXW), Math.floor(Math.random() * PIXH),
                   Math.random() < 0.3 ? 2 : 1]);
 
+    /* falling is a LIST. Andrew, on the first version: "the screen needs
+       to be wider or the falling words need to be smaller to fit multiple
+       falling words on the screen at once." Both, in the end: the screen
+       is landscape now and the words are two pixels smaller, and several
+       are in the air at a time, which is what makes finding the right one
+       a search rather than a yes-or-no on whatever is coming. */
     var G = { mode:"ready", score:0, lives:3, best:cfg.best || 0,
-              speed:26, bat:PIXW / 2, batW:40, word:null, y:0, x:0,
-              target:null, flash:0, flashOk:false, caught:{} };
+              speed:24, bat:PIXW / 2, batW:46, falling:[], target:null,
+              flash:0, flashOk:false, stun:0, spawn:0, sinceTarget:0 };
     var raf = 0, last = 0, acc = 0, alive = true;
 
-    function pick(){
-      /* Half the words that fall are the one being asked for. Much below
-         that and the game is mostly dodging; much above and there is no
-         reading to do because catching everything works. */
-      var want = POOL[Math.floor(Math.random() * POOL.length)];
-      G.target = want;
-      var isIt = Math.random() < 0.5;
-      var w = want;
-      if (!isIt && POOL.length > 1){
-        var tries = 0;
-        do { w = POOL[Math.floor(Math.random() * POOL.length)]; tries++; }
-        while (w.en === want.en && tries < 20);
-      }
-      G.word = w;
-      /* above the top edge, so a word falls in from off screen rather
-         than appearing in the middle of the question */
-      G.y = -4;
+    function width(w){
       g.font = "bold " + FONT + "px " + JPFONT;
-      var half = g.measureText(cfg.label(w)).width / 2 + 3;
-      var span = Math.max(8, PIXW - 2 * half);
-      G.x = Math.round(half + Math.random() * span);
+      return g.measureText(cfg.label(w)).width;
     }
     function newTarget(){
-      /* The target only changes when a word is dealt with, so a student
-         who is still reading is not chasing a moving question. */
-      pick();
-    }
-    function hit(ok){
-      G.flash = 14; G.flashOk = ok;
-      if (ok){
-        G.score++;
-        G.speed = Math.min(132, G.speed * 1.05);
-        if (cfg.onCatch) cfg.onCatch(G.word);
-        if (S.sfx) SFX.slurp();
-      } else {
-        G.lives--;
-        if (S.sfx) SFX.buzz();
-        if (G.lives <= 0) return over();
+      var was = G.target;
+      var t = POOL[Math.floor(Math.random() * POOL.length)], tries = 0;
+      while (POOL.length > 1 && was && t.en === was.en && tries < 20){
+        t = POOL[Math.floor(Math.random() * POOL.length)]; tries++;
       }
+      G.target = t;
+      G.sinceTarget = 0;
+      /* The words already in the air stay: the question changed, so the
+         student re-reads what is falling, which is the point. The only
+         ones taken away are the ones too close to the floor to be
+         reached, because losing a life to a word that was already past
+         you when the question changed is not a thing you could have
+         done anything about. */
+      var reach = PIXH - 18 - 50;
+      G.falling = G.falling.filter(function(f){ return f.y < reach; });
+      /* The prompt lives outside the canvas, in the page, where it can be
+         read at page-text size instead of in 15-pixel capitals. Andrew
+         asked for that and he is right: the question is the one thing on
+         this screen that is not meant to be a game. */
+      if (cfg.onPrompt) cfg.onPrompt(G.target);
+    }
+    function spawn(force){
+      /* Roughly two in five of the words in the air are the one being
+         asked for. Below that the game is mostly dodging; above it, and
+         catching everything works and nothing is read. The target is
+         forced in if it has not been seen for a while, so a question can
+         never become unanswerable. */
+      function inAir(x){
+        return G.falling.some(function(f){ return f.w.en === x.en; });
+      }
+      var w, tries = 0;
+      if ((force || Math.random() < 0.4) && !inAir(G.target)) w = G.target;
+      else {
+        /* never two of the same word on the screen at once: two copies of
+           the answer reads as a bug, and two copies of a distractor is
+           one fewer word to read */
+        do { w = POOL[Math.floor(Math.random() * POOL.length)]; tries++; }
+        while (POOL.length > 1 && tries < 30
+               && (inAir(w) || (!force && w.en === G.target.en)));
+        if (inAir(w)) return;
+      }
+      if (w === G.target) G.sinceTarget = 0;
+      var half = width(w) / 2 + 3;
+      var span = Math.max(8, PIXW - 2 * half);
+      G.falling.push({ w: w, x: Math.round(half + Math.random() * span),
+                       y: -2, half: half });
+    }
+    function caught(f){
+      G.score++;
+      G.speed = Math.min(150, G.speed * 1.05);
+      G.flash = 14; G.flashOk = true;
+      if (cfg.onCatch) cfg.onCatch(f.w);
+      if (S.sfx) SFX.slurp();
       newTarget();
+      if (!G.falling.some(function(x){ return x.w.en === G.target.en; }))
+        spawn(true);
+    }
+    function wrong(){
+      /* Catching a word that is not the one asked for does NOT cost a
+         life: Andrew's rule is three missed targets and out. It costs
+         the bat, which is stopped for a third of a second, and the
+         target is still falling while that happens. A wrong catch with
+         no cost at all would make parking under everything a winning
+         strategy, which is the one thing this game must not reward. */
+      G.stun = 20;
+      G.flash = 14; G.flashOk = false;
+      if (S.sfx) SFX.buzz();
+    }
+    function missed(){
+      G.lives--;
+      G.flash = 16; G.flashOk = false;
+      if (S.sfx) SFX.buzz();
+      if (G.lives <= 0) return over();
+      newTarget();
+      if (!G.falling.some(function(x){ return x.w.en === G.target.en; }))
+        spawn(true);
     }
     function over(){
       G.mode = "over";
       G.best = Math.max(G.best, G.score);
       MUSIC.stop();
       if (cfg.onOver) cfg.onOver(G.score);
+      if (cfg.onPrompt) cfg.onPrompt(null);
     }
     function begin(){
-      G.mode = "play"; G.score = 0; G.lives = 3; G.speed = 30;
+      G.mode = "play"; G.score = 0; G.lives = 3; G.speed = 24;
+      G.falling = []; G.stun = 0; G.spawn = 0; G.target = null;
       SFX.wake();
       if (S.sfx && cfg.tune) MUSIC.start(cfg.tune);
       newTarget();
+      spawn(true);
     }
     function step(){
       if (G.mode !== "play") return;
-      G.y += G.speed / 60;
       if (G.flash > 0) G.flash--;
-      var floor = PIXH - 20;
-      if (G.y >= floor){
-        var onBat = Math.abs(G.x - G.bat) < G.batW / 2 + 12;
-        var right = G.word.en === G.target.en;
-        if (onBat) hit(right);
-        else if (right){
-          G.lives--;
-          G.flash = 14; G.flashOk = false;
-          if (S.sfx) SFX.buzz();
-          if (G.lives <= 0) return over();
-          newTarget();
-        } else newTarget();
+      if (G.stun > 0) G.stun--;
+      G.sinceTarget++;
+      /* A new word every so often, and sooner as the game speeds up, so
+         the screen stays about as full however fast it is going. */
+      G.spawn++;
+      var every = Math.max(26, Math.round(3000 / G.speed));
+      if (G.spawn >= every && G.falling.length < 5){
+        G.spawn = 0;
+        spawn(G.sinceTarget > 240);
+      }
+      var floor = PIXH - 18;
+      for (var i = G.falling.length - 1; i >= 0; i--){
+        var f = G.falling[i];
+        f.y += G.speed / 60;
+        if (f.y < floor) continue;
+        var onBat = !G.stun && Math.abs(f.x - G.bat) < G.batW / 2 + f.half;
+        var isTarget = f.w.en === G.target.en;
+        G.falling.splice(i, 1);
+        if (onBat){
+          if (isTarget) return caught(f);
+          wrong();
+        } else if (isTarget){
+          return missed();
+        }
       }
     }
 
@@ -1278,44 +1339,35 @@
 
       if (G.mode === "ready" || G.mode === "over"){
         text(G.mode === "over" ? "GAME OVER" : "ことばキャッチ",
-             PIXW / 2, 84, G.mode === "over" ? 17 : 18,
+             PIXW / 2, 70, G.mode === "over" ? 20 : 22,
              G.mode === "over" ? "#ff6a4a" : "#6cf06c");
         if (G.mode === "over"){
-          text("SCORE " + G.score, PIXW / 2, 110, 12, "#fff");
-          text("BEST " + G.best, PIXW / 2, 126, 9, "#8a8a8a");
+          text("SCORE " + G.score, PIXW / 2, 96, 13, "#fff");
+          text("BEST " + G.best, PIXW / 2, 113, 10, "#8a8a8a");
         } else {
-          text("Catch the word that means", PIXW / 2, 110, 8, "#9a9a9a");
-          text("the English at the top.", PIXW / 2, 121, 8, "#9a9a9a");
-          text("Let the others fall.", PIXW / 2, 132, 8, "#9a9a9a");
+          text("Catch the word above the screen.", PIXW / 2, 96, 9, "#9a9a9a");
+          text("Let the others fall.", PIXW / 2, 110, 9, "#9a9a9a");
         }
-        text("PRESS START", PIXW / 2, 162, 11,
+        text("PRESS START", PIXW / 2, 142, 12,
              (Math.floor(Date.now() / 420) % 2) ? "#6cf06c" : "#1d4a1d");
-        text("move: drag, or ← →", PIXW / 2, 184, 8, "#5a5a5a");
+        text("drag, or ← →", PIXW / 2, 162, 8, "#5a5a5a");
       }
 
-      if (G.mode === "play" && G.word){
-        var col = "#fff";
-        if (G.flash > 0) col = G.flashOk ? "#6cf06c" : "#ff6a4a";
-        text(cfg.label(G.word), G.x, Math.round(G.y), FONT, col);
-      }
-      /* The question is painted AFTER the word, in the amber of a 1980
-         cabinet, so a word falls out from behind the band rather than
-         landing on top of the question. */
       if (G.mode === "play"){
-        g.fillStyle = "#1a1407";
-        g.fillRect(0, 0, PIXW, 26);
-        text(G.target.en, PIXW / 2, 12, 10, "#ffb43a");
-        text("CATCH IT IF IT MEANS THIS", PIXW / 2, 22, 6, "#7a5a1e");
-        g.fillStyle = "#2b2b2b";
-        g.fillRect(0, 26, PIXW, 1);
+        G.falling.forEach(function(f){
+          var near = f.y > PIXH - 60;
+          text(cfg.label(f.w), f.x, Math.round(f.y), FONT,
+               near && f.w.en === G.target.en ? "#fff" : "#cfe6cf");
+        });
       }
 
       /* the bat: a slab with a lighter lip, and a mouth when it eats */
-      var by = PIXH - 14, bx = Math.round(G.bat - G.batW / 2);
-      g.fillStyle = G.flash > 0 && G.flashOk ? "#aaffaa" : "#6cf06c";
-      g.fillRect(bx, by, G.batW, 6);
-      g.fillStyle = "#2f8f2f";
-      g.fillRect(bx, by + 6, G.batW, 3);
+      var by = PIXH - 12, bx = Math.round(G.bat - G.batW / 2);
+      g.fillStyle = G.stun ? "#4a4a4a"
+        : (G.flash > 0 && G.flashOk ? "#aaffaa" : "#6cf06c");
+      g.fillRect(bx, by, G.batW, 5);
+      g.fillStyle = G.stun ? "#2a2a2a" : "#2f8f2f";
+      g.fillRect(bx, by + 5, G.batW, 3);
       g.fillStyle = "#000";
       g.fillRect(Math.round(bx + G.batW / 2 - 4), by, 8, 2);
 
@@ -1368,9 +1420,9 @@
     cv.addEventListener("keydown", keydown);
     cv.addEventListener("keyup", keyup);
     var kt = setInterval(function(){
-      if (G.mode !== "play") return;
-      if (keys.ArrowLeft) G.bat = Math.max(G.batW / 2, G.bat - 5);
-      if (keys.ArrowRight) G.bat = Math.min(PIXW - G.batW / 2, G.bat + 5);
+      if (G.mode !== "play" || G.stun) return;
+      if (keys.ArrowLeft) G.bat = Math.max(G.batW / 2, G.bat - 6);
+      if (keys.ArrowRight) G.bat = Math.min(PIXW - G.batW / 2, G.bat + 6);
     }, 1000 / 60);
 
     raf = requestAnimationFrame(loop);
@@ -2630,12 +2682,14 @@
   DRAW.katch = function(){
     var pool = (K.kanji || []).filter(function(w){ return w.en; });
     $("main").innerHTML =
-        '<div class="rule"><b>Catch the kanji</b>Read the English at the '
-      + 'top, then catch the word that means it. Let the others fall. '
-      + 'Every word you catch makes the next one fall faster. Drag the '
-      + 'bar, or use the arrow keys.</div>'
+        '<div class="rule"><b>Catch the kanji</b>Read the word above the '
+      + 'screen, then catch the one falling word that means it. Let the '
+      + 'others fall. Each catch speeds them up. Miss the right word 3 '
+      + 'times and the game ends.</div>'
       + '<div class="work fit arcadewrap">'
-      + '<canvas id="arc" class="arcade" width="180" height="240"'
+      + '<div class="prompt" id="prompt"><span class="lab">CATCH</span>'
+      + '<b id="promptw">—</b></div>'
+      + '<canvas id="arc" class="arcade" width="320" height="200"'
       + ' tabindex="0" aria-label="Catch the kanji: a word game"></canvas>'
       + '</div>'
       + foot('<span class="score" id="asc"></span>'
@@ -2655,6 +2709,10 @@
       tune: K.tune,
       best: S.arcade || 0,
       label: function(w){ return plain(w.ja); },
+      onPrompt: function(w){
+        $("promptw").textContent = w ? w.en : "—";
+        $("prompt").classList.toggle("live", !!w);
+      },
       onCatch: function(w){
         var key = "catch:" + plain(w.ja);
         if (!S.done[key]){ S.done[key] = 1; award(1); save(); }
