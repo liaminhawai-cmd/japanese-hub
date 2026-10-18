@@ -1836,8 +1836,8 @@
                   9, function(w){ return w.kind === "i" ? "i" : "na"; }),
       hint: "Tap a colour, then tap the side it belongs on.",
       then: "Now tap a side.",
-      closing: "There is no rule for telling which colour is which kind. It "
-        + "comes with the word, the same way \u3044 and \u306a do.",
+      closing: "No rule tells you which colour is which kind. Learn it with "
+        + "the word, the way you learnt \u3044 and \u306a.",
       cols: [{ key:"i",  cls:"i",
                head:'\u3042\u304b\u3044 ' + ruby(g.ja) },
              { key:"na", cls:"na",

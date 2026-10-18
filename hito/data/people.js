@@ -333,7 +333,7 @@ window.HITO_PEOPLE = {
       "step": "colour",
       "title": "いろ",
       "title_en": "Colours",
-      "rule": "Some colours are い adjectives and go straight in front of the thing. The rest are nouns and take の first. No rule tells you which is which, so learn it along with the word.",
+      "rule": "Put an い colour straight in front of the garment. Put の after a noun colour. No rule tells you which is which, so learn the kind with the word.",
       "eg": [
         {
           "ja": "あかい シャツ",
