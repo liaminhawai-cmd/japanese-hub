@@ -56,127 +56,91 @@
 
 window.HITO_WORDS = {
   "tune": {
-    "title": "エリーゼのために",
-    "title_en": "Für Elise",
-    "source": "Beethoven, WoO 59, written 1810 and first printed 1867. Public domain: Beethoven died in 1827. The opening is one wandering line of semiquavers, which is exactly what a single square wave wants.",
-    "check": "Transcribed by ear in this repo, not from a score. Correct the notes here if they are wrong; nothing else has to change.",
-    "tempo": 82,
+    "title": "メヌエット ト長調",
+    "title_en": "Minuet in G",
+    "source": "Beethoven, WoO 10 No. 2, published 1796. Public domain: Beethoven died in 1827. G major, 3/4, with the oom-pah-pah a minuet wants underneath it.",
+    "check": "THE LEAST CERTAIN OF THE THREE TUNES IN THESE APPS. The Mozart and the Für Elise were transcribed by ear and are close; this one is the shape of the minuet rather than a reliable reading of it, because it is the piece this repo could not recall note for note. Listen to it, and correct the melody here against a score. Nothing else has to change.",
+    "tempo": 126,
     "melody": [
       [
+        "D5",
+        0.5
+      ],
+      [
+        "G5",
+        0.75
+      ],
+      [
+        "F#5",
+        0.25
+      ],
+      [
+        "G5",
+        0.5
+      ],
+      [
+        "A5",
+        0.5
+      ],
+      [
+        "B5",
+        0.5
+      ],
+      [
+        "A5",
+        0.5
+      ],
+      [
+        "G5",
+        0.5
+      ],
+      [
+        "F#5",
+        0.5
+      ],
+      [
         "E5",
-        0.25
-      ],
-      [
-        "D#5",
-        0.25
-      ],
-      [
-        "E5",
-        0.25
-      ],
-      [
-        "D#5",
-        0.25
-      ],
-      [
-        "E5",
-        0.25
-      ],
-      [
-        "B4",
-        0.25
+        0.5
       ],
       [
         "D5",
-        0.25
-      ],
-      [
-        "C5",
-        0.25
-      ],
-      [
-        "A4",
         0.5
-      ],
-      [
-        "C4",
-        0.25
-      ],
-      [
-        "E4",
-        0.25
-      ],
-      [
-        "A4",
-        0.25
-      ],
-      [
-        "B4",
-        0.5
-      ],
-      [
-        "E4",
-        0.25
-      ],
-      [
-        "G#4",
-        0.25
-      ],
-      [
-        "B4",
-        0.25
       ],
       [
         "C5",
         0.5
       ],
       [
-        "E4",
-        0.25
+        "B4",
+        0.5
       ],
       [
-        "E5",
-        0.25
-      ],
-      [
-        "D#5",
-        0.25
-      ],
-      [
-        "E5",
-        0.25
-      ],
-      [
-        "D#5",
-        0.25
-      ],
-      [
-        "E5",
-        0.25
+        "A4",
+        0.5
       ],
       [
         "B4",
-        0.25
+        0.5
+      ],
+      [
+        "C5",
+        0.5
+      ],
+      [
+        "A4",
+        0.5
+      ],
+      [
+        "G4",
+        1.5
       ],
       [
         "D5",
-        0.25
-      ],
-      [
-        "C5",
-        0.25
-      ],
-      [
-        "A4",
         0.5
       ],
       [
-        "C4",
-        0.25
-      ],
-      [
-        "E4",
-        0.25
+        "B4",
+        0.75
       ],
       [
         "A4",
@@ -187,54 +151,190 @@ window.HITO_WORDS = {
         0.5
       ],
       [
-        "E4",
-        0.25
+        "C5",
+        0.5
+      ],
+      [
+        "D5",
+        0.5
       ],
       [
         "C5",
-        0.25
+        0.5
       ],
       [
         "B4",
-        0.25
+        0.5
       ],
       [
         "A4",
-        1
+        0.5
       ],
       [
-        null,
-        1.25
+        "G4",
+        0.5
+      ],
+      [
+        "A4",
+        0.5
+      ],
+      [
+        "B4",
+        0.5
+      ],
+      [
+        "C5",
+        0.5
+      ],
+      [
+        "D5",
+        0.5
+      ],
+      [
+        "E5",
+        0.5
+      ],
+      [
+        "F#5",
+        0.5
+      ],
+      [
+        "G5",
+        0.5
+      ],
+      [
+        "A5",
+        0.5
+      ],
+      [
+        "G5",
+        0.5
+      ],
+      [
+        "F#5",
+        0.5
+      ],
+      [
+        "E5",
+        0.5
+      ],
+      [
+        "D5",
+        0.5
+      ],
+      [
+        "C5",
+        0.5
+      ],
+      [
+        "B4",
+        0.5
+      ],
+      [
+        "A4",
+        0.5
+      ],
+      [
+        "G4",
+        1.5
       ]
     ],
     "bass": [
       [
-        "A2",
-        2
+        "G2",
+        1
+      ],
+      [
+        "D3",
+        1
+      ],
+      [
+        "D3",
+        1
+      ],
+      [
+        "D2",
+        1
       ],
       [
         "A2",
-        1.75
-      ],
-      [
-        "E2",
-        1.25
+        1
       ],
       [
         "A2",
-        2.25
+        1
+      ],
+      [
+        "G2",
+        1
+      ],
+      [
+        "D3",
+        1
+      ],
+      [
+        "D3",
+        1
+      ],
+      [
+        "C3",
+        1
+      ],
+      [
+        "G3",
+        1
+      ],
+      [
+        "G3",
+        1
+      ],
+      [
+        "G2",
+        1
+      ],
+      [
+        "D3",
+        1
+      ],
+      [
+        "D3",
+        1
+      ],
+      [
+        "D2",
+        1
       ],
       [
         "A2",
-        1.75
-      ],
-      [
-        "E2",
-        1.75
+        1
       ],
       [
         "A2",
-        1.25
+        1
+      ],
+      [
+        "D2",
+        1
+      ],
+      [
+        "A2",
+        1
+      ],
+      [
+        "A2",
+        1
+      ],
+      [
+        "G2",
+        1
+      ],
+      [
+        "D3",
+        1
+      ],
+      [
+        "D3",
+        1
       ]
     ]
   },
