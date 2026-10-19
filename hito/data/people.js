@@ -260,7 +260,7 @@ window.HITO_PEOPLE = {
     {
       "step": "katch",
       "title_en": "Catch the word",
-      "rule": "Read the word above the screen, then catch the one falling word that means it. Let the others fall. Each catch speeds them up. Miss the right word 3 times and the game ends.",
+      "rule": "Read the word above the screen, then catch the one falling word that means it. Let the others fall. Catch the ninja for a bonus and keep away from the かさおばけ. Three mistakes and the game ends.",
       "eg": []
     },
     {

@@ -1052,14 +1052,19 @@
       } catch (e){}
     }
     /* A wrong catch, or a right word let through: the 1980 cabinet's
-       "no", which is a square wave falling a fourth. */
+       "no", a harsh note falling a fourth. Sawtooth rather than square,
+       and the ninja's bonus is a triangle, so that a square wave in
+       this app always means a note of the tune. The browser check
+       reads the notes off the oscillators to prove the melody is the
+       one in the data, and it cannot do that if the sound effects are
+       mixed in with it. */
     function buzz(){
       if (!S.sfx) return;
       try {
         var c = build(); if (!c) return;
         var t = c.currentTime;
         var o = c.createOscillator(), g = c.createGain();
-        o.type = "square";
+        o.type = "sawtooth";
         o.frequency.setValueAtTime(200, t);
         o.frequency.setValueAtTime(150, t + 0.09);
         g.gain.setValueAtTime(0.0001, t);
@@ -1069,8 +1074,102 @@
         o.start(t); o.stop(t + 0.22);
       } catch (e){}
     }
+    /* ---- a small explosion ----
+       Andrew: "What about adding a small explosion sound when a word is
+       caught?" It replaces the slurp rather than joining it: two sounds
+       on every catch is mush, and twenty-five of them in a room is a
+       reason to ban the game. A burst of noise with the top rolled off
+       as it decays, over a low thud that gives it a body. */
+    function boom(){
+      if (!S.sfx) return;
+      try {
+        var c = build(); if (!c) return;
+        var t = c.currentTime, D = 0.26;
+        var src = c.createBufferSource(); src.buffer = hiss;
+        var lp = c.createBiquadFilter();
+        lp.type = "lowpass";
+        lp.frequency.setValueAtTime(5200, t);
+        lp.frequency.exponentialRampToValueAtTime(380, t + D);
+        var g1 = c.createGain();
+        g1.gain.setValueAtTime(0.0001, t);
+        g1.gain.exponentialRampToValueAtTime(0.3, t + 0.008);
+        g1.gain.exponentialRampToValueAtTime(0.0001, t + D);
+        src.connect(lp); lp.connect(g1); g1.connect(c.destination);
+        src.start(t); src.stop(t + D + 0.02);
+
+        var o = c.createOscillator(), g2 = c.createGain();
+        o.type = "sine";
+        o.frequency.setValueAtTime(220, t);
+        o.frequency.exponentialRampToValueAtTime(48, t + 0.18);
+        g2.gain.setValueAtTime(0.0001, t);
+        g2.gain.exponentialRampToValueAtTime(0.3, t + 0.01);
+        g2.gain.exponentialRampToValueAtTime(0.0001, t + 0.2);
+        o.connect(g2); g2.connect(c.destination);
+        o.start(t); o.stop(t + 0.22);
+      } catch (e){}
+    }
+    /* The ninja's bonus: the two rising notes every arcade machine has
+       used for a pickup since 1985. */
+    function bonus(){
+      if (!S.sfx) return;
+      try {
+        var c = build(); if (!c) return;
+        var t = c.currentTime;
+        [[988, 0], [1319, 0.085]].forEach(function(n){
+          var o = c.createOscillator(), g = c.createGain();
+          o.type = "triangle";
+          o.frequency.setValueAtTime(n[0], t + n[1]);
+          g.gain.setValueAtTime(0.0001, t + n[1]);
+          g.gain.exponentialRampToValueAtTime(0.16, t + n[1] + 0.008);
+          g.gain.exponentialRampToValueAtTime(0.0001, t + n[1] + 0.13);
+          o.connect(g); g.connect(c.destination);
+          o.start(t + n[1]); o.stop(t + n[1] + 0.15);
+        });
+      } catch (e){}
+    }
+    /* ---- wah wah wah waaah ----
+       Andrew asked for the comedic failure, and the comedy is all in
+       the bend: four notes down a chromatic scale, each sliding into
+       the next, the last one sagging a whole tone and taking its time
+       about it. A sawtooth through a lowpass is near enough a muted
+       trombone for a game that is drawn in squares. */
+    function sadtrombone(){
+      if (!S.sfx) return;
+      try {
+        var c = build(); if (!c) return;
+        var t = c.currentTime;
+        var lp = c.createBiquadFilter();
+        lp.type = "lowpass"; lp.frequency.value = 1500; lp.Q.value = 1;
+        lp.connect(c.destination);
+        /* wah  wah  wah  waaaah */
+        var N = [[311, 0.00, 0.22], [294, 0.24, 0.22],
+                 [277, 0.48, 0.22], [262, 0.72, 0.85]];
+        N.forEach(function(n, k){
+          var f = n[0], at = t + n[1], d = n[2];
+          var o = c.createOscillator(), g = c.createGain();
+          o.type = "sawtooth";
+          o.frequency.setValueAtTime(f * 1.06, at);
+          o.frequency.linearRampToValueAtTime(f, at + 0.07);
+          /* the last one sags away */
+          if (k === 3) o.frequency.linearRampToValueAtTime(f * 0.84, at + d);
+          /* the wobble that makes it a wah */
+          var lfo = c.createOscillator(), lg = c.createGain();
+          lfo.type = "sine"; lfo.frequency.value = k === 3 ? 5.5 : 7;
+          lg.gain.value = f * 0.022;
+          lfo.connect(lg); lg.connect(o.frequency);
+          g.gain.setValueAtTime(0.0001, at);
+          g.gain.exponentialRampToValueAtTime(0.2, at + 0.03);
+          g.gain.setValueAtTime(0.2, at + d * 0.6);
+          g.gain.exponentialRampToValueAtTime(0.0001, at + d);
+          o.connect(g); g.connect(lp);
+          o.start(at); o.stop(at + d + 0.03);
+          lfo.start(at); lfo.stop(at + d + 0.03);
+        });
+      } catch (e){}
+    }
     return { play: play, ratchet: ratchet, clunk: clunk, wake: wakeAudio,
              whoosh: whoosh, warble: warble, slurp: slurp, buzz: buzz,
+             boom: boom, bonus: bonus, sadtrombone: sadtrombone,
              ctx: function(){ return ctx; } };
   })();
   /* The things that look pressable: the home panes, the tab row, and the
@@ -1373,7 +1472,8 @@
        question on it to find. There is always one now. */
     var G = { mode:"ready", score:0, lives:3, best:cfg.best || 0,
               speed:24, bat:PIXW / 2, batW:56, falling:[], target:null,
-              flash:0, flashOk:false, stun:0, spawn:0, sinceTarget:0 };
+              flash:0, flashOk:false, spawn:0, sinceTarget:0,
+              bits:[], flyers:[], fly:260 };
     var raf = 0, last = 0, acc = 0, alive = true;
 
     function width(w){
@@ -1422,19 +1522,50 @@
                && (inAir(w) || (!force && w.en === G.target.en)));
         if (inAir(w)) return;
       }
-      if (w === G.target) G.sinceTarget = 0;
       var half = width(w) / 2 + 3;
       var span = Math.max(8, PIXW - 2 * half);
-      G.falling.push({ w: w, x: Math.round(half + Math.random() * span),
-                       y: -2, half: half });
+      /* Never one word above another. Andrew: "Definitely don't stack
+         words on top of each other because it is too hard to catch
+         them." Two words sharing a column arrive at the bat one after
+         the other with no room to move between them, so a new word has
+         to clear every word already in the air by both their widths.
+         If there is nowhere to put it, it does not come: a thinner
+         screen is better than an uncatchable one. */
+      var x = null;
+      for (var t2 = 0; t2 < 40 && x === null; t2++){
+        var try_ = Math.round(half + Math.random() * span);
+        var clear = G.falling.every(function(o){
+          return Math.abs(o.x - try_) > o.half + half + 6;
+        });
+        if (clear) x = try_;
+      }
+      if (x === null) return;
+      if (w === G.target) G.sinceTarget = 0;
+      G.falling.push({ w: w, x: x, y: -2, half: half });
+    }
+    /* ---- the disintegration ----
+       Andrew: "What about making the word disintegrate when it is
+       caught?" The word is thrown outwards as a handful of its own
+       pixels, which at this resolution is the only effect that looks
+       like it belongs. */
+    function burst(x, y, col, n){
+      for (var k = 0; k < (n || 14); k++){
+        var a = Math.random() * Math.PI * 2, sp = 0.4 + Math.random() * 1.5;
+        G.bits.push({ x: x + (Math.random() * 20 - 10), y: y - 5 + Math.random() * 8,
+                      vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 0.5,
+                      life: 16 + Math.floor(Math.random() * 12), col: col });
+      }
     }
     function caught(f){
+      burst(f.x, f.y, "#bfffbf", 18);
       G.score++;
-      G.speed = Math.min(150, G.speed * 1.05);
+      /* Andrew: "the words need to speed up a bit faster than they
+           have been in order to keep it interesting." */
+        G.speed = Math.min(175, G.speed * 1.085);
         MUSIC.rate(1 + (G.speed - 24) / 190);
       G.flash = 14; G.flashOk = true;
       if (cfg.onCatch) cfg.onCatch(f.w);
-      if (S.sfx) CLICK.slurp();
+      if (S.sfx) CLICK.boom();
       newTarget();
       if (!G.falling.some(function(x){ return x.w.en === G.target.en; }))
         spawn(true);
@@ -1459,16 +1590,38 @@
         spawn(true);
     }
     function missed(){ lose(); }
+    /* ---- the ninja and the かさおばけ ----
+       Andrew: "Add a random flying yokai that players have to avoid or
+       lose a life. Also add a random flying ninja that players must hit
+       to get a bonus point."
+
+       They swoop rather than fall: in from one side near the top and
+       down across the screen, so they cross the bat line once, at a
+       place the player has to get to or get away from. Missing a ninja
+       costs nothing; it is a bonus, not a fourth way to lose. */
+    function flyer(){
+      var ninja = Math.random() < 0.5;
+      var fromLeft = Math.random() < 0.5;
+      G.flyers.push({
+        ninja: ninja,
+        x: fromLeft ? -12 : PIXW + 12,
+        y: 22 + Math.random() * 30,
+        vx: (fromLeft ? 1 : -1) * (0.55 + Math.random() * 0.5),
+        vy: 0.42 + Math.random() * 0.22,
+        t: 0
+      });
+    }
     function over(){
       G.mode = "over";
       G.best = Math.max(G.best, G.score);
       MUSIC.stop();
+      if (S.sfx) setTimeout(function(){ CLICK.sadtrombone(); }, 140);
       if (cfg.onOver) cfg.onOver(G.score);
       /* the question stays up: it is the one the next game starts on */
     }
     function begin(){
       G.mode = "play"; G.score = 0; G.lives = 3; G.speed = 24;
-      G.falling = []; G.stun = 0; G.spawn = 0;
+      G.falling = []; G.spawn = 0; G.bits = []; G.flyers = []; G.fly = 260;
       CLICK.wake();
       if (S.sfx && cfg.tune) MUSIC.start(cfg.tune);
       /* the question already on the pill is the one you start on */
@@ -1489,6 +1642,51 @@
         spawn(G.sinceTarget > 240);
       }
       var floor = PIXH - 18;
+
+      /* the pixels of a word that has already gone */
+      for (var bI = G.bits.length - 1; bI >= 0; bI--){
+        var bt = G.bits[bI];
+        bt.x += bt.vx; bt.y += bt.vy; bt.vy += 0.05; bt.life--;
+        if (bt.life <= 0) G.bits.splice(bI, 1);
+      }
+
+      /* one swooping creature every ten seconds or so */
+      G.fly--;
+      if (G.fly <= 0 && G.flyers.length < 2){
+        G.fly = 420 + Math.floor(Math.random() * 360);
+        flyer();
+      }
+      for (var vI = G.flyers.length - 1; vI >= 0; vI--){
+        var fl = G.flyers[vI];
+        var wasAbove = fl.y < floor;
+        fl.x += fl.vx * (G.speed / 24);
+        fl.y += fl.vy * (G.speed / 24);
+        fl.t++;
+        if (fl.x < -24 || fl.x > PIXW + 24 || fl.y > PIXH + 20){
+          G.flyers.splice(vI, 1);
+          continue;
+        }
+        if (wasAbove && fl.y >= floor){
+          var onIt = Math.abs(fl.x - G.bat) < G.batW / 2 + 7;
+          if (onIt){
+            G.flyers.splice(vI, 1);
+            if (fl.ninja){
+              /* a bonus point, and it is only ever a bonus: it is not
+                 a word, so it pays no points towards the step and
+                 cannot be farmed for them */
+              G.score += 2;
+              G.flash = 14; G.flashOk = true;
+              burst(fl.x, fl.y, "#9fd4ff", 16);
+              if (S.sfx) CLICK.bonus();
+            } else {
+              burst(fl.x, fl.y, "#d9a7ff", 16);
+              lose();
+            }
+            continue;
+          }
+        }
+      }
+
       for (var i = G.falling.length - 1; i >= 0; i--){
         var f = G.falling[i];
         f.y += G.speed / 60;
@@ -1541,12 +1739,61 @@
       }
 
       if (G.mode === "play"){
+        /* Every word the same colour. The target used to brighten as it
+           neared the floor, which told a student which one to catch
+           without their reading a thing: Andrew spotted it. */
         G.falling.forEach(function(f){
-          var near = f.y > PIXH - 60;
-          text(cfg.label(f.w), f.x, Math.round(f.y), FONT,
-               near && f.w.en === G.target.en ? "#fff" : "#cfe6cf");
+          text(cfg.label(f.w), f.x, Math.round(f.y), FONT, "#e8f2e8");
         });
       }
+
+      /* ---- the two creatures, in pixels ----
+         A ninja is dark, which on a black screen is nothing at all, so
+         he is a grey hood with a bright headband and two white eyes.
+         The かさおばけ is the one-eyed umbrella: a purple canopy, a
+         single eye and one wooden leg. Both are drawn from rectangles
+         rather than fetched, like everything else here. */
+      G.flyers.forEach(function(fl){
+        var x = Math.round(fl.x), y = Math.round(fl.y);
+        var bob = Math.round(Math.sin(fl.t / 7) * 2);
+        y += bob;
+        if (fl.ninja){
+          g.fillStyle = "#3a3f46";
+          g.fillRect(x - 5, y - 7, 10, 9);          /* hood */
+          g.fillRect(x - 7, y - 1, 14, 5);          /* shoulders */
+          g.fillStyle = "#c8332f";
+          g.fillRect(x - 6, y - 4, 12, 2);          /* headband */
+          g.fillRect(x + 5, y - 4, 4, 1);           /* its tail, streaming */
+          g.fillStyle = "#fff";
+          g.fillRect(x - 3, y - 4, 2, 2);
+          g.fillRect(x + 1, y - 4, 2, 2);           /* eyes */
+          g.fillStyle = "#2a2e33";
+          g.fillRect(x - 4, y + 4, 3, 3);
+          g.fillRect(x + 1, y + 4, 3, 3);           /* legs, mid stride */
+        } else {
+          g.fillStyle = "#7a4a86";
+          g.fillRect(x - 8, y - 5, 16, 3);          /* canopy */
+          g.fillRect(x - 6, y - 7, 12, 2);
+          g.fillStyle = "#9a66a8";
+          g.fillRect(x - 8, y - 2, 16, 1);          /* its rim */
+          g.fillStyle = "#e8d8f0";
+          g.fillRect(x - 3, y, 6, 5);               /* face */
+          g.fillStyle = "#1a1020";
+          g.fillRect(x - 1, y + 1, 3, 3);           /* the one eye */
+          g.fillStyle = "#c8332f";
+          g.fillRect(x - 1, y + 5, 2, 3);           /* tongue */
+          g.fillStyle = "#8a6a3a";
+          g.fillRect(x - 1, y + 5, 1, 6);           /* the one leg */
+        }
+      });
+
+      /* the pixels of a caught word, on their way out */
+      G.bits.forEach(function(bt){
+        g.fillStyle = bt.col;
+        g.globalAlpha = Math.max(0, Math.min(1, bt.life / 16));
+        g.fillRect(Math.round(bt.x), Math.round(bt.y), 2, 2);
+      });
+      g.globalAlpha = 1;
 
       /* the bat: a slab with a lighter lip, and a mouth when it eats */
       var by = PIXH - 12, bx = Math.round(G.bat - G.batW / 2);
