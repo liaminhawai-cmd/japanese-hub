@@ -1178,7 +1178,7 @@
   function arcade(cfg){
     var cv = cfg.canvas, g = cv.getContext("2d");
     cv.width = PIXW; cv.height = PIXH;
-    var FONT = 15;
+    var FONT = cfg.font || 18;
     g.imageSmoothingEnabled = false;
     var POOL = cfg.words;
     var stars = [];
@@ -1192,6 +1192,11 @@
        is landscape now and the words are two pixels smaller, and several
        are in the air at a time, which is what makes finding the right one
        a search rather than a yes-or-no on whatever is coming. */
+    /* A question from the moment the rung opens. Andrew: "Where is the
+       prompt word? Can't see it." The pill read CATCH — until somebody
+       pressed Start, and on game over it went back to a dash, so for
+       most of the time a student was looking at the screen there was no
+       question on it to find. There is always one now. */
     var G = { mode:"ready", score:0, lives:3, best:cfg.best || 0,
               speed:24, bat:PIXW / 2, batW:46, falling:[], target:null,
               flash:0, flashOk:false, stun:0, spawn:0, sinceTarget:0 };
@@ -1284,14 +1289,16 @@
       G.best = Math.max(G.best, G.score);
       MUSIC.stop();
       if (cfg.onOver) cfg.onOver(G.score);
-      if (cfg.onPrompt) cfg.onPrompt(null);
+      /* the question stays up: it is the one the next game starts on */
     }
     function begin(){
       G.mode = "play"; G.score = 0; G.lives = 3; G.speed = 24;
-      G.falling = []; G.stun = 0; G.spawn = 0; G.target = null;
+      G.falling = []; G.stun = 0; G.spawn = 0;
       SFX.wake();
       if (S.sfx && cfg.tune) MUSIC.start(cfg.tune);
-      newTarget();
+      /* the question already on the pill is the one you start on */
+      if (!G.target) newTarget();
+      else if (cfg.onPrompt) cfg.onPrompt(G.target);
       spawn(true);
     }
     function step(){
@@ -1425,9 +1432,13 @@
       if (keys.ArrowRight) G.bat = Math.min(PIXW - G.batW / 2, G.bat + 6);
     }, 1000 / 60);
 
+    newTarget();
     raf = requestAnimationFrame(loop);
     return {
       state: G,
+      /* what the game would draw for a word. The browser check reads it
+         to hold the kana rule in place; nothing in the app calls it. */
+      label: function(w){ return cfg.label(w); },
       start: begin,
       stop: function(){
         alive = false;
@@ -2710,6 +2721,14 @@
       words: pool,
       tune: K.tune,
       best: S.arcade || 0,
+      /* The kanji stay here, because this rung exists to drill them:
+         Andrew's kana rule would take 21 of the 30 topic kanji off the
+         screen and leave a reading game with nothing to read. What the
+         rule was really about is legibility, so the glyphs are bigger
+         instead. Drawn at 15 pixels, 歴史 was a smudge and 上手 was
+         unreadable; at 21 every one of the thirty is clear, with the
+         pixels still as coarse as they were. */
+      font: 21,
       label: function(w){ return plain(w.ja); },
       onPrompt: function(w){
         $("promptw").textContent = w ? w.en : "—";

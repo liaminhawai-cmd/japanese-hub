@@ -288,19 +288,18 @@
      is not meant to be a game. */
   .arcadewrap{display:flex;flex-direction:column;align-items:center;
        justify-content:center;gap:8px;padding:4px 0;min-height:0}
-  .prompt{display:flex;align-items:baseline;gap:10px;padding:5px 16px;
-       border:2px solid var(--line);border-radius:999px;background:var(--paper)}
-  .prompt .lab{font-size:10.5px;font-weight:700;letter-spacing:.14em;
-       color:var(--muted)}
-  .prompt b{font-size:23px;line-height:1.25;color:var(--muted)}
-  .prompt.live{border-color:#8a6d1f;background:#fffbe9}
-  .prompt.live b{color:var(--ink)}
-  /* The width is set in JS from the height that is actually free, because
-     the chrome above and below this is three bars whose heights depend on
-     the font, the wrapping and whether there is a legend row. Guessing
-     them in a calc() put the bat and the score behind the pinned footer
-     on two of the four sizes tested. The CSS keeps a sane default for the
-     moment before the measurement lands. */
+  /* The question. It is pinned to the top of the scrolling area, so no
+     amount of scrolling can put it off the screen, and it carries a word
+     from the moment the rung opens rather than a dash until somebody
+     presses Start. */
+  .prompt{position:sticky;top:0;z-index:4;align-self:stretch;
+       display:flex;align-items:baseline;justify-content:center;gap:12px;
+       padding:7px 18px;border:2px solid #8a6d1f;border-radius:10px;
+       background:#fffbe9}
+  .prompt .lab{font-size:11px;font-weight:700;letter-spacing:.14em;
+       color:#8a6d1f}
+  .prompt b{font-size:27px;line-height:1.2;color:var(--ink)}
+  @media (max-width:700px){ .prompt b{font-size:21px} }
   .arcade{display:block;height:auto;width:min(100%,900px);
        aspect-ratio:320/200;background:#000;border:3px solid #2f8f2f;
        border-radius:6px;cursor:none;touch-action:none;
@@ -386,9 +385,9 @@
 <nav class="steps" id="steps"></nav>
 <div class="whobar" id="whobar"></div>
 <main id="main"></main>
-<script src="data/kiji.js?v=20261018f"></script>
-<script src="data/audio.js?v=20261018f"></script>
-<script src="app.js?v=20261018f"></script>
-<div class="build" aria-hidden="true">build 2026-10-18f</div>
+<script src="data/kiji.js?v=20261019a"></script>
+<script src="data/audio.js?v=20261019a"></script>
+<script src="app.js?v=20261019a"></script>
+<div class="build" aria-hidden="true">build 2026-10-19a</div>
 </body>
 </html>
