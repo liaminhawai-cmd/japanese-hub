@@ -1287,7 +1287,7 @@
      thing that gets a game banned, so the music sits under the sound
      effects and the ♪ button turns the lot off. */
   var MUSIC = (function(){
-    var timer = null, at = 0, i = 0, bi = 0, on = false, T = null;
+    var timer = null, at = 0, i = 0, bi = 0, on = false, T = null, rate = 1;
     function voice(c, note, start, dur, type, vol, detune){
       if (!note) return;
       var o = c.createOscillator(), g = c.createGain();
@@ -1306,7 +1306,10 @@
     }
     function pumpNow(){
       var c = CLICK.ctx(); if (!c || !on || !T) return;
-      var beat = 60 / (T.tempo || 100);
+      /* The tune winds up with the game. Every word caught makes the
+         words fall a little faster and the music follow them, which is
+         most of what makes an arcade game feel like it is closing in. */
+      var beat = 60 / ((T.tempo || 100) * rate);
       /* keep about a second and a half of music in front of the clock */
       while (at < c.currentTime + 1.5){
         if (at < c.currentTime) at = c.currentTime + 0.05;
@@ -1328,7 +1331,7 @@
          word. */
       try {
         var c = CLICK.wake(); if (!c) return;
-        T = tune; on = true; at = c.currentTime + 0.08; i = 0; bi = 0;
+        T = tune; on = true; rate = 1; at = c.currentTime + 0.08; i = 0; bi = 0;
         pump();
         timer = setInterval(pump, 400);
       } catch (e){ on = false; T = null; }
@@ -1337,7 +1340,9 @@
       on = false; T = null;
       clearInterval(timer); timer = null;
     }
-    return { start: start, stop: stop, playing: function(){ return on; } };
+    return { start: start, stop: stop, playing: function(){ return on; },
+             rate: function(x){ rate = Math.max(1, Math.min(1.45, x)); },
+             tempo: function(){ return (T ? T.tempo || 100 : 0) * rate; } };
   })();
 
   /* ---- the game ----
@@ -1367,7 +1372,7 @@
        most of the time a student was looking at the screen there was no
        question on it to find. There is always one now. */
     var G = { mode:"ready", score:0, lives:3, best:cfg.best || 0,
-              speed:24, bat:PIXW / 2, batW:46, falling:[], target:null,
+              speed:24, bat:PIXW / 2, batW:56, falling:[], target:null,
               flash:0, flashOk:false, stun:0, spawn:0, sinceTarget:0 };
     var raf = 0, last = 0, acc = 0, alive = true;
 
@@ -1426,6 +1431,7 @@
     function caught(f){
       G.score++;
       G.speed = Math.min(150, G.speed * 1.05);
+        MUSIC.rate(1 + (G.speed - 24) / 190);
       G.flash = 14; G.flashOk = true;
       if (cfg.onCatch) cfg.onCatch(f.w);
       if (S.sfx) CLICK.slurp();
@@ -1434,17 +1440,16 @@
         spawn(true);
     }
     function wrong(){
-      /* Catching a word that is not the one asked for does NOT cost a
-         life: Andrew's rule is three missed targets and out. It costs
-         the bat, which is stopped for a third of a second, and the
-         target is still falling while that happens. A wrong catch with
-         no cost at all would make parking under everything a winning
-         strategy, which is the one thing this game must not reward. */
-      G.stun = 20;
-      G.flash = 14; G.flashOk = false;
-      if (S.sfx) CLICK.buzz();
+      /* Andrew: "Make sure that the game takes lives when the player
+         catches the wrong word. I noticed that it wasn't working
+         properly in the body app. I was getting away with wrong
+         catches." It did not take one before: it stopped the bat for a
+         third of a second instead, which was my call and not his.
+         A wrong catch costs a life, the same as a missed one. */
+      lose();
     }
-    function missed(){
+    /* One life, whichever way it went. */
+    function lose(){
       G.lives--;
       G.flash = 16; G.flashOk = false;
       if (S.sfx) CLICK.buzz();
@@ -1453,6 +1458,7 @@
       if (!G.falling.some(function(x){ return x.w.en === G.target.en; }))
         spawn(true);
     }
+    function missed(){ lose(); }
     function over(){
       G.mode = "over";
       G.best = Math.max(G.best, G.score);
@@ -1473,7 +1479,6 @@
     function step(){
       if (G.mode !== "play") return;
       if (G.flash > 0) G.flash--;
-      if (G.stun > 0) G.stun--;
       G.sinceTarget++;
       /* A new word every so often, and sooner as the game speeds up, so
          the screen stays about as full however fast it is going. */
@@ -1488,7 +1493,13 @@
         var f = G.falling[i];
         f.y += G.speed / 60;
         if (f.y < floor) continue;
-        var onBat = !G.stun && Math.abs(f.x - G.bat) < G.batW / 2 + f.half;
+        /* The word's CENTRE has to be over the bat, not merely touching
+           its edge. The old test counted any overlap, so a long word was
+           caught from a fifth of the screen away on either side: fine
+           when a wrong catch was free, unfair the moment it costs a
+           life. Catching is a deliberate act now, which is what makes
+           losing one always the player's own doing. */
+        var onBat = Math.abs(f.x - G.bat) < G.batW / 2 + 6;
         var isTarget = f.w.en === G.target.en;
         G.falling.splice(i, 1);
         if (onBat){
@@ -1539,10 +1550,10 @@
 
       /* the bat: a slab with a lighter lip, and a mouth when it eats */
       var by = PIXH - 12, bx = Math.round(G.bat - G.batW / 2);
-      g.fillStyle = G.stun ? "#4a4a4a"
-        : (G.flash > 0 && G.flashOk ? "#aaffaa" : "#6cf06c");
+      g.fillStyle = G.flash > 0
+        ? (G.flashOk ? "#aaffaa" : "#ff6a4a") : "#6cf06c";
       g.fillRect(bx, by, G.batW, 5);
-      g.fillStyle = G.stun ? "#2a2a2a" : "#2f8f2f";
+      g.fillStyle = "#2f8f2f";
       g.fillRect(bx, by + 5, G.batW, 3);
       g.fillStyle = "#000";
       g.fillRect(Math.round(bx + G.batW / 2 - 4), by, 8, 2);
@@ -1596,7 +1607,7 @@
     cv.addEventListener("keydown", keydown);
     cv.addEventListener("keyup", keyup);
     var kt = setInterval(function(){
-      if (G.mode !== "play" || G.stun) return;
+      if (G.mode !== "play") return;
       if (keys.ArrowLeft) G.bat = Math.max(G.batW / 2, G.bat - 6);
       if (keys.ArrowRight) G.bat = Math.min(PIXW - G.batW / 2, G.bat + 6);
     }, 1000 / 60);
