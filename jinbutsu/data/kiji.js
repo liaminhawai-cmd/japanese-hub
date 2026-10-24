@@ -3343,6 +3343,11 @@ window.KIJI = {
     },
     "links": [
       {
+        "name": "Microsoft's own page on the Japanese IME",
+        "url": "https://learn.microsoft.com/en-us/globalization/input/japanese-ime",
+        "what": "The keyboard itself, written by the people who made it."
+      },
+      {
         "name": "Install the Japanese keyboard on Windows 11",
         "url": "https://www.youtube.com/watch?v=lvH9ulLvaZA",
         "what": "Watch this if step 1 does not look the way it reads here."

@@ -78,6 +78,11 @@
         border-radius:999px;font:700 11px/1 var(--font);letter-spacing:.09em;
         text-transform:uppercase;cursor:pointer}
   .howto:hover{background:#fff6d8}
+  /* Which build is on screen. Without it there is no way to tell a
+     change that did not work from a change that never arrived. */
+  .build{position:fixed;right:4px;bottom:2px;z-index:70;pointer-events:none;
+     font-family:var(--font);font-size:9px;letter-spacing:.04em;
+     color:var(--line);user-select:none}
   @media (prefers-reduced-motion:reduce){ .rule{transition:none} }
   .rule ul{margin:3px 0 0 17px} .rule li{margin:1px 0}
   .work{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain}
@@ -225,12 +230,13 @@
 <nav class="steps" id="steps"></nav>
 <div class="pick" id="pick"></div>
 <main id="main"></main>
-<script src="data/exam.js"></script>
-<script src="data/drills.js"></script>
-<script src="data/texts.js"></script>
-<script src="data/writing.js"></script>
-<script src="data/readings.js"></script>
-<script src="data/audio.js"></script>
-<script src="app.js"></script>
+<script src="data/exam.js?v=20261024a"></script>
+<script src="data/drills.js?v=20261024a"></script>
+<script src="data/texts.js?v=20261024a"></script>
+<script src="data/writing.js?v=20261024a"></script>
+<script src="data/readings.js?v=20261024a"></script>
+<script src="data/audio.js?v=20261024a"></script>
+<script src="app.js?v=20261024a"></script>
+<div class="build" aria-hidden="true">build 2026-10-24a</div>
 </body>
 </html>

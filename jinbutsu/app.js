@@ -3322,7 +3322,7 @@
       + '<div id="nfb"></div></div></div>'
       + ((N.links || []).length
           ? '<div class="hstep"><div class="hnum">→</div><div class="hbody">'
-            + '<h4>Watch somebody do it</h4>'
+            + '<h4>Read more, or watch somebody do it</h4>'
             + N.links.map(function(l){
                 return '<p><a href="' + esc(l.url) + '" target="_blank"'
                   + ' rel="noopener">' + esc(l.name) + '</a><br>'
