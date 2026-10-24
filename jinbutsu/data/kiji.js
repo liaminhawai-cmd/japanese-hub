@@ -3341,6 +3341,22 @@ window.KIJI = {
       "head": "Check it is working",
       "say": "Type anything Japanese below. This box does not keep what you write and does not send it anywhere; it only looks at what kind of characters came out."
     },
-    "links": []
+    "links": [
+      {
+        "name": "Install the Japanese keyboard on Windows 11",
+        "url": "https://www.youtube.com/watch?v=lvH9ulLvaZA",
+        "what": "Watch this if step 1 does not look the way it reads here."
+      },
+      {
+        "name": "Type Japanese on a normal keyboard",
+        "url": "https://www.youtube.com/watch?v=VjZ4E-cdHZA",
+        "what": "Start at 2 minutes 30, where the typing begins."
+      },
+      {
+        "name": "Every sound, in detail",
+        "url": "https://www.youtube.com/watch?v=to8QUll9_gM",
+        "what": "Longer. Use it for the sounds step 5 warns about."
+      }
+    ]
   }
 };

@@ -108,7 +108,7 @@
   /* ---- what the device remembers, on this device only ---- */
   var KEY = "hito-v1";
   var S = { furi:true, en:true, sfx:true, rate:1, dressText:false,
-            pts:0, spent:0, best:0, done:{}, won:{}, wrote:{} };
+            pts:0, spent:0, best:0, done:{}, won:{}, wrote:{}, howto:{} };
   try { var raw = localStorage.getItem(KEY); if (raw){
     var o = JSON.parse(raw); for (var k in S) if (o[k] !== undefined) S[k] = o[k];
   } } catch (e){}
@@ -1926,6 +1926,64 @@
       b.onclick = function(ev){ ev.stopPropagation(); say(b.dataset.say); };
     });
   }
+  /* ---- the how-to box gets out of the way ----
+     Andrew: "the yellow speech bubble containing the instructions for
+     each tab/activity takes up screen real estate that reduces the fun
+     and usefulness of the activity ... make it fade after 10 seconds
+     and/or recede into a small clickable 'How to' pop-up when students
+     need it." It does both. The box fades ten seconds after the rung
+     opens and leaves a chip where it stood, and a rung whose box has
+     folded once opens folded from then on, so a student who already
+     knows the activity never waits for it again.
+
+     The chip is in the same place whether the box is open or shut, so
+     the control never moves. Folding frees real height, which anything
+     that sizes itself to the window needs to know, so a resize goes out
+     when it happens.
+
+     An observer rather than a line in draw(): several rungs rewrite
+     main themselves when the student changes mode, and each of those
+     is a fresh box that needs the same treatment. */
+  var foldT = null;
+  function howto(){
+    var main = $("main"), box = main.querySelector(".rule");
+    /* Putting the chip in is itself a change to main, so this runs again
+       on its own chip. It has to leave on tiptoe: clearing the timer
+       here would cancel the fold the first pass just set. */
+    if (!box || main.querySelector(".howto")) return;
+    clearTimeout(foldT); foldT = null;
+    var id = STEPS[at].id;
+    var chip = document.createElement("button");
+    chip.className = "howto"; chip.type = "button";
+    main.insertBefore(chip, box);
+    function show(open){
+      main.classList.toggle("folded", !open);
+      chip.textContent = open ? "Hide" : "How to";
+      chip.setAttribute("aria-expanded", open ? "true" : "false");
+      window.dispatchEvent(new Event("resize"));
+    }
+    function fold(){
+      clearTimeout(foldT); foldT = null;
+      box.classList.remove("fading");
+      if (!S.howto[id]){ S.howto[id] = 1; save(); }
+      show(false);
+    }
+    chip.onclick = function(){
+      if (main.classList.contains("folded")) show(true); else fold();
+    };
+    if (S.howto[id]){ show(false); return; }
+    show(true);
+    /* reduced motion gets the fold without the fade */
+    var slow = window.matchMedia
+      && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    foldT = setTimeout(function(){
+      if (slow){ fold(); return; }
+      box.classList.add("fading");
+      foldT = setTimeout(fold, 420);
+    }, 10000);
+  }
+  new MutationObserver(howto).observe($("main"), { childList: true });
+
   function draw(){
     paintToggles(); paintSteps();
     /* The game runs on its own clock and its own audio. Leaving the rung

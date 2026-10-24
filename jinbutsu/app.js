@@ -119,7 +119,8 @@
   /* ---- what the page remembers ---- */
   var KEY = "jinbutsu-v1";
   var S = { furi:true, en:true, rate:1, sfx:true,
-            pts:0, spent:0, arcade:0, hard:false, done:{}, best:{}, wrote:{} };
+            pts:0, spent:0, arcade:0, hard:false,
+            done:{}, best:{}, wrote:{}, howto:{} };
   try { S = Object.assign(S, JSON.parse(localStorage.getItem(KEY) || "{}")); } catch(e){}
   var saveT = null;
   function write(){
@@ -170,7 +171,8 @@
   $("resetBtn").onclick = function(){
     if (!confirm("Clear your score, your records and anything typed on this device?")) return;
     S = { furi:true, en:true, rate:1, sfx:true,
-          pts:0, spent:0, arcade:0, hard:false, done:{}, best:{}, wrote:{} };
+          pts:0, spent:0, arcade:0, hard:false,
+          done:{}, best:{}, wrote:{}, howto:{} };
     try { localStorage.removeItem(KEY); } catch(e){}
     draw();
   };
@@ -1765,6 +1767,63 @@
     return '<div class="foot"><span class="score" id="spenttip"></span>'
       + '<span class="sp"></span>' + (html||"") + '</div>';
   }
+  /* ---- the how-to box gets out of the way ----
+     Andrew: "the yellow speech bubble containing the instructions for
+     each tab/activity takes up screen real estate that reduces the fun
+     and usefulness of the activity ... make it fade after 10 seconds
+     and/or recede into a small clickable 'How to' pop-up when students
+     need it." It does both. The box fades ten seconds after the rung
+     opens and leaves a chip where it stood, and a rung whose box has
+     folded once opens folded from then on, so a student who already
+     knows the activity never waits for it again.
+
+     The chip is in the same place whether the box is open or shut, so
+     the control never moves. Folding frees real height, which the game
+     measures, so a resize goes out when it happens.
+
+     An observer rather than a line in draw(): several rungs rewrite
+     main themselves when the student changes mode, and each of those
+     is a fresh box that needs the same treatment. */
+  var foldT = null;
+  function howto(){
+    var main = $("main"), box = main.querySelector(".rule");
+    /* Putting the chip in is itself a change to main, so this runs again
+       on its own chip. It has to leave on tiptoe: clearing the timer
+       here would cancel the fold the first pass just set. */
+    if (!box || main.querySelector(".howto")) return;
+    clearTimeout(foldT); foldT = null;
+    var id = STEPS[at].id;
+    var chip = document.createElement("button");
+    chip.className = "howto"; chip.type = "button";
+    main.insertBefore(chip, box);
+    function show(open){
+      main.classList.toggle("folded", !open);
+      chip.textContent = open ? "Hide" : "How to";
+      chip.setAttribute("aria-expanded", open ? "true" : "false");
+      window.dispatchEvent(new Event("resize"));
+    }
+    function fold(){
+      clearTimeout(foldT); foldT = null;
+      box.classList.remove("fading");
+      if (!S.howto[id]){ S.howto[id] = 1; save(); }
+      show(false);
+    }
+    chip.onclick = function(){
+      if (main.classList.contains("folded")) show(true); else fold();
+    };
+    if (S.howto[id]){ show(false); return; }
+    show(true);
+    /* reduced motion gets the fold without the fade */
+    var slow = window.matchMedia
+      && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    foldT = setTimeout(function(){
+      if (slow){ fold(); return; }
+      box.classList.add("fading");
+      foldT = setTimeout(fold, 420);
+    }, 10000);
+  }
+  new MutationObserver(howto).observe($("main"), { childList: true });
+
   function draw(){
     paintToggles(); paintSteps();
     /* The game runs on its own clock and its own audio. Leaving the rung
@@ -3263,7 +3322,7 @@
       + '<div id="nfb"></div></div></div>'
       + ((N.links || []).length
           ? '<div class="hstep"><div class="hnum">→</div><div class="hbody">'
-            + '<h4>Elsewhere</h4>'
+            + '<h4>Watch somebody do it</h4>'
             + N.links.map(function(l){
                 return '<p><a href="' + esc(l.url) + '" target="_blank"'
                   + ' rel="noopener">' + esc(l.name) + '</a><br>'

@@ -153,7 +153,7 @@
   /* ---- what the page remembers ---- */
   var KEY = "hikki-v1";
   var S = { furi:true, rate:1, step:"bunpou", pick:{}, right:0, tried:0,
-            got:{}, wrote:{}, script:{} };
+            got:{}, wrote:{}, script:{}, howto:{} };
   try { S = Object.assign(S, JSON.parse(localStorage.getItem(KEY) || "{}")); } catch(e){}
   var saveT = null;
   function save(){
@@ -188,7 +188,7 @@
   $("resetBtn").onclick = function(){
     if (!confirm("Clear your score and everything typed on this device?")) return;
     S = { furi:true, rate:1, step:"bunpou", pick:{}, right:0, tried:0,
-          got:{}, wrote:{}, script:{} };
+          got:{}, wrote:{}, script:{}, howto:{} };
     try { localStorage.removeItem(KEY); } catch(e){}
     draw();
   };
@@ -300,9 +300,9 @@
 
     $("main").innerHTML =
       '<div class="rule"><b>Fill the gap</b>'
-      + 'Four options, one answer, and a reason underneath that says why the '
-      + 'other three are wrong. The assessors name most of these in a report, '
-      + 'and where they do the year is on it.</div>'
+      + 'Pick the right option. The reason underneath says why the other '
+      + 'three are wrong. Examiner reports name most of these mistakes, and '
+      + 'the year sits beside the quote.</div>'
       + '<div class="work"><div class="col">'
       + '<div class="card" id="item"></div></div></div>'
       + '<div class="foot"><span>' + done + ' of ' + pool.length
@@ -414,8 +414,8 @@
 
     $("main").innerHTML =
       '<div class="rule"><b>One sentence, one mistake</b>'
-      + 'Tap the part you think is wrong. Every sentence here carries a '
-      + 'mistake an examiner report named, and the year is under the answer.</div>'
+      + 'Tap the part you think is wrong. An examiner report named every '
+      + 'mistake here, and the year sits under the answer.</div>'
       + '<div class="work"><div class="col">'
       + '<div class="card" id="item"></div></div></div>'
       + '<div class="foot"><span>' + done + ' of ' + pool.length
@@ -654,9 +654,9 @@
 
     $("main").innerHTML =
       '<div class="rule"><b>Plan it, do not write it</b>'
-      + 'Four minutes on a plan is worth more than four minutes of extra '
-      + 'sentences. Fill the slots below, then read the model and see which '
-      + 'of your slots it answers.</div>'
+      + 'Fill the slots below, then read the model and find which of your '
+      + 'slots it answers. Four minutes of planning beats four minutes of '
+      + 'extra sentences.</div>'
       + '<div class="work"><div class="col">'
       + '<div class="card"><h3><span class="jp">' + esc(tt.ja) + '</span> &middot; '
       + esc(tt.en) + ' <span class="cap">' + esc(tt.style) + '</span></h3>'
@@ -763,6 +763,64 @@
   /* ---------------------------------------------------------------- draw */
   var DRAW = { bunpou:drawBunpou, machigai:drawMachigai, kikitori:drawKikitori,
                dokkai:drawDokkai, sakubun:drawSakubun, sakusen:drawSakusen };
+
+  /* ---- the how-to box gets out of the way ----
+     Andrew: "the yellow speech bubble containing the instructions for
+     each tab/activity takes up screen real estate that reduces the fun
+     and usefulness of the activity ... make it fade after 10 seconds
+     and/or recede into a small clickable 'How to' pop-up when students
+     need it." It does both. The box fades ten seconds after the rung
+     opens and leaves a chip where it stood, and a rung whose box has
+     folded once opens folded from then on, so a student who already
+     knows the activity never waits for it again.
+
+     The chip is in the same place whether the box is open or shut, so
+     the control never moves. Folding frees real height, which anything
+     that sizes itself to the window needs to know, so a resize goes out
+     when it happens.
+
+     An observer rather than a line in draw(): several rungs rewrite
+     main themselves when the student changes mode, and each of those
+     is a fresh box that needs the same treatment. */
+  var foldT = null;
+  function howto(){
+    var main = $("main"), box = main.querySelector(".rule");
+    /* Putting the chip in is itself a change to main, so this runs again
+       on its own chip. It has to leave on tiptoe: clearing the timer
+       here would cancel the fold the first pass just set. */
+    if (!box || main.querySelector(".howto")) return;
+    clearTimeout(foldT); foldT = null;
+    var id = S.step;
+    var chip = document.createElement("button");
+    chip.className = "howto"; chip.type = "button";
+    main.insertBefore(chip, box);
+    function show(open){
+      main.classList.toggle("folded", !open);
+      chip.textContent = open ? "Hide" : "How to";
+      chip.setAttribute("aria-expanded", open ? "true" : "false");
+      window.dispatchEvent(new Event("resize"));
+    }
+    function fold(){
+      clearTimeout(foldT); foldT = null;
+      box.classList.remove("fading");
+      if (!S.howto[id]){ S.howto[id] = 1; save(); }
+      show(false);
+    }
+    chip.onclick = function(){
+      if (main.classList.contains("folded")) show(true); else fold();
+    };
+    if (S.howto[id]){ show(false); return; }
+    show(true);
+    /* reduced motion gets the fold without the fade */
+    var slow = window.matchMedia
+      && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    foldT = setTimeout(function(){
+      if (slow){ fold(); return; }
+      box.classList.add("fading");
+      foldT = setTimeout(fold, 420);
+    }, 10000);
+  }
+  new MutationObserver(howto).observe($("main"), { childList: true });
 
   function draw(){
     if (!DRAW[S.step]) S.step = "bunpou";

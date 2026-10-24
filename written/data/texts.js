@@ -28,7 +28,7 @@ window.HIKKI_TEXTS = {
       "answer_in": "English",
       "title": "A weekend plan",
       "setting": "Sakura rings Alex, the exchange student staying with her family, on Friday night.",
-      "note": "Shorter than the paper's own Section 1 text. Everything else about it matches: two speakers, one conversation, questions in English.",
+      "note": "This text is shorter than the paper's. Everything else matches: two speakers, one conversation, questions in English.",
       "speakers": [
         {
           "tag": "a",
@@ -133,7 +133,7 @@ window.HIKKI_TEXTS = {
       "answer_in": "Japanese",
       "title": "The volunteer club",
       "setting": "Kenta talks Emma into joining the school's volunteer club.",
-      "note": "Section 1 Part B wants your answers in Japanese. The assessors do not mark content and language separately, so a right answer in broken Japanese still loses marks.",
+      "note": "Answer Part B in Japanese. The assessors mark content and language together, so a right answer in broken Japanese still drops marks.",
       "speakers": [
         {
           "tag": "a",
@@ -242,7 +242,7 @@ window.HIKKI_TEXTS = {
       "answer_in": "English",
       "title": "The shop with no plastic",
       "setting": "A reporter interviews the owner of a shop that sells nothing in plastic.",
-      "note": "Section 2 Part A puts a reading text and a listening text on the same topic, and some questions want both. This is the listening half.",
+      "note": "Section 2 Part A pairs a reading text and a listening text on one topic, and some questions want both. This is the listening half.",
       "speakers": [
         {
           "tag": "b",
@@ -353,7 +353,7 @@ window.HIKKI_TEXTS = {
       "answer_in": "English",
       "kind": "ブログ",
       "title": "A month of riding to school",
-      "note": "A blog post, the text type Section 2 Part A uses most often. Read the questions first: fifteen minutes of reading time is enough to do that.",
+      "note": "Section 2 Part A uses blog posts most often. Read the questions first: 15 minutes of reading time is enough for that.",
       "body": [
         "私[わたし]の　高校[こうこう]では、五月[ごがつ]の　一[いっ]か月[げつ]、じてんしゃで　学校[がっこう]に　来[く]る　人[ひと]を　かぞえました。",
         "四月[しがつ]は　毎日[まいにち]　五十人[ごじゅうにん]ぐらいでしたが、五月の　さいごの　週[しゅう]には　二百人[にひゃくにん]に　なりました。　学校の　人の　四分[よんぶん]の　一[いち]です。",
@@ -424,7 +424,7 @@ window.HIKKI_TEXTS = {
       "answer_in": "Japanese",
       "kind": "おしらせ",
       "title": "The Japanese camp notice",
-      "note": "A notice, read closely. Section 2 Part B gives you a text like this and asks you to write something back, so every detail in it is a detail you may need.",
+      "note": "Read a notice closely. Section 2 Part B gives you a text like this and asks you to write back, so every detail may be one you need.",
       "body": [
         "三年生[さんねんせい]の　みなさんへ",
         "八月[はちがつ]　十日[とおか]から　十二日[じゅうににち]まで、山[やま]の　中[なか]の　ロッジで　日本語[にほんご]キャンプを　します。",
