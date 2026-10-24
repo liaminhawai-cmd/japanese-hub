@@ -119,7 +119,7 @@
   /* ---- what the page remembers ---- */
   var KEY = "jinbutsu-v1";
   var S = { furi:true, en:true, rate:1, sfx:true,
-            pts:0, spent:0, arcade:0, done:{}, best:{}, wrote:{} };
+            pts:0, spent:0, arcade:0, hard:false, done:{}, best:{}, wrote:{} };
   try { S = Object.assign(S, JSON.parse(localStorage.getItem(KEY) || "{}")); } catch(e){}
   var saveT = null;
   function write(){
@@ -170,7 +170,7 @@
   $("resetBtn").onclick = function(){
     if (!confirm("Clear your score, your records and anything typed on this device?")) return;
     S = { furi:true, en:true, rate:1, sfx:true,
-          pts:0, spent:0, arcade:0, done:{}, best:{}, wrote:{} };
+          pts:0, spent:0, arcade:0, hard:false, done:{}, best:{}, wrote:{} };
     try { localStorage.removeItem(KEY); } catch(e){}
     draw();
   };
@@ -1720,6 +1720,7 @@
     { id:"bunpou", ja:"ぶんぽう", en:"Grammar", whole:true },
     { id:"roulette", ja:"ルーレット", en:"Spin a pattern", whole:true },
     { id:"katch", ja:"ことばキャッチ", en:"Catch the kanji", whole:true },
+    { id:"nyuu", ja:"にゅうりょく", en:"Japanese keyboard", whole:true },
     { id:"jibun",  ja:"じぶんで", en:"Write your own", whole:true },
     { id:"kuraberu", ja:"くらべる", en:"All six", whole:true }
   ];
@@ -2649,7 +2650,10 @@
   /* a need group is satisfied by any one of its spellings: 好きです and
      すきです are the same answer and both are on the worksheet */
   function fmiss(f, got){
-    var n = String(got || "").replace(/[\s　]/g, "");
+    /* plain() first: what comes in here is sometimes a student's typing,
+       which carries no furigana, and sometimes a line of tiles cut from
+       an article, which does. 好[す]きです does not contain 好き. */
+    var n = plain(String(got || "")).replace(/[\s　]/g, "");
     if (!n) return null;
     var missing = [];
     (f.need || []).forEach(function(grp){
@@ -2714,21 +2718,97 @@
   }
 
   var spinR = null, spunG = null;
+  /* ---- the sentence bank ----
+     Andrew: "I think the sentence formation will be more accessible if
+     words/phrases are click and drag to form sentences."
+
+     So the rung builds sentences out of tiles instead of asking for them
+     to be typed, which on a school Windows machine with no Japanese
+     keyboard installed was asking for something most students could not
+     do at all. Free typing has not gone anywhere: じぶんで is still a
+     blank box, and にゅうりょく now explains how to set the keyboard up.
+
+     The sentences are Andrew's own, harvested from the six articles
+     rather than written here, so the tiles a student arranges are from
+     text they have already read. A pattern that needs two sentences to
+     exist at all — しかし joins one to the next — gets the pair, because
+     no single sentence can ever show it.
+
+     Tiled at the phrase boundaries Andrew already spaces his text at,
+     and also at every comma and full stop, because a tile holding
+     食[た]べた後[あと]、しごとに is two ideas in one piece and hands over
+     half the answer. */
+  var BANK = null;
+  function tilesOf(ja){
+    return String(ja).replace(/。\s*$/, "").split(/[\s　]+/)
+      .reduce(function(a, c){
+        var buf = "";
+        for (var i = 0; i < c.length; i++){
+          buf += c[i];
+          if ("、。".indexOf(c[i]) >= 0){ a.push(buf); buf = ""; }
+        }
+        if (buf) a.push(buf);
+        return a;
+      }, [])
+      .filter(function(x){ return x.length; });
+  }
+  function sentenceBank(){
+    if (BANK) return BANK;
+    BANK = {};
+    var singles = [], pairs = [];
+    (K.people || []).forEach(function(p){
+      (p.paras || []).forEach(function(para){
+        var list = [], from = 0;
+        for (var i = 0; i < para.length; i++){
+          if ("。！？".indexOf(para[i]) >= 0){
+            list.push(para.slice(from, i + 1).trim()); from = i + 1;
+          }
+        }
+        list.forEach(function(sn, i){
+          if (sn) singles.push({ who: p.id, ja: sn });
+          if (i) pairs.push({ who: p.id, ja: list[i - 1] + " " + sn });
+        });
+      });
+    });
+    (K.grammar || []).forEach(function(g){
+      var seen = {}, list = [];
+      function take(from){
+        from.forEach(function(c){
+          var ja = c.ja;
+          if (!ja) return;
+          var miss = gmiss(g, ja);
+          if (miss === null || miss.length) return;
+          var t = tilesOf(ja);
+          if (t.length < 3 || t.length > 9) return;
+          var k = plain(ja).replace(/[\s　]/g, "");
+          if (seen[k]) return;
+          seen[k] = 1;
+          list.push({ ja: ja, who: c.who || null, en: c.en || null });
+        });
+      }
+      take(g.egs || []);
+      take(singles);
+      /* Pairs only where nothing single can carry the pattern, so an
+         ordinary sentence is never glued to an unrelated neighbour. */
+      if (!list.length) take(pairs);
+      BANK[g.id] = list;
+    });
+    return BANK;
+  }
+
   DRAW.roulette = function(){
-    var G = K.grammar || [];
-    /* Five of the six articles are first-person じこしょうかい; the LED one
-       is third-person and about an invention. "Write about the inventors
-       of the blue LED using 〜に生まれました" is not a sentence anybody can
-       write, so the wheel's people are the five who introduce themselves. */
-    var PEOPLE = (K.people || []).filter(function(x){ return x.first_person; });
+    var BK = sentenceBank();
+    /* Only patterns the articles can actually build. A pattern whose
+       sentences all come apart into fewer than three tiles has nothing
+       to drag, and landing on one would spend a spin on an apology. */
+    var G = (K.grammar || []).filter(function(g){ return (BK[g.id] || []).length; });
     if (!G.length){ $("main").innerHTML = '<div class="work"></div>'; return; }
     var done13 = G.filter(function(g){ return S.done["rl:" + g.id]; }).length;
     $("main").innerHTML =
-        '<div class="rule"><b>Spin a pattern</b>Spin for a pattern and a '
-      + 'person, then write one sentence about that person using that '
-      + 'pattern.<br>The app checks grammar patterns only. Check the '
-      + 'meaning, vocabulary and accuracy yourself or with your '
-      + 'teacher.</div>'
+        '<div class="rule"><b>Spin a pattern</b>Spin for a pattern, then build '
+      + 'a sentence from the articles out of the tiles. Drag a tile onto the '
+      + 'line, or tap the tile and then the line; tap a tile on the line to '
+      + 'take it back. On <b>hard</b> there are more tiles than you need.</div>'
       + '<div class="work fit"><div class="col">'
       + '<div class="reel" id="reel">'
       + '<div class="rwin"><div class="rstrip"></div><div class="rmark"></div></div>'
@@ -2740,8 +2820,13 @@
       + '<div id="ask"></div></div></div>'
       + '<div id="rfb" class="fbslot"></div>'
       + foot('<span class="score"><b>' + done13 + '</b> of ' + G.length
-          + ' written</span>'
+          + ' built</span>'
+        + '<button class="btn sm ' + (S.hard ? "ghost" : "") + '" id="lvEasy">easy</button>'
+        + '<button class="btn sm ' + (S.hard ? "" : "ghost") + '" id="lvHard">hard</button>'
         + '<span id="rtip" class="hint">Flick the drum, or press the button.</span>');
+
+    $("lvEasy").onclick = function(){ S.hard = false; save(); draw(); };
+    $("lvHard").onclick = function(){ S.hard = true; save(); draw(); };
 
     spinR = REEL.mount($("reel"), G.map(function(g){
       return { id: g.id, html: ruby(g.pat), sub: esc(g.title_en) };
@@ -2752,7 +2837,7 @@
       $("rtip").textContent = "Spinning…";
     }
     $("rgo").onclick = function(){
-      SFX.wake();                       /* the engine starts inside the press */
+      SFX.wake();
       clearAsk();
       spinR.spinTo(G[dealt("rl", G.length)].id);
     };
@@ -2763,28 +2848,105 @@
       G.forEach(function(x){ if (x.id === id) g = x; });
       if (!g) return;
       spunG = g;
-      /* The deck moves on only when the drum stopped where it was sent: a
-         student who throws it by hand lands where the physics put them. */
       if (G[dealt("rl", G.length)] === g) advance("rl", G.length);
-      var who2 = PEOPLE[dealt("rlp", PEOPLE.length)];
-      advance("rlp", PEOPLE.length);
-      $("rtip").textContent = "Write one sentence.";
+      var bank = BK[g.id] || [];
+      if (!bank.length){
+        $("ask").innerHTML = '<div class="mark hm"><b>Nothing to build</b>'
+          + 'No sentence in the articles carries this pattern in a form that '
+          + 'comes apart into tiles. Spin again.</div>';
+        return;
+      }
+      var bi = dealt("rb:" + g.id, bank.length);
+      advance("rb:" + g.id, bank.length);
+      var target = bank[bi];
+      var want = tilesOf(target.ja);
+
+      /* hard adds tiles from the OTHER sentences this pattern lives in,
+         so a wrong choice is the same register and the same unit rather
+         than obvious padding */
+      var extra = [];
+      if (S.hard){
+        var pool = {};
+        function feed(list, skip){
+          list.forEach(function(b, i){
+            if (i === skip) return;
+            tilesOf(b.ja).forEach(function(t){ pool[t] = 1; });
+          });
+        }
+        feed(bank, bi);
+        /* A pattern the articles use once has no other sentence to lend
+           tiles, and hard would then be easy. Top up from the rest of
+           the unit: still this unit's words, in this unit's register. */
+        if (Object.keys(pool).length < 8){
+          shuffle(Object.keys(BK)).forEach(function(k){
+            if (k !== g.id) feed(BK[k], -1);
+          });
+        }
+        want.forEach(function(t){ delete pool[t]; });
+        extra = shuffle(Object.keys(pool)).slice(0, 4);
+      }
+      var tray = shuffle(want.concat(extra));
+      var line = [];
+
+      var who = null;
+      (K.people || []).forEach(function(p){ if (p.id === target.who) who = p; });
+
+      $("rtip").textContent = "Build the sentence.";
       $("ask").setAttribute("data-pat", g.id);
-      $("ask").setAttribute("data-who", who2.id);
+      /* A test seam, like the one the game carries. The browser check has
+         to know which sentence was dealt before it can build it, and
+         reading the answer off the page is not possible by design.
+         Reading it changes nothing. */
+      window.KIJI_SPIN = { pattern: g.id, ja: target.ja, want: want.slice(),
+                           extra: extra.slice() };
       $("ask").innerHTML =
           '<div class="mark yes"><b>the shape</b><span class="jp">'
         + ruby(g.form) + '</span></div>'
-        + '<p class="ask-en">Write about <b>' + esc(plain(who2.name_ja))
-        + '</b> using <span class="jp">' + ruby(g.pat) + '</span></p>'
-        + '<div class="row"><input id="rin" type="text" autocomplete="off"'
-        + ' autocapitalize="off" spellcheck="false" lang="ja" class="ans"'
-        + ' aria-label="Your sentence"></div>'
+        + '<p class="ask-en">Build a sentence that uses <span class="jp">'
+        + ruby(g.pat) + '</span>'
+        + (who ? ', from <b>' + esc(plain(who.name_ja)) + '</b>’s article' : "")
+        + (target.en ? '<br><i>' + esc(target.en) + '</i>' : "") + '</p>'
+        + '<div class="sline" data-gap="line" id="rline"></div>'
+        + '<div class="tiles" id="rtray"></div>'
         + '<div class="row" style="margin-top:7px">'
         + '<button class="btn sm" id="rchk">Check</button>'
+        + '<button class="btn ghost sm" id="rclr">Start again</button>'
         + '<button class="btn ghost sm" id="reg">Show an example</button></div>';
-      $("rin").focus();
-      $("rin").onkeydown = function(ev){ if (ev.key === "Enter") check(); };
-      $("rchk").onclick = check;
+
+      function paint(){
+        $("rline").innerHTML = line.length
+          ? line.map(function(t, i){
+              return '<button class="tile" data-line="' + i + '">' + ruby(t) + '</button>';
+            }).join("")
+          : '<span class="hint">Drop the tiles here, in order.</span>';
+        $("rtray").innerHTML = tray.map(function(t, i){
+          return '<button class="tile" data-tile="' + esc(t) + '" data-tray="' + i
+            + '">' + ruby(t) + '</button>';
+        }).join("");
+        each($("rline"), "[data-line]", function(b){
+          b.onclick = function(){
+            /* A tile already on the line comes off when it is tapped. But
+               once the line has tiles in it, most of the line IS tiles,
+               so a student with a tile armed and aiming at the line hits
+               one of them and takes it off instead of putting theirs on.
+               If something is armed the tap is a drop: do nothing here
+               and let it bubble to the line, which appends it. */
+            if ($("rtray").querySelector("[data-tile].armed")) return;
+            tray.push(line.splice(+b.dataset.line, 1)[0]); paint();
+          };
+        });
+        dragdrop($("ask"), function(tile){
+          var i = +tile.dataset.tray;
+          if (isNaN(i) || !tray[i]) return;
+          line.push(tray.splice(i, 1)[0]); paint();
+        });
+      }
+      paint();
+
+      $("rclr").onclick = function(){
+        tray = shuffle(want.concat(extra)); line = [];
+        $("rfb").innerHTML = ""; paint();
+      };
       $("reg").onclick = function(){
         spend(1, "example shown");
         var e = (g.egs || [])[0] || { ja:"", en:"" };
@@ -2794,40 +2956,47 @@
         $("reg").disabled = true;
         wireSay();
       };
-
-      function check(){
-        var got = ($("rin").value || "");
-        var missing = gmiss(g, got);
-        if (missing === null){
+      $("rchk").onclick = function(){
+        if (!line.length){
           $("rfb").innerHTML = '<div class="mark hm"><b>Nothing there yet</b>'
-            + 'Write the sentence first.</div>';
+            + 'Put some tiles on the line first.</div>';
           return;
         }
-        if (!missing.length){
-          if (!S.done["rl:" + g.id]){ S.done["rl:" + g.id] = 1; award(3); save(); }
+        var got = line.join(" ");
+        var exact = line.join("") === want.join("");
+        var missing = gmiss(g, got) || [];
+        if (exact || !missing.length){
+          if (!S.done["rl:" + g.id]){
+            S.done["rl:" + g.id] = 1; award(exact ? 3 : 1); save();
+          }
           ninja($("rfb"));
-          $("rfb").innerHTML = '<div class="mark yes"><b>The pattern is there</b>'
-            + '<span class="jp">' + esc(got) + '</span>'
-            + '<p>That is the grammar the wheel asked for. Whether it is true '
-            + 'of ' + esc(plain(who2.name_ja)) + ', and whether the words are '
-            + 'the right words, this page cannot tell you.</p></div>';
+          $("rfb").innerHTML = exact
+            ? '<div class="mark yes"><b>That is the sentence</b>'
+              + '<span class="jp">' + ruby(target.ja) + '</span> '
+              + saybtn(target.ja) + '</div>'
+            : '<div class="mark hm"><b>The pattern is there</b>'
+              + '<span class="jp">' + esc(plain(got)) + '</span>'
+              + '<p>That is the grammar the wheel asked for, but it is not the '
+              + 'sentence from the article, which is:</p><span class="jp">'
+              + ruby(target.ja) + '</span> ' + saybtn(target.ja) + '</div>';
           var n = G.filter(function(x){ return S.done["rl:" + x.id]; }).length;
           var sc = $("main").querySelector(".score b");
           if (sc) sc.textContent = n;
           if (n === G.length && !S.done["roulette"]){
             S.done["roulette"] = 1; award(4); save(); paintSteps();
           }
+          wireSay();
         } else {
           yokai($("rfb"));
           $("rfb").innerHTML = '<div class="mark no"><b>Not yet</b>'
             + 'There is no <span class="jp">' + esc(plain(missing[0]))
-            + '</span> in your sentence'
+            + '</span> on the line'
             + (missing.length > 1 ? ', and ' + (missing.length - 1) + ' other part'
                 + (missing.length > 2 ? 's are' : ' is') + ' missing too' : '')
             + '. The shape is <span class="jp">' + esc(plain(g.form))
             + '</span>.</div>';
         }
-      }
+      };
     }
   };
 
@@ -3050,6 +3219,95 @@
     /* the one test seam, as in ひと: a game loop cannot be driven
        through the DOM. Reading it changes nothing. */
     window.KIJI_GAME = GAME;
+  };
+
+  /* ---- にゅうりょく ----
+     Andrew: "provide a new tab with a 'how to' to show students, working
+     with Windows 11, how to install the Japanese Language package,
+     toggle to hiragana input and get it working properly."
+
+     The whole tutorial is on the page rather than behind a link, because
+     a link is one more thing to be blocked by a school filter and one
+     more thing to rot. The steps live in data/kiji.js so they can be
+     corrected without touching code, and so can a video link if Andrew
+     finds one he likes: nothing here invents a URL it has not seen.
+
+     The last step is the useful one. A student who has followed four
+     steps still does not know whether it worked, so the box reads what
+     came out and says which of the three states they are in: still
+     typing rōmaji, kana at last, or kana converted to kanji. */
+  DRAW.nyuu = function(){
+    var N = K.nyuuryoku || { steps: [] };
+    $("main").innerHTML =
+        '<div class="rule"><b>Japanese keyboard</b>' + esc(N.intro) + '</div>'
+      + '<div class="work"><div class="howto">'
+      + N.steps.map(function(st){
+          return '<div class="hstep"><div class="hnum">' + st.n + '</div>'
+            + '<div class="hbody"><h4>' + esc(st.head) + '</h4>'
+            + '<ol>' + st.lines.map(function(l){
+                return '<li>' + esc(l) + '</li>'; }).join("") + '</ol>'
+            + ((st.keys || []).length
+                ? '<p class="hkeys">' + st.keys.map(function(k){
+                    return '<kbd>' + esc(k) + '</kbd>'; }).join('<span>+</span>')
+                  + '</p>' : "")
+            + (st.note ? '<p class="hnote">' + esc(st.note) + '</p>' : "")
+            + '</div></div>';
+        }).join("")
+      + '<div class="hstep"><div class="hnum">✓</div><div class="hbody">'
+      + '<h4>' + esc((N.check || {}).head || "Check it is working") + '</h4>'
+      + '<p class="hnote" style="margin-top:0">' + esc((N.check || {}).say || "") + '</p>'
+      + '<input id="nin" class="ans" type="text" autocomplete="off"'
+      + ' autocapitalize="off" spellcheck="false" lang="ja"'
+      + ' placeholder="ここにかいてください"'
+      + ' aria-label="Type something in Japanese to check the keyboard">'
+      + '<div id="nfb"></div></div></div>'
+      + ((N.links || []).length
+          ? '<div class="hstep"><div class="hnum">→</div><div class="hbody">'
+            + '<h4>Elsewhere</h4>'
+            + N.links.map(function(l){
+                return '<p><a href="' + esc(l.url) + '" target="_blank"'
+                  + ' rel="noopener">' + esc(l.name) + '</a><br>'
+                  + '<span class="hnote">' + esc(l.what) + '</span></p>';
+              }).join("") + '</div></div>'
+          : "")
+      + '</div></div>'
+      + foot('<span class="hint">Nothing typed here is kept or sent.</span>');
+
+    var inp = $("nin");
+    inp.oninput = function(){
+      var v = inp.value;
+      if (!v){ $("nfb").innerHTML = ""; return; }
+      var kana  = /[ぁ-ゟ゠-ヿ]/.test(v);
+      var kanji = /[一-鿿]/.test(v);
+      var latin = /[A-Za-z]/.test(v);
+      var cls, head, say;
+      if (kanji && kana){
+        cls = "yes"; head = "That is it";
+        say = "Kana and kanji together, which is what a Japanese keyboard "
+            + "typing properly looks like.";
+      } else if (kanji){
+        cls = "yes"; head = "Kanji";
+        say = "Converted. Press Space on a word to convert it and Enter to keep it.";
+      } else if (kana && !latin){
+        cls = "yes"; head = "Kana";
+        say = "The keyboard is on and in hiragana. Press Space while a word is "
+            + "underlined to turn it into kanji.";
+      } else if (kana && latin){
+        cls = "hm"; head = "Half and half";
+        say = "Some kana, some English letters. The indicator near the clock "
+            + "has been flipped between あ and A partway through.";
+      } else {
+        cls = "no"; head = "Still English letters";
+        say = "Nothing has come out as kana. Either the taskbar still says ENG "
+            + "(Windows key and Space) or it says JPN with an A beside it "
+            + "(Alt and the ` key, above Tab).";
+      }
+      $("nfb").innerHTML = '<div class="mark ' + cls + '"><b>' + head + '</b>'
+        + esc(say) + '</div>';
+      if (cls === "yes" && !S.done["nyuu"]){
+        S.done["nyuu"] = 1; award(2); save(); paintSteps();
+      }
+    };
   };
 
   DRAW.kuraberu = function(){

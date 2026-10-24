@@ -1493,229 +1493,901 @@ window.KIJI = {
     ]
   },
   "ui": [
-    {"ja": "はなすスピード", "en": "Speaking speed", "note": "Spoken when the speed button is pressed, so the new speed is heard on a line that names it."}
+    {
+      "ja": "はなすスピード",
+      "en": "Speaking speed",
+      "note": "Spoken when the speed button is pressed, so the new speed is heard on a line that names it."
+    }
   ],
   "kanji": [
-    {"ja": "歴史[れきし]", "en": "history"},
-    {"ja": "人物[じんぶつ]", "en": "historical figure"},
-    {"ja": "名前[なまえ]", "en": "name"},
-    {"ja": "年[ねん]", "en": "year"},
-    {"ja": "生[う]まれました", "en": "was born"},
-    {"ja": "住[す]んでいます", "en": "live (in)"},
-    {"ja": "今[いま]", "en": "now"},
-    {"ja": "東京[とうきょう]", "en": "Tokyo"},
-    {"ja": "友[とも]だち", "en": "friend"},
-    {"ja": "侍[さむらい]", "en": "samurai"},
-    {"ja": "社長[しゃちょう]", "en": "CEO / company president"},
-    {"ja": "毎日[まいにち]", "en": "every day"},
-    {"ja": "時[じ]", "en": "time / o'clock", "alt_read": "とき"},
-    {"ja": "食[た]べる", "en": "to eat"},
-    {"ja": "後[あと]", "en": "after"},
-    {"ja": "行[い]く", "en": "to go"},
-    {"ja": "人[ひと]", "en": "person"},
-    {"ja": "話[はな]す", "en": "to speak / talk"},
-    {"ja": "作[つく]る", "en": "to make"},
-    {"ja": "売[う]る", "en": "to sell"},
-    {"ja": "好[す]き", "en": "like"},
-    {"ja": "外国[がいこく]", "en": "foreign country"},
-    {"ja": "父[ちち]", "en": "father"},
-    {"ja": "本[ほん]", "en": "book"},
-    {"ja": "読[よ]む", "en": "to read"},
-    {"ja": "先生[せんせい]", "en": "teacher"},
-    {"ja": "学校[がっこう]", "en": "school"},
-    {"ja": "上手[じょうず]", "en": "good at / skilful"},
-    {"ja": "何[なに]", "en": "what", "alt_read": "なん"},
-    {"ja": "しょう来[らい]", "en": "future"}
+    {
+      "ja": "歴史[れきし]",
+      "en": "history"
+    },
+    {
+      "ja": "人物[じんぶつ]",
+      "en": "historical figure"
+    },
+    {
+      "ja": "名前[なまえ]",
+      "en": "name"
+    },
+    {
+      "ja": "年[ねん]",
+      "en": "year"
+    },
+    {
+      "ja": "生[う]まれました",
+      "en": "was born"
+    },
+    {
+      "ja": "住[す]んでいます",
+      "en": "live (in)"
+    },
+    {
+      "ja": "今[いま]",
+      "en": "now"
+    },
+    {
+      "ja": "東京[とうきょう]",
+      "en": "Tokyo"
+    },
+    {
+      "ja": "友[とも]だち",
+      "en": "friend"
+    },
+    {
+      "ja": "侍[さむらい]",
+      "en": "samurai"
+    },
+    {
+      "ja": "社長[しゃちょう]",
+      "en": "CEO / company president"
+    },
+    {
+      "ja": "毎日[まいにち]",
+      "en": "every day"
+    },
+    {
+      "ja": "時[じ]",
+      "en": "time / o'clock",
+      "alt_read": "とき"
+    },
+    {
+      "ja": "食[た]べる",
+      "en": "to eat"
+    },
+    {
+      "ja": "後[あと]",
+      "en": "after"
+    },
+    {
+      "ja": "行[い]く",
+      "en": "to go"
+    },
+    {
+      "ja": "人[ひと]",
+      "en": "person"
+    },
+    {
+      "ja": "話[はな]す",
+      "en": "to speak / talk"
+    },
+    {
+      "ja": "作[つく]る",
+      "en": "to make"
+    },
+    {
+      "ja": "売[う]る",
+      "en": "to sell"
+    },
+    {
+      "ja": "好[す]き",
+      "en": "like"
+    },
+    {
+      "ja": "外国[がいこく]",
+      "en": "foreign country"
+    },
+    {
+      "ja": "父[ちち]",
+      "en": "father"
+    },
+    {
+      "ja": "本[ほん]",
+      "en": "book"
+    },
+    {
+      "ja": "読[よ]む",
+      "en": "to read"
+    },
+    {
+      "ja": "先生[せんせい]",
+      "en": "teacher"
+    },
+    {
+      "ja": "学校[がっこう]",
+      "en": "school"
+    },
+    {
+      "ja": "上手[じょうず]",
+      "en": "good at / skilful"
+    },
+    {
+      "ja": "何[なに]",
+      "en": "what",
+      "alt_read": "なん"
+    },
+    {
+      "ja": "しょう来[らい]",
+      "en": "future"
+    }
   ],
   "particles": [
-    {"ja": "は", "en": "topic: as for ~", "note": "Said わ. Marks what the sentence is about."},
-    {"ja": "が", "en": "marks the subject"},
-    {"ja": "を", "en": "marks the object: the thing it is done to"},
-    {"ja": "に", "en": "to, at, in: a time or a destination"},
-    {"ja": "で", "en": "at, by, with: where it happens or what it is done with"},
-    {"ja": "と", "en": "and, with"},
-    {"ja": "の", "en": "of, 's: joins two nouns"},
-    {"ja": "も", "en": "also, too"},
-    {"ja": "や", "en": "and, among other things", "note": "Unlike と, it does not finish the list."},
-    {"ja": "から", "en": "from, because"},
-    {"ja": "まで", "en": "until, as far as"},
-    {"ja": "へ", "en": "to: a direction", "note": "Said え."},
-    {"ja": "ね", "en": "isn't it"},
-    {"ja": "か", "en": "turns it into a question"},
-    {"ja": "など", "en": "and so on"},
-    {"ja": "だけ", "en": "only"}
+    {
+      "ja": "は",
+      "en": "topic: as for ~",
+      "note": "Said わ. Marks what the sentence is about."
+    },
+    {
+      "ja": "が",
+      "en": "marks the subject"
+    },
+    {
+      "ja": "を",
+      "en": "marks the object: the thing it is done to"
+    },
+    {
+      "ja": "に",
+      "en": "to, at, in: a time or a destination"
+    },
+    {
+      "ja": "で",
+      "en": "at, by, with: where it happens or what it is done with"
+    },
+    {
+      "ja": "と",
+      "en": "and, with"
+    },
+    {
+      "ja": "の",
+      "en": "of, 's: joins two nouns"
+    },
+    {
+      "ja": "も",
+      "en": "also, too"
+    },
+    {
+      "ja": "や",
+      "en": "and, among other things",
+      "note": "Unlike と, it does not finish the list."
+    },
+    {
+      "ja": "から",
+      "en": "from, because"
+    },
+    {
+      "ja": "まで",
+      "en": "until, as far as"
+    },
+    {
+      "ja": "へ",
+      "en": "to: a direction",
+      "note": "Said え."
+    },
+    {
+      "ja": "ね",
+      "en": "isn't it"
+    },
+    {
+      "ja": "か",
+      "en": "turns it into a question"
+    },
+    {
+      "ja": "など",
+      "en": "and so on"
+    },
+    {
+      "ja": "だけ",
+      "en": "only"
+    }
   ],
   "endings": [
-    {"ja": "です", "en": "the copula: X is Y", "note": "Andrew's 〜です pattern."},
-    {"ja": "でした", "en": "was: the past of です"},
-    {"ja": "じゃないです", "en": "is not"},
-    {"ja": "ですね", "en": "is, isn't it"},
-    {"ja": "ですが", "en": "is, but"},
-    {"ja": "でしたが", "en": "was, but"},
-    {"ja": "ます", "en": "polite present"},
-    {"ja": "ました", "en": "polite past"},
-    {"ja": "ません", "en": "polite negative"},
-    {"ja": "ませんでした", "en": "polite past negative"},
-    {"ja": "さん", "en": "Mr, Ms: added to a name"},
-    {"ja": "ね", "en": "isn't it"}
+    {
+      "ja": "です",
+      "en": "the copula: X is Y",
+      "note": "Andrew's 〜です pattern."
+    },
+    {
+      "ja": "でした",
+      "en": "was: the past of です"
+    },
+    {
+      "ja": "じゃないです",
+      "en": "is not"
+    },
+    {
+      "ja": "ですね",
+      "en": "is, isn't it"
+    },
+    {
+      "ja": "ですが",
+      "en": "is, but"
+    },
+    {
+      "ja": "でしたが",
+      "en": "was, but"
+    },
+    {
+      "ja": "ます",
+      "en": "polite present"
+    },
+    {
+      "ja": "ました",
+      "en": "polite past"
+    },
+    {
+      "ja": "ません",
+      "en": "polite negative"
+    },
+    {
+      "ja": "ませんでした",
+      "en": "polite past negative"
+    },
+    {
+      "ja": "さん",
+      "en": "Mr, Ms: added to a name"
+    },
+    {
+      "ja": "ね",
+      "en": "isn't it"
+    }
   ],
   "patterns": [
-    {"id": "naritai", "ends": ["なりたいです", "なりたい", "なりました"]},
-    {"id": "wasuretai", "ends": ["わすれたいです", "わすれたい"]},
-    {"id": "ikitai", "ends": ["たいです", "たい"]},
-    {"id": "tari", "ends": ["たり", "だり", "たりします", "だりします", "たりして", "だりして"]},
-    {"id": "ta-ato", "ends": ["た後", "だ後", "たあと", "だあと"]},
-    {"id": "nai-koto", "ends": ["ことが"], "sentence": "ありません|あります"},
-    {"id": "suki", "ends": ["ことが"]},
-    {"id": "sunde", "ends": ["住んでいます", "住んでいました", "住んでいる"]},
-    {"id": "umareta", "ends": ["生まれました"]},
-    {"id": "shikashi", "ends": ["しかし"]},
-    {"id": "shourai", "ends": ["しょうらい", "しょう来"]}
+    {
+      "id": "naritai",
+      "ends": [
+        "なりたいです",
+        "なりたい",
+        "なりました"
+      ]
+    },
+    {
+      "id": "wasuretai",
+      "ends": [
+        "わすれたいです",
+        "わすれたい"
+      ]
+    },
+    {
+      "id": "ikitai",
+      "ends": [
+        "たいです",
+        "たい"
+      ]
+    },
+    {
+      "id": "tari",
+      "ends": [
+        "たり",
+        "だり",
+        "たりします",
+        "だりします",
+        "たりして",
+        "だりして"
+      ]
+    },
+    {
+      "id": "ta-ato",
+      "ends": [
+        "た後",
+        "だ後",
+        "たあと",
+        "だあと"
+      ]
+    },
+    {
+      "id": "nai-koto",
+      "ends": [
+        "ことが"
+      ],
+      "sentence": "ありません|あります"
+    },
+    {
+      "id": "suki",
+      "ends": [
+        "ことが"
+      ]
+    },
+    {
+      "id": "sunde",
+      "ends": [
+        "住んでいます",
+        "住んでいました",
+        "住んでいる"
+      ]
+    },
+    {
+      "id": "umareta",
+      "ends": [
+        "生まれました"
+      ]
+    },
+    {
+      "id": "shikashi",
+      "ends": [
+        "しかし"
+      ]
+    },
+    {
+      "id": "shourai",
+      "ends": [
+        "しょうらい",
+        "しょう来"
+      ]
+    }
   ],
   "names": [
-    {"ja": "いわさき", "en": "Iwasaki, a family name"},
-    {"ja": "やたろう", "en": "Yataro, a given name"},
-    {"ja": "さかもと", "en": "Sakamoto, a family name"},
-    {"ja": "りょうま", "en": "Ryoma, a given name"},
-    {"ja": "みやもと", "en": "Miyamoto, a family name"},
-    {"ja": "むさし", "en": "Musashi, a given name"},
-    {"ja": "ひろおか", "en": "Hirooka, a family name"},
-    {"ja": "あさこ", "en": "Asako, a given name"},
-    {"ja": "さいごう", "en": "Saigo, a family name"},
-    {"ja": "たかもり", "en": "Takamori, a given name"},
-    {"ja": "赤崎[あかさき]", "en": "Akasaki, a family name"},
-    {"ja": "天野[あまの]", "en": "Amano, a family name"},
-    {"ja": "中村[なかむら]", "en": "Nakamura, a family name"},
-    {"ja": "とさ", "en": "Tosa, an old province, now Kochi"},
-    {"ja": "ながさき", "en": "Nagasaki, a city in the south-west"},
-    {"ja": "えど", "en": "Edo, the old name for Tokyo"},
-    {"ja": "さつま", "en": "Satsuma, an old province, now Kagoshima"},
-    {"ja": "京都[きょうと]", "en": "Kyoto"},
-    {"ja": "大阪[おおさか]", "en": "Osaka"},
-    {"ja": "せきがはら", "en": "Sekigahara, where the 1600 battle was fought"},
-    {"ja": "みつびし", "en": "Mitsubishi, the company"},
-    {"ja": "いしだ", "en": "Ishida, a family name"},
-    {"ja": "西軍[せいぐん]", "en": "the Western army"},
-    {"ja": "けんどう", "en": "kendo"},
-    {"ja": "ノーベルしょう", "en": "the Nobel Prize"}
+    {
+      "ja": "いわさき",
+      "en": "Iwasaki, a family name"
+    },
+    {
+      "ja": "やたろう",
+      "en": "Yataro, a given name"
+    },
+    {
+      "ja": "さかもと",
+      "en": "Sakamoto, a family name"
+    },
+    {
+      "ja": "りょうま",
+      "en": "Ryoma, a given name"
+    },
+    {
+      "ja": "みやもと",
+      "en": "Miyamoto, a family name"
+    },
+    {
+      "ja": "むさし",
+      "en": "Musashi, a given name"
+    },
+    {
+      "ja": "ひろおか",
+      "en": "Hirooka, a family name"
+    },
+    {
+      "ja": "あさこ",
+      "en": "Asako, a given name"
+    },
+    {
+      "ja": "さいごう",
+      "en": "Saigo, a family name"
+    },
+    {
+      "ja": "たかもり",
+      "en": "Takamori, a given name"
+    },
+    {
+      "ja": "赤崎[あかさき]",
+      "en": "Akasaki, a family name"
+    },
+    {
+      "ja": "天野[あまの]",
+      "en": "Amano, a family name"
+    },
+    {
+      "ja": "中村[なかむら]",
+      "en": "Nakamura, a family name"
+    },
+    {
+      "ja": "とさ",
+      "en": "Tosa, an old province, now Kochi"
+    },
+    {
+      "ja": "ながさき",
+      "en": "Nagasaki, a city in the south-west"
+    },
+    {
+      "ja": "えど",
+      "en": "Edo, the old name for Tokyo"
+    },
+    {
+      "ja": "さつま",
+      "en": "Satsuma, an old province, now Kagoshima"
+    },
+    {
+      "ja": "京都[きょうと]",
+      "en": "Kyoto"
+    },
+    {
+      "ja": "大阪[おおさか]",
+      "en": "Osaka"
+    },
+    {
+      "ja": "せきがはら",
+      "en": "Sekigahara, where the 1600 battle was fought"
+    },
+    {
+      "ja": "みつびし",
+      "en": "Mitsubishi, the company"
+    },
+    {
+      "ja": "いしだ",
+      "en": "Ishida, a family name"
+    },
+    {
+      "ja": "西軍[せいぐん]",
+      "en": "the Western army"
+    },
+    {
+      "ja": "けんどう",
+      "en": "kendo"
+    },
+    {
+      "ja": "ノーベルしょう",
+      "en": "the Nobel Prize"
+    }
   ],
   "counters": [
-    {"ja": "才[さい]", "en": "years old"},
-    {"ja": "年[ねん]", "en": "year"},
-    {"ja": "年前[ねんまえ]", "en": "years ago"},
-    {"ja": "時[じ]", "en": "o'clock"},
-    {"ja": "時半[じはん]", "en": "half past"},
-    {"ja": "人[にん]", "en": "people"},
-    {"ja": "%", "en": "per cent"}
+    {
+      "ja": "才[さい]",
+      "en": "years old"
+    },
+    {
+      "ja": "年[ねん]",
+      "en": "year"
+    },
+    {
+      "ja": "年前[ねんまえ]",
+      "en": "years ago"
+    },
+    {
+      "ja": "時[じ]",
+      "en": "o'clock"
+    },
+    {
+      "ja": "時半[じはん]",
+      "en": "half past"
+    },
+    {
+      "ja": "人[にん]",
+      "en": "people"
+    },
+    {
+      "ja": "%",
+      "en": "per cent"
+    }
   ],
   "extras": [
-    {"ja": "みなさん", "en": "everyone"},
-    {"ja": "とても", "en": "very"},
-    {"ja": "私[わたし]", "en": "I, me"},
-    {"ja": "します", "en": "do"},
-    {"ja": "しました", "en": "did"},
-    {"ja": "しています", "en": "is doing"},
-    {"ja": "よろしく　おねがいします", "en": "a set phrase that closes an introduction"},
-    {"ja": "よろしく", "en": "a set phrase that closes an introduction"},
-    {"ja": "おねがいします", "en": "please, I ask you"},
-    {"ja": "こんにちは", "en": "hello"},
-    {"ja": "おはようございます", "en": "good morning"},
-    {"ja": "あります", "en": "there is, I have"},
-    {"ja": "ありません", "en": "there is not, I have not"},
-    {"ja": "たくさん", "en": "a lot, many"},
-    {"ja": "いっしょに", "en": "together"},
-    {"ja": "ところ", "en": "place"},
-    {"ja": "今年[ことし]", "en": "this year"},
-    {"ja": "ビジネス", "en": "business"},
-    {"ja": "すごい", "en": "amazing"},
-    {"ja": "それ", "en": "that"},
-    {"ja": "その後[あと]", "en": "after that"},
-    {"ja": "できました", "en": "was made, came about"},
-    {"ja": "できません", "en": "cannot be made"},
-    {"ja": "できた", "en": "was made"},
-    {"ja": "子[こ]ども", "en": "child"},
-    {"ja": "こども", "en": "child"},
-    {"ja": "時々[ときどき]", "en": "sometimes"},
-    {"ja": "前[まえ]", "en": "before, ago"},
-    {"ja": "半[はん]", "en": "half"},
-    {"ja": "日本[にほん]", "en": "Japan"},
-    {"ja": "日本人[にほんじん]", "en": "Japanese person"},
-    {"ja": "英語[えいご]", "en": "English"},
-    {"ja": "世界中[せかいじゅう]", "en": "all over the world"},
-    {"ja": "よく", "en": "often, well"},
-    {"ja": "この", "en": "this"},
-    {"ja": "三人[さんにん]", "en": "three people"},
-    {"ja": "物[もの]", "en": "thing"},
-    {"ja": "もの", "en": "thing"},
-    {"ja": "かれら", "en": "they"},
-    {"ja": "れんしゅう", "en": "practice"},
-    {"ja": "練習[れんしゅう]", "en": "practice"},
-    {"ja": "さんぽ", "en": "a walk"},
-    {"ja": "てがみ", "en": "letter"},
-    {"ja": "手紙[てがみ]", "en": "letter"},
-    {"ja": "お金[かね]", "en": "money"},
-    {"ja": "しにました", "en": "died"},
-    {"ja": "せっぷく", "en": "seppuku"},
-    {"ja": "たいへんでした", "en": "it was hard"},
-    {"ja": "たいへん", "en": "hard, tough"},
-    {"ja": "じっけん", "en": "experiment"},
-    {"ja": "かんがえなおし", "en": "rethinking"},
-    {"ja": "やっと", "en": "at last"},
-    {"ja": "なかなか", "en": "not easily"},
-    {"ja": "だから", "en": "so, therefore"},
-    {"ja": "でも", "en": "but"},
-    {"ja": "それから", "en": "and then"},
-    {"ja": "まで", "en": "until"},
-    {"ja": "しずかな", "en": "quiet"},
-    {"ja": "しずか", "en": "quiet"},
-    {"ja": "ゆうめいな", "en": "famous"},
-    {"ja": "こんな", "en": "this kind of"},
-    {"ja": "ほうりつ", "en": "law"},
-    {"ja": "けいやく", "en": "contract"},
-    {"ja": "ぎんこう", "en": "bank"},
-    {"ja": "女子大学[じょしだいがく]", "en": "women's university"},
-    {"ja": "大学[だいがく]", "en": "university"},
-    {"ja": "高[たか]いです", "en": "is expensive, is high"},
-    {"ja": "発明[はつめい]して", "en": "inventing"},
-    {"ja": "発明[はつめい]", "en": "invention"},
-    {"ja": "知[し]っていますか", "en": "do you know?"},
-    {"ja": "つかっていませんか", "en": "aren't you using?"},
-    {"ja": "使[つか]われています", "en": "is used"},
-    {"ja": "使[つか]います", "en": "uses"},
-    {"ja": "スマートフォン", "en": "smartphone"},
-    {"ja": "テレビ", "en": "television"},
-    {"ja": "カラーテレビ", "en": "colour television"},
-    {"ja": "コンピューター", "en": "computer"},
-    {"ja": "画面[がめん]", "en": "screen"},
-    {"ja": "電[でん]きゅう", "en": "light bulb"},
-    {"ja": "電気[でんき]", "en": "electricity"},
-    {"ja": "青[あお]い", "en": "blue"},
-    {"ja": "あかい", "en": "red"},
-    {"ja": "みどり", "en": "green"},
-    {"ja": "むずかしかった", "en": "was difficult"},
-    {"ja": "科学者[かがくしゃ]", "en": "scientist"},
-    {"ja": "ことば", "en": "word"},
-    {"ja": "おめでとうございます", "en": "congratulations"},
-    {"ja": "LED", "en": "LED, a light-emitting diode"},
-    {"ja": "Light", "en": "light"},
-    {"ja": "Emitting", "en": "emitting"},
-    {"ja": "Diode", "en": "diode"},
-    {"ja": "しゃちょう", "en": "CEO, company president"},
-    {"ja": "ともだち", "en": "friend"},
-    {"ja": "行[い]きます", "en": "go"},
-    {"ja": "作[つく]りました", "en": "made, built, founded"},
-    {"ja": "もらいました", "en": "received"},
-    {"ja": "ありました", "en": "there was"},
-    {"ja": "ありましたが", "en": "there was, but"},
-    {"ja": "作[つく]ろう", "en": "let's make, going to make"},
-    {"ja": "して", "en": "doing, and"},
-    {"ja": "ない", "en": "not, without"},
-    {"ja": "じっけんを", "en": "experiment"},
-    {"ja": "かんがえなおし", "en": "rethinking"},
-    {"ja": "知[し]っています", "en": "know"},
-    {"ja": "つかっています", "en": "is using"},
-    {"ja": "なりました", "en": "became"},
-    {"ja": "なります", "en": "become"}
+    {
+      "ja": "みなさん",
+      "en": "everyone"
+    },
+    {
+      "ja": "とても",
+      "en": "very"
+    },
+    {
+      "ja": "私[わたし]",
+      "en": "I, me"
+    },
+    {
+      "ja": "します",
+      "en": "do"
+    },
+    {
+      "ja": "しました",
+      "en": "did"
+    },
+    {
+      "ja": "しています",
+      "en": "is doing"
+    },
+    {
+      "ja": "よろしく　おねがいします",
+      "en": "a set phrase that closes an introduction"
+    },
+    {
+      "ja": "よろしく",
+      "en": "a set phrase that closes an introduction"
+    },
+    {
+      "ja": "おねがいします",
+      "en": "please, I ask you"
+    },
+    {
+      "ja": "こんにちは",
+      "en": "hello"
+    },
+    {
+      "ja": "おはようございます",
+      "en": "good morning"
+    },
+    {
+      "ja": "あります",
+      "en": "there is, I have"
+    },
+    {
+      "ja": "ありません",
+      "en": "there is not, I have not"
+    },
+    {
+      "ja": "たくさん",
+      "en": "a lot, many"
+    },
+    {
+      "ja": "いっしょに",
+      "en": "together"
+    },
+    {
+      "ja": "ところ",
+      "en": "place"
+    },
+    {
+      "ja": "今年[ことし]",
+      "en": "this year"
+    },
+    {
+      "ja": "ビジネス",
+      "en": "business"
+    },
+    {
+      "ja": "すごい",
+      "en": "amazing"
+    },
+    {
+      "ja": "それ",
+      "en": "that"
+    },
+    {
+      "ja": "その後[あと]",
+      "en": "after that"
+    },
+    {
+      "ja": "できました",
+      "en": "was made, came about"
+    },
+    {
+      "ja": "できません",
+      "en": "cannot be made"
+    },
+    {
+      "ja": "できた",
+      "en": "was made"
+    },
+    {
+      "ja": "子[こ]ども",
+      "en": "child"
+    },
+    {
+      "ja": "こども",
+      "en": "child"
+    },
+    {
+      "ja": "時々[ときどき]",
+      "en": "sometimes"
+    },
+    {
+      "ja": "前[まえ]",
+      "en": "before, ago"
+    },
+    {
+      "ja": "半[はん]",
+      "en": "half"
+    },
+    {
+      "ja": "日本[にほん]",
+      "en": "Japan"
+    },
+    {
+      "ja": "日本人[にほんじん]",
+      "en": "Japanese person"
+    },
+    {
+      "ja": "英語[えいご]",
+      "en": "English"
+    },
+    {
+      "ja": "世界中[せかいじゅう]",
+      "en": "all over the world"
+    },
+    {
+      "ja": "よく",
+      "en": "often, well"
+    },
+    {
+      "ja": "この",
+      "en": "this"
+    },
+    {
+      "ja": "三人[さんにん]",
+      "en": "three people"
+    },
+    {
+      "ja": "物[もの]",
+      "en": "thing"
+    },
+    {
+      "ja": "もの",
+      "en": "thing"
+    },
+    {
+      "ja": "かれら",
+      "en": "they"
+    },
+    {
+      "ja": "れんしゅう",
+      "en": "practice"
+    },
+    {
+      "ja": "練習[れんしゅう]",
+      "en": "practice"
+    },
+    {
+      "ja": "さんぽ",
+      "en": "a walk"
+    },
+    {
+      "ja": "てがみ",
+      "en": "letter"
+    },
+    {
+      "ja": "手紙[てがみ]",
+      "en": "letter"
+    },
+    {
+      "ja": "お金[かね]",
+      "en": "money"
+    },
+    {
+      "ja": "しにました",
+      "en": "died"
+    },
+    {
+      "ja": "せっぷく",
+      "en": "seppuku"
+    },
+    {
+      "ja": "たいへんでした",
+      "en": "it was hard"
+    },
+    {
+      "ja": "たいへん",
+      "en": "hard, tough"
+    },
+    {
+      "ja": "じっけん",
+      "en": "experiment"
+    },
+    {
+      "ja": "かんがえなおし",
+      "en": "rethinking"
+    },
+    {
+      "ja": "やっと",
+      "en": "at last"
+    },
+    {
+      "ja": "なかなか",
+      "en": "not easily"
+    },
+    {
+      "ja": "だから",
+      "en": "so, therefore"
+    },
+    {
+      "ja": "でも",
+      "en": "but"
+    },
+    {
+      "ja": "それから",
+      "en": "and then"
+    },
+    {
+      "ja": "まで",
+      "en": "until"
+    },
+    {
+      "ja": "しずかな",
+      "en": "quiet"
+    },
+    {
+      "ja": "しずか",
+      "en": "quiet"
+    },
+    {
+      "ja": "ゆうめいな",
+      "en": "famous"
+    },
+    {
+      "ja": "こんな",
+      "en": "this kind of"
+    },
+    {
+      "ja": "ほうりつ",
+      "en": "law"
+    },
+    {
+      "ja": "けいやく",
+      "en": "contract"
+    },
+    {
+      "ja": "ぎんこう",
+      "en": "bank"
+    },
+    {
+      "ja": "女子大学[じょしだいがく]",
+      "en": "women's university"
+    },
+    {
+      "ja": "大学[だいがく]",
+      "en": "university"
+    },
+    {
+      "ja": "高[たか]いです",
+      "en": "is expensive, is high"
+    },
+    {
+      "ja": "発明[はつめい]して",
+      "en": "inventing"
+    },
+    {
+      "ja": "発明[はつめい]",
+      "en": "invention"
+    },
+    {
+      "ja": "知[し]っていますか",
+      "en": "do you know?"
+    },
+    {
+      "ja": "つかっていませんか",
+      "en": "aren't you using?"
+    },
+    {
+      "ja": "使[つか]われています",
+      "en": "is used"
+    },
+    {
+      "ja": "使[つか]います",
+      "en": "uses"
+    },
+    {
+      "ja": "スマートフォン",
+      "en": "smartphone"
+    },
+    {
+      "ja": "テレビ",
+      "en": "television"
+    },
+    {
+      "ja": "カラーテレビ",
+      "en": "colour television"
+    },
+    {
+      "ja": "コンピューター",
+      "en": "computer"
+    },
+    {
+      "ja": "画面[がめん]",
+      "en": "screen"
+    },
+    {
+      "ja": "電[でん]きゅう",
+      "en": "light bulb"
+    },
+    {
+      "ja": "電気[でんき]",
+      "en": "electricity"
+    },
+    {
+      "ja": "青[あお]い",
+      "en": "blue"
+    },
+    {
+      "ja": "あかい",
+      "en": "red"
+    },
+    {
+      "ja": "みどり",
+      "en": "green"
+    },
+    {
+      "ja": "むずかしかった",
+      "en": "was difficult"
+    },
+    {
+      "ja": "科学者[かがくしゃ]",
+      "en": "scientist"
+    },
+    {
+      "ja": "ことば",
+      "en": "word"
+    },
+    {
+      "ja": "おめでとうございます",
+      "en": "congratulations"
+    },
+    {
+      "ja": "LED",
+      "en": "LED, a light-emitting diode"
+    },
+    {
+      "ja": "Light",
+      "en": "light"
+    },
+    {
+      "ja": "Emitting",
+      "en": "emitting"
+    },
+    {
+      "ja": "Diode",
+      "en": "diode"
+    },
+    {
+      "ja": "しゃちょう",
+      "en": "CEO, company president"
+    },
+    {
+      "ja": "ともだち",
+      "en": "friend"
+    },
+    {
+      "ja": "行[い]きます",
+      "en": "go"
+    },
+    {
+      "ja": "作[つく]りました",
+      "en": "made, built, founded"
+    },
+    {
+      "ja": "もらいました",
+      "en": "received"
+    },
+    {
+      "ja": "ありました",
+      "en": "there was"
+    },
+    {
+      "ja": "ありましたが",
+      "en": "there was, but"
+    },
+    {
+      "ja": "作[つく]ろう",
+      "en": "let's make, going to make"
+    },
+    {
+      "ja": "して",
+      "en": "doing, and"
+    },
+    {
+      "ja": "ない",
+      "en": "not, without"
+    },
+    {
+      "ja": "じっけんを",
+      "en": "experiment"
+    },
+    {
+      "ja": "かんがえなおし",
+      "en": "rethinking"
+    },
+    {
+      "ja": "知[し]っています",
+      "en": "know"
+    },
+    {
+      "ja": "つかっています",
+      "en": "is using"
+    },
+    {
+      "ja": "なりました",
+      "en": "became"
+    },
+    {
+      "ja": "なります",
+      "en": "become"
+    }
   ],
   "grammar": [
     {
@@ -2591,5 +3263,84 @@ window.KIJI = {
     "何を": "なにを",
     "何が": "なにが",
     "私": "わたし"
+  },
+  "nyuuryoku": {
+    "intro": "Windows 11 can type Japanese, but it does not out of the box. Five minutes, once, and the school laptop types かな and 漢字 for the rest of the year.",
+    "steps": [
+      {
+        "n": 1,
+        "head": "Add Japanese to Windows",
+        "lines": [
+          "Press the Windows key and I together to open Settings.",
+          "Go to Time & language, then Language & region.",
+          "Beside Preferred languages, choose Add a language.",
+          "Type Japanese or 日本語, pick it, then Next and Install."
+        ],
+        "note": "Leave the Windows display language as English. You are adding a keyboard, not changing the computer into Japanese.",
+        "keys": [
+          "⊞ Win",
+          "I"
+        ]
+      },
+      {
+        "n": 2,
+        "head": "Switch the keyboard to Japanese",
+        "lines": [
+          "Look at the bottom right of the taskbar, near the clock. It now says ENG or JPN.",
+          "Hold the Windows key and tap Space to move between them.",
+          "Choose JPN."
+        ],
+        "note": "The switch is per window. A new window can come back as ENG, so check the taskbar before you start typing.",
+        "keys": [
+          "⊞ Win",
+          "Space"
+        ]
+      },
+      {
+        "n": 3,
+        "head": "Turn hiragana on",
+        "lines": [
+          "With JPN chosen, the taskbar shows either A or あ.",
+          "A means it is still typing English letters.",
+          "あ means it is typing kana. Click the letter to toggle it."
+        ],
+        "note": "The keyboard shortcut is Alt and the ` key, the one above Tab. This is the step most people miss: JPN is selected, the indicator still says A, and nothing comes out in kana.",
+        "keys": [
+          "Alt",
+          "`"
+        ]
+      },
+      {
+        "n": 4,
+        "head": "Type, then convert",
+        "lines": [
+          "Type the sounds in rōmaji and the kana appear as you go: nihon becomes にほん.",
+          "Press Space to turn the kana into kanji: 日本.",
+          "Press Space again to see other kanji with the same reading.",
+          "Press Enter to accept what is shown."
+        ],
+        "note": "Until you press Enter the word is still being chosen, and it is underlined to say so.",
+        "keys": [
+          "Space",
+          "Enter"
+        ]
+      },
+      {
+        "n": 5,
+        "head": "The three that catch everyone",
+        "lines": [
+          "Small っ: double the next consonant. kitte gives きって.",
+          "ん on its own: type nn. konnnichiha is awkward, so type konnichiha and check.",
+          "を the particle: type wo, not o."
+        ],
+        "note": "さん after a name is sann? No: san gives さん on its own, but inside a word type nn when the next letter is a vowel.",
+        "keys": []
+      }
+    ],
+    "check": {
+      "head": "Check it is working",
+      "say": "Type anything Japanese below. This box does not keep what you write and does not send it anywhere; it only looks at what kind of characters came out."
+    },
+    "links": []
   }
 };
