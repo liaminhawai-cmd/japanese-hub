@@ -88,8 +88,26 @@
   *{margin:0;padding:0;box-sizing:border-box}
   body{font-family:var(--font);background:var(--bg);color:var(--ink);
        line-height:1.45;min-height:100vh}
-  .wrap{max-width:min(100vw,1240px);margin:0 auto}
+  .wrap{max-width:min(100vw,1240px);margin:0 auto;position:relative}
 
+  /* ---- the timer, top left ----
+     Andrew asked for one button, in the corner, that opens the
+     classroom timer from anywhere on this page. It sits over the
+     header rather than in the run of tiles, because it is the thing a
+     teacher reaches for with a class already waiting. The tiles below
+     still carry it, for anyone who meets the page the usual way. */
+  .corner{position:absolute;top:12px;left:12px;z-index:5;
+       display:inline-flex;align-items:center;gap:6px;
+       background:var(--paper);border:1px solid var(--line);border-radius:999px;
+       padding:7px 13px;text-decoration:none;color:var(--ink);font-size:.84rem;
+       box-shadow:0 1px 2px rgba(0,0,0,.05)}
+  .corner:hover{border-color:var(--accent);color:var(--accent)}
+  .corner b{font-family:var(--font);font-weight:600}
+  .corner .en{color:var(--muted);font-size:.74rem}
+  @media (max-width:640px){
+    .corner{position:static;margin:12px 0 0 12px}
+    .corner .en{display:none}
+  }
   header{text-align:center;padding:20px 16px 14px}
   h1{font-family:var(--font);font-size:clamp(1.5rem,5vw,2.1rem);letter-spacing:.5px}
   header p{color:var(--muted);font-size:.85rem;max-width:620px;margin:5px auto 0}
@@ -156,6 +174,9 @@
 </head>
 <body>
 <div class="wrap">
+
+  <a class="corner" href="timer/"><span aria-hidden="true">⏳</span>
+     <b>タイマー</b><span class="en">Classroom timer</span></a>
 
   <header>
     <h1>ジャプリ</h1>
@@ -297,6 +318,11 @@
           <span class="en">Mission: Japan</span>
           <p>A 1-bit handheld. An agent in Tokyo, no set order.</p>
         </a>
+        <a class="tile" href="timer/">
+          <h3><span class="e">⏳</span>タイマー</h3>
+          <span class="en">Classroom timer</span>
+          <p>Counts down in kanji numerals, big enough for the back row.</p>
+        </a>
       </div>
     </section>
 
@@ -311,7 +337,7 @@
   </main>
 
   <footer>
-    <div class="build-tag">JH build 2026-10-13</div>
+    <div class="build-tag">JH build 2026-10-25</div>
   </footer>
 
 </div>
