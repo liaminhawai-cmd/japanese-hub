@@ -83,6 +83,21 @@
        transform:translateX(-50%)}
   .sep::before{top:.3em}
   .sep::after{top:.6em}
+  /* ---- the dots blink, one blink a second ----
+     Andrew: the timer "holds for two seconds" going from 30 to 29 and
+     from 20 to 19. It does not: every face is on screen for a second,
+     to the millisecond. What he was reading is the kanji themselves.
+     三十一 loses its 一 and becomes 三十, and a glance from across a
+     room sees 三十 in both, so thirty looks like it lasts twice as
+     long. Every tens boundary does it, and it is the price of correct
+     numerals: 三十 is how thirty is written, and 三十〇 is not.
+     So the seconds are counted somewhere that never looks the same
+     twice running. The dots are dark for the first half of each
+     second and pale for the second half, in step with the numbers,
+     which is what every digital clock has always done and for this
+     same reason. */
+  .sep::before,.sep::after{transition:opacity .12s linear}
+  .face.tock .sep::before,.face.tock .sep::after{opacity:.16}
   /* the last ten seconds do not flash or go red: a timer that changes
      its appearance near the end is a timer students watch instead of
      working. The numbers only get out of the way at the end. */
@@ -160,7 +175,7 @@
   <span class="hint" id="hint">Space starts and stops. R resets.</span>
 </div>
 
-<div class="build" aria-hidden="true">build 2026-10-25b</div>
+<div class="build" aria-hidden="true">build 2026-10-25c</div>
 
 <script>
 (function(){
@@ -319,6 +334,7 @@
       var d = new Date(), h = d.getHours();
       $("over").textContent = h < 12 ? "午前" : "午後";
       paint(((h + 11) % 12) + 1, d.getMinutes());
+      $("face").classList.toggle("tock", d.getMilliseconds() >= 500);
       return;
     }
     var ms = remaining();
@@ -326,6 +342,9 @@
        reaches 〇:〇 exactly when it ends */
     var s = Math.ceil(ms / 1000);
     paint(Math.floor(s / 60), s % 60);
+    /* dark for the first half of the second the numbers are showing,
+       pale for the second half. A stopped timer holds them dark. */
+    $("face").classList.toggle("tock", running && (s * 1000 - ms) >= 500);
     /* nothing above the numbers in timer mode: the face already says
        what is set, and a second number up there is one to read by
        mistake from the back of the room */
