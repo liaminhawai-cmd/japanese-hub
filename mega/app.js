@@ -1632,6 +1632,7 @@
     { id:"build", ja:"えでつくる",     en:"Build it with pictures" },
     { id:"read",  ja:"ことばでつくる", en:"Build it with words" },
     { id:"match", ja:"ことば",         en:"Words" },
+    { id:"kanji", ja:"かんじ",         en:"The kanji" },
     { id:"verb",  ja:"どうし",         en:"Change the verb" },
     { id:"fast",  ja:"はやく",         en:"Read it fast" }
   ];
@@ -2366,6 +2367,105 @@
       advance("match", Math.ceil(pool.length / 8));
       draw();
     };
+  };
+
+  /* ================= かんじ =================
+     The unit's twenty-four, off Andrew's topic kanji list. Two modes,
+     the same pair ことば uses in ひと: みる puts them in front of the
+     student with their reading, their meaning and their sound, and
+     テスト takes the reading away and asks for it.
+
+     A card in みる pays once, the first time it is turned over, and
+     テスト pays once per kanji read correctly, so a student who knows
+     them already does not farm the grid.
+
+     Readings are kana. Andrew: "We need to avoid romaji because the
+     current cohort has become reliant on it." */
+  var kanjiMode = "look";
+  DRAW.kanji = function(){
+    var K = M.kanji || [];
+    var met = K.filter(function(k){ return S.won["kmet:" + k.k]; }).length;
+    var read = K.filter(function(k){ return S.won["kread:" + k.k]; }).length;
+    $("main").innerHTML = ruleFor("kanji", "tight")
+      + '<div class="work"><div class="col" id="kbody"></div></div>'
+      + '<div id="fb" class="fbslot"></div>'
+      + foot('<button class="btn sm ' + (kanjiMode === "look" ? "" : "ghost")
+          + '" id="mLook">みる</button>'
+        + '<button class="btn sm ' + (kanjiMode === "test" ? "" : "ghost")
+          + '" id="mTest">テスト</button>'
+        + '<span class="hint">' + (kanjiMode === "look"
+            ? "Tap a kanji to hear it." : "Which reading is it?") + '</span>');
+    $("sc").innerHTML = kanjiMode === "look"
+      ? '<b>' + met + '</b> of ' + K.length + ' turned over'
+      : '<b>' + read + '</b> of ' + K.length + ' read';
+    $("mLook").onclick = function(){ kanjiMode = "look"; DRAW.kanji(); };
+    $("mTest").onclick = function(){ kanjiMode = "test"; DRAW.kanji(); };
+    if (kanjiMode === "look") look(); else test();
+
+    function look(){
+      $("kbody").innerHTML = '<div class="kgrid">' + K.map(function(k, i){
+        var seen = S.won["kmet:" + k.k];
+        return '<button class="kcard' + (seen ? " seen" : "") + '" data-k="' + i + '">'
+          + '<span class="kface">' + esc(k.k) + '</span>'
+          + '<span class="kyomi">' + esc(k.yomi.join("・")) + '</span>'
+          + '<span class="ken">' + esc(k.en) + '</span></button>';
+      }).join("") + '</div>';
+      each($("kbody"), "[data-k]", function(b){
+        b.onclick = function(){
+          var k = K[+b.dataset.k];
+          b.classList.add("open");
+          say(k.yomi[0]);
+          first("kmet:" + k.k, 1, "kanji met");
+          var n = K.filter(function(x){ return S.won["kmet:" + x.k]; }).length;
+          $("sc").innerHTML = '<b>' + n + '</b> of ' + K.length + ' turned over';
+          if (n === K.length) done("kanji");
+        };
+      });
+    }
+
+    function test(){
+      var ki = dealt("kanji", K.length), k = K[ki];
+      /* the wrong readings are other readings off this same list, so
+         the choice is between kanji a student has met rather than
+         between Japanese and noise */
+      var others = shuffle(K.filter(function(x){ return x.k !== k.k; }))
+        .slice(0, 2).map(function(x){ return x.yomi[0]; });
+      var opts = shuffle([k.yomi[0]].concat(others));
+      $("kbody").innerHTML =
+          '<div class="kask"><span class="kbig">' + esc(k.k) + '</span></div>'
+        + '<div class="tray" id="kopts">' + opts.map(function(o){
+            return '<button class="piece word wide" data-o="' + esc(o) + '">'
+              + '<span class="pja">' + esc(o) + '</span></button>';
+          }).join("") + '</div>';
+      each($("kbody"), "[data-o]", function(b){
+        b.onclick = function(){
+          var chosen = b.dataset.o;
+          say(chosen);
+          if (chosen !== k.yomi[0]){
+            b.classList.add("no");
+            yokai(b);
+            var was = null;
+            K.forEach(function(x){ if (x.yomi[0] === chosen) was = x; });
+            $("fb").innerHTML = '<div class="mark no"><b>That is '
+              + esc(was ? was.k : "another kanji") + '</b>'
+              + (was ? esc(was.en) : "") + '</div>';
+            return;
+          }
+          b.classList.add("ok");
+          ninja(b);
+          first("kread:" + k.k, 1, "kanji read");
+          advance("kanji", K.length);
+          $("fb").innerHTML = '<div class="mark yes"><b>Yes</b>'
+            + '<span class="jp">' + esc(k.k) + '　' + esc(k.yomi.join("・")) + '</span> '
+            + saybtn(k.yomi[0]) + '<p>' + esc(k.en) + '</p></div>';
+          wireSay();
+          var n = K.filter(function(x){ return S.won["kread:" + x.k]; }).length;
+          $("sc").innerHTML = '<b>' + n + '</b> of ' + K.length + ' read';
+          if (n >= 18) done("kanji");
+          setTimeout(function(){ if (kanjiMode === "test") test(); }, 1300);
+        };
+      });
+    }
   };
 
   /* ================= どうし =================

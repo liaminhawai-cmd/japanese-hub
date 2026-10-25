@@ -546,6 +546,22 @@
   .slot .men{font-size:13.5px}
   .slot .pja{font-family:var(--jp);font-size:16px}
 
+  /* ---- the kanji grid ----
+     A card is the kanji alone until it is tapped. The reading and the
+     meaning are underneath it and hidden, so the grid is a page of
+     kanji to read rather than a page of answers. */
+  .kgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));
+       gap:8px;max-width:860px;margin:0 auto}
+  .kcard{border:1.5px solid var(--line);border-radius:12px;background:var(--paper);
+       padding:8px 4px 6px;cursor:pointer;text-align:center;font-family:var(--font)}
+  .kcard .kface{display:block;font-family:var(--jp);font-size:30px;line-height:1.2}
+  .kcard .kyomi{display:block;font-family:var(--jp);font-size:14px;color:var(--deep);
+       visibility:hidden}
+  .kcard .ken{display:block;font-size:11px;color:var(--muted);visibility:hidden}
+  .kcard.open .kyomi,.kcard.open .ken{visibility:visible}
+  .kcard.seen{border-color:var(--ok);background:#f4fbf5}
+  .kask{text-align:center;margin:6px 0 10px}
+  .kbig{font-family:var(--jp);font-size:clamp(56px,14vw,96px);line-height:1.1}
   /* ---- the verb card ---- */
   .vcard{display:flex;align-items:center;gap:12px;flex-wrap:wrap;
        border:1px solid var(--line-soft);border-radius:12px;padding:10px 12px;

@@ -122,6 +122,19 @@
   button[aria-pressed="true"]{background:#f1f1f1;border-color:#9a9a9a}
   .gap{width:14px}
   .hint{color:var(--muted);font-size:12px}
+  /* display:flex beats the browser's own hiding of [hidden], and a
+     placeholder that will not hide is a placeholder in the way */
+  [hidden]{display:none !important}
+  .gone{flex:1;display:flex;flex-direction:column;align-items:center;
+       justify-content:center;gap:12px;color:var(--muted)}
+  .gone p{font-size:clamp(15px,2.6vw,20px)}
+  .gone button{font-size:16px;min-height:44px;padding:0 16px;border:1.5px solid var(--ink);
+       border-radius:9px;background:var(--paper);cursor:pointer}
+  /* opened as the small window: the numbers and nothing else */
+  body.small .bar{padding:4px 6px;gap:4px;justify-content:center}
+  body.small .bar button{min-height:32px;font-size:13px;padding:0 9px}
+  body.small .hint,body.small #pop,body.small #full,body.small #mode{display:none}
+  body.small .build{display:none}
   .build{position:fixed;right:4px;bottom:2px;z-index:70;pointer-events:none;
        font-family:var(--font-en);font-size:9px;letter-spacing:.04em;
        color:#cfcfcf;user-select:none}
@@ -144,7 +157,7 @@
 </head>
 <body>
 
-<div class="screen">
+<div class="screen" id="screen">
   <div class="over" id="over"></div>
   <div class="face" id="face" role="timer" aria-live="off">
     <span class="cell" id="h2"></span><span class="cell" id="h1"></span><span class="cell" id="h0"></span>
@@ -152,6 +165,10 @@
     <span class="cell" id="m2"></span><span class="cell" id="m1"></span><span class="cell" id="m0"></span>
   </div>
   <div class="word" id="word"></div>
+</div>
+<div class="gone" id="gone" hidden>
+  <p>The timer is in the small window.</p>
+  <button id="back">Bring it back</button>
 </div>
 
 <div class="bar" id="bar">
@@ -171,16 +188,26 @@
   <span class="gap"></span>
   <button id="chime">Chime: チャイム</button>
   <button id="mode">Clock</button>
+  <button id="pop">Small window</button>
   <button id="full">Full screen</button>
   <span class="hint" id="hint">Space starts and stops. R resets.</span>
 </div>
 
-<div class="build" aria-hidden="true">build 2026-10-25c</div>
+<div class="build" aria-hidden="true">build 2026-10-25d</div>
 
 <script>
 (function(){
   "use strict";
-  var $ = function(id){ return document.getElementById(id); };
+  /* The numbers move house. When the timer is popped out, the six
+     cells, the colon and the word おわり are in the small window's
+     document and not in this one, so everything that paints them has
+     to look in both. One line here rather than a cached reference at
+     every call site. */
+  var pipWin = null, pipDoc = null;
+  var $ = function(id){
+    return document.getElementById(id)
+      || (pipDoc ? pipDoc.getElementById(id) : null);
+  };
 
   /* ---- the numerals ----
      0 to 99 in three cells. The tens cell carries the multiplier and is
@@ -352,6 +379,11 @@
     if (running && ms <= 0) done();
   }
   (function loop(){ show(); requestAnimationFrame(loop); })();
+  /* A frame loop is throttled to nothing when this tab is behind the
+     slides, which is exactly when the small window is being watched.
+     The interval is the backstop: a quarter of a second, cheap, and it
+     keeps running where frames do not. */
+  setInterval(show, 250);
 
   /* ---- the bar gets out of the way while the timer runs ---- */
   var idleFrom = Date.now(), hidden = false;
@@ -406,18 +438,113 @@
     else if (document.documentElement.requestFullscreen)
       document.documentElement.requestFullscreen();
   };
-  document.addEventListener("keydown", function(e){
+  function onKey(e){
     if (e.target && /^(INPUT|TEXTAREA)$/.test(e.target.tagName)) return;
     if (e.code === "Space"){ e.preventDefault(); running ? stop() : start(); }
     else if (e.key === "r" || e.key === "R"){ setMins(S.mins); paintSet(); }
     else if (e.key === "f" || e.key === "F"){ $("full").click(); }
-  });
+  }
+  document.addEventListener("keydown", onKey);
+
+  /* ---- the small window ----
+     Andrew: "make the new timer app collapsable to a small window if
+     you can." A page cannot float over PowerPoint by itself, but
+     Chrome and Edge will give one a picture-in-picture window that
+     does, and that is what a classroom wants: the slides full screen
+     and the count in the corner.
+
+     The numbers are MOVED rather than copied. Two copies of a clock is
+     two clocks to keep in step, and the first time they disagree
+     nobody believes either. What travels is the same DOM this page was
+     painting all along, so the count carries on mid-second.
+
+     Where picture-in-picture is not offered, a plain small window is
+     opened instead and told where the count is up to. That one cannot
+     sit on top of other windows, but it can be dragged beside them. */
+  function pipSupported(){
+    return !!(window.documentPictureInPicture
+      && window.documentPictureInPicture.requestWindow);
+  }
+  function popOut(){
+    if (pipDoc) return bringBack();
+    if (!pipSupported()) return smallWindow();
+    window.documentPictureInPicture.requestWindow({ width: 440, height: 280 })
+      .then(function(w){
+        pipWin = w; pipDoc = w.document;
+        var st = pipDoc.createElement("style");
+        var src = document.querySelector("style");
+        st.textContent = (src ? src.textContent : "") +
+          "\n.bar,.build{display:none}\nbody{cursor:pointer}";
+        pipDoc.head.appendChild(st);
+        pipDoc.body.appendChild($("screen"));
+        /* the small window is too small for a row of buttons, so the
+           whole of it is the start and stop button */
+        pipDoc.body.addEventListener("click", function(){
+          running ? stop() : start();
+        });
+        pipDoc.addEventListener("keydown", onKey);
+        w.addEventListener("pagehide", bringBack);
+        $("gone").hidden = false;
+        $("pop").textContent = "Bring it back";
+      })
+      .catch(function(){ smallWindow(); });
+  }
+  function bringBack(){
+    if (!pipDoc) return;
+    var screen = $("screen");
+    if (screen) document.body.insertBefore(screen, document.getElementById("gone"));
+    try { if (pipWin) pipWin.close(); } catch(e){}
+    pipWin = null; pipDoc = null;
+    $("gone").hidden = true;
+    $("pop").textContent = "Small window";
+    show();
+  }
+  function smallWindow(){
+    /* a separate window, told where the count is up to, and this one
+       stands down so there are never two timers running */
+    var q = "?small=1&m=" + S.mins + "&left=" + Math.round(remaining() / 1000)
+      + (running ? "&run=1" : "") + "&chime=" + S.chime;
+    stop();
+    var w = window.open(location.pathname + q, "jghtimer",
+      "width=460,height=300,menubar=no,toolbar=no,location=no,status=no");
+    if (!w){ alert("The browser blocked the small window. Allow pop-ups for this page."); return; }
+    $("gone").hidden = false;
+    $("pop").textContent = "Bring it back";
+    $("back").onclick = function(){
+      try { w.close(); } catch(e){}
+      $("gone").hidden = true;
+      $("pop").textContent = "Small window";
+    };
+  }
+  $("pop").onclick = popOut;
+  $("back").onclick = bringBack;
+  if (!pipSupported()) $("pop").title = "Opens a separate small window";
+
+  /* ---- opened as the small window ---- */
+  var asSmall = false;
+  (function(){
+    var q = {};
+    location.search.replace(/^\?/, "").split("&").forEach(function(kv){
+      var b = kv.split("=");
+      if (b[0]) q[b[0]] = decodeURIComponent(b[1] || "");
+    });
+    if (!q.small) return;
+    asSmall = true;
+    document.body.classList.add("small");
+    if (q.m) S.mins = Math.max(1, Math.min(99, +q.m || 5));
+    if (q.chime && CHIMES[q.chime]) S.chime = q.chime;
+    left = Math.max(0, (+q.left || S.mins * 60) * 1000);
+    if (q.run) start();
+    show();
+  })();
 
   /* ---- open where it was left ---- */
   $("chime").textContent = "Chime: " + CHIMES[S.chime].ja;
   $("mode").textContent = S.mode === "timer" ? "Clock" : "Timer";
   $("go").disabled = S.mode === "clock";
-  left = S.mins * 60000;
+  /* a window opened small was handed the count it is to carry on from,
+     and must not be reset to the stored minutes underneath it */
+  if (!asSmall) left = S.mins * 60000;
   paintSet(); show();
 
   /* a seam for the browser check, which cannot read a canvas or hear a
