@@ -154,13 +154,13 @@
   <button class="go" id="go">Start</button>
   <button id="reset">Reset</button>
   <span class="gap"></span>
-  <button id="chime">Chime: りん</button>
+  <button id="chime">Chime: チャイム</button>
   <button id="mode">Clock</button>
   <button id="full">Full screen</button>
   <span class="hint" id="hint">Space starts and stops. R resets.</span>
 </div>
 
-<div class="build" aria-hidden="true">build 2026-10-25a</div>
+<div class="build" aria-hidden="true">build 2026-10-25b</div>
 
 <script>
 (function(){
@@ -193,8 +193,11 @@
   }
 
   /* ---- what is kept between lessons ---- */
-  var KEY = "jgh-timer-v1";
-  var S = { mins: 5, chime: "rin", mode: "timer" };
+  /* v2 because the default chime changed from the bowl to the school
+     bell: a machine that had already stored v1 would have kept the
+     bowl and never seen it. */
+  var KEY = "jgh-timer-v2";
+  var S = { mins: 5, chime: "chime", mode: "timer" };
   try { var raw = localStorage.getItem(KEY); if (raw){
     var o = JSON.parse(raw); for (var k in S) if (o[k] !== undefined) S[k] = o[k];
   } } catch(e){}
@@ -261,7 +264,7 @@
   var ORDER = ["rin", "chime", "bell"];
   function ring(){
     var c = ac(); if (!c) return;
-    (CHIMES[S.chime] || CHIMES.rin).play(c.currentTime + 0.05);
+    (CHIMES[S.chime] || CHIMES.chime).play(c.currentTime + 0.05);
   }
 
   /* ---- the timer ----
