@@ -1632,6 +1632,7 @@
     { id:"build", ja:"えでつくる",     en:"Build it with pictures" },
     { id:"read",  ja:"ことばでつくる", en:"Build it with words" },
     { id:"match", ja:"ことば",         en:"Words" },
+    { id:"kata",  ja:"カタカナ",       en:"Katakana" },
     { id:"kanji", ja:"かんじ",         en:"The kanji" },
     { id:"verb",  ja:"どうし",         en:"Change the verb" },
     { id:"fast",  ja:"はやく",         en:"Read it fast" }
@@ -2367,6 +2368,182 @@
       advance("match", Math.ceil(pool.length / 8));
       draw();
     };
+  };
+
+  /* ================= カタカナ =================
+     Andrew asked for katakana word recognition "from the katakana a-h
+     lines", so every word here is readable with ア through ハ and
+     nothing else: no ラ行, no ヤ行, no マ行, no ン. That rules out
+     three words the unit itself uses (フェリー, トラム, コンサート),
+     which is the right way round: the tab is for the katakana a class
+     has, not for the words a topic wants.
+
+     Three modes. みる is the words with their meanings, to be looked
+     at and heard. テスト takes the English away and asks what the
+     word says. きく is the one the other two cannot do: the word is
+     spoken and the choice is between spellings that differ only by a
+     ー or a small ッ, which is where katakana actually goes wrong. */
+  var kataMode = "look";
+  /* A misspelling a student would actually make: the long mark left
+     out, the small ッ left out, or the ten-ten dropped. Generated
+     rather than written down, so a new word cannot arrive without its
+     traps. */
+  var TEN = { "ガ":"カ","ギ":"キ","グ":"ク","ゲ":"ケ","ゴ":"コ",
+              "ザ":"サ","ジ":"シ","ズ":"ス","ゼ":"セ","ゾ":"ソ",
+              "ダ":"タ","ヂ":"チ","ヅ":"ツ","デ":"テ","ド":"ト",
+              "バ":"ハ","ビ":"ヒ","ブ":"フ","ベ":"ヘ","ボ":"ホ",
+              "パ":"ハ","ピ":"ヒ","プ":"フ","ペ":"ヘ","ポ":"ホ" };
+  function traps(ka){
+    var out = [];
+    function push(text, why){
+      if (text !== ka && !out.some(function(o){ return o.ka === text; }))
+        out.push({ ka: text, why: why });
+    }
+    var i = ka.indexOf("ー");
+    if (i >= 0) push(ka.slice(0, i) + ka.slice(i + 1), "the ー makes the sound long");
+    var j = ka.indexOf("ッ");
+    if (j >= 0) push(ka.slice(0, j) + ka.slice(j + 1), "the small ッ is the little stop");
+    for (var k = 0; k < ka.length && out.length < 2; k++){
+      if (TEN[ka[k]])
+        push(ka.slice(0, k) + TEN[ka[k]] + ka.slice(k + 1),
+             "the marks beside " + TEN[ka[k]] + " change the sound");
+    }
+    /* the pairs a beginner's eye slides between. Same stroke, different
+       sound, and no amount of listening to the word helps unless the
+       difference is looked for. */
+    var LOOK = { "シ":"ツ", "ツ":"シ", "ク":"タ", "タ":"ク", "ス":"ヌ", "ヌ":"ス" };
+    for (var m = 0; m < ka.length && out.length < 2; m++){
+      if (LOOK[ka[m]])
+        push(ka.slice(0, m) + LOOK[ka[m]] + ka.slice(m + 1),
+             ka[m] + " and " + LOOK[ka[m]] + " are not the same letter");
+    }
+    /* and if a word has none of those, the long mark goes in where it
+       does not belong, which is the other thing a beginner writes */
+    for (var n = ka.length - 1; n > 0 && out.length < 2; n--)
+      push(ka.slice(0, n) + "ー" + ka.slice(n), "there is no ー in this one");
+    return out;
+  }
+
+  DRAW.kata = function(){
+    var KA = (M.katakana || {}).words || [];
+    var rows = ((M.katakana || {}).rows || []).join("");
+    var met = KA.filter(function(w){ return S.won["kamet:" + w.ka]; }).length;
+    var read = KA.filter(function(w){ return S.won["karead:" + w.ka]; }).length;
+    var heard = KA.filter(function(w){ return S.won["kahear:" + w.ka]; }).length;
+    $("main").innerHTML = ruleFor("kata", "tight")
+      + '<div class="work"><div class="col" id="kabody"></div></div>'
+      + '<div id="fb" class="fbslot"></div>'
+      + foot('<button class="btn sm ' + (kataMode === "look" ? "" : "ghost")
+          + '" id="mLook">みる</button>'
+        + '<button class="btn sm ' + (kataMode === "test" ? "" : "ghost")
+          + '" id="mTest">テスト</button>'
+        + '<button class="btn sm ' + (kataMode === "hear" ? "" : "ghost")
+          + '" id="mHear">きく</button>'
+        + '<span class="hint">' + esc(rows) + ' lines only.</span>');
+    $("sc").innerHTML = kataMode === "look"
+      ? '<b>' + met + '</b> of ' + KA.length + ' heard'
+      : (kataMode === "test"
+          ? '<b>' + read + '</b> of ' + KA.length + ' read'
+          : '<b>' + heard + '</b> of ' + KA.length + ' spelled');
+    $("mLook").onclick = function(){ kataMode = "look"; DRAW.kata(); };
+    $("mTest").onclick = function(){ kataMode = "test"; DRAW.kata(); };
+    $("mHear").onclick = function(){ kataMode = "hear"; DRAW.kata(); };
+    if (kataMode === "look") look();
+    else if (kataMode === "test") test();
+    else hear();
+
+    function score(key, n){
+      var got = KA.filter(function(w){ return S.won[key + w.ka]; }).length;
+      $("sc").innerHTML = '<b>' + got + '</b> of ' + KA.length + ' ' + n;
+      return got;
+    }
+    function look(){
+      $("kabody").innerHTML = '<div class="kagrid">' + KA.map(function(w, i){
+        return '<button class="kacard' + (S.won["kamet:" + w.ka] ? " seen" : "")
+          + '" data-i="' + i + '">'
+          + '<span class="kaface">' + esc(w.ka) + '</span>'
+          + '<span class="kaen">' + esc(w.en) + '</span></button>';
+      }).join("") + '</div>';
+      each($("kabody"), "[data-i]", function(b){
+        b.onclick = function(){
+          var w = KA[+b.dataset.i];
+          say(w.ka);
+          b.classList.add("open");
+          first("kamet:" + w.ka, 1, "katakana heard");
+          if (score("kamet:", "heard") === KA.length) done("kata");
+        };
+      });
+    }
+    function test(){
+      var i = dealt("kata", KA.length), w = KA[i];
+      var others = shuffle(KA.filter(function(x){ return x.ka !== w.ka; }))
+        .slice(0, 2).map(function(x){ return x.en; });
+      var opts = shuffle([w.en].concat(others));
+      $("kabody").innerHTML =
+          '<div class="kask"><span class="kabig">' + esc(w.ka) + '</span></div>'
+        + '<div class="tray">' + opts.map(function(o){
+            return '<button class="piece word wide" data-o="' + esc(o) + '">'
+              + '<span class="pen open">' + esc(o) + '</span></button>';
+          }).join("") + '</div>';
+      each($("kabody"), "[data-o]", function(b){
+        b.onclick = function(){
+          if (b.dataset.o !== w.en){
+            b.classList.add("no"); yokai(b);
+            var was = null;
+            KA.forEach(function(x){ if (x.en === b.dataset.o) was = x; });
+            $("fb").innerHTML = '<div class="mark no"><b>Not that one</b>'
+              + (was ? esc(b.dataset.o) + ' is <span class="jp">' + esc(was.ka)
+                       + '</span>' : esc(b.dataset.o)) + '</div>';
+            return;
+          }
+          b.classList.add("ok"); ninja(b);
+          say(w.ka);
+          first("karead:" + w.ka, 1, "katakana read");
+          advance("kata", KA.length);
+          $("fb").innerHTML = '<div class="mark yes"><b>Yes</b>'
+            + '<span class="jp">' + esc(w.ka) + '</span> ' + saybtn(w.ka)
+            + '<p>' + esc(w.en) + '</p></div>';
+          wireSay();
+          if (score("karead:", "read") >= Math.ceil(KA.length * 0.6)) done("kata");
+          setTimeout(function(){ if (kataMode === "test") test(); }, 1300);
+        };
+      });
+    }
+    function hear(){
+      var i = dealt("katah", KA.length), w = KA[i];
+      var wrong = traps(w.ka).slice(0, 2);
+      var opts = shuffle([{ ka: w.ka, why: null }].concat(wrong));
+      $("kabody").innerHTML =
+          '<div class="kask"><button class="btn sm" id="again">\u25b6 Listen</button></div>'
+        + '<div class="tray">' + opts.map(function(o){
+            return '<button class="piece word wide" data-k="' + esc(o.ka) + '">'
+              + '<span class="pja kaopt">' + esc(o.ka) + '</span></button>';
+          }).join("") + '</div>';
+      say(w.ka);
+      $("again").onclick = function(){ say(w.ka); };
+      each($("kabody"), "[data-k]", function(b){
+        b.onclick = function(){
+          if (b.dataset.k !== w.ka){
+            b.classList.add("no"); yokai(b);
+            var miss = null;
+            wrong.forEach(function(o){ if (o.ka === b.dataset.k) miss = o; });
+            $("fb").innerHTML = '<div class="mark no"><b>Listen again</b>'
+              + (miss ? esc(miss.why) : "") + '</div>';
+            say(w.ka);
+            return;
+          }
+          b.classList.add("ok"); ninja(b);
+          first("kahear:" + w.ka, 1, "katakana spelled");
+          advance("katah", KA.length);
+          $("fb").innerHTML = '<div class="mark yes"><b>Yes</b>'
+            + '<span class="jp">' + esc(w.ka) + '</span> ' + saybtn(w.ka)
+            + '<p>' + esc(w.en) + '</p></div>';
+          wireSay();
+          if (score("kahear:", "spelled") >= Math.ceil(KA.length * 0.6)) done("kata");
+          setTimeout(function(){ if (kataMode === "hear") hear(); }, 1300);
+        };
+      });
+    }
   };
 
   /* ================= かんじ =================
