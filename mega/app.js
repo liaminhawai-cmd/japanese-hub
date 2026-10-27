@@ -80,11 +80,28 @@
       return c;
     });
   }
-  function speakable(t){ return particles(plain(t)).replace(/[\s　]+/g, ""); }
+  /* ---- a word is not a phrase ----
+     Andrew: "母 in the kanji tab is being read out as はわ not 2x は."
+     The は→わ rule is about the particle, and a particle is what
+     follows a word inside a sentence. はは is a word that happens to
+     end in は, and running the sentence rule over it turns a mother
+     into a topic marker.
+
+     So a line can be asked for in two ways. A phrase keeps the rule,
+     because わたしは really is said わたしわ. A word on its own is
+     left exactly as it is written. The recorder and the sanity check
+     know the same two ways, or the keys stop matching and the page
+     goes quiet. */
+  function speakable(t, lex){
+    return (lex ? plain(t) : particles(plain(t))).replace(/[\s　]+/g, "");
+  }
   /* onEnd is how the きせかえ step plays a whole outfit: one line, then
      the next when the first has finished. */
-  function say(text, onEnd){
-    var clip = CLIPS[speakable(text)];
+  function say(text, onEnd, lex){
+    /* a key that is already a key is taken as it stands, which is how
+       the ▶ buttons work: they carry the resolved key, and resolving
+       it twice would put the rule through a second time */
+    var clip = CLIPS[text] || CLIPS[speakable(text, lex)];
     var a = sound();
     try { a.pause(); } catch (e){}
     a.onended = null;
@@ -195,8 +212,8 @@
     try { a.pause(); } catch (e){}
   }
   document.body.classList.toggle("hasvoice", !!Object.keys(CLIPS).length);
-  function saybtn(text){
-    return '<button class="say" data-say="' + esc(speakable(text))
+  function saybtn(text, lex){
+    return '<button class="say" data-say="' + esc(speakable(text, lex))
          + '" aria-label="Listen">▶</button>';
   }
 
@@ -1871,11 +1888,11 @@
         var over = document.elementFromPoint(ev.clientX, ev.clientY);
         over = over && over.closest ? over.closest(slotSel) : null;
         clearOver();
-        if (over && open(over)) over.classList.add("over");
+        if (over && open(over)){ over.classList.add("over"); drag.last = over; }
       });
       function drop(ev){
         if (!drag) return;
-        var moved = drag.moved;
+        var moved = drag.moved, last = drag.last || null;
         drag = null;
         clearOver();
         if (moved < 7){
@@ -1889,6 +1906,25 @@
         chip.style.cssText = "";
         var el = document.elementFromPoint(ev.clientX, ev.clientY);
         var slot = el && el.closest ? el.closest(slotSel) : null;
+        /* ---- a near miss still counts ----
+           Andrew: "the top word on the left cannot be dragged down to
+           its matching word on the list on the right if it is at the
+           bottom. You can click on one and then the other sequentially
+           and it works but drag does not."
+
+           A row near the bottom of the window is half under the edge
+           of it on a laptop with a bookmarks bar, and a pointer let go
+           past the edge of the window is over nothing at all:
+           elementFromPoint answers null and the drag is thrown away.
+           The same happens in the gap beside a row. So the slot the
+           drag was last over is remembered, and a drop that lands on
+           nothing goes there if it was let go anywhere near it. */
+        if (!slot && last){
+          var r = last.getBoundingClientRect(), NEAR = 46;
+          if (ev.clientX > r.left - NEAR && ev.clientX < r.right + NEAR
+              && ev.clientY > r.top - NEAR && ev.clientY < r.bottom + NEAR)
+            slot = last;
+        }
         if (slot && open(slot)) cfg.land(chip, slot);
       }
       chip.addEventListener("pointerup", drop);
@@ -2059,7 +2095,7 @@
       dragdrop($("main"), ".piece", "[data-slot]", {
         grab: function(chip){
           var w = byId(chip.dataset.w);
-          if (w) say(w.ja);
+          if (w) say(w.ja, null, true);
         },
         land: function(chip, box){
           var w = byId(chip.dataset.w), id = box.dataset.slot;
@@ -2092,7 +2128,7 @@
       piece.classList.add("flipped");
       spend(1, "English shown");
       var w = byId(id);
-      if (w) say(w.ja);
+      if (w) say(w.ja, null, true);
       setTimeout(function(){ piece.classList.remove("flipped"); }, 4000);
     }
     function fb(html){ $("fb").innerHTML = html; wireSay(); }
@@ -2338,7 +2374,7 @@
         b.onclick = function(){
           var w = byId(b.dataset.pick);
           if (!w) return;
-          say(w.ja);
+          say(w.ja, null, true);
           if (!fits(w, sl.id)){
             b.classList.add("no");
             yokai(b);
@@ -2386,8 +2422,13 @@
      not come round twice. */
   DRAW.match = function(){
     var pool = W.filter(function(w){ return w.en; });
-    var i0 = dealt("match", Math.ceil(pool.length / 8));
-    var page = shuffle(pool).slice(0, 8);
+    /* Six, not eight. Eight rows plus the explanation and the two bars
+       come to more than a 1366x700 laptop has, and the last row then
+       sits under the bottom edge of the window, where a drag cannot
+       reach it. Measured at four window sizes rather than guessed. */
+    var PER = 6;
+    var i0 = dealt("match", Math.ceil(pool.length / PER));
+    var page = shuffle(pool).slice(0, PER);
     var left = shuffle(page), right = shuffle(page);
     var got = {};
     $("main").innerHTML = ruleFor("match", "tight")
@@ -2406,13 +2447,13 @@
       + foot('<button class="btn ghost sm" id="again">Eight more</button>'
         + '<span class="hint">Tap a word to hear it, then drop it on its meaning.</span>');
     function score(){
-      $("sc").innerHTML = '<b>' + Object.keys(got).length + '</b> of 8 matched';
+      $("sc").innerHTML = '<b>' + Object.keys(got).length + '</b> of ' + PER + ' matched';
     }
     score();
     dragdrop($("main"), ".chip", "[data-slot]", {
       grab: function(chip){
         var w = byId(chip.dataset.w);
-        if (w) say(w.ja);
+        if (w) say(w.ja, null, true);
       },
       open: function(slot){ return !slot.classList.contains("filled"); },
       land: function(chip, slot){
@@ -2432,18 +2473,18 @@
         first("match:" + w.id, 1, "matched");
         score();
         $("fb").innerHTML = '<div class="mark yes"><b>Yes</b>'
-          + '<span class="jp">' + ruby(w.ja) + '</span> ' + saybtn(w.ja)
+          + '<span class="jp">' + ruby(w.ja) + '</span> ' + saybtn(w.ja, true)
           + '<p>' + esc(w.en) + '</p></div>';
         wireSay();
-        if (Object.keys(got).length === 8){
+        if (Object.keys(got).length === PER){
           ninja($("fb"));
-          advance("match", Math.ceil(pool.length / 8));
+          advance("match", Math.ceil(pool.length / PER));
           done("match");
         }
       }
     });
     $("again").onclick = function(){
-      advance("match", Math.ceil(pool.length / 8));
+      advance("match", Math.ceil(pool.length / PER));
       draw();
     };
   };
@@ -2545,7 +2586,7 @@
       each($("kabody"), "[data-i]", function(b){
         b.onclick = function(){
           var w = KA[+b.dataset.i];
-          say(w.ka);
+          say(w.ka, null, true);
           b.classList.add("open");
           first("kamet:" + w.ka, 1, "katakana heard");
           if (score("kamet:", "heard") === KA.length) done("kata");
@@ -2575,11 +2616,11 @@
             return;
           }
           b.classList.add("ok"); ninja(b);
-          say(w.ka);
+          say(w.ka, null, true);
           first("karead:" + w.ka, 1, "katakana read");
           advance("kata", KA.length);
           $("fb").innerHTML = '<div class="mark yes"><b>Yes</b>'
-            + '<span class="jp">' + esc(w.ka) + '</span> ' + saybtn(w.ka)
+            + '<span class="jp">' + esc(w.ka) + '</span> ' + saybtn(w.ka, true)
             + '<p>' + esc(w.en) + '</p></div>';
           wireSay();
           if (score("karead:", "read") >= Math.ceil(KA.length * 0.6)) done("kata");
@@ -2597,8 +2638,8 @@
             return '<button class="piece word wide" data-k="' + esc(o.ka) + '">'
               + '<span class="pja kaopt">' + esc(o.ka) + '</span></button>';
           }).join("") + '</div>';
-      say(w.ka);
-      $("again").onclick = function(){ say(w.ka); };
+      say(w.ka, null, true);
+      $("again").onclick = function(){ say(w.ka, null, true); };
       each($("kabody"), "[data-k]", function(b){
         b.onclick = function(){
           if (b.dataset.k !== w.ka){
@@ -2607,14 +2648,14 @@
             wrong.forEach(function(o){ if (o.ka === b.dataset.k) miss = o; });
             $("fb").innerHTML = '<div class="mark no"><b>Listen again</b>'
               + (miss ? esc(miss.why) : "") + '</div>';
-            say(w.ka);
+            say(w.ka, null, true);
             return;
           }
           b.classList.add("ok"); ninja(b);
           first("kahear:" + w.ka, 1, "katakana spelled");
           advance("katah", KA.length);
           $("fb").innerHTML = '<div class="mark yes"><b>Yes</b>'
-            + '<span class="jp">' + esc(w.ka) + '</span> ' + saybtn(w.ka)
+            + '<span class="jp">' + esc(w.ka) + '</span> ' + saybtn(w.ka, true)
             + '<p>' + esc(w.en) + '</p></div>';
           wireSay();
           if (score("kahear:", "spelled") >= Math.ceil(KA.length * 0.6)) done("kata");
@@ -2639,6 +2680,10 @@
   var kanjiMode = "look";
   DRAW.kanji = function(){
     var K = M.kanji || [];
+    /* declared up here and not beside the test: the dispatch at the
+       bottom of this block runs before anything written below it, and
+       a round of undefined questions is no round at all */
+    var ROUND = 6, round = null;
     var met = K.filter(function(k){ return S.won["kmet:" + k.k]; }).length;
     var read = K.filter(function(k){ return S.won["kread:" + k.k]; }).length;
     $("main").innerHTML = ruleFor("kanji", "tight")
@@ -2649,13 +2694,20 @@
         + '<button class="btn sm ' + (kanjiMode === "test" ? "" : "ghost")
           + '" id="mTest">テスト</button>'
         + '<span class="hint">' + (kanjiMode === "look"
-            ? "Tap a kanji to hear it." : "Which reading is it?") + '</span>');
+            ? "Tap a kanji to hear it." : "Six at a time, and the question changes.")
+        + '</span>');
     $("sc").innerHTML = kanjiMode === "look"
       ? '<b>' + met + '</b> of ' + K.length + ' turned over'
       : '<b>' + read + '</b> of ' + K.length + ' read';
     $("mLook").onclick = function(){ kanjiMode = "look"; DRAW.kanji(); };
     $("mTest").onclick = function(){ kanjiMode = "test"; DRAW.kanji(); };
     if (kanjiMode === "look") look(); else test();
+
+    function score(){
+      var n = K.filter(function(k){ return S.won["kread:" + k.k]; }).length;
+      $("sc").innerHTML = '<b>' + n + '</b> of ' + K.length + ' read';
+      return n;
+    }
 
     function look(){
       $("kbody").innerHTML = '<div class="kgrid">' + K.map(function(k, i){
@@ -2669,7 +2721,7 @@
         b.onclick = function(){
           var k = K[+b.dataset.k];
           b.classList.add("open");
-          say(k.yomi[0]);
+          say(k.yomi[0], null, true);
           first("kmet:" + k.k, 1, "kanji met");
           var n = K.filter(function(x){ return S.won["kmet:" + x.k]; }).length;
           $("sc").innerHTML = '<b>' + n + '</b> of ' + K.length + ' turned over';
@@ -2678,49 +2730,129 @@
       });
     }
 
+    /* ---- the test, in rounds of six ----
+       Andrew: "the kanji test is great but probably too long (and
+       unengaging) with 24 kanji in a row. Can it be shorter, rotate
+       different ones each time, involve another method of testing
+       knowledge, use English meaning or other testing method
+       variation to keep it interesting?"
+
+       So: six questions, then a score and a new six. The deck deals
+       them, so all twenty-four come round before any of them comes
+       round twice, and the question changes shape as it goes:
+
+         よみ     the kanji, and three readings
+         いみ     the kanji, and three meanings
+         かんじ   the meaning, and three kanji to choose between
+         きく     the reading spoken, and three kanji
+
+       The last two run the other way round, which is the half a
+       recognition test leaves out: a student who can read 海 cannot
+       necessarily find 海 among 店 and 町. */
+    function newRound(){
+      var list = [];
+      for (var i = 0; i < ROUND; i++){
+        var at = dealt("kanji", K.length);
+        advance("kanji", K.length);
+        list.push(K[at]);
+      }
+      var kinds = shuffle(["yomi", "imi", "kanji", "kiku", "yomi", "imi"]);
+      round = { list: list, kinds: kinds, at: 0, right: 0 };
+    }
     function test(){
-      var ki = dealt("kanji", K.length), k = K[ki];
-      /* the wrong readings are other readings off this same list, so
-         the choice is between kanji a student has met rather than
-         between Japanese and noise */
-      var others = shuffle(K.filter(function(x){ return x.k !== k.k; }))
-        .slice(0, 2).map(function(x){ return x.yomi[0]; });
-      var opts = shuffle([k.yomi[0]].concat(others));
+      if (!round) newRound();
+      if (round.at >= ROUND) return endRound();
+      var k = round.list[round.at], kind = round.kinds[round.at];
+      var others = shuffle(K.filter(function(x){ return x.k !== k.k; })).slice(0, 2);
+      var ask, opts, key, shown;
+      if (kind === "yomi"){
+        ask = '<span class="kbig">' + esc(k.k) + '</span>'
+            + '<span class="kq">Which reading?</span>';
+        key = k.yomi[0];
+        opts = [k.yomi[0]].concat(others.map(function(x){ return x.yomi[0]; }));
+        shown = function(o){ return '<span class="pja">' + esc(o) + '</span>'; };
+      } else if (kind === "imi"){
+        ask = '<span class="kbig">' + esc(k.k) + '</span>'
+            + '<span class="kq">What does it mean?</span>';
+        key = k.en;
+        opts = [k.en].concat(others.map(function(x){ return x.en; }));
+        shown = function(o){ return '<span class="pen open">' + esc(o) + '</span>'; };
+      } else if (kind === "kanji"){
+        ask = '<span class="kmean">' + esc(k.en) + '</span>'
+            + '<span class="kq">Which kanji?</span>';
+        key = k.k;
+        opts = [k.k].concat(others.map(function(x){ return x.k; }));
+        shown = function(o){ return '<span class="pja big">' + esc(o) + '</span>'; };
+      } else {
+        ask = '<button class="btn sm" id="hear">▶ Listen</button>'
+            + '<span class="kq">Which kanji is it?</span>';
+        key = k.k;
+        opts = [k.k].concat(others.map(function(x){ return x.k; }));
+        shown = function(o){ return '<span class="pja big">' + esc(o) + '</span>'; };
+      }
       $("kbody").innerHTML =
-          '<div class="kask"><span class="kbig">' + esc(k.k) + '</span></div>'
-        + '<div class="tray" id="kopts">' + opts.map(function(o){
+          '<div class="kround">' + (round.at + 1) + ' of ' + ROUND + '</div>'
+        + '<div class="kask">' + ask + '</div>'
+        + '<div class="tray" id="kopts">' + shuffle(opts).map(function(o){
             return '<button class="piece word wide" data-o="' + esc(o) + '">'
-              + '<span class="pja">' + esc(o) + '</span></button>';
+              + shown(o) + '</button>';
           }).join("") + '</div>';
+      if (kind === "kiku"){
+        say(k.yomi[0], null, true);
+        $("hear").onclick = function(){ say(k.yomi[0], null, true); };
+      }
+      /* a seam for the check. The listening question cannot be answered
+         from the page, which is the point of it, so the answer is put
+         where a test can read it. Reading it changes nothing. */
+      window.MEGA_KANJI = { kind: kind, answer: key, at: round.at, of: ROUND };
       each($("kbody"), "[data-o]", function(b){
         b.onclick = function(){
           var chosen = b.dataset.o;
-          say(chosen);
-          if (chosen !== k.yomi[0]){
-            b.classList.add("no");
-            yokai(b);
+          if (kind === "yomi") say(chosen, null, true);
+          if (chosen !== key){
+            b.classList.add("no"); yokai(b);
             var was = null;
-            K.forEach(function(x){ if (x.yomi[0] === chosen) was = x; });
-            $("fb").innerHTML = '<div class="mark no"><b>That is '
-              + esc(was ? was.k : "another kanji") + '</b>'
-              + (was ? esc(was.en) : "") + '</div>';
+            K.forEach(function(x){
+              if (x.k === chosen || x.en === chosen || x.yomi[0] === chosen) was = x;
+            });
+            $("fb").innerHTML = '<div class="mark no"><b>Not that one</b>'
+              + (was ? '<span class="jp">' + esc(was.k) + '</span> is '
+                       + esc(was.yomi.join("・")) + ', ' + esc(was.en)
+                     : esc(chosen)) + '</div>';
             return;
           }
-          b.classList.add("ok");
-          ninja(b);
-          first("kread:" + k.k, 1, "kanji read");
-          advance("kanji", K.length);
+          b.classList.add("ok"); ninja(b);
+          say(k.yomi[0], null, true);
+          round.right++;
+          first("kread:" + k.k, 1, "kanji");
           $("fb").innerHTML = '<div class="mark yes"><b>Yes</b>'
             + '<span class="jp">' + esc(k.k) + '　' + esc(k.yomi.join("・")) + '</span> '
-            + saybtn(k.yomi[0]) + '<p>' + esc(k.en) + '</p></div>';
+            + saybtn(k.yomi[0], true) + '<p>' + esc(k.en) + '</p></div>';
           wireSay();
-          var n = K.filter(function(x){ return S.won["kread:" + x.k]; }).length;
-          $("sc").innerHTML = '<b>' + n + '</b> of ' + K.length + ' read';
-          if (n >= 18) done("kanji");
-          setTimeout(function(){ if (kanjiMode === "test") test(); }, 1300);
+          score();
+          round.at++;
+          setTimeout(function(){ if (onTest()) test(); }, 1100);
         };
       });
     }
+    function endRound(){
+      var n = round.right;
+      $("kbody").innerHTML =
+          '<div class="kdone"><b>' + n + ' of ' + ROUND + '</b>'
+        + '<p>' + (n === ROUND ? "Every one of them."
+                   : (n >= ROUND - 1 ? "One to look at again."
+                      : "The grid is under みる whenever you want it.")) + '</p>'
+        + '<div class="row"><button class="btn sm" id="more">Six more</button>'
+        + '<button class="btn ghost sm" id="grid">みる</button></div></div>';
+      /* a clean round pays every time, because the six are never the
+         same six: the deck has dealt them all before it deals any of
+         them twice */
+      if (n === ROUND) award(2, "a clean round");
+      if (score() >= 18) done("kanji");
+      $("more").onclick = function(){ newRound(); test(); };
+      $("grid").onclick = function(){ kanjiMode = "look"; DRAW.kanji(); };
+    }
+    function onTest(){ return kanjiMode === "test"; }
   };
 
   /* ================= どうし =================
@@ -2746,7 +2878,7 @@
       + '<div class="vcard">'
       + '<div class="vicon" aria-hidden="true">' + v.icon + '</div>'
       + '<div class="vask"><span class="jp big">' + ruby(v.forms.pos) + '</span> '
-      + saybtn(plain(v.forms.pos))
+      + saybtn(plain(v.forms.pos), true)
       + '<p>' + esc(v.en) + '</p></div>'
       + '<div class="vwant"><b>' + esc(box.en) + '</b>'
       + '<span class="tag">' + esc(box.tag) + '</span></div></div>'
@@ -2762,7 +2894,7 @@
     each($("opts"), "[data-o]", function(b){
       b.onclick = function(){
         var chosen = b.dataset.o;
-        say(chosen);
+        say(chosen, null, true);
         if (chosen !== plain(right)){
           b.classList.add("no");
           yokai(b);
@@ -2778,7 +2910,7 @@
         first("verb:" + v.id + ":" + box.id, 1, "verb form");
         advance("verb", V.length); advance("box", B.length);
         $("fb").innerHTML = '<div class="mark yes"><b>Yes</b>'
-          + '<span class="jp">' + ruby(right) + '</span> ' + saybtn(plain(right))
+          + '<span class="jp">' + ruby(right) + '</span> ' + saybtn(plain(right), true)
           + '<p>' + esc(v.en) + ', ' + esc(box.en) + '</p></div>';
         wireSay();
         var n = 0;

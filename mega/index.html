@@ -576,7 +576,17 @@
   .kcard .ken{display:block;font-size:11px;color:var(--muted);visibility:hidden}
   .kcard.open .kyomi,.kcard.open .ken{visibility:visible}
   .kcard.seen{border-color:var(--ok);background:#f4fbf5}
-  .kask{text-align:center;margin:6px 0 10px}
+  .kask{text-align:center;margin:6px 0 10px;display:flex;flex-direction:column;
+       align-items:center;gap:6px}
+  .kq{font-size:13.5px;color:var(--muted)}
+  .kmean{font-size:clamp(20px,4vw,30px);font-weight:600}
+  .kround{text-align:center;font-size:11px;letter-spacing:.1em;color:var(--muted);
+       text-transform:uppercase}
+  .kdone{text-align:center;padding:14px 0}
+  .kdone b{display:block;font-size:clamp(26px,6vw,40px);font-family:var(--font)}
+  .kdone p{color:var(--muted);font-size:13.5px;margin:4px 0 12px}
+  .kdone .row{display:flex;gap:8px;justify-content:center}
+  .piece .pja.big{font-size:30px}
   .kbig{font-family:var(--jp);font-size:clamp(56px,14vw,96px);line-height:1.1}
   /* ---- the verb card ---- */
   .vcard{display:flex;align-items:center;gap:12px;flex-wrap:wrap;
@@ -639,9 +649,9 @@
 </div>
 <nav class="steps" id="steps"></nav>
 <main id="main"></main>
-<script src="data/mega.js?v=20261027a"></script>
-<script src="data/audio.js?v=20261027a"></script>
-<script src="app.js?v=20261027a"></script>
-<div class="build" aria-hidden="true">build 2026-10-27a</div>
+<script src="data/mega.js?v=20261027b"></script>
+<script src="data/audio.js?v=20261027b"></script>
+<script src="app.js?v=20261027b"></script>
+<div class="build" aria-hidden="true">build 2026-10-27b</div>
 </body>
 </html>
