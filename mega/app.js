@@ -300,6 +300,10 @@
   }
   $("furiBtn").onclick = function(){ S.furi = !S.furi; paintToggles(); save(); };
   $("enBtn").onclick = function(){ S.en = !S.en; paintToggles(); save(); };
+  /* the footer's help line and a mark's translation arrive after the
+     tab is drawn, so the button is asked again when they do */
+  new MutationObserver(function(){ paintEn(); })
+    .observe(document.getElementById("main"), { childList: true, subtree: true });
   /* Three speeds, in the bar rather than a settings page, because 0.7 is
      how you catch a word you missed at full speed and it gets reached for
      many times in a sitting. The recordings are one fixed voice, so the
@@ -1824,6 +1828,16 @@
   }
   new MutationObserver(howto).observe($("main"), { childList: true });
 
+  /* The EN button only governs English that is a prop. On a tab with
+     none of it the button is flat and says why, because a control
+     that silently does nothing is worse than no control. */
+  function paintEn(){
+    var any = $("main").querySelector(".box .ask, .foot .hint, .mark p, .en");
+    $("enBtn").disabled = !any;
+    $("enBtn").title = any
+      ? "Hide the English captions and hints"
+      : "Nothing on this tab is English that can be hidden";
+  }
   function draw(){
     paintToggles(); paintSteps();
     /* The game runs on its own clock and its own audio. Leaving the rung
@@ -1834,6 +1848,7 @@
     $("main").innerHTML = "";
     DRAW[STEPS[at].id]();
     wireSay();
+    paintEn();
   }
   /* ---- drag a chip onto a slot, or tap the chip and then the slot ----
      A school iPad does not do HTML5 drag-and-drop at all and a mouse is

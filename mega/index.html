@@ -149,7 +149,28 @@
   .card.gone{opacity:.25;pointer-events:none}
   ruby rt{font-size:.5em;font-weight:400;color:var(--muted)}
   body.nofuri ruby rt{visibility:hidden}
-  body.noen .en{display:none}
+  /* ---- what the EN button hides ----
+     Andrew: "what is the EN button on the top left of screen for in
+     this app? Does it work? Where does it apply." It did nothing: it
+     came across from ひと, where it hides the English line under a
+     question, and this app has none of those.
+
+     It now hides the English that is a prop rather than the task: the
+     caption under each box in the builders, the line of help in the
+     footer, and the translation that appears under a right answer.
+     What it leaves alone is the English a task is made of, because
+     hiding that would not make the task harder, it would make it
+     impossible: the sentence to build in ことばでつくる, the meanings
+     to match in ことば, the word to catch in the game, and the form
+     being asked for in どうし.
+
+     Where a tab has none of the first kind, the button says so by
+     going flat rather than pretending. */
+  body.noen .en,
+  body.noen .box .ask,
+  body.noen .foot .hint,
+  body.noen .mark p{display:none}
+  .tool[disabled]{opacity:.35;cursor:default}
   .en{font-size:12.5px;color:var(--muted);display:block}
 
   .cols{display:grid;grid-template-columns:1fr 1fr;gap:10px;height:100%}
@@ -649,9 +670,9 @@
 </div>
 <nav class="steps" id="steps"></nav>
 <main id="main"></main>
-<script src="data/mega.js?v=20261027b"></script>
-<script src="data/audio.js?v=20261027b"></script>
-<script src="app.js?v=20261027b"></script>
-<div class="build" aria-hidden="true">build 2026-10-27b</div>
+<script src="data/mega.js?v=20261027c"></script>
+<script src="data/audio.js?v=20261027c"></script>
+<script src="app.js?v=20261027c"></script>
+<div class="build" aria-hidden="true">build 2026-10-27c</div>
 </body>
 </html>
