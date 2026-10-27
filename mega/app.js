@@ -99,17 +99,95 @@
     return true;
   }
   /* ---- a sentence nobody recorded ----
-     The eight sentences in the unit have clips. A sentence a student
-     builds out of the palette is one of thousands, and recording those
-     is not a thing anybody can do, so it is said out of the pieces that
-     were recorded: each word with its particle, in order, one after the
-     other on the clip's own ended event. It is the same voice and the
-     same words; what it is missing is the join between them. */
+     The eight sentences in the unit have a clip each. A sentence a
+     student builds out of the palette is one of about half a million,
+     so it is said out of the pieces that were recorded instead.
+
+     Andrew, on the first way of doing that: "the voice that reads it
+     does not read it smoothly. It's a bit stop and start." It was.
+     Each clip arrives with silence recorded either side of the words,
+     and playing them one after another on the ended event added a gap
+     of its own on top, so five words came out as five announcements.
+
+     So the parts are decoded, the silence at each end is measured and
+     cut, and the pieces are scheduled on the audio clock one after the
+     other with the join a speaker would make and nothing more. The
+     clock is the point: a note scheduled for 1.284 seconds starts at
+     1.284 seconds, where an ended event starts whenever the browser
+     gets round to it.
+
+     sayParts is the fallback, for a machine where the clips cannot be
+     fetched and decoded (opening the page from a memory stick does
+     that, since a file:// page may not fetch its own files). */
   function sayParts(list, i){
     i = i || 0;
     if (i >= list.length) return;
     var more = function(){ setTimeout(function(){ sayParts(list, i + 1); }, 90); };
     if (!say(list[i], more)) more();
+  }
+  var BUFS = {};
+  function clipBuf(file, ctx){
+    if (BUFS[file]) return BUFS[file];
+    BUFS[file] = fetch("audio/" + file)
+      .then(function(r){ return r.arrayBuffer(); })
+      .then(function(b){
+        return new Promise(function(ok, no){
+          /* the callback form as well as the promise: Safari still
+             answers the old one */
+          var out = ctx.decodeAudioData(b, ok, no);
+          if (out && out.then) out.then(ok, no);
+        });
+      })
+      .then(function(buf){
+        var d = buf.getChannelData(0), n = d.length, i = 0, j = n - 1;
+        var TH = 0.006;                /* anything quieter is the room */
+        while (i < n && Math.abs(d[i]) < TH) i++;
+        while (j > i && Math.abs(d[j]) < TH) j--;
+        /* a little air either side, so the first consonant is not
+           shaved off and the last vowel is allowed to stop */
+        i = Math.max(0, i - Math.round(buf.sampleRate * 0.02));
+        j = Math.min(n - 1, j + Math.round(buf.sampleRate * 0.03));
+        return { buf: buf, from: i / buf.sampleRate,
+                 dur: Math.max(0.08, (j - i) / buf.sampleRate),
+                 whole: buf.duration };
+      });
+    return BUFS[file];
+  }
+  /* the gap between one phrase and the next: enough to hear the join,
+     far less than the silence the recordings carry */
+  var JOIN = 0.055;
+  function sayLine(texts, after){
+    /* a sentence the unit does have a recording of is simply played */
+    var whole = texts.join("");
+    if (CLIPS[speakable(whole)]) return say(whole, after);
+    var ctx = null;
+    try { ctx = CLICK.wake(); } catch (e){}
+    var files = texts.map(function(t){ return CLIPS[speakable(t)]; });
+    if (!ctx || !window.fetch || files.some(function(f){ return !f; })){
+      sayParts(texts);
+      return false;
+    }
+    hush();
+    Promise.all(files.map(function(f){ return clipBuf(f, ctx); }))
+      .then(function(list){
+        var rate = S.rate || 1, at = ctx.currentTime + 0.05, plan = [];
+        list.forEach(function(x, i){
+          var src = ctx.createBufferSource();
+          src.buffer = x.buf;
+          try { src.playbackRate.value = rate; } catch (e){}
+          src.connect(ctx.destination);
+          src.start(at, x.from, x.dur);
+          plan.push({ at: +at.toFixed(3), dur: +(x.dur / rate).toFixed(3),
+                      cut: +(x.whole - x.dur).toFixed(3) });
+          at += x.dur / rate + (i === list.length - 1 ? 0 : JOIN);
+          if (i === list.length - 1 && after) src.onended = after;
+        });
+        /* a seam for the check, which cannot listen: it reads the plan
+           and adds up the gaps. Reading it changes nothing. */
+        window.MEGA_SAID = { parts: texts.slice(), plan: plan, join: JOIN };
+      })
+      .catch(function(){ sayParts(texts); });
+    return true;
   }
   function hush(){
     var a = sound();
@@ -2061,11 +2139,11 @@
           + '<button class="say" id="sayfree" aria-label="Say it again">\u25b6</button>'
           + '<p>' + esc(englishOf(parts)) + '</p></div>');
         $("sayfree").onclick = function(){
-          sayParts(parts.map(function(p){
+          sayLine(parts.map(function(p){
             return plain(p.w.ja) + partOf(p.slot, p.w);
           }).concat([plain(M.verb.ja)]));
         };
-        sayParts(parts.map(function(p){
+        sayLine(parts.map(function(p){
           return plain(p.w.ja) + partOf(p.slot, p.w);
         }).concat([plain(M.verb.ja)]));
         return;
