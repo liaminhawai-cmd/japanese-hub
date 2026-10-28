@@ -1743,7 +1743,8 @@
     { id:"kata",  ja:"カタカナ",       en:"Katakana" },
     { id:"kanji", ja:"かんじ",         en:"The kanji" },
     { id:"verb",  ja:"どうし",         en:"Change the verb" },
-    { id:"fast",  ja:"はやく",         en:"Read it fast" }
+    { id:"fast",  ja:"はやく",         en:"Read it fast" },
+    { id:"quiz",  ja:"クイズ",         en:"Team quiz" }
   ];
   var at = 0, DRAW = {};
   /* かるた listens on the document for its two buzzer keys, so the
@@ -2815,7 +2816,15 @@
         out.push({ id: "k" + i, face: k.kata, say: k.kata, jp: true });
       });
     } else if (kind === "kanji"){
-      shuffle(M.kanji || []).slice(0, n / 2).forEach(function(k, i){
+      /* no two kanji on the board may share a meaning: a card reading
+         "friend" that fits either 友 or 友だち has no right answer.
+         Shuffled before the cull, so it is not always the same one of
+         the pair that gets dropped. */
+      var seenEn = {};
+      shuffle(M.kanji || []).filter(function(k){
+        if (seenEn[k.en]) return false;
+        seenEn[k.en] = 1; return true;
+      }).slice(0, n / 2).forEach(function(k, i){
         out.push({ id: "j" + i, face: k.k, say: k.yomi[0], jp: true });
         out.push({ id: "j" + i, face: k.en, say: k.yomi[0], jp: false });
       });
@@ -2944,6 +2953,250 @@
       done("pairs");
     }
   };
+
+  /* ================= クイズ, the team quiz =================
+     The only rung here that is not for a student at a laptop. This one
+     goes on the projector and the teacher drives it: a question big
+     enough to read from the back row, teams answering out loud in the
+     room, and the teacher saying who got it.
+
+     So the buttons are the teacher's, not the class's. The device
+     never decides who was first, because a room decides that faster
+     and more fairly than a laptop at the front can. What the device
+     does is hold the question, hide the answer until it is wanted,
+     keep the score, and get out of the way.
+
+     Everything it asks comes from banks already in this unit, so a
+     quiz is never a separate set of content to maintain. Tick the
+     rounds you want and it deals them shuffled together.
+
+     The keyboard runs it, because a teacher standing at a board wants
+     one hand on the laptop and their eyes on the room:
+       space   show the answer, then move on
+       1 2 3 4 give the point to that team
+       0       nobody got it
+       r       read the Japanese out again */
+  var QUIZ = {
+    teams: 3,
+    banks: { word: 1, kanji: 1, kata: 0, verb: 0, sent: 0 },
+    on: false
+  };
+  var QBANKS = [
+    { id: "word",  ja: "ことば",   en: "words" },
+    { id: "kanji", ja: "かんじ",   en: "kanji" },
+    { id: "kata",  ja: "カタカナ", en: "katakana" },
+    { id: "verb",  ja: "どうし",   en: "verbs" },
+    { id: "sent",  ja: "ぶん",     en: "sentences" }
+  ];
+  var QFORM = [
+    { id: "pos",     ja: "ます",           en: "will" },
+    { id: "neg",     ja: "ません",         en: "will not" },
+    { id: "past",    ja: "ました",         en: "did" },
+    { id: "pastneg", ja: "ませんでした",   en: "did not" }
+  ];
+  function quizBank(){
+    /* ans is the answer in the biggest type on the screen; sub is the
+       gloss under it. A reading and a meaning are two different
+       answers and must not run together on one line. */
+    var out = [];
+    if (QUIZ.banks.word)
+      W.filter(function(w){ return w.en; }).forEach(function(w){
+        out.push({ ask: w.en, ans: ruby(w.ja), say: w.ja, tag: "ことば" });
+      });
+    if (QUIZ.banks.kanji)
+      (M.kanji || []).forEach(function(k){
+        out.push({ ask: plain(k.k), askJp: true, ans: esc(k.yomi.join("・")),
+                   sub: k.en, say: k.yomi[0], tag: "かんじ" });
+      });
+    if (QUIZ.banks.kata)
+      ((M.katakana || {}).words || []).forEach(function(w){
+        out.push({ ask: w.ka, askJp: true, ans: esc(w.en), ansEn: true,
+                   say: w.ka, tag: "カタカナ" });
+      });
+    if (QUIZ.banks.verb)
+      (M.verbs || []).forEach(function(v){
+        QFORM.forEach(function(f){
+          out.push({ ask: v.en + "  →  " + f.en + " (" + f.ja + ")",
+                     ans: ruby(v.forms[f.id]), say: v.forms[f.id],
+                     tag: "どうし" });
+        });
+      });
+    if (QUIZ.banks.sent)
+      (M.sentences || []).forEach(function(sn){
+        var parts = sentenceOf(sn), ja = "";
+        parts.forEach(function(x){ ja += x.w.ja + x.slot.part; });
+        ja += "行[い]きます";
+        out.push({ ask: sn.en, ans: ruby(ja), say: ja, tag: "ぶん" });
+      });
+    return shuffle(out);
+  }
+  DRAW.quiz = function(){
+    if (!QUIZ.on) return quizSetup();
+    var bank = quizBank();
+    if (!bank.length){ QUIZ.on = false; return quizSetup(); }
+    var i = 0, shown = false, score = [], q = null;
+    for (var t = 0; t < QUIZ.teams; t++) score.push(0);
+
+    document.body.classList.add("gamefull");
+    $("main").innerHTML =
+        '<div class="quiz">'
+      + '<div class="qteams" id="qteams"></div>'
+      + '<div class="qcard">'
+      + '<div class="qtag" id="qtag"></div>'
+      + '<div class="qask" id="qask"></div>'
+      + '<div class="qans" id="qans" hidden></div>'
+      + '<div class="qsub" id="qsub" hidden></div>'
+      + '</div>'
+      + '<div class="qbar" id="qbar"></div>'
+      + '</div>'
+      + foot('<button class="btn sm ghost" id="qend">やめる <span class="en">Finish</span></button>');
+    $("qend").onclick = function(){ QUIZ.on = false; DRAW.quiz(); };
+
+    /* a seam for the check: the question, whether the answer is out,
+       and the score */
+    window.MEGA_QUIZ = {
+      ask: function(){ return q ? q.ask : null; },
+      shown: function(){ return shown; },
+      score: function(){ return score.slice(); },
+      left: function(){ return bank.length - i; }
+    };
+
+    function onKey(e){
+      var k = (e.key || "").toLowerCase();
+      if (k === " " || k === "spacebar" || e.code === "Space"){
+        e.preventDefault(); shown ? next() : reveal(); return;
+      }
+      if (k === "r"){ if (q) say(q.say, null, true); return; }
+      if (k === "0"){ if (shown) award(-1); return; }
+      var n = parseInt(k, 10);
+      if (n >= 1 && n <= QUIZ.teams && shown) award(n - 1);
+    }
+    document.addEventListener("keydown", onKey);
+    if (KEYOFF) document.removeEventListener("keydown", KEYOFF);
+    KEYOFF = onKey;
+
+    paintTeams(); ask();
+
+    function paintTeams(){
+      $("qteams").innerHTML = score.map(function(n, t){
+        return '<div class="qteam"><b>' + (t + 1) + '</b><span>' + n + '</span></div>';
+      }).join("");
+      $("sc").innerHTML = '<b>' + (i + 1) + '</b> of ' + bank.length;
+    }
+    /* A sentence is twenty times the length of a kanji and cannot be
+       set in the same type. The size steps down with the length, so
+       the longest answer still fits above the buttons instead of
+       pushing them off the bottom of the projector. */
+    function fit(el, n){
+      el.classList.remove("len2", "len3");
+      if (n > 24) el.classList.add("len3");
+      else if (n > 9) el.classList.add("len2");
+    }
+    function ask(){
+      if (i >= bank.length) return over();
+      q = bank[i]; shown = false;
+      $("qtag").textContent = q.tag;
+      $("qask").className = "qask" + (q.askJp ? " jp" : "");
+      fit($("qask"), q.askJp ? q.ask.length : Math.ceil(q.ask.length / 2.2));
+      $("qask").innerHTML = q.askJp ? esc(q.ask) : esc(q.ask);
+      $("qans").hidden = true;
+      $("qans").innerHTML = "";
+      $("qsub").hidden = true;
+      $("qsub").innerHTML = "";
+      $("qbar").innerHTML =
+          '<button class="btn big" id="qshow">こたえ <span class="en">Show the answer  (space)</span></button>';
+      $("qshow").onclick = reveal;
+      paintTeams();
+    }
+    function reveal(){
+      if (shown) return;
+      shown = true;
+      $("qans").className = "qans" + (q.ansEn ? " en" : "");
+      $("qans").hidden = false;
+      $("qans").innerHTML = q.ans;
+      fit($("qans"), q.ansEn ? Math.ceil($("qans").textContent.length / 2.2)
+                             : plain($("qans").textContent).length);
+      $("qsub").hidden = !q.sub;
+      $("qsub").textContent = q.sub || "";
+      if (q.say) say(q.say, null, true);
+      $("qbar").innerHTML =
+          '<span class="qwho">Who got it?</span>'
+        + score.map(function(n, t){
+            return '<button class="btn qpt" data-t="' + t + '">' + (t + 1) + '</button>';
+          }).join("")
+        + '<button class="btn ghost qpt" data-t="-1">だれも <span class="en">Nobody  (0)</span></button>'
+        + '<button class="btn ghost sm" id="qsay">▶ <span class="en">Again  (r)</span></button>';
+      each($("qbar"), "[data-t]", function(b){
+        b.onclick = function(){ award(+b.dataset.t); };
+      });
+      $("qsay").onclick = function(){ say(q.say, null, true); };
+    }
+    function award(t){
+      if (!shown) return;
+      if (t >= 0){ score[t]++; CLICK.play ? CLICK.play() : 0; }
+      next();
+    }
+    function next(){ i++; ask(); }
+    function over(){
+      var top = Math.max.apply(null, score);
+      var winners = [];
+      score.forEach(function(n, t){ if (n === top) winners.push(t + 1); });
+      ninja($("qbar"));
+      $("qtag").textContent = "";
+      $("qask").className = "qask jp";
+      $("qask").textContent = winners.length > 1
+        ? "ひきわけ" : ("チーム " + winners[0] + " のかち");
+      $("qsub").hidden = true;
+      $("qans").className = "qans en";
+      $("qans").hidden = false;
+      $("qans").innerHTML = score.map(function(n, t){
+        return '<span class="qfin">' + (t + 1) + ': <b>' + n + '</b></span>';
+      }).join("");
+      $("qbar").innerHTML =
+          '<button class="btn big" id="qagain">もう一回 <span class="en">Play again</span></button>';
+      $("qagain").onclick = function(){ DRAW.quiz(); };
+      done("quiz");
+    }
+  };
+  function quizSetup(){
+    document.body.classList.remove("gamefull");
+    var n = 0;
+    QBANKS.forEach(function(b){ if (QUIZ.banks[b.id]) n++; });
+    $("main").innerHTML = ruleFor("quiz", "tight")
+      + '<div class="work fit"><div class="col qsetup">'
+      + '<p class="qlead">Put this on the projector. Split the class into teams. '
+      + 'Read the question out, let them answer in the room, then tap who got it.</p>'
+      + '<div class="qrow"><span class="qlab">Teams</span>'
+      + [2, 3, 4].map(function(t){
+          return '<button class="btn sm ' + (QUIZ.teams === t ? "" : "ghost")
+            + '" data-team="' + t + '">' + t + '</button>';
+        }).join("")
+      + '</div>'
+      + '<div class="qrow"><span class="qlab">Ask about</span>'
+      + QBANKS.map(function(b){
+          return '<button class="btn sm ' + (QUIZ.banks[b.id] ? "" : "ghost")
+            + '" data-bank="' + b.id + '" title="' + esc(b.en) + '">' + b.ja + '</button>';
+        }).join("")
+      + '</div>'
+      + '<p class="qkeys">Space shows the answer and moves on. '
+      + 'Press 1, 2, 3 or 4 to give the point, 0 for nobody, r to hear it again.</p>'
+      + '<div class="qrow"><button class="btn big" id="qgo"'
+      + (n ? "" : " disabled") + '>はじめ <span class="en">Start the quiz</span></button></div>'
+      + '</div></div>'
+      + foot("");
+    each($("main"), "[data-team]", function(b){
+      b.onclick = function(){ QUIZ.teams = +b.dataset.team; quizSetup(); };
+    });
+    each($("main"), "[data-bank]", function(b){
+      b.onclick = function(){
+        QUIZ.banks[b.dataset.bank] = QUIZ.banks[b.dataset.bank] ? 0 : 1;
+        quizSetup();
+      };
+    });
+    $("qgo").onclick = function(){ QUIZ.on = true; DRAW.quiz(); };
+    $("sc").innerHTML = n ? (quizBank().length + " questions ready")
+                          : "Pick at least one thing to ask about";
+  }
 
   /* ================= かるた =================
      The game they already know, and the only one here that is pure
@@ -3247,27 +3500,54 @@
       if (!round) newRound();
       if (round.at >= ROUND) return endRound();
       var k = round.list[round.at], kind = round.kinds[round.at];
-      var others = shuffle(K.filter(function(x){ return x.k !== k.k; })).slice(0, 2);
+      /* ---- a distractor has to be wrong ----
+         It is not enough for it to be a different kanji. 友 and 友だち
+         both mean "friend", so offering both under "What does it
+         mean?" puts the same word in the tray twice and marks one of
+         them wrong, and under "Which kanji?" it gives the question two
+         right answers. So the two decoys must differ from the answer
+         in whatever the question is actually asking about. */
+      function decoys(field){
+        var seen = {}, out = [];
+        seen[field(k)] = 1;
+        shuffle(K).forEach(function(x){
+          if (x.k === k.k || out.length >= 2) return;
+          var v = field(x);
+          if (seen[v]) return;
+          seen[v] = 1; out.push(x);
+        });
+        return out;
+      }
+      var yomiOf = function(x){ return x.yomi[0]; },
+          enOf   = function(x){ return x.en; };
+      var others;
       var ask, opts, key, shown;
       if (kind === "yomi"){
+        others = decoys(yomiOf);
         ask = '<span class="kbig">' + esc(k.k) + '</span>'
             + '<span class="kq">Which reading?</span>';
         key = k.yomi[0];
         opts = [k.yomi[0]].concat(others.map(function(x){ return x.yomi[0]; }));
         shown = function(o){ return '<span class="pja">' + esc(o) + '</span>'; };
       } else if (kind === "imi"){
+        others = decoys(enOf);
         ask = '<span class="kbig">' + esc(k.k) + '</span>'
             + '<span class="kq">What does it mean?</span>';
         key = k.en;
         opts = [k.en].concat(others.map(function(x){ return x.en; }));
         shown = function(o){ return '<span class="pen open">' + esc(o) + '</span>'; };
       } else if (kind === "kanji"){
+        /* the question is the meaning, so a decoy that means the same
+           thing would be a second right answer */
+        others = decoys(enOf);
         ask = '<span class="kmean">' + esc(k.en) + '</span>'
             + '<span class="kq">Which kanji?</span>';
         key = k.k;
         opts = [k.k].concat(others.map(function(x){ return x.k; }));
         shown = function(o){ return '<span class="pja big">' + esc(o) + '</span>'; };
       } else {
+        /* the question is the reading, spoken */
+        others = decoys(yomiOf);
         ask = '<button class="btn sm" id="hear">▶ Listen</button>'
             + '<span class="kq">Which kanji is it?</span>';
         key = k.k;

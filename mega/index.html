@@ -612,6 +612,59 @@
     .card .front{font-size:12.5px}
     .card .front.jp{font-size:17px}
   }
+  /* ---- クイズ, the projector quiz ----
+     Sized for the back row of a classroom, not for a laptop at arm's
+     length. Everything scales off the viewport, because the one thing
+     that must never happen is a question nobody can read. */
+  .quiz{display:flex;flex-direction:column;gap:14px;min-height:62vh}
+  .qteams{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .qteam{display:flex;align-items:baseline;gap:8px;border:1.5px solid var(--line);
+       border-radius:999px;padding:4px 16px;background:var(--paper)}
+  .qteam b{font-size:15px;color:var(--muted)}
+  .qteam span{font-size:clamp(20px,3vw,30px);font-weight:700;color:var(--deep)}
+  .qcard{flex:1;display:flex;flex-direction:column;align-items:center;
+       justify-content:center;gap:16px;text-align:center;padding:12px}
+  .qtag{font-family:var(--jp);font-size:13px;color:var(--muted);letter-spacing:.08em}
+  .qask{font-size:clamp(28px,5.4vw,58px);line-height:1.25;max-width:22ch}
+  .qask.jp{font-family:var(--jp);font-size:clamp(44px,9vw,110px)}
+  .qans{font-family:var(--jp);font-size:clamp(32px,6vw,72px);line-height:1.3;
+       color:var(--ok);max-width:24ch}
+  /* an answer that is English is set in the reading font at a size the
+     back row can still read, but never in the Japanese face */
+  .qans.en{font-family:var(--font);font-size:clamp(28px,4.6vw,54px)}
+  /* the gloss under a reading: there, and clearly the smaller of the
+     two, because the reading is what was asked for */
+  .qsub{font-family:var(--font);font-size:clamp(17px,2.4vw,27px);color:var(--muted)}
+  /* the controls stay on the screen whatever the question does above
+     them: a teacher cannot award a point to a button that has been
+     pushed off the bottom */
+  .qbar{display:flex;gap:10px;align-items:center;justify-content:center;
+       flex-wrap:wrap;padding:10px 0;position:sticky;bottom:0;z-index:2;
+       background:var(--bg)}
+  .qcard{min-height:0}
+  .qask.len2{font-size:clamp(24px,4.2vw,44px)}
+  .qask.len3{font-size:clamp(20px,3vw,34px)}
+  .qask.jp.len2{font-size:clamp(34px,6vw,76px)}
+  .qask.jp.len3{font-size:clamp(26px,4vw,50px)}
+  .qans.len2{font-size:clamp(26px,4.4vw,52px)}
+  .qans.len3{font-size:clamp(21px,3.1vw,38px)}
+  .qans.en.len2{font-size:clamp(24px,3.6vw,42px)}
+  .qans.en.len3{font-size:clamp(20px,2.8vw,32px)}
+  .qwho{font-size:14px;color:var(--muted)}
+  .btn.big{font-size:19px;padding:12px 26px}
+  .btn.qpt{font-size:22px;min-width:62px;padding:10px 18px}
+  .qfin{font-family:var(--font);font-size:20px;color:var(--ink);margin:0 10px}
+  .qsetup{max-width:620px;margin:0 auto}
+  .qlead{font-size:15px;line-height:1.5;margin:0 0 16px}
+  .qrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 12px}
+  .qlab{font-size:13px;color:var(--muted);min-width:74px}
+  .qkeys{font-size:13px;color:var(--muted);line-height:1.5;margin:4px 0 18px}
+  body.gamefull .quiz{min-height:74vh}
+  @media (max-width:560px){
+    .qask{font-size:clamp(24px,7vw,34px)}
+    .qask.jp{font-size:clamp(38px,13vw,60px)}
+    .qans{font-size:clamp(26px,8vw,40px)}
+  }
   /* ---- かるた ----
      The cards sit face up and large: this is a listening race read
      from across a desk, not a grid to lean into. A wrong grab shakes
@@ -749,9 +802,9 @@
 </div>
 <nav class="steps" id="steps"></nav>
 <main id="main"></main>
-<script src="data/mega.js?v=20261028c"></script>
-<script src="data/audio.js?v=20261028c"></script>
-<script src="app.js?v=20261028c"></script>
-<div class="build" aria-hidden="true">build 2026-10-28c</div>
+<script src="data/mega.js?v=20261028d"></script>
+<script src="data/audio.js?v=20261028d"></script>
+<script src="app.js?v=20261028d"></script>
+<div class="build" aria-hidden="true">build 2026-10-28d</div>
 </body>
 </html>
