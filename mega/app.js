@@ -220,6 +220,7 @@
   /* ---- what the device remembers, on this device only ---- */
   var KEY = "mega-v1";
   var S = { furi:true, en:true, sfx:true, rate:1,
+            lvl:"pic", free:true,
             pts:0, spent:0, best:0, done:{}, won:{}, wrote:{}, howto:{} };
   try { var raw = localStorage.getItem(KEY); if (raw){
     var o = JSON.parse(raw); for (var k in S) if (o[k] !== undefined) S[k] = o[k];
@@ -1728,8 +1729,7 @@
   var STEPS = [
     { id:"katch", ja:"ことばキャッチ", en:"Catch the word" },
     { id:"spin",  ja:"ルーレット",     en:"Spin a slot" },
-    { id:"build", ja:"えでつくる",     en:"Build it with pictures" },
-    { id:"read",  ja:"ことばでつくる", en:"Build it with words" },
+    { id:"make",  ja:"つくる",         en:"Build the sentence" },
     { id:"match", ja:"ことば",         en:"Words" },
     { id:"kata",  ja:"カタカナ",       en:"Katakana" },
     { id:"kanji", ja:"かんじ",         en:"The kanji" },
@@ -2001,19 +2001,28 @@
 
   /* A picture is a piece and a word is a piece. The difference is one
      line of HTML, so the two tabs cannot drift apart. */
-  function pieceHTML(w, mode, i){
-    return '<button class="piece' + (mode === "word" ? " word" : "")
+  /* ---- a piece at each of the three levels ----
+     絵         the picture alone
+     絵＋ことば  the picture with the word under it, which is the rung
+                between them: a student reads with the picture there
+                to catch them
+     ことば      the word alone, with the English face down behind the
+                ？ in the corner, which costs a point
+
+     Andrew: "I also wonder what the learning purpose of giving users a
+     picture hint that limits it to only one correct card ... Maybe
+     they could have the option to add pictures to make it easier?"
+     This is that option, as a switch rather than as two tabs, so a
+     student can move up or down in the middle of a sentence. */
+  function pieceHTML(w, lvl, i){
+    var pic = '<span class="pic" aria-hidden="true">' + w.icon + '</span>'
+      + (w.badge ? '<span class="badge">' + esc(w.badge) + '</span>' : '');
+    var ja = '<span class="pja">' + ruby(w.ja) + '</span>';
+    var help = '<span class="pen">' + esc(w.en) + '</span>'
+      + '<span class="qq" data-flip="' + esc(w.id) + '">？</span>';
+    return '<button class="piece lvl-' + lvl + (lvl === "pic" ? "" : " word")
       + '" data-w="' + esc(w.id) + '" data-i="' + i + '">'
-      + (mode === "word"
-          /* The English is face down. A student who cannot read the
-             word yet turns it over with the ？ in the corner, which
-             costs a point: the reading is the thing being practised,
-             so the help is there and it is not free. */
-          ? '<span class="pja">' + ruby(w.ja) + '</span>'
-            + '<span class="pen">' + esc(w.en) + '</span>'
-            + '<span class="qq" data-flip="' + esc(w.id) + '">？</span>'
-          : '<span class="pic" aria-hidden="true">' + w.icon + '</span>'
-            + (w.badge ? '<span class="badge">' + esc(w.badge) + '</span>' : ''))
+      + (lvl === "pic" ? pic : (lvl === "both" ? pic + ja + help : ja + help))
       + '</button>';
   }
 
@@ -2028,8 +2037,22 @@
      ことばでつくる is the task. The English is given and the sentence
      has to be built from words rather than pictures, with the English
      on each piece face down behind a ？ that costs a point. */
-  function builder(mode){
-    var free = mode === "pic";
+  /* ---- one builder, three levels, free or set ----
+     Andrew asked for the ghost picture out of the empty boxes and for
+     the two builders to become one with a switch. Both are the same
+     point: the picture was doing the work. A bus-shaped hole takes
+     the bus piece without anybody reading anything, so the boxes now
+     carry what the grammar carries and nothing else, the particle and
+     the question, and on 絵 with EN off that leaves the particle on
+     its own, which is the hardest and truest version of the task.
+
+     じゆう is kept beside the levels rather than tied to one of them,
+     so a student can explore with words and be set a sentence with
+     pictures. The palette is every word in the unit; a set sentence
+     deals its five answers and two more for each box. */
+  function builder(){
+    var lvl = S.lvl || "pic";
+    var free = !!S.free;
     var S9 = M.sentences;
     var si = dealt("sent", S9.length);
     var want = free ? [] : sentenceOf(S9[si]);
@@ -2055,24 +2078,37 @@
       tray = shuffle(tray);
     }
 
-    $("main").innerHTML = ruleFor(free ? "build" : "read", "tight")
+    function lvlBtn(id, ja, title){
+      return '<button class="btn sm ' + (lvl === id ? "" : "ghost")
+        + '" id="lv' + id + '" title="' + esc(title) + '">' + ja + '</button>';
+    }
+    $("main").innerHTML = ruleFor("make", "tight")
       + '<div class="work fit"><div class="col">'
       + (free ? '' : '<div class="target" id="target">' + esc(S9[si].en) + '</div>')
       + '<div class="frame" id="frame"></div>'
       + '<div class="tray' + (free ? ' palette' : '') + '" id="tray">'
-      + tray.map(function(w, i){ return pieceHTML(w, free ? "pic" : "word", i); }).join("")
+      + tray.map(function(w, i){ return pieceHTML(w, lvl, i); }).join("")
       + '</div>'
       + '<div id="fb" class="fbslot"></div>'
       + '</div></div>'
-      + foot((free
-          ? '<button class="btn sm" id="chk">Say it</button>'
-          : '<button class="btn sm" id="chk">Check</button>')
+      + foot(lvlBtn("pic", "絵", "Pictures only")
+        + lvlBtn("both", "絵＋ことば", "The picture with the word under it")
+        + lvlBtn("word", "ことば", "Words only, English behind the ？")
+        + '<span class="gapsm"></span>'
+        + '<button class="btn sm ' + (free ? "" : "ghost") + '" id="lvFree"'
+        + ' title="Build anything you like, or be given a sentence">じゆう</button>'
+        + '<span class="gapsm"></span>'
+        + '<button class="btn sm" id="chk">' + (free ? "Say it" : "Check") + '</button>'
         + '<button class="btn ghost sm" id="clr">Start again</button>'
         + (free ? '' : '<button class="btn ghost sm" id="other">Another sentence</button>')
         + '<span class="hint" id="tip">'
-        + (free ? "Drag a picture into a box, or tap it and tap the box."
-                : "Tap the ？ on a word to flip the English up. It costs a point.")
+        + (free ? "Build any sentence you like. Every word in the unit is here."
+                : "Build the English sentence above.")
         + '</span>');
+    ["pic", "both", "word"].forEach(function(id){
+      $("lv" + id).onclick = function(){ S.lvl = id; save(); builder(); };
+    });
+    $("lvFree").onclick = function(){ S.free = !S.free; save(); builder(); };
 
     function frameSlots(){
       return free ? SLOTS : want.map(function(p){ return p.slot; });
@@ -2082,22 +2118,25 @@
       want.forEach(function(p){ if (p.slot.id === id) hit = p.w; });
       return hit;
     }
+    function inBox(w){
+      var pic = '<span class="pic" aria-hidden="true">' + w.icon
+        + (w.badge ? '<span class="badge">' + esc(w.badge) + '</span>' : '') + '</span>';
+      var ja = '<span class="pja">' + ruby(w.ja) + '</span>';
+      return lvl === "pic" ? pic : (lvl === "both" ? pic + ja : ja);
+    }
     function paintFrame(){
       $("frame").innerHTML = frameSlots().map(function(sl){
         var got = placed[sl.id] ? byId(placed[sl.id]) : null;
         var right = !free && checked && got && got.id === (wantAt(sl.id) || {}).id;
         var wrong = !free && checked && got && got.id !== (wantAt(sl.id) || {}).id;
+        /* ---- no ghost picture ----
+           An empty box used to show a small grey picture of its own
+           kind, so a bicycle went into the box with the bus in it and
+           nothing was read or decided. What is left is what the
+           grammar gives: the particle, and the question it answers. */
         return '<div class="box' + (right ? " right" : "") + (wrong ? " wrong" : "")
           + '" data-slot="' + esc(sl.id) + '">'
-          + '<div class="hole">'
-          + (got
-              ? (free
-                  ? '<span class="pic" aria-hidden="true">' + got.icon
-                    + (got.badge ? '<span class="badge">' + esc(got.badge) + '</span>' : '')
-                    + '</span>'
-                  : '<span class="pja">' + ruby(got.ja) + '</span>')
-              : '<span class="ghosticon" aria-hidden="true">' + sl.icon + '</span>')
-          + '</div>'
+          + '<div class="hole">' + (got ? inBox(got) : '') + '</div>'
           + '<div class="part">' + esc(partOf(sl, got) || "—") + '</div>'
           + '<div class="ask">' + esc(sl.ask) + '</div></div>';
       }).join("")
@@ -2158,11 +2197,21 @@
       });
     }
     paintFrame();
+    paintScore();
 
     $("clr").onclick = function(){ placed = {}; checked = false; fb(""); paintFrame(); };
     if ($("other")) $("other").onclick = function(){
-      advance("sent", S9.length); builder(mode);
+      advance("sent", S9.length); builder();
     };
+    function paintScore(){
+      if (free){
+        var n = W.filter(function(w){ return S.won["said:" + w.id]; }).length;
+        $("sc").innerHTML = '<b>' + n + '</b> of ' + W.length + ' words used';
+      } else {
+        var m = S9.filter(function(_, i){ return S.won["sent:" + i]; }).length;
+        $("sc").innerHTML = '<b>' + m + '</b> of ' + S9.length + ' sentences';
+      }
+    }
     $("chk").onclick = function(){
       var empty = frameSlots().filter(function(sl){ return !placed[sl.id]; });
       if (empty.length){
@@ -2176,12 +2225,11 @@
         /* Nothing is wrong here, because nothing was asked. The page
            says what the student has just made, in Japanese and in
            English, and pays for words it has not heard from them
-           before: the reward is for trying another word, which is the
-           point of a palette. */
+           before: the reward is for trying another word. */
         parts.forEach(function(p){ first("said:" + p.w.id, 1, "new word used"); });
+        paintScore();
         var n = W.filter(function(w){ return S.won["said:" + w.id]; }).length;
-        $("sc").innerHTML = '<b>' + n + '</b> of ' + W.length + ' words used';
-        if (n >= 15) done("build");
+        if (n >= 15) done("make");
         ninja($("fb"));
         fb('<div class="mark yes"><b>Your sentence</b>'
           + '<span class="jp">' + ruby(parts.map(function(p){
@@ -2220,36 +2268,26 @@
         + '<p>' + esc(S9[si].en) + '</p>'
         + '<div class="btns"><button class="btn sm" id="next">Another one</button></div></div>');
       say(line);
-      var n = S9.filter(function(_, i){ return S.won["sent:" + i]; }).length;
-      $("sc").innerHTML = '<b>' + n + '</b> of ' + S9.length + ' sentences';
-      if (n >= 3) done("read");
-      $("next").onclick = function(){ builder(mode); };
+      paintScore();
+      var n2 = S9.filter(function(_, i){ return S.won["sent:" + i]; }).length;
+      if (n2 >= 3) done("make");
+      $("next").onclick = function(){ builder(); };
     };
-    if (free){
-      var n0 = W.filter(function(w){ return S.won["said:" + w.id]; }).length;
-      $("sc").innerHTML = '<b>' + n0 + '</b> of ' + W.length + ' words used';
-    } else {
-      var n1 = S9.filter(function(_, i){ return S.won["sent:" + i]; }).length;
-      $("sc").innerHTML = '<b>' + n1 + '</b> of ' + S9.length + ' sentences';
-    }
   }
   /* The English of whatever was built, which is only ever shown after
-     the Japanese has been said: it is a check on what they made, not a
-     way of making it. */
+     the Japanese has been said: it is a check on what they made, not
+     a way of making it. */
   function englishOf(parts){
     var by = {};
     parts.forEach(function(p){ by[p.slot.id] = p.w; });
     var who = (by.who || {}).en || "";
-    var out = "On " + ((by.day || {}).en || "") + " " + who
-      + (who === "I" ? " will go to " : " will go to ")
+    var out = "On " + ((by.day || {}).en || "") + " " + who + " will go to "
       + ((by.where || {}).en || "") + " " + ((by.how || {}).en || "");
     var w = (by["with"] || {}).en || "";
     out += (w === "on my own") ? " on my own" : (w ? " with " + w : "");
     return out.replace(/\s+/g, " ").trim() + ".";
   }
-
-  DRAW.build = function(){ builder("pic"); };
-  DRAW.read  = function(){ builder("word"); };
+  DRAW.make = function(){ builder(); };
 
   /* ================= ことばキャッチ =================
      Ported from ひと, with this unit's words in it. The prompt sits
