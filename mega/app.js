@@ -1709,6 +1709,13 @@
       /* what the game would draw for a word. The browser check reads it
          to hold the kana rule in place; nothing in the app calls it. */
       label: function(w){ return cfg.label(w); },
+      /* what is in the air right now, as the student sees it. The
+         browser check reads it to prove the script sets drop the other
+         script; nothing in the app calls it. */
+      falling: function(){ return G.falling.map(function(f){ return cfg.label(f.w); }); },
+      /* every face this set can drop, which is what the browser check
+         reads: the air at any one moment is only two or three of them */
+      faces: function(){ return POOL.map(function(w){ return cfg.label(w); }); },
       start: begin,
       stop: function(){
         alive = false;
@@ -1731,6 +1738,7 @@
     { id:"spin",  ja:"ルーレット",     en:"Spin a slot" },
     { id:"make",  ja:"つくる",         en:"Build the sentence" },
     { id:"match", ja:"ことば",         en:"Words" },
+    { id:"pairs", ja:"ペア",           en:"Memory" },
     { id:"kata",  ja:"カタカナ",       en:"Katakana" },
     { id:"kanji", ja:"かんじ",         en:"The kanji" },
     { id:"verb",  ja:"どうし",         en:"Change the verb" },
@@ -2294,8 +2302,46 @@
      outside the game screen because the question is the one thing here
      that is not a game. */
   var GAME = null, onResize = null;
+  /* ---- what falls out of the sky ----
+     Andrew: "make the pong/invaders video game have optional
+     word/script themes. So students can choose to practice kana,
+     kanji or topic vocab."
+
+     Four sets, and the prompt changes with them. Vocabulary and kanji
+     are asked in English, because the meaning is what is being
+     practised. The two script sets are asked in the other script, so
+     a student reads ひ and catches ヒ: no English at all, and no
+     romaji either, which is the rule for this cohort. */
+  var CATCH = "word";
+  var CATCHERS = [
+    { id: "word",  ja: "ことば",   en: "the unit's words, asked in English" },
+    { id: "kanji", ja: "かんじ",   en: "this unit's kanji, asked in English" },
+    { id: "hira",  ja: "ひらがな", en: "read the katakana, catch the hiragana" },
+    { id: "kata",  ja: "カタカナ", en: "read the hiragana, catch the katakana" }
+  ];
+  function catchPool(kind){
+    if (kind === "kanji")
+      return (M.kanji || []).map(function(k){
+        return { id: "k:" + k.k, ja: k.k, kana: k.yomi[0], en: k.en,
+                 /* one kanji at 17px is readable; a compound is a smudge,
+                    so those fall as their reading */
+                 face: plain(k.k).length === 1 ? plain(k.k) : k.yomi[0] };
+      });
+    if (kind === "hira" || kind === "kata"){
+      var want = kind === "hira" ? "hira" : "kata";
+      var ask  = kind === "hira" ? "kata" : "hira";
+      return (M.kana || []).map(function(k){
+        return { id: "n:" + k.hira, ja: k[want], kana: k[want],
+                 en: k[ask], face: k[want], script: true };
+      });
+    }
+    return W.filter(function(w){ return w.en; }).map(function(w){
+      return { id: "w:" + w.id, ja: w.ja, kana: kana(w.ja) || plain(w.ja),
+               en: w.en, face: kana(w.ja) || plain(w.ja) };
+    });
+  }
   DRAW.katch = function(){
-    var pool = W.filter(function(w){ return w.en; });
+    var pool = catchPool(CATCH);
     $("main").innerHTML = ruleFor("katch", "tight")
       + '<div class="work fit arcadewrap">'
       + '<div class="prompt" id="prompt"><span class="lab">CATCH</span>'
@@ -2305,7 +2351,10 @@
       + '</div>'
       + '<div class="foot"><span class="score" id="sc"></span>'
       + '<span class="sp"></span>'
-      + '<span class="hint">Drag the bar, or use the arrow keys.</span>'
+      + CATCHERS.map(function(c){
+          return '<button class="btn sm ' + (c.id === CATCH ? "" : "ghost")
+            + '" data-set="' + c.id + '" title="' + esc(c.en) + '">' + c.ja + '</button>';
+        }).join("")
       + '<button class="btn sm" id="go">Start</button></div>';
     function tally(){
       var n = 0;
@@ -2314,20 +2363,28 @@
       return n;
     }
     tally();
+    each($("main"), "[data-set]", function(b5){
+      b5.onclick = function(){ CATCH = b5.dataset.set; draw(); };
+    });
     if (GAME) GAME.stop();
     GAME = arcade({
       canvas: $("arc"),
       words: pool,
       tune: M.tune,
-      best: S.best || 0,
-      font: 17,
+      best: (S.best && S.best["catch:" + CATCH]) || 0,
+      /* a single character can be twice the size of a word and still
+         fit the screen, and at this size it has to be */
+      font: CATCH === "hira" || CATCH === "kata" ? 30 : 17,
       /* Kana at this size. A kanji with more than a few strokes is a
          smudge on a 320 pixel screen, and a smudge is not a reading
          task: Andrew's rule from ひと, and 電車 and 曜日 are exactly
          the words it was written for. */
-      label: function(w){ return kana(w.ja) || plain(w.ja); },
+      label: function(w){ return w.face; },
       onPrompt: function(w){
         $("promptw").textContent = w ? w.en : "—";
+        /* the script sets ask in Japanese, so the prompt is set in the
+           Japanese face at a size a room can read */
+        $("promptw").className = w && w.script ? "jp big" : "";
         $("prompt").classList.toggle("live", !!w);
       },
       onCatch: function(w){
@@ -2335,7 +2392,11 @@
         if (tally() >= 12) done("katch");
       },
       onOver: function(score){
-        if (score > (S.best || 0)){ S.best = score; save(); }
+        S.best = S.best || {};
+        if (typeof S.best !== "object") S.best = {};
+        if (score > (S.best["catch:" + CATCH] || 0)){
+          S.best["catch:" + CATCH] = score; save();
+        }
       }
     });
     document.body.classList.add("gamefull");
@@ -2715,6 +2776,167 @@
           setTimeout(function(){ if (kataMode === "hear") hear(); }, 1300);
         };
       });
+    }
+  };
+
+  /* ================= ペア, the memory game =================
+     Andrew: "games like memory where you have to flip over two random
+     cards in a face-down set of cards and remember where the matching
+     pairs are to collect pairs and win. Could we make it with a two
+     player option on one screen? Pairs could be katakana and hiragana
+     matching pairs, kanji and their meaning, vocab and their meaning,
+     pictures and their vocab."
+
+     All four, and two players on one laptop, which is the point of it:
+     a game two students play side by side is a game they talk to each
+     other in. The turn passes on a miss and stays on a match, which is
+     the rule that makes it worth remembering where a card was rather
+     than guessing.
+
+     A card says its Japanese when it is turned over, so a pair that is
+     missed is still a word heard twice. */
+  var PAIRS = { kind: "word", two: false, n: 12 };
+  var KINDS = [
+    { id: "word",  ja: "ことば・いみ",     en: "a word and its meaning" },
+    { id: "kanji", ja: "かんじ・いみ",     en: "a kanji and its meaning" },
+    { id: "kana",  ja: "ひらがな・カタカナ", en: "the two scripts" },
+    { id: "pic",   ja: "え・ことば",       en: "a picture and its word" }
+  ];
+  function pairDeck(kind, n){
+    var out = [];
+    if (kind === "kana"){
+      shuffle(M.kana || []).slice(0, n / 2).forEach(function(k, i){
+        out.push({ id: "k" + i, face: k.hira, say: k.hira, jp: true });
+        out.push({ id: "k" + i, face: k.kata, say: k.kata, jp: true });
+      });
+    } else if (kind === "kanji"){
+      shuffle(M.kanji || []).slice(0, n / 2).forEach(function(k, i){
+        out.push({ id: "j" + i, face: k.k, say: k.yomi[0], jp: true });
+        out.push({ id: "j" + i, face: k.en, say: k.yomi[0], jp: false });
+      });
+    } else if (kind === "pic"){
+      shuffle(W.filter(function(w){ return w.icon; })).slice(0, n / 2)
+        .forEach(function(w, i){
+          out.push({ id: "p" + i, face: w.icon, say: w.ja, jp: false, pic: true });
+          out.push({ id: "p" + i, face: ruby(w.ja), say: w.ja, jp: true });
+        });
+    } else {
+      shuffle(W.filter(function(w){ return w.en; })).slice(0, n / 2)
+        .forEach(function(w, i){
+          out.push({ id: "w" + i, face: ruby(w.ja), say: w.ja, jp: true });
+          out.push({ id: "w" + i, face: w.en, say: w.ja, jp: false });
+        });
+    }
+    return shuffle(out);
+  }
+
+  DRAW.pairs = function(){
+    var deck = pairDeck(PAIRS.kind, PAIRS.n);
+    var up = [], done = {}, turn = 0, score = [0, 0], tries = 0, busy = false;
+    var kindName = "";
+    KINDS.forEach(function(k){ if (k.id === PAIRS.kind) kindName = k.en; });
+
+    $("main").innerHTML = ruleFor("pairs", "tight")
+      + '<div class="work fit"><div class="col">'
+      + '<div class="scoreline" id="who"></div>'
+      + '<div class="board" id="board"></div>'
+      + '<div id="fb" class="fbslot"></div>'
+      + '</div></div>'
+      + foot(KINDS.map(function(k){
+          return '<button class="btn sm ' + (k.id === PAIRS.kind ? "" : "ghost")
+            + '" data-kind="' + k.id + '" title="' + esc(k.en) + '">' + k.ja + '</button>';
+        }).join("")
+        + '<span class="gapsm"></span>'
+        + '<button class="btn sm ' + (PAIRS.two ? "" : "ghost") + '" id="two">ふたり</button>'
+        + '<button class="btn ghost sm" id="size">' + PAIRS.n + 'まい</button>'
+        + '<button class="btn ghost sm" id="again">もう一回[いっかい]</button>');
+    each($("main"), "[data-kind]", function(b){
+      b.onclick = function(){ PAIRS.kind = b.dataset.kind; DRAW.pairs(); };
+    });
+    $("two").onclick = function(){ PAIRS.two = !PAIRS.two; DRAW.pairs(); };
+    $("size").onclick = function(){
+      PAIRS.n = PAIRS.n === 12 ? 16 : (PAIRS.n === 16 ? 20 : 12);
+      DRAW.pairs();
+    };
+    $("again").onclick = function(){ DRAW.pairs(); };
+    $("again").innerHTML = ruby("もう一回[いっかい]");
+
+    paintWho();
+    /* a seam for the check, which has to know which two cards make a
+       pair before it can turn them over. Reading it changes nothing,
+       and a student with the console open has bigger problems. */
+    window.MEGA_PAIRS = deck.map(function(c){ return c.id; });
+    $("board").innerHTML = deck.map(function(c, i){
+      return '<button class="card" data-c="' + i + '" aria-label="card ' + (i + 1) + '">'
+        + '<span class="back">日</span>'
+        + '<span class="front' + (c.pic ? " pic" : "") + (c.jp ? " jp" : "")
+        + '">' + c.face + '</span></button>';
+    }).join("");
+    each($("board"), "[data-c]", function(b){
+      b.onclick = function(){ flip(+b.dataset.c, b); };
+    });
+
+    function paintWho(){
+      $("who").innerHTML = PAIRS.two
+        ? '<span class="pl' + (turn === 0 ? " on" : "") + '">ひとりめ <b>'
+          + score[0] + '</b></span>'
+          + '<span class="pl' + (turn === 1 ? " on" : "") + '">ふたりめ <b>'
+          + score[1] + '</b></span>'
+        : '<span class="pl on">' + esc(kindName) + '</span>';
+      $("sc").innerHTML = PAIRS.two
+        ? '<b>' + (score[0] + score[1]) + '</b> of ' + (PAIRS.n / 2) + ' pairs'
+        : '<b>' + tries + '</b> turns'
+          + (S.best && S.best[PAIRS.kind + PAIRS.n]
+              ? ' · best ' + S.best[PAIRS.kind + PAIRS.n] : '');
+    }
+    function flip(i, btn){
+      if (busy || done[i] || up.indexOf(i) >= 0) return;
+      var c = deck[i];
+      btn.classList.add("up");
+      if (c.jp) say(c.say, null, true);
+      up.push(i);
+      if (up.length < 2) return;
+      tries++;
+      busy = true;
+      var a = deck[up[0]], b = deck[up[1]];
+      if (a.id === b.id){
+        up.forEach(function(k){ done[k] = 1; });
+        each($("board"), "[data-c]", function(x){
+          if (up.indexOf(+x.dataset.c) >= 0) x.classList.add("got");
+        });
+        score[turn]++;
+        up = []; busy = false;
+        paintWho();
+        if (Object.keys(done).length === deck.length) over();
+        return;
+      }
+      setTimeout(function(){
+        each($("board"), "[data-c]", function(x){
+          if (up.indexOf(+x.dataset.c) >= 0) x.classList.remove("up");
+        });
+        up = []; busy = false;
+        if (PAIRS.two){ turn = 1 - turn; }
+        paintWho();
+      }, 1100);
+    }
+    function over(){
+      ninja($("fb"));
+      if (PAIRS.two){
+        var win = score[0] === score[1] ? "ひきわけ"
+          : (score[0] > score[1] ? "ひとりめのかち" : "ふたりめのかち");
+        $("fb").innerHTML = '<div class="mark yes"><b>' + esc(win) + '</b>'
+          + score[0] + ' : ' + score[1] + '</div>';
+      } else {
+        var key = PAIRS.kind + PAIRS.n;
+        S.best = S.best || {};
+        var best = S.best[key];
+        if (!best || tries < best){ S.best[key] = tries; save(); }
+        first("pairs:" + PAIRS.kind, 3, "a board cleared");
+        $("fb").innerHTML = '<div class="mark yes"><b>Done in ' + tries + ' turns</b>'
+          + (best && tries < best ? "Your best yet." : (best ? "Your best is " + best + "." : ""))
+          + '</div>';
+      }
+      done("pairs");
     }
   };
 

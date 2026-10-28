@@ -574,6 +574,44 @@
   .slot .men{font-size:13.5px}
   .slot .pja{font-family:var(--jp);font-size:16px}
 
+  #promptw.jp{font-family:var(--jp)}
+  #promptw.big{font-size:clamp(28px,5vw,44px);line-height:1.1}
+  /* ---- the memory game ----
+     A card is a square that turns over. The back carries one character
+     so a board of them still looks like Japanese, and the front holds
+     a word, a meaning, a kana or a picture: the grid is fixed so the
+     board does not reflow as cards are taken, because remembering
+     where a card was is the whole game. */
+  .board{display:grid;grid-template-columns:repeat(4,minmax(66px,1fr));gap:10px;
+       max-width:min(680px,92vw);margin:0 auto}
+  .card{position:relative;aspect-ratio:1;border:0;background:none;padding:0;
+       cursor:pointer;font-family:var(--font);perspective:600px}
+  .card .back,.card .front{position:absolute;inset:0;display:flex;align-items:center;
+       justify-content:center;border-radius:12px;border:1.5px solid var(--line);
+       padding:4px;text-align:center;line-height:1.25;
+       transition:opacity .18s, transform .18s}
+  .card .back{background:var(--deep);color:#fff;font-family:var(--jp);font-size:26px;
+       border-color:var(--deep)}
+  .card .front{background:var(--paper);font-size:15px;opacity:0;transform:scale(.94)}
+  .card .front.jp{font-family:var(--jp);font-size:23px}
+  .card .front.pic{font-size:40px}
+  .card.up .back,.card.got .back{opacity:0}
+  .card.up .front,.card.got .front{opacity:1;transform:none}
+  .card.got .front{border-color:var(--ok);background:#eefaf0}
+  .card.got{cursor:default}
+  .scoreline{display:flex;gap:10px;justify-content:center;margin:0 0 10px}
+  .pl{font-size:13.5px;color:var(--muted);border:1.5px solid transparent;
+       border-radius:999px;padding:3px 12px}
+  .pl.on{border-color:var(--deep);color:var(--ink);background:var(--paper)}
+  .pl b{font-size:16px}
+  @media (prefers-reduced-motion:reduce){
+    .card .back,.card .front{transition:none}
+  }
+  @media (max-width:560px){
+    .board{grid-template-columns:repeat(4,minmax(58px,1fr));gap:6px}
+    .card .front{font-size:12.5px}
+    .card .front.jp{font-size:17px}
+  }
   /* ---- katakana ---- */
   .kagrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));
        gap:8px;max-width:900px;margin:0 auto}
@@ -677,9 +715,9 @@
 </div>
 <nav class="steps" id="steps"></nav>
 <main id="main"></main>
-<script src="data/mega.js?v=20261028a"></script>
-<script src="data/audio.js?v=20261028a"></script>
-<script src="app.js?v=20261028a"></script>
-<div class="build" aria-hidden="true">build 2026-10-28a</div>
+<script src="data/mega.js?v=20261028b"></script>
+<script src="data/audio.js?v=20261028b"></script>
+<script src="app.js?v=20261028b"></script>
+<div class="build" aria-hidden="true">build 2026-10-28b</div>
 </body>
 </html>
