@@ -1739,12 +1739,16 @@
     { id:"make",  ja:"つくる",         en:"Build the sentence" },
     { id:"match", ja:"ことば",         en:"Words" },
     { id:"pairs", ja:"ペア",           en:"Memory" },
+    { id:"karuta",ja:"かるた",         en:"Hear it, grab it" },
     { id:"kata",  ja:"カタカナ",       en:"Katakana" },
     { id:"kanji", ja:"かんじ",         en:"The kanji" },
     { id:"verb",  ja:"どうし",         en:"Change the verb" },
     { id:"fast",  ja:"はやく",         en:"Read it fast" }
   ];
   var at = 0, DRAW = {};
+  /* かるた listens on the document for its two buzzer keys, so the
+     listener has to come off when another rung is drawn */
+  var KEYOFF = null;
 
   function ruleFor(id, cls){
     var r = null;
@@ -1851,6 +1855,7 @@
     /* The game runs on its own clock and its own audio. Leaving the rung
        has to stop both, or the chiptune follows you round the app. */
     if (GAME){ GAME.stop(); GAME = null; }
+    if (KEYOFF){ document.removeEventListener("keydown", KEYOFF); KEYOFF = null; }
     if (onResize){ window.removeEventListener("resize", onResize); onResize = null; }
     document.body.classList.remove("gamefull");
     $("main").innerHTML = "";
@@ -2937,6 +2942,210 @@
           + '</div>';
       }
       done("pairs");
+    }
+  };
+
+  /* ================= かるた =================
+     The game they already know, and the only one here that is pure
+     listening under pressure. The app reads a word; the cards are
+     face up; whoever finds it first takes it.
+
+     Four sets, the same idea as ことばキャッチ: hear a word and tap
+     the picture, the Japanese, the kanji, or the katakana. The call
+     is always audio and never written, because a written call turns
+     a listening race into a matching puzzle.
+
+     Two players share one laptop, and a race on a shared screen needs
+     a way to tell who got there first, so it is buzz then grab:
+     ひだり claims with A, みぎ claims with L, and the player who
+     claimed has the board to themselves until they tap. Tap the wrong
+     card and the other player gets a free grab at the same call. That
+     is how the argument gets settled at a real table too.
+
+     Alone, it is the clock: clear the board, and the app remembers
+     your best time for that set and that many cards. */
+  var KARUTA = { kind: "pic", two: false, n: 9 };
+  var KSETS = [
+    { id: "pic",   ja: "え",       en: "hear a word, tap the picture" },
+    { id: "word",  ja: "ことば",   en: "hear a word, tap the Japanese" },
+    { id: "kanji", ja: "かんじ",   en: "hear a reading, tap the kanji" },
+    { id: "kata",  ja: "カタカナ", en: "hear a word, tap the katakana" }
+  ];
+  /* An id names the word, not the square it landed on. The ledger pays
+     the first time a word is taken and never again, so an index would
+     pay nine times for nine squares however often the deck reshuffled. */
+  function karutaDeck(kind, n){
+    if (kind === "kanji")
+      return shuffle(M.kanji || []).slice(0, n).map(function(k){
+        return { id: "j:" + plain(k.k), face: ruby(k.k), say: k.yomi[0],
+                 jp: true, en: k.en };
+      });
+    if (kind === "kata")
+      return shuffle((M.katakana || {}).words || []).slice(0, n).map(function(w){
+        return { id: "t:" + w.ka, face: esc(w.ka), say: w.ka, jp: true, en: w.en };
+      });
+    if (kind === "pic")
+      return shuffle(W.filter(function(w){ return w.icon; })).slice(0, n)
+        .map(function(w){
+          return { id: "p:" + w.id, face: esc(w.icon), say: w.ja, pic: true, en: w.en };
+        });
+    return shuffle(W.filter(function(w){ return w.en; })).slice(0, n)
+      .map(function(w){
+        return { id: "w:" + w.id, face: ruby(w.ja), say: w.ja, jp: true, en: w.en };
+      });
+  }
+  DRAW.karuta = function(){
+    var deck = shuffle(karutaDeck(KARUTA.kind, KARUTA.n));
+    var left = deck.slice(), call = null, score = [0, 0], claim = null,
+        tried = {}, began = 0, overYet = false;
+    var setName = "";
+    KSETS.forEach(function(k){ if (k.id === KARUTA.kind) setName = k.en; });
+
+    $("main").innerHTML = ruleFor("karuta", "tight")
+      + '<div class="work fit"><div class="col">'
+      + '<div class="scoreline" id="who"></div>'
+      + '<div class="callbar"><button class="btn" id="again2">'
+      + 'もう一度[いちど] <span class="en">Play it again</span></button>'
+      + '<span class="callnote" id="note"></span></div>'
+      + '<div class="board tori" id="board"></div>'
+      + '<div class="buzz" id="buzz" hidden>'
+      + '<button class="bz" data-p="0"><b>ひだり</b><i>press A</i></button>'
+      + '<button class="bz" data-p="1"><b>みぎ</b><i>press L</i></button>'
+      + '</div>'
+      + '<div id="fb" class="fbslot"></div>'
+      + '</div></div>'
+      + foot(KSETS.map(function(k){
+          return '<button class="btn sm ' + (k.id === KARUTA.kind ? "" : "ghost")
+            + '" data-set="' + k.id + '" title="' + esc(k.en) + '">' + k.ja + '</button>';
+        }).join("")
+        + '<span class="gapsm"></span>'
+        + '<button class="btn sm ' + (KARUTA.two ? "" : "ghost") + '" id="two2">ふたり</button>'
+        + '<button class="btn ghost sm" id="size2">' + KARUTA.n + 'まい</button>'
+        + '<button class="btn ghost sm" id="deal">はじめ</button>');
+    $("again2").innerHTML = ruby("もう一度[いちど]") + ' <span class="en">Play it again</span>';
+
+    each($("main"), "[data-set]", function(b){
+      b.onclick = function(){ KARUTA.kind = b.dataset.set; DRAW.karuta(); };
+    });
+    $("two2").onclick = function(){ KARUTA.two = !KARUTA.two; DRAW.karuta(); };
+    $("size2").onclick = function(){
+      KARUTA.n = KARUTA.n === 9 ? 12 : (KARUTA.n === 12 ? 6 : 9);
+      DRAW.karuta();
+    };
+    $("deal").onclick = function(){ DRAW.karuta(); };
+    $("again2").onclick = function(){ if (call) say(call.say, null, true); };
+
+    $("board").innerHTML = deck.map(function(c, i){
+      return '<button class="card up" data-c="' + i + '">'
+        + '<span class="front' + (c.pic ? " pic" : "") + (c.jp ? " jp" : "")
+        + '">' + c.face + '</span></button>';
+    }).join("");
+    each($("board"), "[data-c]", function(b){
+      b.onclick = function(){ grab(+b.dataset.c, b); };
+    });
+    $("buzz").hidden = !KARUTA.two;
+    each($("buzz"), "[data-p]", function(b){
+      b.onclick = function(){ buzz(+b.dataset.p); };
+    });
+    /* the keys matter more than the buttons: two students reaching for
+       the same screen knock each other off it, and two keys at opposite
+       ends of the keyboard are a fair race */
+    function onKey(e){
+      if (!KARUTA.two || overYet) return;
+      var k = (e.key || "").toLowerCase();
+      if (k === "a") buzz(0); else if (k === "l") buzz(1);
+    }
+    document.addEventListener("keydown", onKey);
+    if (KEYOFF) document.removeEventListener("keydown", KEYOFF);
+    KEYOFF = onKey;
+
+    /* a seam for the check: what is on the table, and what is being
+       asked for right now */
+    window.MEGA_KARUTA = {
+      cards: function(){ return deck.map(function(c){ return c.id; }); },
+      call: function(){ return call ? call.id : null; },
+      claim: function(){ return claim; }
+    };
+
+    paintWho();
+    next();
+
+    function paintWho(){
+      $("who").innerHTML = KARUTA.two
+        ? '<span class="pl' + (claim === 0 ? " on" : "") + '">ひだり <b>'
+          + score[0] + '</b></span>'
+          + '<span class="pl' + (claim === 1 ? " on" : "") + '">みぎ <b>'
+          + score[1] + '</b></span>'
+        : '<span class="pl on">' + esc(setName) + '</span>';
+      var key = "karuta:" + KARUTA.kind + KARUTA.n;
+      $("sc").innerHTML = KARUTA.two
+        ? '<b>' + (score[0] + score[1]) + '</b> of ' + deck.length + ' taken'
+        : '<b>' + (deck.length - left.length) + '</b> of ' + deck.length
+          + (S.best && S.best[key] ? ' · best ' + S.best[key] + 's' : '');
+      $("note").textContent = !KARUTA.two ? ""
+        : (claim === null ? "Press A or L to claim it."
+                          : (claim === 0 ? "ひだり, grab it." : "みぎ, grab it."));
+    }
+    function next(){
+      if (!left.length) return over();
+      claim = null; tried = {};
+      call = left[Math.floor(Math.random() * left.length)];
+      if (!began) began = Date.now();
+      paintWho();
+      say(call.say, null, true);
+    }
+    function buzz(p){
+      if (claim !== null || tried[p] || !call) return;
+      claim = p; paintWho();
+    }
+    function grab(i, btn){
+      var c = deck[i];
+      if (!call || btn.classList.contains("got")) return;
+      if (KARUTA.two && claim === null) return;          /* claim it first */
+      var who = KARUTA.two ? claim : 0;
+      if (c.id === call.id){
+        btn.classList.add("got");
+        left = left.filter(function(x){ return x.id !== c.id; });
+        score[who]++;
+        if (!KARUTA.two) first("karuta:" + c.id, 1, "taken");
+        paintWho();
+        setTimeout(next, 420);
+        return;
+      }
+      /* a wrong card is not taken off the table: it is still the right
+         card for a later call, and removing it would hand the student
+         the answer by elimination */
+      btn.classList.add("miss");
+      setTimeout(function(){ btn.classList.remove("miss"); }, 420);
+      CLICK.clunk();
+      if (KARUTA.two){
+        tried[who] = 1;
+        claim = tried[1 - who] ? null : 1 - who;
+        paintWho();
+        if (claim === null) setTimeout(function(){ say(call.say, null, true); }, 450);
+      } else {
+        setTimeout(function(){ say(call.say, null, true); }, 450);
+      }
+    }
+    function over(){
+      overYet = true;
+      ninja($("fb"));
+      if (KARUTA.two){
+        var win = score[0] === score[1] ? "ひきわけ"
+          : (score[0] > score[1] ? "ひだりのかち" : "みぎのかち");
+        $("fb").innerHTML = '<div class="mark yes"><b>' + esc(win) + '</b>'
+          + score[0] + ' : ' + score[1] + '</div>';
+      } else {
+        var secs = Math.max(1, Math.round((Date.now() - began) / 1000));
+        var key = "karuta:" + KARUTA.kind + KARUTA.n;
+        S.best = S.best || {};
+        var best = S.best[key];
+        if (!best || secs < best){ S.best[key] = secs; save(); }
+        $("fb").innerHTML = '<div class="mark yes"><b>' + secs + ' seconds</b>'
+          + (best && secs < best ? "Your best yet."
+             : (best ? "Your best is " + best + "s." : "")) + '</div>';
+      }
+      done("karuta");
     }
   };
 

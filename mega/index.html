@@ -612,6 +612,40 @@
     .card .front{font-size:12.5px}
     .card .front.jp{font-size:17px}
   }
+  /* ---- かるた ----
+     The cards sit face up and large: this is a listening race read
+     from across a desk, not a grid to lean into. A wrong grab shakes
+     and stays on the table, because the card is still the answer to a
+     call that has not come yet. */
+  .board.tori{grid-template-columns:repeat(3,minmax(92px,1fr));max-width:min(560px,94vw)}
+  .board.tori .card .front{font-size:17px}
+  .board.tori .card .front.jp{font-size:clamp(20px,4.2vw,30px)}
+  .board.tori .card .front.pic{font-size:clamp(34px,7vw,52px)}
+  .card.miss .front{border-color:var(--accent);background:#fdf0f0;
+       animation:shake .34s}
+  @keyframes shake{
+    0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)}
+    75%{transform:translateX(5px)}
+  }
+  .callbar{display:flex;align-items:center;justify-content:center;gap:12px;
+       flex-wrap:wrap;margin:0 0 12px}
+  .callnote{font-size:13px;color:var(--muted)}
+  .buzz{display:flex;gap:12px;justify-content:center;margin:14px 0 0}
+  /* a display rule beats the attribute, so the attribute has to win */
+  [hidden]{display:none !important}
+  /* the English under a label sits on a filled button here, where the
+     muted grey it uses everywhere else is unreadable */
+  #again2 .en{color:#cfdcea}
+  .bz{flex:1;max-width:220px;border:1.5px solid var(--line);border-radius:14px;
+       background:var(--paper);padding:10px 8px;cursor:pointer;
+       font-family:var(--font);color:var(--ink)}
+  .bz b{display:block;font-family:var(--jp);font-size:19px}
+  .bz i{display:block;font-style:normal;font-size:11.5px;color:var(--muted)}
+  .bz:active{background:var(--deep);color:#fff}
+  @media (prefers-reduced-motion:reduce){ .card.miss .front{animation:none} }
+  @media (max-width:560px){
+    .board.tori{grid-template-columns:repeat(3,minmax(74px,1fr));gap:7px}
+  }
   /* ---- katakana ---- */
   .kagrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));
        gap:8px;max-width:900px;margin:0 auto}
@@ -715,9 +749,9 @@
 </div>
 <nav class="steps" id="steps"></nav>
 <main id="main"></main>
-<script src="data/mega.js?v=20261028b"></script>
-<script src="data/audio.js?v=20261028b"></script>
-<script src="app.js?v=20261028b"></script>
-<div class="build" aria-hidden="true">build 2026-10-28b</div>
+<script src="data/mega.js?v=20261028c"></script>
+<script src="data/audio.js?v=20261028c"></script>
+<script src="app.js?v=20261028c"></script>
+<div class="build" aria-hidden="true">build 2026-10-28c</div>
 </body>
 </html>

@@ -268,6 +268,8 @@ window.MEGA = {
                 "en": "The frame. Every sentence in this unit is this shape." } ] },
     { "step": "pairs", "title_en": "Memory",
       "rule": "Turn two cards over. A match stays up and you go again; a miss turns back and the other player has a turn. Pick what the pairs are made of, and one player or two." },
+    { "step": "karuta", "title_en": "Hear it, grab it",
+      "rule": "Listen to the word. Tap the card it names. Tap the wrong card and the call plays again, and the card stays on the table. Pick one player or two: with two, press A or L to claim the call first, then grab." },
     { "step": "kata",  "title_en": "Katakana",
       "rule": "Read the katakana. Every word here uses the ア to ハ lines only. In テスト say what the word is; in きく listen and pick the spelling, watching for ー and the small ッ." },
     { "step": "kanji", "title_en": "The kanji",
