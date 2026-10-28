@@ -50,8 +50,8 @@
   /* wrote holds everything typed, keyed by question, because this is
      revision: a student comes back to it across a fortnight and
      nobody should have to type an answer twice. */
-  var S = { furi:true, en:true, topic:"",
-            pts:0, spent:0, done:{}, won:{}, wrote:{}, checks:{}, howto:{} };
+  var S = { furi:true, en:true, topic:"", exam:false, slow:false,
+            pts:0, spent:0, done:{}, won:{}, wrote:{}, checks:{}, plays:{}, howto:{} };
   try { var raw = localStorage.getItem(KEY); if (raw){
     var o = JSON.parse(raw); for (var k in S) if (o[k] !== undefined) S[k] = o[k];
   } } catch (e){}
@@ -477,6 +477,241 @@
   /* a line that appears under every box that takes Japanese */
   var CANNOT = "The app looks for the pieces the marker needs. It cannot "
     + "judge your Japanese: check that with Sensei.";
+
+  /* ================= the listening paper =================
+     Two modes, and the difference between them is the whole point.
+     れんしゅう plays as often as a student likes, line by line if they
+     want, with the transcript there. 本番 plays the passage twice and
+     then will not play it again, which is the exam, and the
+     transcript stays shut until the questions have been answered.
+
+     The passages are not the school's recordings. The ones Andrew has
+     belong to Monash and are licensed for his classroom, not for a
+     public site, so these were written to the same shape and recorded
+     in the two voices the other apps use. Every one is marked draft
+     and the page says so.
+
+     Playing is line by line on the clip's own ended event rather than
+     one file for the passage: two speakers need two voices, and a
+     conversation read in one voice stops being a listening task. */
+  var AUD = (window.SHIKEN_AUDIO || {}).clips || {};
+  var el0 = null, seq = 0;
+  function sound(){ if (!el0){ el0 = new Audio(); el0.preload = "auto"; } return el0; }
+  function hush(){
+    seq++;
+    var a = sound();
+    try { a.pause(); } catch (e){}
+    a.onended = null;
+  }
+  /* mirrors tools/make-audio.py: the key is the voice and the line as
+     it is said, with the readings dropped and は said わ */
+  function spokenKey(voice, text){
+    var t = plain(text).replace(/[\s　]/g, "");
+    t = t.replace(/([^\s　、。！？!?「」『』]+)/g, function(c){
+      c = c.replace(/では(?=[なあ])/, "でわ");
+      if (/は$/.test(c)) return c.slice(0, -1) + "わ";
+      if (/へ$/.test(c)) return c.slice(0, -1) + "え";
+      return c;
+    });
+    return voice + "|" + t;
+  }
+  function playLine(voice, text, onEnd){
+    var clip = AUD[spokenKey(voice, text)];
+    var a = sound();
+    try { a.pause(); } catch (e){}
+    a.onended = onEnd || null;
+    if (!clip) return false;
+    a.src = "audio/" + clip;
+    try { a.playbackRate = S.slow ? 0.8 : 1; } catch (e){}
+    var r = a.play();
+    if (r && r.catch) r.catch(function(){});
+    return true;
+  }
+
+  DRAW.kiki = function(){
+    var L = X.listening || [];
+    if (!L.length){ $("main").innerHTML = '<div class="work"></div>'; return; }
+    var t = L[Math.min(S.wrote["kikiAt"] || 0, L.length - 1)];
+    var exam = !!S.exam;
+    var plays = S.plays || {};
+    var left = exam ? Math.max(0, 2 - (plays[t.id] || 0)) : null;
+    var open = !exam || allAnswered();
+    var who = {};
+    (t.speakers || []).forEach(function(sp){ who[sp.tag] = sp; });
+
+    function allAnswered(){
+      return t.questions.every(function(_, i){ return S.won["l:" + t.id + ":" + i]
+        || (S.wrote["l:" + t.id + ":" + i] || "").trim(); });
+    }
+    $("main").innerHTML = ruleFor("kiki", "tight")
+      + '<div class="work"><div class="col">'
+      + '<div class="row" style="flex-wrap:wrap;gap:6px;margin-bottom:8px">'
+      + L.map(function(x, i){
+          return '<button class="btn sm ' + (x === t ? "" : "ghost")
+            + '" data-text="' + i + '">' + esc(x.section) + ' · ' + esc(x.title_en)
+            + '</button>';
+        }).join("") + '</div>'
+      + '<div class="text" style="line-height:1.6">'
+      + '<h3><span class="tt">' + ruby(t.title) + '</span><span class="mk">'
+      + 'answer in ' + esc(t.answer_in) + ' · ' + t.marks + ' marks</span></h3>'
+      + '<p style="font-family:var(--font);font-size:13.5px;color:var(--muted)">'
+      + esc(t.setting) + '</p>'
+      + '<div class="ansrow" style="margin-top:8px">'
+      + '<button class="btn sm" id="play"' + (exam && !left ? ' disabled' : '') + '>'
+      + (exam ? "Play (" + left + " left)" : "Play it") + '</button>'
+      + '<button class="btn ghost sm" id="stop">Stop</button>'
+      + '<button class="btn ' + (exam ? "" : "ghost") + ' sm" id="mode">'
+      + (exam ? "本番" : "れんしゅう") + '</button>'
+      + (exam ? '' : '<button class="btn ghost sm" id="slow">'
+          + (S.slow ? "×0.8" : "×1") + '</button>')
+      + '</div>'
+      + '<div id="turns" style="margin-top:10px">'
+      + (open
+          ? (t.lines || []).map(function(l, i){
+              var sp = who[l.sp] || {};
+              return '<div class="turn" data-i="' + i + '">'
+                + '<div class="whoami">' + ruby(sp.who || l.sp) + '</div>'
+                + (exam ? '' : '<button class="btn ghost sm" data-play="' + i + '">▶</button>')
+                + '<div class="jaline">' + ruby(l.ja) + '</div></div>';
+            }).join("")
+          : '<p class="hintbox">The transcript opens when you have written '
+            + 'something for every question. In the exam there is no transcript '
+            + 'at all, which is what the two plays are for.</p>')
+      + '</div></div>'
+      + '<div id="qs"></div></div></div>'
+      + foot('<span class="hint">' + esc(CANNOT) + '</span>');
+    each($("main"), "[data-text]", function(b2){
+      b2.onclick = function(){ hush(); S.wrote["kikiAt"] = +b2.dataset.text; save(); draw(); };
+    });
+    $("mode").onclick = function(){ hush(); S.exam = !S.exam; save(); draw(); };
+    if ($("slow")) $("slow").onclick = function(){ S.slow = !S.slow; save(); draw(); };
+    $("stop").onclick = function(){ hush(); lit(-1); };
+    $("play").onclick = function(){
+      if (exam){
+        var n = (S.plays[t.id] || 0) + 1;
+        S.plays[t.id] = n; save();
+        if (n >= 2) $("play").disabled = true;
+        $("play").textContent = "Play (" + Math.max(0, 2 - n) + " left)";
+      }
+      playFrom(0, ++seq);
+    };
+    each($("turns"), "[data-play]", function(b3){
+      b3.onclick = function(){
+        var i = +b3.dataset.play;
+        hush(); lit(i);
+        var sp = who[t.lines[i].sp] || {};
+        playLine(sp.voice, t.lines[i].ja, function(){ lit(-1); });
+      };
+    });
+    function lit(i){
+      each($("turns"), ".turn", function(d){
+        d.classList.toggle("now", +d.dataset.i === i);
+      });
+    }
+    /* In 本番 the transcript is shut. It opens when every question has
+       been answered, and it opens in place: a redraw here would wipe
+       the feedback the student has just been given, which is the part
+       they were about to read. */
+    function openScript(){
+      if ($("turns").querySelector(".jaline")) return;
+      $("turns").innerHTML = (t.lines || []).map(function(l, i){
+        var sp = who[l.sp] || {};
+        return '<div class="turn" data-i="' + i + '">'
+          + '<div class="whoami">' + ruby(sp.who || l.sp) + '</div>'
+          + '<button class="btn ghost sm" data-play="' + i + '">▶</button>'
+          + '<div class="jaline">' + ruby(l.ja) + '</div></div>';
+      }).join("");
+      each($("turns"), "[data-play]", function(b7){
+        b7.onclick = function(){
+          var i = +b7.dataset.play;
+          hush(); lit(i);
+          var sp2 = who[t.lines[i].sp] || {};
+          playLine(sp2.voice, t.lines[i].ja, function(){ lit(-1); });
+        };
+      });
+    }
+    function playFrom(i, mine){
+      if (mine !== seq) return;
+      if (i >= (t.lines || []).length){ lit(-1); return; }
+      lit(i);
+      var sp = who[t.lines[i].sp] || {};
+      var ok = playLine(sp.voice, t.lines[i].ja, function(){
+        setTimeout(function(){ playFrom(i + 1, mine); }, 260);
+      });
+      if (!ok) playFrom(i + 1, mine);
+    }
+
+    /* the questions, marked the same way as everywhere else */
+    var done = 0;
+    $("qs").innerHTML = '<div class="card">' + t.questions.map(function(q, i){
+      var key = "l:" + t.id + ":" + i;
+      if (S.won[key]) done++;
+      return '<div class="qn" data-q="' + i + '">'
+        + '<span class="mk">' + q.marks + '</span>'
+        + '<div class="ask">' + (t.answer_in === "Japanese" ? ruby(q.q) : esc(q.q))
+        + (q.ask_en ? '<em>' + esc(q.ask_en) + '</em>' : '') + '</div>'
+        + '<textarea class="ans" data-k="' + esc(key) + '" rows="2"'
+        + (t.answer_in === "Japanese" ? ' lang="ja"'
+            : ' style="font-family:var(--font);font-size:15px"')
+        + ' spellcheck="false">' + esc(S.wrote[key] || "") + '</textarea>'
+        + '<div class="ansrow">'
+        + '<button class="btn sm" data-check="' + i + '">Check</button>'
+        + '<button class="btn ghost sm" data-model="' + i + '">Show the answer</button>'
+        + (q.line !== undefined && !exam
+            ? '<button class="btn ghost sm" data-hear="' + i + '">Hear that line</button>' : '')
+        + '</div><div class="out"></div></div>';
+    }).join("") + '</div>';
+    $("sc").innerHTML = '<b>' + done + '</b> of ' + t.questions.length + ' answered';
+    keepTyping();
+    each($("qs"), "[data-hear]", function(b4){
+      b4.onclick = function(){
+        var q = t.questions[+b4.dataset.hear];
+        var sp = who[(t.lines[q.line] || {}).sp] || {};
+        hush(); lit(q.line);
+        playLine(sp.voice, t.lines[q.line].ja, function(){ lit(-1); });
+      };
+    });
+    each($("qs"), "[data-check]", function(b5){
+      b5.onclick = function(){
+        var i = +b5.dataset.check, q = t.questions[i];
+        var box = b5.closest(".qn"), out = box.querySelector(".out");
+        var ans = box.querySelector("textarea").value;
+        if (!ans.trim()){
+          out.innerHTML = '<div class="mark hm"><b>Nothing written yet</b>'
+            + 'Write an answer in ' + esc(t.answer_in) + ' first.</div>';
+          return;
+        }
+        var list = hits(ans, q.look_for), ok = enough(list, q.need);
+        out.innerHTML = lookHTML(list)
+          + '<div class="mark ' + (ok ? "yes" : "hm") + '"><b>'
+          + (ok ? "Everything the marker wants is there" : "Not all of it yet")
+          + '</b>' + (ok ? "" : "Play it again and listen for the ticks that are missing.")
+          + '</div>';
+        if (ok){
+          ninja(out);
+          first("l:" + t.id + ":" + i, q.marks, "listening answer");
+          showL(box, q);
+          var n = t.questions.filter(function(_, k){ return S.won["l:" + t.id + ":" + k]; }).length;
+          $("sc").innerHTML = '<b>' + n + '</b> of ' + t.questions.length + ' answered';
+          if (n === t.questions.length){ done2("kiki"); openScript(); }
+        }
+      };
+    });
+    each($("qs"), "[data-model]", function(b6){
+      b6.onclick = function(){
+        var i = +b6.dataset.model, box = b6.closest(".qn");
+        if (!S.won["l:" + t.id + ":" + i]) spend(1, "answer shown");
+        showL(box, t.questions[i]);
+      };
+    });
+    function showL(box, q){
+      if (box.querySelector(".model")) return;
+      box.querySelector(".out").insertAdjacentHTML("beforeend",
+        '<div class="model"' + (t.answer_in === "English"
+          ? ' style="font-family:var(--font);font-size:14.5px"' : '') + '>'
+        + (t.answer_in === "English" ? esc(q.model) : ruby(q.model)) + '</div>');
+    }
+  };
 
   /* ================= Part A, reading ================= */
   DRAW.read = function(){
@@ -986,6 +1221,19 @@
       + (P.reading_time || 0) + ' minutes reading, ' + (P.writing_time || 0)
       + ' minutes writing · ' + esc(P.dictionary || "") + '</p>'
       + (P.note ? '<p class="hintbox">' + esc(P.note) + '</p>' : "")
+      + (X.listening_paper
+          ? '<table class="plan" style="margin-top:12px">'
+            + '<tr><th>Listening</th><th></th><th>Questions</th><th>Marks</th></tr>'
+            + (X.listening_paper.sections || []).map(function(s2){
+                return '<tr><td>' + esc(s2.id) + '</td><td class="ja">' + ruby(s2.ja)
+                  + '<br><span style="font-size:12px;color:var(--muted)">' + esc(s2.en)
+                  + '</span></td><td>' + s2.q + '</td><td>' + s2.marks + '</td></tr>';
+              }).join("")
+            + '<tr><td></td><td></td><td></td><td><b>'
+            + (X.listening_paper.total || "") + '</b></td></tr></table>'
+            + (X.listening_paper.note
+                ? '<p class="hintbox">' + esc(X.listening_paper.note) + '</p>' : "")
+          : "")
       + '<div class="tips">' + (X.strategy || []).map(function(t){
           return '<div class="tip"><b>' + esc(t.head) + '</b><p>' + esc(t.body) + '</p></div>';
         }).join("") + '</div>'
@@ -1001,6 +1249,7 @@
      opens on translation and Year 10 opens on a reading. A tab with
      nothing behind it is dropped rather than shown empty. */
   var TAB = {
+    kiki:  { ja:"ききとり", en:"Listening",   has: function(){ return (X.listening || []).length; } },
     read:  { ja:"よむ",     en:"Reading",     has: function(){ return (X.reading || []).length; } },
     trans: { ja:"ほんやく", en:"Translation", has: function(){ return (X.translate || []).length; } },
     gram:  { ja:"ぶんぽう", en:"Grammar",     has: function(){ return (X.grammar || []).length; } },
@@ -1008,7 +1257,7 @@
     essay: { ja:"さくぶん", en:"Essay",       has: function(){ return !!X.essay; } },
     plan:  { ja:"しけん",   en:"The paper",   has: function(){ return true; } }
   };
-  var STEPS = (X.tabs || ["read", "trans", "gram", "kanji", "essay", "plan"])
+  var STEPS = (X.tabs || ["kiki", "read", "trans", "gram", "kanji", "essay", "plan"])
     .filter(function(id){ return TAB[id] && TAB[id].has(); })
     .map(function(id){ return { id: id, ja: TAB[id].ja, en: TAB[id].en }; });
 

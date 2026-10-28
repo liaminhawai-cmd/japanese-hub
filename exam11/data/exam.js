@@ -21,7 +21,7 @@ window.SHIKEN = {
   "year": "Year 11",
   "title_ja": "しけん",
   "title_en": "Unit 2 exam practice",
-  "tabs": ["trans", "read", "essay", "plan"],
+  "tabs": ["kiki", "trans", "read", "essay", "plan"],
 
   "paper": {
     "when": "Semester 2, 90 minutes",
@@ -39,6 +39,8 @@ window.SHIKEN = {
   },
 
   "rules": [
+    { "step": "kiki", "title_en": "The listening paper",
+      "rule": "れんしゅう plays as often as you like and shows the transcript. 本番 plays twice and no more, which is the exam. These passages are written for this app, not taken from the school's recordings." },
     { "step": "trans", "title_en": "Part A, translation",
       "rule": "Four forms, both directions. A Japanese sentence into English is worth 1; an English sentence into Japanese is worth 2, because the grammar has to be built rather than read." },
     { "step": "read", "title_en": "Parts B and C, reading",
@@ -215,6 +217,152 @@ window.SHIKEN = {
           "look_for": [ { "any": "会社員[かいしゃいん]", "says": "that the father is a company employee" },
                         { "any": "夜[よる]おそく|おそくまで", "says": "that he works late" },
                         { "any": "家事[かじ]|パート", "says": "that the mother works part time and does the housework" } ] }
+      ]
+    }
+  ],
+
+  "listening_paper": {
+    "when": "Sat separately",
+    "note": "The shape of the Year 11 listening paper was not uploaded, so this follows the Year 10 one: answers in English, then answers in Japanese. Tell Andrew if the real paper differs and the numbers move.",
+    "sections": [
+      { "id": "1A", "ja": "ききとり", "en": "Listening, answered in English",  "q": 8, "marks": 10 },
+      { "id": "1B", "ja": "ききとり", "en": "Listening, answered in Japanese", "q": 6, "marks": 12 }
+    ],
+    "total": 22
+  },
+
+  "listening": [
+    {
+      "id": "kankyou", "section": "1A", "answer_in": "English", "marks": 6, "draft": true,
+      "title": "大学[だいがく]でべんきょうすること",
+      "title_en": "What she has decided to study",
+      "setting": "A Year 12 student speaks to your class about next year.",
+      "speakers": [ { "tag": "a", "who": "みさき", "voice": "a" } ],
+      "lines": [
+        { "sp": "a", "ja": "今年[ことし]、大学[だいがく]でかんきょうについて勉強[べんきょう]することにしました。" },
+        { "sp": "a", "ja": "小[ちい]さいころから、ごみのもんだいにきょうみがありました。" },
+        { "sp": "a", "ja": "日本[にほん]では、ごみを分[わ]けなければなりませんが、オーストラリアでは、あまり分[わ]けません。もっと分[わ]けるべきだと思[おも]います。" },
+        { "sp": "a", "ja": "来年[らいねん]、日本[にほん]の大学[だいがく]に一年間[いちねんかん]りゅうがくすることになりました。" },
+        { "sp": "a", "ja": "むこうでアルバイトをしながら、日本語[にほんご]も勉強[べんきょう]するつもりです。たいへんそうですが、楽[たの]しみです。" }
+      ],
+      "questions": [
+        { "q": "What has Misaki decided to study, and since when has she been interested?", "marks": 2, "line": 0,
+          "model": "The environment, and she has been interested in the rubbish problem since she was little.",
+          "look_for": [ { "any": "environment", "says": "the environment" },
+                        { "any": "little|small|child|young", "says": "since she was small" } ] },
+        { "q": "What difference does she describe between Japan and Australia?", "marks": 2, "line": 2,
+          "model": "In Japan you have to separate rubbish; in Australia people do not do it much.",
+          "look_for": [ { "any": "separat|sort|divid", "says": "separating rubbish" },
+                        { "any": "australia", "says": "what Australia does" } ] },
+        { "q": "What has been decided for next year?", "marks": 1, "line": 3,
+          "model": "It has been decided that she will study at a Japanese university for a year.",
+          "look_for": [ { "any": "year", "says": "for a year" },
+                        { "any": "japan", "says": "in Japan" } ] },
+        { "q": "What does she intend to do while she is there?", "marks": 1, "line": 4,
+          "model": "Work part-time while studying Japanese.",
+          "look_for": [ { "any": "work|job|part", "says": "a part-time job" },
+                        { "any": "japanese|study", "says": "studying at the same time" } ] }
+      ]
+    },
+    {
+      "id": "baito", "section": "1A", "answer_in": "English", "marks": 4, "draft": true,
+      "title": "あたらしいアルバイト",
+      "title_en": "The new job",
+      "setting": "Two Year 11 students, three weeks before the exams.",
+      "speakers": [ { "tag": "a", "who": "ハナ", "voice": "a" },
+                    { "tag": "b", "who": "トム", "voice": "b" } ],
+      "lines": [
+        { "sp": "a", "ja": "来週[らいしゅう]から、あたらしいアルバイトをすることになったよ。" },
+        { "sp": "b", "ja": "へえ、どこで？" },
+        { "sp": "a", "ja": "えきの近[ちか]くのカフェ。土曜日[どようび]の朝[あさ]だけ。" },
+        { "sp": "b", "ja": "いいね。でも、しけんの前[まえ]だから、むりをするべきじゃないよ。" },
+        { "sp": "a", "ja": "うん。だから、しけんの一週間前[いっしゅうかんまえ]からは休[やす]むことにした。" },
+        { "sp": "b", "ja": "それがいいと思[おも]う。つかれていると、おぼえられないそうだから。" }
+      ],
+      "questions": [
+        { "q": "Where is Hana's new job?", "marks": 1, "line": 2,
+          "model": "At a café near the station.",
+          "look_for": [ { "any": "caf|coffee", "says": "a café" },
+                        { "any": "station", "says": "near the station" } ] },
+        { "q": "When will she work?", "marks": 1, "line": 2,
+          "model": "Saturday mornings only.",
+          "look_for": [ { "any": "saturday", "says": "Saturday" },
+                        { "any": "morning", "says": "mornings" } ] },
+        { "q": "What does Tom warn her about?", "marks": 1, "line": 3,
+          "model": "That she should not overdo it before the exam.",
+          "look_for": [ { "any": "overdo|too much|not push|hard", "says": "not overdoing it" },
+                        { "any": "exam", "says": "before the exam" } ] },
+        { "q": "What has Hana decided to do about it?", "marks": 1, "line": 4,
+          "model": "To take the week before the exam off.",
+          "look_for": [ { "any": "week", "says": "the week before" },
+                        { "any": "off|rest|not work|break", "says": "that she will not work" } ] }
+      ]
+    },
+    {
+      "id": "kyoto", "section": "1B", "answer_in": "Japanese", "marks": 6, "draft": true,
+      "title": "京都[きょうと]に行[い]くことになりました",
+      "title_en": "The trip to Kyoto",
+      "setting": "An exchange student and her host mother, after dinner.",
+      "speakers": [ { "tag": "a", "who": "お母[かあ]さん", "voice": "a" },
+                    { "tag": "b", "who": "エマ", "voice": "b" } ],
+      "lines": [
+        { "sp": "a", "ja": "来週[らいしゅう]の日曜日[にちようび]、みんなで京都[きょうと]に行[い]くことになりましたよ。" },
+        { "sp": "b", "ja": "ほんとうですか。うれしいです。何時[なんじ]に出[で]ますか。" },
+        { "sp": "a", "ja": "朝[あさ]六時[ろくじ]に家[いえ]を出[で]ます。早[はや]いですが、電車[でんしゃ]がこむので、早[はや]く出[で]るべきです。" },
+        { "sp": "b", "ja": "わかりました。カメラを持[も]って行[い]ってもいいですか。" },
+        { "sp": "a", "ja": "もちろん。でも、お寺[てら]の中[なか]では写真[しゃしん]をとってはいけないところもありますから、気[き]をつけてくださいね。" },
+        { "sp": "b", "ja": "はい。ガイドブックを読[よ]みながら、じゅんびします。" }
+      ],
+      "questions": [
+        { "q": "いつ、どこへ行[い]くことになりましたか。", "marks": 2, "line": 0,
+          "ask_en": "When, and where, has it been decided they will go?",
+          "model": "来週[らいしゅう]の日曜日[にちようび]に京都[きょうと]へ行[い]くことになりました。",
+          "look_for": [ { "any": "来週[らいしゅう]", "says": "next week" },
+                        { "any": "日曜日[にちようび]", "says": "Sunday" },
+                        { "any": "京都[きょうと]", "says": "Kyoto" } ] },
+        { "q": "どうして朝[あさ]早[はや]く家[いえ]を出[で]ますか。", "marks": 2, "line": 2,
+          "ask_en": "Why are they leaving early?",
+          "model": "電車[でんしゃ]がこむからです。",
+          "look_for": [ { "any": "電車[でんしゃ]", "says": "the train" },
+                        { "any": "こむ|こみます|混[こ]む", "says": "that it gets crowded" },
+                        { "any": "から|ので", "says": "a reason, which the question asks for" } ] },
+        { "q": "エマさんは何[なに]をしながら、じゅんびしますか。", "marks": 2, "line": 5,
+          "ask_en": "What will Emma do while she gets ready?",
+          "model": "ガイドブックを読[よ]みながら、じゅんびします。",
+          "look_for": [ { "any": "ガイドブック", "says": "the guidebook" },
+                        { "any": "読[よ]みながら|よみながら", "says": "the 〜ながら form" } ] }
+      ]
+    },
+    {
+      "id": "shikenmae", "section": "1B", "answer_in": "Japanese", "marks": 6, "draft": true,
+      "title": "しけんの前[まえ]に",
+      "title_en": "Before the exam",
+      "setting": "Your teacher, two weeks out from the exams.",
+      "speakers": [ { "tag": "a", "who": "先生[せんせい]", "voice": "a" } ],
+      "lines": [
+        { "sp": "a", "ja": "みなさん、しけんまであと二週間[にしゅうかん]です。毎日[まいにち]少[すこ]しずつ勉強[べんきょう]するべきです。" },
+        { "sp": "a", "ja": "しけんの前[まえ]の日[ひ]に全部[ぜんぶ]おぼえるのはむりそうですね。" },
+        { "sp": "a", "ja": "来週[らいしゅう]から、ひるやすみに教室[きょうしつ]を開[あ]けることにしました。しずかに勉強[べんきょう]したい人[ひと]は来[き]てください。" },
+        { "sp": "a", "ja": "それから、しけんの日[ひ]は、八時半[はちじはん]に来[く]ることになっています。" },
+        { "sp": "a", "ja": "じしょを持[も]って来[き]てもいいですが、けいたいは持[も]って来[き]てはいけません。" }
+      ],
+      "questions": [
+        { "q": "先生[せんせい]は毎日[まいにち]どうするべきだと言[い]っていますか。", "marks": 2, "line": 0,
+          "ask_en": "What does the teacher say you should do every day?",
+          "model": "毎日[まいにち]少[すこ]しずつ勉強[べんきょう]するべきだと言[い]っています。",
+          "look_for": [ { "any": "毎日[まいにち]", "says": "every day" },
+                        { "any": "少[すこ]しずつ|すこしずつ", "says": "a little at a time" },
+                        { "any": "べき", "says": "the べき form the question uses" } ] },
+        { "q": "来週[らいしゅう]から、ひるやすみに何[なに]をすることにしましたか。", "marks": 2, "line": 2,
+          "ask_en": "What has been decided about lunchtimes from next week?",
+          "model": "教室[きょうしつ]を開[あ]けることにしました。",
+          "look_for": [ { "any": "教室[きょうしつ]|きょうしつ", "says": "the classroom" },
+                        { "any": "開[あ]け|あけ", "says": "that it will be open" } ] },
+        { "q": "しけんの日[ひ]に持[も]って来[き]てもいいものと、持[も]って来[き]てはいけないものは何[なん]ですか。", "marks": 2, "line": 4,
+          "ask_en": "What may you bring on exam day, and what may you not?",
+          "model": "じしょを持[も]って来[き]てもいいですが、けいたいを持[も]って来[き]てはいけません。",
+          "look_for": [ { "any": "じしょ|辞書[じしょ]", "says": "the dictionary" },
+                        { "any": "けいたい|スマホ", "says": "the phone" } ] }
       ]
     }
   ],

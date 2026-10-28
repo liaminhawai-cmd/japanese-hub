@@ -21,7 +21,7 @@ window.SHIKEN = {
   "year": "Year 10",
   "title_ja": "しけん",
   "title_en": "Semester 2 exam practice",
-  "tabs": ["read", "gram", "kanji", "essay", "plan"],
+  "tabs": ["kiki", "read", "gram", "kanji", "essay", "plan"],
 
   "paper": {
     "when": "Monday 25 November, 1:50pm",
@@ -39,6 +39,8 @@ window.SHIKEN = {
   },
 
   "rules": [
+    { "step": "kiki", "title_en": "The listening paper",
+      "rule": "れんしゅう plays as often as you like and shows the transcript. 本番 plays twice and no more, which is the exam. The passages here are not the school's recordings: they are written to the same shape." },
     { "step": "read", "title_en": "Part A, reading",
       "rule": "Read the text, then answer each question in Japanese. Press Check and the app ticks off the pieces the marker is looking for. Showing the answer before you have it costs a point." },
     { "step": "gram", "title_en": "Part B, grammar",
@@ -196,6 +198,146 @@ window.SHIKEN = {
     { "k": "社会人",     "yomi": "しゃかいじん", "en": "working adult" },
     { "k": "着[つ]く",   "yomi": "つく",         "en": "to arrive" },
     { "k": "南極",       "yomi": "なんきょく",   "en": "Antarctica, the South Pole" }
+  ],
+
+  "listening_paper": {
+    "when": "Sat separately in class",
+    "sections": [
+      { "id": "1A", "ja": "ききとり", "en": "Listening, answered in English",  "q": 8, "marks": 10 },
+      { "id": "1B", "ja": "ききとり", "en": "Listening, answered in Japanese", "q": 6, "marks": 12 }
+    ],
+    "total": 22
+  },
+
+  "listening": [
+    {
+      "id": "kengaku", "section": "1A", "answer_in": "English", "marks": 7, "draft": true,
+      "title": "あしたのしゃかいけんがく",
+      "title_en": "Tomorrow's excursion",
+      "setting": "Your teacher makes an announcement at the end of class.",
+      "speakers": [ { "tag": "a", "who": "先生[せんせい]", "voice": "a" } ],
+      "lines": [
+        { "sp": "a", "ja": "みなさん、おはようございます。あしたのしゃかいけんがくについて、おしらせします。" },
+        { "sp": "a", "ja": "あしたは、八時四十分[はちじよんじゅっぷん]までに学校[がっこう]に来[き]てください。" },
+        { "sp": "a", "ja": "バスで博物館[はくぶつかん]に行[い]きます。電車[でんしゃ]ではありません。" },
+        { "sp": "a", "ja": "お弁当[べんとう]を持[も]って来[こ]なければなりません。学校[がっこう]のしょくどうはしまっています。" },
+        { "sp": "a", "ja": "それから、水[みず]とうも持[も]って来[き]てください。お金[かね]は持[も]って来[こ]なくてもいいです。" },
+        { "sp": "a", "ja": "雨[あめ]がふりそうですから、かさをわすれないでください。" },
+        { "sp": "a", "ja": "学校[がっこう]にもどるのは三時[さんじ]ごろです。" }
+      ],
+      "questions": [
+        { "q": "What time must students arrive at school?", "marks": 1, "line": 1,
+          "model": "By 8:40.",
+          "look_for": [ { "any": "8:40|8.40|eight forty|twenty to nine|8 40", "says": "the time" } ] },
+        { "q": "How are they travelling, and how are they NOT travelling?", "marks": 2, "line": 2,
+          "model": "By bus, not by train.",
+          "look_for": [ { "any": "bus", "says": "by bus" },
+                        { "any": "train", "says": "that it is not the train" } ] },
+        { "q": "Name the two things they must bring.", "marks": 2, "line": 3,
+          "model": "Their lunch and a water bottle.",
+          "look_for": [ { "any": "lunch|bento", "says": "lunch" },
+                        { "any": "water", "says": "a water bottle" } ] },
+        { "q": "What do they not have to bring, and what should they not forget?", "marks": 2, "line": 4,
+          "model": "They do not have to bring money. They should not forget an umbrella, because it looks like rain.",
+          "look_for": [ { "any": "money", "says": "money, which is not needed" },
+                        { "any": "umbrella", "says": "the umbrella" } ] }
+      ]
+    },
+    {
+      "id": "shiai", "section": "1A", "answer_in": "English", "marks": 3, "draft": true,
+      "title": "サッカーのしあい",
+      "title_en": "The soccer match",
+      "setting": "Two students talk before class on Monday.",
+      "speakers": [ { "tag": "a", "who": "ゆうき", "voice": "a" },
+                    { "tag": "b", "who": "ベン", "voice": "b" } ],
+      "lines": [
+        { "sp": "a", "ja": "ねえ、きのうのサッカーのしあい、見[み]た？" },
+        { "sp": "b", "ja": "ううん、見[み]なかった。アルバイトがあったから。" },
+        { "sp": "a", "ja": "ざんねん。キューハイスクールが三[さん]たい一[いち]でかったよ。" },
+        { "sp": "b", "ja": "すごいね。つぎのしあいはいつ？" },
+        { "sp": "a", "ja": "来週[らいしゅう]の土曜日[どようび]。十時[じゅうじ]に学校[がっこう]にあつまって、バスで行[い]く。" },
+        { "sp": "b", "ja": "行[い]ってみたいけど、土曜日[どようび]はかぞくと海[うみ]に行[い]くから、むりだなあ。" },
+        { "sp": "a", "ja": "そっか。じゃあ、しゃしんをおくるよ。" }
+      ],
+      "questions": [
+        { "q": "Why did Ben not watch the match?", "marks": 1, "line": 1,
+          "model": "He had his part-time job.",
+          "look_for": [ { "any": "job|work|arubaito|part", "says": "his part-time job" } ] },
+        { "q": "What was the score, and who won?", "marks": 1, "line": 2,
+          "model": "Kew High School won three one.",
+          "look_for": [ { "any": "3|three", "says": "the score" },
+                        { "any": "kew", "says": "who won" } ] },
+        { "q": "Why can Ben not go to the next match?", "marks": 1, "line": 5,
+          "model": "He is going to the beach with his family on Saturday.",
+          "look_for": [ { "any": "family", "says": "his family" },
+                        { "any": "beach|sea", "says": "the beach" } ] }
+      ]
+    },
+    {
+      "id": "bangohan", "section": "1B", "answer_in": "Japanese", "marks": 6, "draft": true,
+      "title": "ばんごはんのじかん",
+      "title_en": "Dinner time",
+      "setting": "An exchange student and their host mother, in the kitchen.",
+      "speakers": [ { "tag": "a", "who": "お母[かあ]さん", "voice": "a" },
+                    { "tag": "b", "who": "アレックス", "voice": "b" } ],
+      "lines": [
+        { "sp": "a", "ja": "アレックスさん、ばんごはんは何時[なんじ]がいいですか。" },
+        { "sp": "b", "ja": "六時[ろくじ]はどうですか。七時[しちじ]からオンラインでかぞくと話[はな]さなければなりませんから。" },
+        { "sp": "a", "ja": "いいですよ。今日[きょう]はカレーを作[つく]ります。にがてな食[た]べ物[もの]はありますか。" },
+        { "sp": "b", "ja": "さかなはちょっと…。でも、ほかは何[なん]でも食[た]べられます。" },
+        { "sp": "a", "ja": "わかりました。じゃあ、さかなは入[い]れません。食[た]べた後[あと]、おさらをあらってくれますか。" },
+        { "sp": "b", "ja": "はい、もちろんです。" }
+      ],
+      "questions": [
+        { "q": "アレックスさんは何時[なんじ]にばんごはんを食[た]べたいですか。どうしてですか。", "marks": 2, "line": 1,
+          "ask_en": "What time does Alex want dinner, and why?",
+          "model": "六時[ろくじ]に食[た]べたいです。七時[しちじ]からかぞくと話[はな]さなければならないからです。",
+          "look_for": [ { "any": "六時[ろくじ]|6時", "says": "six o'clock" },
+                        { "any": "かぞく|家族[かぞく]", "says": "his family" },
+                        { "any": "から|ので", "says": "a reason, which the question asks for" } ] },
+        { "q": "今日[きょう]のばんごはんは何[なん]ですか。アレックスさんがにがてな食[た]べ物[もの]は何[なん]ですか。", "marks": 2, "line": 2,
+          "ask_en": "What is for dinner, and what food does Alex not like?",
+          "model": "カレーです。さかながにがてです。",
+          "look_for": [ { "any": "カレー", "says": "curry" },
+                        { "any": "さかな|魚[さかな]", "says": "fish" } ] },
+        { "q": "食[た]べた後[あと]、アレックスさんは何[なに]をしますか。", "marks": 2, "line": 4,
+          "ask_en": "What will Alex do after eating?",
+          "model": "おさらをあらいます。",
+          "look_for": [ { "any": "さら|おさら|皿[さら]", "says": "the dishes" },
+                        { "any": "あらい|あらう|洗[あら]", "says": "washing them" } ] }
+      ]
+    },
+    {
+      "id": "jikoshoukai", "section": "1B", "answer_in": "Japanese", "marks": 6, "draft": true,
+      "title": "あいさんのじこしょうかい",
+      "title_en": "Ai introduces herself",
+      "setting": "A visiting student from Tokyo speaks to your class.",
+      "speakers": [ { "tag": "a", "who": "まつもと あい", "voice": "a" } ],
+      "lines": [
+        { "sp": "a", "ja": "はじめまして。わたしはまつもとあいです。東京[とうきょう]の高校[こうこう]二年生[にねんせい]です。" },
+        { "sp": "a", "ja": "日本[にほん]では、水曜日[すいようび]と金曜日[きんようび]にテニスぶのれんしゅうがあります。" },
+        { "sp": "a", "ja": "オーストラリアに来[く]るのははじめてです。" },
+        { "sp": "a", "ja": "日本[にほん]の学校[がっこう]ではせいふくを着[き]なければなりませんが、キューハイスクールでは着[き]なくてもいいですね。びっくりしました。" },
+        { "sp": "a", "ja": "来月[らいげつ]、日本[にほん]に帰[かえ]りますが、その前[まえ]にメルボルンのびじゅつかんに行[い]ってみたいです。" }
+      ],
+      "questions": [
+        { "q": "あいさんはいつテニスのれんしゅうをしますか。", "marks": 2, "line": 1,
+          "ask_en": "When does Ai practise tennis?",
+          "model": "水曜日[すいようび]と金曜日[きんようび]にれんしゅうします。",
+          "look_for": [ { "any": "水曜日[すいようび]", "says": "Wednesday" },
+                        { "any": "金曜日[きんようび]", "says": "Friday" } ] },
+        { "q": "あいさんは何[なに]にびっくりしましたか。", "marks": 2, "line": 3,
+          "ask_en": "What surprised Ai?",
+          "model": "キューハイスクールではせいふくを着[き]なくてもいいことにびっくりしました。",
+          "look_for": [ { "any": "せいふく|制服[せいふく]", "says": "the uniform" },
+                        { "any": "着[き]なくてもいい|きなくてもいい", "says": "that you do not have to wear it" } ] },
+        { "q": "日本[にほん]に帰[かえ]る前[まえ]に、何[なに]をしてみたいですか。", "marks": 2, "line": 4,
+          "ask_en": "What does she want to try before going home?",
+          "model": "メルボルンのびじゅつかんに行[い]ってみたいです。",
+          "look_for": [ { "any": "びじゅつかん|美術館[びじゅつかん]", "says": "the art gallery" },
+                        { "any": "行[い]ってみたい|いってみたい", "says": "that she wants to try going" } ] }
+      ]
+    }
   ],
 
   "essay": {
