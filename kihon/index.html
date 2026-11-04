@@ -81,6 +81,9 @@
   .cell.odd b{color:var(--odd)}
   .cell.odd s{color:var(--odd)}
   .cell.wide{grid-column:1/-1}
+  /* an emptied answer column still holds its line, so the grid does not
+     jump when かくす goes on and off */
+  .cell s:empty::after{content:"\30FB\30FB\30FB";color:var(--line)}
   .key{font-size:12px;color:var(--muted);margin-top:9px}
   .key b{color:var(--odd)}
 
@@ -138,8 +141,8 @@
 <nav class="panels" id="panels"></nav>
 <nav class="modes" id="modes"></nav>
 <main id="main"></main>
-<script src="data/kihon.js?v=20261104a"></script>
-<script src="app.js?v=20261104a"></script>
-<div class="build" aria-hidden="true">build 2026-11-04a</div>
+<script src="data/kihon.js?v=20261104b"></script>
+<script src="app.js?v=20261104b"></script>
+<div class="build" aria-hidden="true">build 2026-11-04b</div>
 </body>
 </html>

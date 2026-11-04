@@ -351,7 +351,8 @@ window.KIHON = {
           "title": "People",
           "note": "Japanese drops the word for I when it is obvious. Say 日本へ行きます, not わたしは日本へ行きます every time.",
           "gloss": [
-            ["わたし", "I"], ["ぼく", "I, used by boys"], ["わたしたち", "we"],
+            ["わたし", "I"], ["ぼく", "I, used by boys"], ["あなた", "you"],
+            ["かれ", "he"], ["かのじょ", "she"], ["わたしたち", "we"],
             ["ぼくたち", "we, used by boys"], ["みんな", "everyone"],
             ["学生たち", "the students: 〜たち makes a group"]
           ]
@@ -389,13 +390,17 @@ window.KIHON = {
         { "q": "あの人[ひと]は ___ ですか。", "a": "だれ", "wrong": ["どこ", "なに", "どれ"], "why": "A person question takes だれ." },
         { "q": "the students, as a group", "a": "学生たち", "wrong": ["学生ら", "学生がた", "学生みんな"], "why": "〜たち makes the plural." },
         { "q": "we, two or more of us", "a": "わたしたち", "wrong": ["わたしら", "わたしども", "わたしみんな"], "why": "わたし + たち." },
+        { "q": "he", "a": "かれ", "wrong": ["かのじょ", "あなた", "わたし"], "why": "かれ is he." },
+        { "q": "she", "a": "かのじょ", "wrong": ["かれ", "あなた", "みんな"], "why": "かのじょ is she." },
+        { "q": "you", "a": "あなた", "wrong": ["わたし", "かれ", "だれ"], "why": "あなた is you." },
         { "q": "a shop away from both of us", "a": "あそこ", "wrong": ["ここ", "そこ", "どこ"], "why": "Away from both speakers is あそこ." }
       ],
       "build": [
         { "en": "This is my bag.", "frame": ["", "わたしのかばんです。"], "a": "これは", "wrong": ["このは", "ここは", "これの"] },
         { "en": "That book over there is the teacher's.", "frame": ["", "本[ほん]は先生[せんせい]のです。"], "a": "あの", "wrong": ["あれ", "あそこ", "あれの"] },
         { "en": "Where is the station?", "frame": ["えきは", "ですか。"], "a": "どこ", "wrong": ["だれ", "どれ", "どの"] },
-        { "en": "We are Year 10 students.", "frame": ["", "十年生[じゅうねんせい]です。"], "a": "わたしたちは", "wrong": ["わたしは", "わたしらは"] }
+        { "en": "We are Year 10 students.", "frame": ["", "十年生[じゅうねんせい]です。"], "a": "わたしたちは", "wrong": ["わたしは", "わたしらは"] },
+        { "en": "She is my friend.", "frame": ["", "わたしの友[とも]だちです。"], "a": "かのじょは", "wrong": ["かれは", "あなたは", "かのじょの"] }
       ]
     }
   ]

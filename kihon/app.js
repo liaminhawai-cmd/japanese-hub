@@ -20,6 +20,12 @@
   var PANELS = K.panels;
 
   var panelAt = 0, mode = "table", furi = true, showEn = true, sfx = true;
+  /* Andrew: the table sits in the first position and hands over every
+     answer, so the drill is no test for a student who flips back to it.
+     かくす empties the answer column. A cell then gives up its own
+     answer when it is tapped, one at a time, which is what a flashcard
+     does and what reading the whole table does not. */
+  var hide = false;
   var round = null;
 
   /* ---------- the small helpers the suite shares ---------- */
@@ -150,6 +156,11 @@
       return '<button data-m="' + m[0] + '" class="' + (mode === m[0] ? "on" : "")
         + '" title="' + esc(m[2]) + '">' + esc(m[1]) + '</button>';
     }).join("")
+      + (mode === "table"
+         ? '<button data-h="1" class="' + (hide ? "on" : "")
+           + '" title="Empty the answer column and tap a card to check">'
+           + 'かくす</button>'
+         : "")
       + '<div class="sp"></div><div class="lede">' + esc(p.lede) + '</div>';
   }
 
@@ -165,12 +176,17 @@
             if (r[2]) odd++;
             var wide = !isRead && plain(r[0]).length > 8;
             return '<button class="cell' + (r[2] ? " odd" : "") + (wide ? " wide" : "")
-              + '" data-say="' + esc(plain(r[0])) + '">'
-              + '<b>' + ruby(r[0]) + '</b><s>' + esc(r[1]) + '</s></button>';
+              + '" data-say="' + esc(plain(r[0])) + '"'
+              + ' data-ans="' + esc(r[1]) + '">'
+              + '<b>' + ruby(r[0]) + '</b><s>'
+              + (hide ? "" : esc(r[1])) + '</s></button>';
           }).join("") + '</div></div>';
     }).join("") + '</div>';
     if (odd) h += '<p class="key"><b>Red</b> marks an irregular reading. '
       + 'The drill deals those far more often than the regular ones.</p>';
+    h += '<p class="key">' + (hide
+      ? 'Answers are hidden. Tap a card to check one.'
+      : 'Tap かくす above to hide the answers and test yourself.') + '</p>';
     $("main").innerHTML = h;
   }
 
@@ -247,7 +263,18 @@
     if (b.dataset.m){
       mode = b.dataset.m; round = null; return draw();
     }
-    if (b.dataset.say){ return say(b.dataset.say); }
+    if (b.dataset.h){ hide = !hide; return draw(); }
+    if (b.dataset.say){
+      /* while the answers are hidden a tap gives up this one only, and
+         says the answer rather than the form, because the answer is the
+         thing being checked */
+      if (hide && !b.classList.contains("shown")){
+        b.classList.add("shown");
+        b.querySelector("s").textContent = b.dataset.ans;
+        return say(b.dataset.ans);
+      }
+      return say(b.dataset.say);
+    }
     if (b.id === "again"){ round = null; return draw(); }
     if (b.id === "next"){
       var it = round.items[round.at];
@@ -289,6 +316,8 @@
     panels: function(){ return PANELS.map(function(p){ return p.id; }); },
     go: function(i, m){ panelAt = i; mode = m || "table"; round = null; draw(); },
     pool: function(i){ return drillPool(PANELS[i]); },
+    hide: function(v){ hide = v; draw(); },
+    hidden: function(){ return hide; },
     deal: function(i, n){ return deal(drillPool(PANELS[i]), n); },
     round: function(){ return round; },
     item: function(){ return round && round.items[round.at]; },
